@@ -76,6 +76,15 @@ INT_PTR CALLBACK UpdateNotifyOptsProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPA
 					CheckDlgButton(hwndDlg, (i+1029), (DBGetContactSettingByte(NULL, MODNAME, str, DEFAULT_MESSAGE_ENABLED)) ? BST_CHECKED: BST_UNCHECKED);
 				}
 			}
+			DBVARIANT dbVar = {0};
+			if (!DBGetContactSettingTString(NULL, MODNAME, "UpdateURL", &dbVar))
+				SetDlgItemText(hwndDlg, IDC_UPDATE_URL, dbVar.ptszVal);
+			else
+			{
+				SetDlgItemText(hwndDlg, IDC_UPDATE_URL, _T(DEFAULT_UPDATE_URL));
+				DBWriteContactSettingTString(NULL, MODNAME, "UpdateURL", _T(DEFAULT_UPDATE_URL));
+			}
+			DBFreeVariant(&dbVar);
 			return TRUE;
 		}
 
@@ -121,6 +130,7 @@ INT_PTR CALLBACK UpdateNotifyOptsProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPA
 		case IDC_ERRORS2:
 		case IDC_INFO_MESSAGES2:
 		case IDC_PROGR_DLG2:
+		case IDC_UPDATE_URL:
 			if ((HIWORD(wParam) == BN_CLICKED || HIWORD(wParam) == EN_CHANGE) && (HWND)lParam == GetFocus())
 				SendMessage(GetParent(hwndDlg), PSM_CHANGED, 0, 0);
 			break;
@@ -164,6 +174,9 @@ INT_PTR CALLBACK UpdateNotifyOptsProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPA
 						DBWriteContactSettingByte(NULL, MODNAME, str, (BYTE)(IsDlgButtonChecked(hwndDlg, (i+1029))));
 					}
 				}
+				TCHAR buf[MAX_PATH];
+				GetDlgItemText(hwndDlg, IDC_UPDATE_URL, buf, SIZEOF(buf));
+				DBWriteContactSettingTString(NULL, MODNAME, "UpdateURL", buf);
 			}
 			break;
 		}
@@ -353,8 +366,8 @@ INT_PTR CALLBACK DlgPopUpOpts(HWND hdlg, UINT msg, WPARAM wParam, LPARAM lParam)
 			}
 			case IDC_PREVIEW: 
 			{//Declarations and initializations
-				Title = TranslateT("Pack Updater");
-				Text = TranslateT("Test");
+				LPCTSTR Title = TranslateT("Pack Updater");
+				LPCTSTR Text = TranslateT("Test");
 				for (int i = 0; i < POPUPS; i++) 
 				{
 					if ((!IsDlgButtonChecked(hdlg, (i+40071))) || (!IsWindowEnabled(GetDlgItem(hdlg, (i+40071)))))

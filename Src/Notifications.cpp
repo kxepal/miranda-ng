@@ -19,7 +19,6 @@ Boston, MA 02111-1307, USA.
 
 #include "common.h"
 
-HWND hDlgDld = NULL;
 INT UpdatesCount = 0;
 
 void PopupAction(HWND hWnd, BYTE action)
@@ -206,16 +205,18 @@ INT_PTR CALLBACK DlgDownloadPop(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPar
 	{
 	case WM_INITDIALOG:
 		{
+			PopupDataText *temp = (PopupDataText*)lParam;
 			Number = 3;
-			show_popup(hDlg, Title, Text, Number, 0);
+			show_popup(hDlg, temp->Title, temp->Text, Number, 0);
 			return TRUE;
 		} // end* WM_INITDIALOG:
 	} // end* switch (uMsg)
 	return FALSE;
 }
 
-static void __stdcall CreateDownloadDialog(void*)
+/*static void __stdcall CreateDownloadDialog(void* param)
 {
+	PopupDataText *temp = (PopupDataText*)param;
 	if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL,MODNAME, "Popups3", DEFAULT_POPUP_ENABLED))
 		hDlgDld = CreateDialog(hInst, MAKEINTRESOURCE(IDD_POPUPDUMMI), NULL, DlgDownloadPop);
 	else if (DBGetContactSettingByte(NULL,MODNAME, "Popups3M", DEFAULT_MESSAGE_ENABLED))
@@ -223,20 +224,28 @@ static void __stdcall CreateDownloadDialog(void*)
 		lstrcpyn(tszDialogMsg, Text, SIZEOF(tszDialogMsg));
 		hDlgDld = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DOWNLOAD), NULL, DlgDownload);
 	}
-}
+}*/
 
-static void __stdcall DestroyDownloadDialog(void*)
+/*static void __stdcall DestroyDownloadDialog(void*)
 {
 	DestroyWindow(hDlgDld);
-}
+}*/
 
-void DlgDownloadProc()
+void DlgDownloadProc(FILEURL *pFileUrl, PopupDataText temp)
 {
-	CallFunctionAsync(CreateDownloadDialog, 0);
+	HWND hDlgDld = NULL;
+	if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL,MODNAME, "Popups3", DEFAULT_POPUP_ENABLED))
+		hDlgDld = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_POPUPDUMMI), NULL, DlgDownloadPop, (LPARAM)&temp);
+	else if (DBGetContactSettingByte(NULL,MODNAME, "Popups3M", DEFAULT_MESSAGE_ENABLED))
+	{
+		lstrcpyn(tszDialogMsg, temp.Text, SIZEOF(tszDialogMsg));
+		hDlgDld = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DOWNLOAD), NULL, DlgDownload);
+	}
+
 	if (!DownloadFile(pFileUrl->tszDownloadURL, pFileUrl->tszDiskPath))
 	{
-		Title = TranslateT("Pack Updater");
-		Text = TranslateT("An error occured while downloading the update.");
+		LPCTSTR Title = TranslateT("Pack Updater");
+		LPCTSTR Text = TranslateT("An error occured while downloading the update.");
 		if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL, MODNAME, "Popups1", DEFAULT_POPUP_ENABLED))
 		{
 			Number = 1;
@@ -245,7 +254,8 @@ void DlgDownloadProc()
 		else if (DBGetContactSettingByte(NULL, MODNAME, "Popups1M", DEFAULT_MESSAGE_ENABLED))
 			MessageBox(NULL, Text, Title, MB_ICONSTOP);
 	}
-	CallFunctionAsync(DestroyDownloadDialog, 0);
+	DestroyWindow(hDlgDld);
+	//CallFunctionAsync(DestroyDownloadDialog, 0);
 }
 
 INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -306,11 +316,11 @@ INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 					lvI.mask = LVIF_TEXT;// | LVIF_IMAGE;
 
 					lvI.iSubItem = 1;
-					lvI.pszText = todo[i].tszCurVer;
+					//lvI.pszText = todo[i].tszCurVer;
 					ListView_SetItem(hwndList, &lvI);
 
 					lvI.iSubItem = 2;
-					lvI.pszText = todo[i].tszNewVer;
+					//lvI.pszText = todo[i].tszNewVer;
 					ListView_SetItem(hwndList, &lvI);
 
 					// remember whether the user has decided not to update this component with this particular new version
@@ -503,13 +513,14 @@ INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 										else
 										{
 											// download update
-											pFileUrl = &todo[i].File;
-											Title = TranslateT("Pack Updater");
+											FILEURL *pFileUrl = &todo[i].File;
+											PopupDataText temp;
+											temp.Title = TranslateT("Pack Updater");
 											if (todo[i].FileType == 1)
-												Text = TranslateT("Downloading pack updates...");
+												temp.Text = TranslateT("Downloading pack updates...");
 											else
-												Text = TranslateT("Downloading update...");
-											DlgDownloadProc();
+												temp.Text = TranslateT("Downloading update...");
+											DlgDownloadProc(pFileUrl, temp);
 											if (!DlgDld)
 											{
 												if (UpdatesCount)
@@ -517,9 +528,13 @@ INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 												continue;
 											}
 										}
-										lstrcpyn(todo[i].tszCurVer, todo[i].tszNewVer, SIZEOF(todo[i].tszCurVer));
-										mir_snprintf(szKey, SIZEOF(szKey), "File_%d_CurrentVersion", todo[i].FileNum);
-										DBWriteContactSettingTString(NULL, MODNAME, szKey, todo[i].tszCurVer);
+										// Save last version
+										//перенести сюда
+										//DBWriteContactSettingTString(NULL, MODNAME, _T2A(ffd.cFileName), todo[i].newhash);
+
+										//lstrcpyn(todo[i].tszCurVer, todo[i].tszNewVer, SIZEOF(todo[i].tszCurVer));
+										//mir_snprintf(szKey, SIZEOF(szKey), "File_%d_CurrentVersion", todo[i].FileNum);
+										//DBWriteContactSettingTString(NULL, MODNAME, szKey, todo[i].tszCurVer);
 										arFileType.push_back(todo[i].FileType);
 										arFilePath.push_back(todo[i].File.tszDiskPath);
 										arFileName.push_back(tszFileName);
@@ -537,12 +552,13 @@ INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 								if (UpdatesCount > 0 && lstrcmp(arExt[0].c_str(), _T(".html")) != 0)
 								{
 									INT rc = -1;
-									Title = TranslateT("Pack Updater");
-									Text = tszBuff;
+									PopupDataText temp;
+									temp.Title = TranslateT("Pack Updater");
+									temp.Text = tszBuff;
 									if (ServiceExists(MS_POPUP_ADDPOPUPEX) && ServiceExists(MS_POPUP_REGISTERACTIONS) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL,MODNAME, "Popups0", DEFAULT_POPUP_ENABLED) && (DBGetContactSettingDword(NULL, "PopUp", "Actions", 0) & 1))
-										rc = DialogBox(hInst, MAKEINTRESOURCE(IDD_POPUPDUMMI), NULL, DlgMsgPop);
+										rc = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_POPUPDUMMI), NULL, DlgMsgPop, (LPARAM)&temp);
 									else
-										rc = MessageBox(NULL, tszBuff, Title, MB_YESNO | MB_ICONQUESTION);
+										rc = MessageBox(NULL, temp.Text, temp.Title, MB_YESNO | MB_ICONQUESTION);
 									if (rc == IDYES)
 									{
 										for (int i = 0; i < UpdatesCount; i++)
@@ -623,8 +639,8 @@ INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 										if (Reminder && (UpdatesCount == 1) && (arFileType[0] == 1))
 											DBWriteContactSettingByte(NULL, MODNAME, "Reminder", 2);
 										mir_sntprintf(tszBuff, SIZEOF(tszBuff), TranslateT("You have chosen not to install the pack update immediately.\nYou can install it manually from this location:\n\n%s"), arFilePath[0].c_str());
-										Title = TranslateT("Pack Updater");
-										Text = tszBuff;
+										LPCTSTR Title = TranslateT("Pack Updater");
+										LPCTSTR Text = tszBuff;
 										if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL, MODNAME, "Popups2", DEFAULT_POPUP_ENABLED))
 										{
 											Number = 2;
@@ -668,8 +684,9 @@ INT_PTR CALLBACK DlgMsgPop(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_INITDIALOG:
 		{
+			PopupDataText *temp = (PopupDataText*)lParam;
 			Number = 0;
-			show_popup(hDlg, Title, Text, Number, 1);
+			show_popup(hDlg, temp->Title, temp->Text, Number, 1);
 			return TRUE;
 		} // end* WM_INITDIALOG:
 	} // end* switch (uMsg)

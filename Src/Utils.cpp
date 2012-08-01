@@ -19,19 +19,18 @@ Boston, MA 02111-1307, USA.
 
 #include "Common.h"
 
-vector<FILEINFO> Files;
+//vector<FILEINFO> Files;
 BOOL DlgDld;
-INT FileCount = 0, CurrentFile = 0, Number = 0;
+INT /*CurrentFile = 0,*/ Number = 0;
 BYTE Reminder, AutoUpdate;
 BYTE UpdateOnStartup, UpdateOnPeriod, OnlyOnceADay, PeriodMeasure;
 INT Period;
 TCHAR tszDialogMsg[2048] = {0};
 FILEINFO* pFileInfo = NULL;
-FILEURL* pFileUrl = NULL;
+//FILEURL* pFileUrl = NULL;
 HANDLE CheckThread = NULL, hNetlibUser = NULL;
 MYOPTIONS MyOptions = {0};
 aPopups PopupsList[POPUPS];
-LPCTSTR Title = {0}, Text = {0};
 
 PackUpdaterIconList iconList[] =
 {
@@ -120,7 +119,6 @@ VOID LoadOptions()
 	Period = DBGetContactSettingDword(NULL, MODNAME, "Period", DEFAULT_PERIOD);
 	PeriodMeasure = DBGetContactSettingByte(NULL, MODNAME, "PeriodMeasure", DEFAULT_PERIODMEASURE);
 	Reminder = DBGetContactSettingByte(NULL, MODNAME, "Reminder", DEFAULT_REMINDER);
-	FileCount = DBGetContactSettingDword(NULL, MODNAME, "FileCount", DEFAULT_FILECOUNT);
 }
 
 BOOL DownloadFile(LPCTSTR tszURL, LPCTSTR tszLocal)
@@ -176,7 +174,6 @@ VOID __stdcall ExitMe(void*)
 
 VOID __stdcall RestartMe(void*)
 {
-	CallService("CloseAction", 0, 0);
 	CallService(MS_SYSTEM_RESTART, 0, 0);
 }
 
@@ -193,16 +190,16 @@ BOOL IsPluginDisabled(TCHAR* filename)
 	return res;
 }
 
-INT getVer(const TCHAR* verStr)
+/*INT getVer(const TCHAR* verStr)
 {
 	INT v1 = 0, v2 = 0, v3 = 0, v4 = 0;
 	_stscanf(verStr, _T("%d.%d.%d.%d"), &v1, &v2, &v3, &v4);
 	return v1*1000000 + v2*10000 + v3*1000 + v4;
-}
+}*/
 
 static void CheckUpdates(void *)
 {
-	TCHAR tszBuff[2048] = {0}, tszFileInfo[30] = {0}, tszTmpIni[MAX_PATH] = {0};
+	TCHAR tszBuff[2048] = {0}, /*tszFileInfo[30] = {0},*/ tszTmpIni[MAX_PATH] = {0};
 	char szKey[64] = {0};
 	INT upd_ret;
 	DBVARIANT dbVar = {0};
@@ -210,16 +207,14 @@ static void CheckUpdates(void *)
 
 	if (!Exists(tszRoot))
 		CreateDirectory(tszRoot, NULL);
-	Files.clear();
+	//Files.clear();
 	Reminder = DBGetContactSettingByte(NULL, MODNAME, "Reminder", DEFAULT_REMINDER);
-	FileCount = DBGetContactSettingDword(NULL, MODNAME, "FileCount", DEFAULT_FILECOUNT);
 
 	// Load files info
-	DBGetContactSettingTString(NULL, MODNAME, "File_VersionURL", &dbVar);
-	if (lstrcmp(dbVar.ptszVal, NULL) == 0)// URL is not set
+	if (DBGetContactSettingTString(NULL, MODNAME, "UpdateURL", &dbVar))// URL is not set
 	{
-		Title=TranslateT("Pack Updater");
-		Text = TranslateT("URL for checking updates not found.");
+		LPCTSTR Title=TranslateT("Pack Updater");
+		LPCTSTR Text = TranslateT("URL for checking updates not found.");
 		if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL, MODNAME, "Popups1", DEFAULT_POPUP_ENABLED))
 		{
 			Number = 1;
@@ -231,15 +226,18 @@ static void CheckUpdates(void *)
 		CheckThread = NULL;
 		return;
 	}
+
 	// Download version info
-	pFileUrl = (FILEURL *)mir_alloc(sizeof(*pFileUrl));
+	FILEURL *pFileUrl = (FILEURL *)mir_alloc(sizeof(*pFileUrl));
 	lstrcpyn(pFileUrl->tszDownloadURL, dbVar.ptszVal, SIZEOF(pFileUrl->tszDownloadURL));
+	DBFreeVariant(&dbVar);
 	mir_sntprintf(tszBuff, SIZEOF(tszBuff), _T("%s\\tmp.ini"), tszRoot);
 	lstrcpyn(pFileUrl->tszDiskPath, tszBuff, SIZEOF(pFileUrl->tszDiskPath));
 	lstrcpyn(tszTmpIni, tszBuff, SIZEOF(tszTmpIni));
-	Title = TranslateT("Pack Updater");
-	Text = TranslateT("Downloading version info...");
-	DlgDownloadProc();
+	PopupDataText temp;
+	temp.Title = TranslateT("Pack Updater");
+	temp.Text = TranslateT("Downloading version info...");
+	DlgDownloadProc(pFileUrl, temp);
 	mir_free(pFileUrl);
 	if (!DlgDld)
 	{
@@ -247,135 +245,144 @@ static void CheckUpdates(void *)
 		return;
 	}
 
-	for (CurrentFile = 0; CurrentFile < FileCount; CurrentFile++)
+
+	WIN32_FIND_DATA ffd;
+	TCHAR *dirname = Utils_ReplaceVarsT(_T("%miranda_path%\\Plugins\\*"));
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+
+	hFind = FindFirstFile(dirname, &ffd);
+	mir_free(dirname);
+	while( hFind != INVALID_HANDLE_VALUE ) 
 	{
-		FILEINFO FileInfo = {_T(""), _T(""), _T(""), _T(""), _T(""), _T(""), _T(""), {_T(""), _T("")}};
-
-		dbVar.ptszVal = NULL;
-		mir_snprintf(szKey, SIZEOF(szKey), "File_%d_CurrentVersion", CurrentFile + 1);
-		DBGetContactSettingTString(NULL, MODNAME, szKey, &dbVar);
-		if (lstrcmp(dbVar.ptszVal, NULL) == 0)
+		if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && !lstrcmp(&ffd.cFileName[lstrlen(ffd.cFileName)-4], _T(".dll")))
 		{
-			DBFreeVariant(&dbVar);
-			lstrcpyn(FileInfo.tszCurVer, _T(""), SIZEOF(FileInfo.tszCurVer));
-		}
-		else
-			lstrcpyn(FileInfo.tszCurVer, dbVar.ptszVal, SIZEOF(FileInfo.tszCurVer));
-		dbVar.ptszVal = NULL;
-		mir_snprintf(szKey, SIZEOF(szKey), "File_%d_LastVersion", CurrentFile + 1);
-		DBGetContactSettingTString(NULL, MODNAME, szKey, &dbVar);
-		if (lstrcmp(dbVar.ptszVal, NULL) == 0)
-		{
-			DBFreeVariant(&dbVar);
-			lstrcpyn(FileInfo.tszLastVer, _T(""), SIZEOF(FileInfo.tszLastVer));
-		}
-		else
-			lstrcpyn(FileInfo.tszLastVer, dbVar.ptszVal, SIZEOF(FileInfo.tszLastVer));
-		Files.push_back(FileInfo);
+			TCHAR *plugname = ffd.cFileName;
+			FILEINFO FileInfo = {_T(""), _T(""), _T(""), _T(""), _T(""), _T(""), {_T(""), _T("")}};
 
-		// Read version info
-		mir_sntprintf(tszFileInfo, SIZEOF(tszFileInfo), _T("FileInfo_%d"), CurrentFile + 1);
-		GetPrivateProfileString(tszFileInfo, _T("FileVersion"), _T(""), Files[CurrentFile].tszNewVer, SIZEOF(Files[CurrentFile].tszNewVer), tszTmpIni);
-		GetPrivateProfileString(tszFileInfo, _T("Message"), _T(""), Files[CurrentFile].tszMessage, SIZEOF(Files[CurrentFile].tszMessage), tszTmpIni);
-		GetPrivateProfileString(tszFileInfo, _T("DownloadURL"), _T(""), Files[CurrentFile].File.tszDownloadURL, SIZEOF(Files[CurrentFile].File.tszDownloadURL), tszTmpIni);
-		GetPrivateProfileString(tszFileInfo, _T("AdvFolder"), _T(""), Files[CurrentFile].tszAdvFolder, SIZEOF(Files[CurrentFile].tszAdvFolder), tszTmpIni);
-		GetPrivateProfileString(tszFileInfo, _T("Descr"), _T(""), Files[CurrentFile].tszDescr, SIZEOF(Files[CurrentFile].tszDescr), tszTmpIni);
-		GetPrivateProfileString(tszFileInfo, _T("DiskFileName"), _T(""), tszBuff, MAX_PATH, tszTmpIni);
-
-		if (_tcsstr(tszBuff, _T("\\"))) //check update name
-		{
-			Title = TranslateT("Pack Updater");
-			Text = TranslateT("Name of Update's file is not supported.");
-			if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) &&  DBGetContactSettingByte(NULL, MODNAME, "Popups1", DEFAULT_POPUP_ENABLED))
+			//dbVar.ptszVal = NULL;
+			//mir_snprintf(szKey, SIZEOF(szKey), "File_%d_CurrentVersion", CurrentFile + 1);
+			if (!DBGetContactSettingTString(NULL, MODNAME, _T2A(ffd.cFileName), &dbVar))
 			{
-				Number = 1;
-				show_popup(0, Title, Text, Number, 0);
+				//считать хэш файла
+				lstrcpyn(FileInfo.curhash, _T(""), SIZEOF(FileInfo.curhash));
 			}
-			else if (DBGetContactSettingByte(NULL, MODNAME, "Popups1M", DEFAULT_MESSAGE_ENABLED))
-				MessageBox(NULL, Text, Title, MB_ICONINFORMATION);
-			continue;
-		} // end check update name
-		lstrcpyn(Files[CurrentFile].File.tszDiskPath, tszBuff, SIZEOF(Files[CurrentFile].File.tszDiskPath));
-		GetPrivateProfileString(tszFileInfo, _T("InfoURL"), _T(""), Files[CurrentFile].tszInfoURL, SIZEOF(Files[CurrentFile].tszInfoURL), tszTmpIni);
-		Files[CurrentFile].FileType = GetPrivateProfileInt(tszFileInfo, _T("FileType"), 0, tszTmpIni);
-		Files[CurrentFile].Force = GetPrivateProfileInt(tszFileInfo, _T("Force"), 0, tszTmpIni);
-		Files[CurrentFile].FileNum = CurrentFile+1;
-
-		if (Files[CurrentFile].FileType == 2)
-		{
-			TCHAR pluginFolgerName[MAX_PATH];
-			if (lstrcmp(Files[CurrentFile].tszAdvFolder, _T("")) == 0)
-				mir_sntprintf(tszBuff, SIZEOF(tszBuff), _T("Plugins\\%s"), Files[CurrentFile].File.tszDiskPath);
 			else
-				mir_sntprintf(tszBuff, SIZEOF(tszBuff), _T("Plugins\\%s\\%s"), Files[CurrentFile].tszAdvFolder, Files[CurrentFile].File.tszDiskPath);
-			CallService(MS_UTILS_PATHTOABSOLUTET, (WPARAM)tszBuff, (LPARAM)pluginFolgerName);
-			if ((IsPluginDisabled(Files[CurrentFile].File.tszDiskPath) || !Exists(pluginFolgerName))) //check if plugin disabled or not exists
-				continue;
-		}
-		// Compare versions
-		if (getVer(Files[CurrentFile].tszCurVer) < getVer(Files[CurrentFile].tszNewVer)) // Yeah, we've got new version.
-		{
-			TCHAR* tszSysRoot = Utils_ReplaceVarsT(_T("%SystemRoot%"));
-			TCHAR* tszProgFiles = Utils_ReplaceVarsT(_T("%ProgramFiles%"));
+				lstrcpyn(FileInfo.curhash, dbVar.ptszVal, SIZEOF(FileInfo.curhash));
+			DBFreeVariant(&dbVar);
+			//dbVar.ptszVal = NULL;
+			//Files.push_back(FileInfo);
 
-			if (Files[CurrentFile].FileType != 1 && !IsUserAnAdmin() && (_tcsstr(tszRoot, tszSysRoot) || _tcsstr(tszRoot, tszProgFiles)))
-			{
-				MessageBox(NULL, TranslateT("Update is not possible!\nYou have no Administrator's rights.\nPlease run Miranda IM with Administrator's rights."), Title, MB_ICONINFORMATION);
-				DeleteFile(tszTmpIni);
-				CheckThread = NULL;
-				return;
-			} // user have not admin's rights
-			else
-			{
-				//добавить проверку на существование файла
-				TCHAR tszFilePathDest[MAX_PATH] = {0};
-				TCHAR* tszUtilRootPlug = NULL; 
-				TCHAR* tszUtilRootIco = NULL;
-				TCHAR* tszUtilRoot = NULL;
+			// Read version info
+			//mir_sntprintf(tszFileInfo, SIZEOF(tszFileInfo), _T("FileInfo_%d"), CurrentFile + 1);
+			GetPrivateProfileString(ffd.cFileName, _T("Hash"), _T(""), FileInfo.newhash, SIZEOF(FileInfo.newhash), tszTmpIni);
 
-				switch (Files[CurrentFile].FileType)
+			// Compare versions
+			if (lstrcmp(FileInfo.curhash, FileInfo.newhash)) // Yeah, we've got new version.
+			{
+				GetPrivateProfileString(ffd.cFileName, _T("Message"), _T(""), FileInfo.tszMessage, SIZEOF(FileInfo.tszMessage), tszTmpIni);
+				GetPrivateProfileString(ffd.cFileName, _T("DownloadURL"), _T(""), FileInfo.File.tszDownloadURL, SIZEOF(FileInfo.File.tszDownloadURL), tszTmpIni);
+				GetPrivateProfileString(ffd.cFileName, _T("AdvFolder"), _T(""), FileInfo.tszAdvFolder, SIZEOF(FileInfo.tszAdvFolder), tszTmpIni);
+				GetPrivateProfileString(ffd.cFileName, _T("Descr"), _T(""), FileInfo.tszDescr, SIZEOF(FileInfo.tszDescr), tszTmpIni);
+				GetPrivateProfileString(ffd.cFileName, _T("DiskFileName"), _T(""), tszBuff, MAX_PATH, tszTmpIni);
+
+				if (_tcsstr(tszBuff, _T("\\"))) //check update name
 				{
-					case 0:
-					case 1:
-						break;
-					case 2:
-						tszUtilRootPlug = Utils_ReplaceVarsT(_T("%miranda_path%\\Plugins"));
-						if (lstrcmp(Files[CurrentFile].tszAdvFolder, _T("")) == 0)
-							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootPlug, Files[CurrentFile].File.tszDiskPath);
-						else
-							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootPlug, Files[CurrentFile].tszAdvFolder, Files[CurrentFile].File.tszDiskPath);
-						mir_free(tszUtilRootPlug);
-						break;
-					case 3:
-						tszUtilRootIco = Utils_ReplaceVarsT(_T("%miranda_path%\\Icons"));
-						if (lstrcmp(Files[CurrentFile].tszAdvFolder, _T("")) == 0)
-							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootIco, Files[CurrentFile].File.tszDiskPath);
-						else
-							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootIco, Files[CurrentFile].tszAdvFolder, Files[CurrentFile].File.tszDiskPath);
-						mir_free(tszUtilRootIco);
-						break;
-					case 4:
-					case 5:
-						tszUtilRoot = Utils_ReplaceVarsT(_T("%miranda_path%"));
-						if (lstrcmp(Files[CurrentFile].tszAdvFolder, _T("")) == 0)
-							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRoot, Files[CurrentFile].File.tszDiskPath);
-						else
-							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRoot, Files[CurrentFile].tszAdvFolder, Files[CurrentFile].File.tszDiskPath);
-						mir_free(tszUtilRoot);
-						break;
-				}//end* switch (Files[CurrentFile].FileType)
+					LPCTSTR Title = TranslateT("Pack Updater");
+					LPCTSTR Text = TranslateT("Name of Update's file is not supported.");
+					if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) &&  DBGetContactSettingByte(NULL, MODNAME, "Popups1", DEFAULT_POPUP_ENABLED))
+					{
+						Number = 1;
+						show_popup(0, Title, Text, Number, 0);
+					}
+					else if (DBGetContactSettingByte(NULL, MODNAME, "Popups1M", DEFAULT_MESSAGE_ENABLED))
+						MessageBox(NULL, Text, Title, MB_ICONINFORMATION);
+					continue;
+				} // end check update name
+				lstrcpyn(FileInfo.File.tszDiskPath, tszBuff, SIZEOF(FileInfo.File.tszDiskPath));
+				GetPrivateProfileString(ffd.cFileName, _T("InfoURL"), _T(""), FileInfo.tszInfoURL, SIZEOF(FileInfo.tszInfoURL), tszTmpIni);
+				FileInfo.FileType = GetPrivateProfileInt(ffd.cFileName, _T("FileType"), 0, tszTmpIni);
+				FileInfo.Force = GetPrivateProfileInt(ffd.cFileName, _T("Force"), 0, tszTmpIni);
+				//FileInfo.FileNum = CurrentFile+1;
 
-				if (Files[CurrentFile].Force || Exists(tszFilePathDest))
-					UpdateFiles.push_back(Files[CurrentFile]);
-				// Save last version
-				lstrcpyn(Files[CurrentFile].tszLastVer, Files[CurrentFile].tszNewVer, SIZEOF(Files[CurrentFile].tszLastVer));
-				mir_snprintf(szKey, SIZEOF(szKey), "File_%d_LastVersion", CurrentFile + 1);
-				DBWriteContactSettingTString(NULL, MODNAME, szKey, Files[CurrentFile].tszLastVer);
-			} // user have admin's rights
-			mir_free(tszSysRoot);
-			mir_free(tszProgFiles);
-		} // end compare versions
-	} //end checking all files in for ()
+				if (FileInfo.FileType == 2)
+				{
+					TCHAR pluginFolgerName[MAX_PATH];
+					if (!lstrcmp(FileInfo.tszAdvFolder, _T("")))
+						mir_sntprintf(tszBuff, SIZEOF(tszBuff), _T("Plugins\\%s"), FileInfo.File.tszDiskPath);
+					else
+						mir_sntprintf(tszBuff, SIZEOF(tszBuff), _T("Plugins\\%s\\%s"), FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
+					CallService(MS_UTILS_PATHTOABSOLUTET, (WPARAM)tszBuff, (LPARAM)pluginFolgerName);
+					if ((IsPluginDisabled(FileInfo.File.tszDiskPath) || !Exists(pluginFolgerName))) //check if plugin disabled or not exists
+						continue;
+				}
+				TCHAR* tszSysRoot = Utils_ReplaceVarsT(_T("%SystemRoot%"));
+				TCHAR* tszProgFiles = Utils_ReplaceVarsT(_T("%ProgramFiles%"));
+
+				if (FileInfo.FileType != 1 && !IsUserAnAdmin() && (_tcsstr(tszRoot, tszSysRoot) || _tcsstr(tszRoot, tszProgFiles)))
+				{
+					LPCTSTR Title = TranslateT("Pack Updater");
+					MessageBox(NULL, TranslateT("Update is not possible!\nYou have no Administrator's rights.\nPlease run Miranda IM with Administrator's rights."), Title, MB_ICONINFORMATION);
+					DeleteFile(tszTmpIni);
+					CheckThread = NULL;
+					return;
+				} // user have not admin's rights
+				else
+				{
+					//добавить проверку на существование файла
+					TCHAR tszFilePathDest[MAX_PATH] = {0};
+					TCHAR* tszUtilRootPlug = NULL; 
+					TCHAR* tszUtilRootIco = NULL;
+					TCHAR* tszUtilRoot = NULL;
+
+					switch (FileInfo.FileType)
+					{
+						case 0:
+						case 1:
+							break;
+						case 2:
+							tszUtilRootPlug = Utils_ReplaceVarsT(_T("%miranda_path%\\Plugins"));
+							if (lstrcmp(FileInfo.tszAdvFolder, _T("")) == 0)
+								mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootPlug, FileInfo.File.tszDiskPath);
+							else
+								mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootPlug, FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
+							mir_free(tszUtilRootPlug);
+							break;
+						case 3:
+							tszUtilRootIco = Utils_ReplaceVarsT(_T("%miranda_path%\\Icons"));
+							if (lstrcmp(FileInfo.tszAdvFolder, _T("")) == 0)
+								mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootIco, FileInfo.File.tszDiskPath);
+							else
+								mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootIco, FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
+							mir_free(tszUtilRootIco);
+							break;
+						case 4:
+						case 5:
+							tszUtilRoot = Utils_ReplaceVarsT(_T("%miranda_path%"));
+							if (lstrcmp(FileInfo.tszAdvFolder, _T("")) == 0)
+								mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRoot, FileInfo.File.tszDiskPath);
+							else
+								mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRoot, FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
+							mir_free(tszUtilRoot);
+							break;
+					}//end* switch (Files[CurrentFile].FileType)
+
+					if (FileInfo.Force || Exists(tszFilePathDest))
+						UpdateFiles.push_back(FileInfo);
+					// Save last version
+					//убрать отсюда
+					DBWriteContactSettingTString(NULL, MODNAME, _T2A(ffd.cFileName), FileInfo.newhash);
+				} // user have admin's rights
+				mir_free(tszSysRoot);
+				mir_free(tszProgFiles);
+			} // end compare versions
+
+		}
+
+		if (!FindNextFile(hFind, &ffd ))
+			break;
+	}
+	FindClose(hFind);
+
 
 	// Show dialog
 	if (UpdateFiles.size()>0)
@@ -388,8 +395,8 @@ static void CheckUpdates(void *)
 	}
 	if (!UpdatesCount && !Silent)
 	{
-		Title = TranslateT("Pack Updater");
-		Text = TranslateT("No updates found.");
+		LPCTSTR Title = TranslateT("Pack Updater");
+		LPCTSTR Text = TranslateT("No updates found.");
 		if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) &&  DBGetContactSettingByte(NULL, MODNAME, "Popups2", DEFAULT_POPUP_ENABLED))
 		{
 			Number = 2;
@@ -398,7 +405,7 @@ static void CheckUpdates(void *)
 		else if (DBGetContactSettingByte(NULL, MODNAME, "Popups2M", DEFAULT_MESSAGE_ENABLED))
 			MessageBox(NULL, Text, Title, MB_ICONINFORMATION);
 	}
-	if (!FileCount)
+	/*if (!FileCount)
 	{
 		Title = TranslateT("Pack Updater");
 		Text = TranslateT("No files for update.");
@@ -409,7 +416,7 @@ static void CheckUpdates(void *)
 		}
 		else if (DBGetContactSettingByte(NULL, MODNAME, "Popups2M", DEFAULT_MESSAGE_ENABLED))
 			MessageBox(NULL, Text, Title, MB_ICONINFORMATION);
-	}
+	}*/
 	CheckThread = NULL;
 }//end* static void CheckUpdates(void *)
 
@@ -417,8 +424,8 @@ void DoCheck(int iFlag, int iFlag2)
 {
 	if (iFlag2)
 	{
-		Title = TranslateT("Pack Updater");
-		Text = TranslateT("Update checking already started!");
+		LPCTSTR Title = TranslateT("Pack Updater");
+		LPCTSTR Text = TranslateT("Update checking already started!");
 		if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) &&  DBGetContactSettingByte(NULL, MODNAME, "Popups2", DEFAULT_POPUP_ENABLED))
 		{
 			Number = 2;
