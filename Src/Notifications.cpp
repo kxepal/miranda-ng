@@ -19,7 +19,7 @@ Boston, MA 02111-1307, USA.
 
 #include "common.h"
 
-INT UpdatesCount = 0;
+void unzip(const TCHAR* ptszZipFile, TCHAR* ptszDestPath, TCHAR* ptszBackPath);
 
 void PopupAction(HWND hWnd, BYTE action)
 {
@@ -215,7 +215,7 @@ static void ApplyUpdates(HWND hDlg)
 {
 	vector<FILEINFO> &todo = *(vector<FILEINFO> *)GetWindowLongPtr(hDlg, GWLP_USERDATA);
 	ShowWindow(hDlg, SW_HIDE);
-	TCHAR tszBuff[2048], tszFileDest[MAX_PATH], tszFileBack[MAX_PATH];
+	TCHAR tszBuff[2048], tszFileTemp[MAX_PATH], tszFileBack[MAX_PATH];
 
 	SetWindowLongPtr(hDlg, GWLP_USERDATA, 0);
 	Utils_SaveWindowPosition(hDlg, NULL, MODNAME, "ConfirmWindow");
@@ -223,15 +223,17 @@ static void ApplyUpdates(HWND hDlg)
 	mir_sntprintf(tszFileBack, SIZEOF(tszFileBack), _T("%s\\Backups"), tszRoot);
 	CreateDirectory(tszFileBack, NULL);
 
+	mir_sntprintf(tszFileTemp, SIZEOF(tszFileTemp), _T("%s\\Temp"), tszRoot);
+	CreateDirectory(tszFileTemp, NULL);
+
 	for(size_t i=0; i < todo.size(); ++i) {
 		if ( !todo[i].enabled) {
+LBL_Skip:
 			todo.erase( todo.begin() + i);
 			i--;
 			continue;
 		}
 		
-		UpdatesCount++;
-
 		// download update
 		FILEURL *pFileUrl = &todo[i].File;
 		PopupDataText temp;
@@ -241,14 +243,11 @@ static void ApplyUpdates(HWND hDlg)
 		else
 			temp.Text = TranslateT("Downloading update...");
 		DlgDownloadProc(pFileUrl, temp);
-		if (!DlgDld) {
-			if (UpdatesCount)
-				UpdatesCount--;
-			continue;
-		}
+		if (!DlgDld)
+			goto LBL_Skip;
 	}
 
-	if (UpdatesCount == 0)
+	if (todo.size() == 0)
 		return;
 
 	INT rc = -1;
@@ -273,75 +272,13 @@ static void ApplyUpdates(HWND hDlg)
 		return;
 	}
 
-	for (int i = 0; i < UpdatesCount; i++) {
-		TCHAR* tszUtilRootPlug = NULL; 
-		TCHAR* tszUtilRootIco = NULL;
-		TCHAR* tszUtilRoot = NULL;
+	TCHAR* tszMirandaPath = Utils_ReplaceVarsT(_T("%miranda_path%"));
 
-		switch (arFileType[i]) {
-		case 0:
-			break;
-		case 1:
-			if (Reminder == 2)
-				DBWriteContactSettingByte(NULL, MODNAME, "Reminder", 1);
-			memset(&si, 0, sizeof(STARTUPINFO));
-			memset(&pi, 0, sizeof(PROCESS_INFORMATION));
-			si.cb = sizeof(STARTUPINFO);
-			CreateProcess(arFilePath[i].c_str(), _T(""), NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi);
-			i = UpdatesCount;
-			CallFunctionAsync(ExitMe, 0);
-			break;
-		case 2:
-			tszUtilRootPlug = Utils_ReplaceVarsT(_T("%miranda_path%\\Plugins"));
-			if (lstrcmp(arAdvFolder[i].c_str(), _T("")) == 0)
-				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootPlug, arFileName[i].c_str());
-			else
-				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootPlug, arAdvFolder[i].c_str(), arFileName[i].c_str());
-			mir_sntprintf(tszFilePathBack, SIZEOF(tszFilePathBack), _T("%s\\Backups\\%s"), tszRoot, arFileName[i].c_str());
-			MoveFile(tszFilePathDest, tszFilePathBack);
-			MoveFile(arFilePath[i].c_str(), tszFilePathDest);
-			mir_free(tszUtilRootPlug);
-			if (i == UpdatesCount - 1)
-				CallFunctionAsync(RestartMe, 0);
-			break;
-		case 3:
-			tszUtilRootIco = Utils_ReplaceVarsT(_T("%miranda_path%\\Icons"));
-			if (lstrcmp(arAdvFolder[i].c_str(), _T("")) == 0)
-				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootIco, arFileName[i].c_str());
-			else
-				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootIco, arAdvFolder[i].c_str(), arFileName[i].c_str());
-			mir_sntprintf(tszFilePathBack, SIZEOF(tszFilePathBack), _T("%s\\Backups\\%s"), tszRoot, arFileName[i].c_str());
-			MoveFile(tszFilePathDest, tszFilePathBack);
-			MoveFile(arFilePath[i].c_str(), tszFilePathDest);
-			mir_free(tszUtilRootIco);
-			if (i == UpdatesCount - 1)
-				CallFunctionAsync(RestartMe, 0);
-			break;
-		case 4:
-			tszUtilRoot = Utils_ReplaceVarsT(_T("%miranda_path%"));
-			if (lstrcmp(arAdvFolder[i].c_str(), _T("")) == 0)
-				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRoot, arFileName[i].c_str());
-			else
-				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRoot, arAdvFolder[i].c_str(), arFileName[i].c_str());
-			mir_sntprintf(tszFilePathBack, SIZEOF(tszFilePathBack), _T("%s\\Backups\\%s"), tszRoot, arFileName[i].c_str());
-			MoveFile(tszFilePathDest, tszFilePathBack);
-			MoveFile(arFilePath[i].c_str(), tszFilePathDest);
-			mir_free(tszUtilRoot);
-			if (i == UpdatesCount - 1)
-				CallFunctionAsync(RestartMe, 0);
-			break;
-		case 5:
-			tszUtilRoot = Utils_ReplaceVarsT(_T("%miranda_path%"));
-			if (lstrcmp(arAdvFolder[i].c_str(), _T("")) == 0)
-				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRoot, arFileName[i].c_str());
-			else
-				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRoot, arAdvFolder[i].c_str(), arFileName[i].c_str());
-			mir_sntprintf(tszFilePathBack, SIZEOF(tszFilePathBack), _T("%s\\Backups\\%s"), tszRoot, arFileName[i].c_str());
-			MoveFile(tszFilePathDest, tszFilePathBack);
-			MoveFile(arFilePath[i].c_str(), tszFilePathDest);
-			mir_free(tszUtilRoot);
-			break;
-		}
+	for (size_t i = 0; i < todo.size(); i++) {
+		FILEINFO& p = todo[i];
+		unzip(p.File.tszDiskPath, tszMirandaPath, tszFileTemp);
+
+		DBWriteContactSettingString(NULL, MODNAME, _T2A(p.tszDescr), p.newhash);
 	}
 }
 

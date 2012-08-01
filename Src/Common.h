@@ -85,13 +85,12 @@ struct PopupDataText
 	TCHAR*  Text;
 };
 
-#define DEFAULT_REMINDER					1
-#define DEFAULT_UPDATEONSTARTUP				1
-#define DEFAULT_ONLYONCEADAY				0
-#define DEFAULT_UPDATEONPERIOD				0
-#define DEFAULT_PERIOD						1
-#define DEFAULT_PERIODMEASURE				1
-#define DEFAULT_FILETYPE					0 //0 - not defined, 1 - pack, 2 - plugin, 3 - icon, 4 - files in miranda root (e.g. langpack, dbtool), 5 - same as 4 without restart
+#define DEFAULT_REMINDER          1
+#define DEFAULT_UPDATEONSTARTUP   1
+#define DEFAULT_ONLYONCEADAY      0
+#define DEFAULT_UPDATEONPERIOD    0
+#define DEFAULT_PERIOD            1
+#define DEFAULT_PERIODMEASURE     1
 
 #ifdef WIN32
 	#define DEFAULT_UPDATE_URL					"http://nightly.miranda.im/x32/"
@@ -107,7 +106,7 @@ using std::wstring;
 using namespace std;
 
 extern HINSTANCE hInst;
-extern INT /*CurrentFile,*/ Number, UpdatesCount, Period;
+extern INT /*CurrentFile,*/ Number, Period;
 extern BOOL Silent, DlgDld;
 extern BYTE Reminder, UpdateOnStartup, UpdateOnPeriod, OnlyOnceADay, PeriodMeasure;
 extern TCHAR tszRoot[MAX_PATH], tszDialogMsg[2048];

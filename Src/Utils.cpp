@@ -196,8 +196,9 @@ BOOL IsPluginDisabled(const char *filename)
 
 static void ScanFolder(const TCHAR* tszFolder, hashMap& hashes, vector<FILEINFO>& UpdateFiles)
 {
-	TCHAR tszMask[MAX_PATH];
+	TCHAR tszMask[MAX_PATH], tszFileBack[MAX_PATH];
 	mir_sntprintf(tszMask, SIZEOF(tszMask), _T("%s\\*"), tszFolder);
+	mir_sntprintf(tszFileBack, SIZEOF(tszFileBack), _T("%s\\Backups"), tszRoot);
 
 	WIN32_FIND_DATA ffd;
 	HANDLE hFind = FindFirstFile(tszMask, &ffd);
@@ -249,10 +250,12 @@ static void ScanFolder(const TCHAR* tszFolder, hashMap& hashes, vector<FILEINFO>
 		// Compare versions
 		if ( strcmp(FileInfo.curhash, FileInfo.newhash)) { // Yeah, we've got new version.
 			_tcscpy(FileInfo.tszDescr, ffd.cFileName);
-			mir_sntprintf(FileInfo.File.tszDiskPath, SIZEOF(FileInfo.File.tszDiskPath), _T("%s\\%s"), tszFolder, ffd.cFileName);
 
 			*p = 0;
-			mir_sntprintf(FileInfo.File.tszDownloadURL, SIZEOF(FileInfo.File.tszDownloadURL), _T("%s/%s.zip"), _T(DEFAULT_UPDATE_URL), ffd.cFileName);
+			mir_sntprintf(FileInfo.File.tszDownloadURL, SIZEOF(FileInfo.File.tszDownloadURL), _T("%s%s.zip"), _T(DEFAULT_UPDATE_URL), ffd.cFileName);
+			_tcslwr(FileInfo.File.tszDownloadURL);
+
+			mir_sntprintf(FileInfo.File.tszDiskPath, SIZEOF(FileInfo.File.tszDiskPath), _T("%s\\%s.zip"), tszFileBack, ffd.cFileName);
 
 			UpdateFiles.push_back(FileInfo);
 		} // end compare versions
@@ -271,7 +274,8 @@ static void CheckUpdates(void *)
 	vector<FILEINFO> UpdateFiles;
 
 	if (!Exists(tszRoot))
-		CreateDirectory(tszRoot, NULL);
+		CreateDirectoryTreeT(tszRoot);
+
 	//Files.clear();
 	Reminder = DBGetContactSettingByte(NULL, MODNAME, "Reminder", DEFAULT_REMINDER);
 
@@ -314,6 +318,7 @@ static void CheckUpdates(void *)
 	hashMap hashes;
 	char str[200];
 	while(fgets(str, SIZEOF(str), fp) != NULL) {
+		rtrim(str);
 		char* p = strchr(str, ' ');
 		if (p == NULL)
 			continue;
@@ -337,7 +342,7 @@ static void CheckUpdates(void *)
 		return;
 	}
 
-	if (!UpdatesCount && !Silent) {
+	if (!UpdateFiles.size() && !Silent) {
 		LPCTSTR Title = TranslateT("Pack Updater");
 		LPCTSTR Text = TranslateT("No updates found.");
 		if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) &&  DBGetContactSettingByte(NULL, MODNAME, "Popups2", DEFAULT_POPUP_ENABLED)) {
