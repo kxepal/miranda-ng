@@ -32,31 +32,35 @@ HANDLE CheckThread = NULL, hNetlibUser = NULL;
 MYOPTIONS MyOptions = {0};
 aPopups PopupsList[POPUPS];
 
-PackUpdaterIconList iconList[] =
+struct
 {
-	{ "check_update",	_T("Check for pack updates"),		IDI_MENU },
-	{ "empty_folder",	_T("Clear pack updates folder"),	IDI_DELETE },
-	{ "btn_ok",			_T("'Yes' Button"),					IDI_OK },
-	{ "btn_cancel",		_T("'No' Button"),					IDI_CANCEL }
+	char*  szIconName;
+	char*  szDescr;
+	int    IconID;
+}
+static iconList[] =
+{
+	{ "check_update", LPGEN("Check for pack updates"),    IDI_MENU },
+	{ "empty_folder", LPGEN("Clear pack updates folder"), IDI_DELETE },
+	{ "btn_ok",			LPGEN("'Yes' Button"),              IDI_OK },
+	{ "btn_cancel",   LPGEN("'No' Button"),               IDI_CANCEL }
 };
 
 VOID IcoLibInit()
 {
-	SKINICONDESC sid;
 	TCHAR destfile[MAX_PATH];
-		
 	GetModuleFileName(hInst, destfile, MAX_PATH);
 
+	SKINICONDESC sid = { 0 };
 	sid.cbSize = sizeof(sid);
-	sid.flags = SIDF_ALL_TCHAR;
+	sid.flags = SIDF_PATH_TCHAR;
 	sid.cx = sid.cy = 16;
 	sid.ptszDefaultFile = destfile;
-	sid.ptszSection = MODULE;
+	sid.pszSection = MODNAME;
 
-	for (int i = 0; i < SIZEOF(iconList); i++)
-	{
+	for (int i = 0; i < SIZEOF(iconList); i++) {
 		sid.pszName = iconList[i].szIconName;
-		sid.ptszDescription = iconList[i].tszDescr;
+		sid.pszDescription = iconList[i].szDescr;
 		sid.iDefaultIndex = -iconList[i].IconID;
 		Skin_AddIcon(&sid);
 	}
@@ -144,13 +148,9 @@ BOOL DownloadFile(LPCTSTR tszURL, LPCTSTR tszLocal)
 	nlhr.headers[3].szValue = "no-cache";
 
 	bool ret = false;
-	NETLIBHTTPREQUEST* pReply = NULL;
-	pReply = (NETLIBHTTPREQUEST*)CallService(MS_NETLIB_HTTPTRANSACTION, (WPARAM)hNetlibUser,(LPARAM)&nlhr);
-
-	if (pReply)
-	{
-		if ((200 == pReply->resultCode) && (pReply->dataLength > 0)) 
-		{
+	NETLIBHTTPREQUEST* pReply = (NETLIBHTTPREQUEST*)CallService(MS_NETLIB_HTTPTRANSACTION, (WPARAM)hNetlibUser,(LPARAM)&nlhr);
+	if (pReply) {
+		if ((200 == pReply->resultCode) && (pReply->dataLength > 0)) {
 			hFile = CreateFile(tszLocal, GENERIC_READ | GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 			WriteFile(hFile, pReply->pData, (DWORD)pReply->dataLength, &dwBytes, NULL);
 			ret = true;
@@ -190,13 +190,6 @@ BOOL IsPluginDisabled(TCHAR* filename)
 	return res;
 }
 
-/*INT getVer(const TCHAR* verStr)
-{
-	INT v1 = 0, v2 = 0, v3 = 0, v4 = 0;
-	_stscanf(verStr, _T("%d.%d.%d.%d"), &v1, &v2, &v3, &v4);
-	return v1*1000000 + v2*10000 + v3*1000 + v4;
-}*/
-
 static void CheckUpdates(void *)
 {
 	TCHAR tszBuff[2048] = {0}, /*tszFileInfo[30] = {0},*/ tszTmpIni[MAX_PATH] = {0};
@@ -211,12 +204,10 @@ static void CheckUpdates(void *)
 	Reminder = DBGetContactSettingByte(NULL, MODNAME, "Reminder", DEFAULT_REMINDER);
 
 	// Load files info
-	if (DBGetContactSettingTString(NULL, MODNAME, "UpdateURL", &dbVar))// URL is not set
-	{
+	if (DBGetContactSettingTString(NULL, MODNAME, "UpdateURL", &dbVar)) { // URL is not set 
 		LPCTSTR Title=TranslateT("Pack Updater");
 		LPCTSTR Text = TranslateT("URL for checking updates not found.");
-		if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL, MODNAME, "Popups1", DEFAULT_POPUP_ENABLED))
-		{
+		if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL, MODNAME, "Popups1", DEFAULT_POPUP_ENABLED)) {
 			Number = 1;
 			show_popup(0, Title, Text, Number, 0);
 		}
@@ -239,8 +230,7 @@ static void CheckUpdates(void *)
 	temp.Text = TranslateT("Downloading version info...");
 	DlgDownloadProc(pFileUrl, temp);
 	mir_free(pFileUrl);
-	if (!DlgDld)
-	{
+	if (!DlgDld) {
 		CheckThread = NULL;
 		return;
 	}
@@ -252,20 +242,16 @@ static void CheckUpdates(void *)
 
 	hFind = FindFirstFile(dirname, &ffd);
 	mir_free(dirname);
-	while( hFind != INVALID_HANDLE_VALUE ) 
-	{
-		if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && !lstrcmp(&ffd.cFileName[lstrlen(ffd.cFileName)-4], _T(".dll")))
-		{
+	while( hFind != INVALID_HANDLE_VALUE ) {
+		if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && !lstrcmp(&ffd.cFileName[lstrlen(ffd.cFileName)-4], _T(".dll"))) {
 			TCHAR *plugname = ffd.cFileName;
 			FILEINFO FileInfo = {_T(""), _T(""), _T(""), _T(""), _T(""), _T(""), {_T(""), _T("")}};
 
 			//dbVar.ptszVal = NULL;
 			//mir_snprintf(szKey, SIZEOF(szKey), "File_%d_CurrentVersion", CurrentFile + 1);
 			if (!DBGetContactSettingTString(NULL, MODNAME, _T2A(ffd.cFileName), &dbVar))
-			{
 				//считать хэш файла
 				lstrcpyn(FileInfo.curhash, _T(""), SIZEOF(FileInfo.curhash));
-			}
 			else
 				lstrcpyn(FileInfo.curhash, dbVar.ptszVal, SIZEOF(FileInfo.curhash));
 			DBFreeVariant(&dbVar);
@@ -277,20 +263,17 @@ static void CheckUpdates(void *)
 			GetPrivateProfileString(ffd.cFileName, _T("Hash"), _T(""), FileInfo.newhash, SIZEOF(FileInfo.newhash), tszTmpIni);
 
 			// Compare versions
-			if (lstrcmp(FileInfo.curhash, FileInfo.newhash)) // Yeah, we've got new version.
-			{
+			if (lstrcmp(FileInfo.curhash, FileInfo.newhash)) { // Yeah, we've got new version.
 				GetPrivateProfileString(ffd.cFileName, _T("Message"), _T(""), FileInfo.tszMessage, SIZEOF(FileInfo.tszMessage), tszTmpIni);
 				GetPrivateProfileString(ffd.cFileName, _T("DownloadURL"), _T(""), FileInfo.File.tszDownloadURL, SIZEOF(FileInfo.File.tszDownloadURL), tszTmpIni);
 				GetPrivateProfileString(ffd.cFileName, _T("AdvFolder"), _T(""), FileInfo.tszAdvFolder, SIZEOF(FileInfo.tszAdvFolder), tszTmpIni);
 				GetPrivateProfileString(ffd.cFileName, _T("Descr"), _T(""), FileInfo.tszDescr, SIZEOF(FileInfo.tszDescr), tszTmpIni);
 				GetPrivateProfileString(ffd.cFileName, _T("DiskFileName"), _T(""), tszBuff, MAX_PATH, tszTmpIni);
 
-				if (_tcsstr(tszBuff, _T("\\"))) //check update name
-				{
+				if ( _tcsstr(tszBuff, _T("\\"))) { //check update name
 					LPCTSTR Title = TranslateT("Pack Updater");
 					LPCTSTR Text = TranslateT("Name of Update's file is not supported.");
-					if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) &&  DBGetContactSettingByte(NULL, MODNAME, "Popups1", DEFAULT_POPUP_ENABLED))
-					{
+					if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL, MODNAME, "Popups1", DEFAULT_POPUP_ENABLED)) {
 						Number = 1;
 						show_popup(0, Title, Text, Number, 0);
 					}
@@ -304,8 +287,7 @@ static void CheckUpdates(void *)
 				FileInfo.Force = GetPrivateProfileInt(ffd.cFileName, _T("Force"), 0, tszTmpIni);
 				//FileInfo.FileNum = CurrentFile+1;
 
-				if (FileInfo.FileType == 2)
-				{
+				if (FileInfo.FileType == 2) {
 					TCHAR pluginFolgerName[MAX_PATH];
 					if (!lstrcmp(FileInfo.tszAdvFolder, _T("")))
 						mir_sntprintf(tszBuff, SIZEOF(tszBuff), _T("Plugins\\%s"), FileInfo.File.tszDiskPath);
@@ -318,52 +300,49 @@ static void CheckUpdates(void *)
 				TCHAR* tszSysRoot = Utils_ReplaceVarsT(_T("%SystemRoot%"));
 				TCHAR* tszProgFiles = Utils_ReplaceVarsT(_T("%ProgramFiles%"));
 
-				if (FileInfo.FileType != 1 && !IsUserAnAdmin() && (_tcsstr(tszRoot, tszSysRoot) || _tcsstr(tszRoot, tszProgFiles)))
-				{
+				if (FileInfo.FileType != 1 && !IsUserAnAdmin() && (_tcsstr(tszRoot, tszSysRoot) || _tcsstr(tszRoot, tszProgFiles))) {
 					LPCTSTR Title = TranslateT("Pack Updater");
 					MessageBox(NULL, TranslateT("Update is not possible!\nYou have no Administrator's rights.\nPlease run Miranda IM with Administrator's rights."), Title, MB_ICONINFORMATION);
 					DeleteFile(tszTmpIni);
 					CheckThread = NULL;
 					return;
 				} // user have not admin's rights
-				else
-				{
+				else {
 					//добавить проверку на существование файла
 					TCHAR tszFilePathDest[MAX_PATH] = {0};
 					TCHAR* tszUtilRootPlug = NULL; 
 					TCHAR* tszUtilRootIco = NULL;
 					TCHAR* tszUtilRoot = NULL;
 
-					switch (FileInfo.FileType)
-					{
-						case 0:
-						case 1:
-							break;
-						case 2:
-							tszUtilRootPlug = Utils_ReplaceVarsT(_T("%miranda_path%\\Plugins"));
-							if (lstrcmp(FileInfo.tszAdvFolder, _T("")) == 0)
-								mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootPlug, FileInfo.File.tszDiskPath);
-							else
-								mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootPlug, FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
-							mir_free(tszUtilRootPlug);
-							break;
-						case 3:
-							tszUtilRootIco = Utils_ReplaceVarsT(_T("%miranda_path%\\Icons"));
-							if (lstrcmp(FileInfo.tszAdvFolder, _T("")) == 0)
-								mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootIco, FileInfo.File.tszDiskPath);
-							else
-								mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootIco, FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
-							mir_free(tszUtilRootIco);
-							break;
-						case 4:
-						case 5:
-							tszUtilRoot = Utils_ReplaceVarsT(_T("%miranda_path%"));
-							if (lstrcmp(FileInfo.tszAdvFolder, _T("")) == 0)
-								mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRoot, FileInfo.File.tszDiskPath);
-							else
-								mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRoot, FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
-							mir_free(tszUtilRoot);
-							break;
+					switch (FileInfo.FileType) {
+					case 0:
+					case 1:
+						break;
+					case 2:
+						tszUtilRootPlug = Utils_ReplaceVarsT(_T("%miranda_path%\\Plugins"));
+						if (lstrcmp(FileInfo.tszAdvFolder, _T("")) == 0)
+							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootPlug, FileInfo.File.tszDiskPath);
+						else
+							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootPlug, FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
+						mir_free(tszUtilRootPlug);
+						break;
+					case 3:
+						tszUtilRootIco = Utils_ReplaceVarsT(_T("%miranda_path%\\Icons"));
+						if (lstrcmp(FileInfo.tszAdvFolder, _T("")) == 0)
+							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootIco, FileInfo.File.tszDiskPath);
+						else
+							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootIco, FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
+						mir_free(tszUtilRootIco);
+						break;
+					case 4:
+					case 5:
+						tszUtilRoot = Utils_ReplaceVarsT(_T("%miranda_path%"));
+						if (lstrcmp(FileInfo.tszAdvFolder, _T("")) == 0)
+							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRoot, FileInfo.File.tszDiskPath);
+						else
+							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRoot, FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
+						mir_free(tszUtilRoot);
+						break;
 					}//end* switch (Files[CurrentFile].FileType)
 
 					if (FileInfo.Force || Exists(tszFilePathDest))
@@ -375,7 +354,6 @@ static void CheckUpdates(void *)
 				mir_free(tszSysRoot);
 				mir_free(tszProgFiles);
 			} // end compare versions
-
 		}
 
 		if (!FindNextFile(hFind, &ffd ))
@@ -383,47 +361,32 @@ static void CheckUpdates(void *)
 	}
 	FindClose(hFind);
 
-
 	// Show dialog
 	if (UpdateFiles.size()>0)
 		upd_ret = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_UPDATE), GetDesktopWindow(), DlgUpdate, (LPARAM)&UpdateFiles);
 	DeleteFile(tszTmpIni);
-	if (upd_ret == IDCANCEL)
-	{
+	if (upd_ret == IDCANCEL) {
 		CheckThread = NULL;
 		return;
 	}
-	if (!UpdatesCount && !Silent)
-	{
+
+	if (!UpdatesCount && !Silent) {
 		LPCTSTR Title = TranslateT("Pack Updater");
 		LPCTSTR Text = TranslateT("No updates found.");
-		if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) &&  DBGetContactSettingByte(NULL, MODNAME, "Popups2", DEFAULT_POPUP_ENABLED))
-		{
+		if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) &&  DBGetContactSettingByte(NULL, MODNAME, "Popups2", DEFAULT_POPUP_ENABLED)) {
 			Number = 2;
 			show_popup(0, Title, Text, Number, 0);
 		}
 		else if (DBGetContactSettingByte(NULL, MODNAME, "Popups2M", DEFAULT_MESSAGE_ENABLED))
 			MessageBox(NULL, Text, Title, MB_ICONINFORMATION);
 	}
-	/*if (!FileCount)
-	{
-		Title = TranslateT("Pack Updater");
-		Text = TranslateT("No files for update.");
-		if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) &&  DBGetContactSettingByte(NULL, MODNAME, "Popups2", DEFAULT_POPUP_ENABLED))
-		{
-			Number = 2;
-			show_popup(0, Title, Text, Number, 0);
-		}
-		else if (DBGetContactSettingByte(NULL, MODNAME, "Popups2M", DEFAULT_MESSAGE_ENABLED))
-			MessageBox(NULL, Text, Title, MB_ICONINFORMATION);
-	}*/
+
 	CheckThread = NULL;
-}//end* static void CheckUpdates(void *)
+}
 
 void DoCheck(int iFlag, int iFlag2)
 {
-	if (iFlag2)
-	{
+	if (iFlag2) {
 		LPCTSTR Title = TranslateT("Pack Updater");
 		LPCTSTR Text = TranslateT("Update checking already started!");
 		if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) &&  DBGetContactSettingByte(NULL, MODNAME, "Popups2", DEFAULT_POPUP_ENABLED))
@@ -434,8 +397,7 @@ void DoCheck(int iFlag, int iFlag2)
 		else if (DBGetContactSettingByte(NULL, MODNAME, "Popups2M", DEFAULT_MESSAGE_ENABLED))
 			MessageBox(NULL, Text, Title, MB_ICONINFORMATION);
 	}
-	else if (iFlag)
-	{
+	else if (iFlag) {
 		CheckThread = mir_forkthread(CheckUpdates, 0);
 		DBWriteContactSettingDword(NULL, MODNAME, "LastUpdate", time(NULL));
 	}
@@ -443,8 +405,7 @@ void DoCheck(int iFlag, int iFlag2)
 
 BOOL AllowUpdateOnStartup()
 {
-	if(OnlyOnceADay)
-	{
+	if (OnlyOnceADay) {
 		time_t now = time(NULL);
 		time_t was = DBGetContactSettingDword(NULL, MODNAME, "LastUpdate", 0);
 
@@ -457,19 +418,18 @@ BOOL AllowUpdateOnStartup()
 LONG PeriodToMilliseconds(const INT period, BYTE& periodMeasure)
 {
 	LONG result = period * 1000;
-	switch(periodMeasure)
-	{
-		case 1:
-			// day
-			result *= 60 * 60 * 24;
-			break;
+	switch(periodMeasure) {
+	case 1:
+		// day
+		result *= 60 * 60 * 24;
+		break;
 
-		default:
-			// hour
-			if(periodMeasure != 0)
-				periodMeasure = 0;
-			result *= 60 * 60;
-			break;
+	default:
+		// hour
+		if(periodMeasure != 0)
+			periodMeasure = 0;
+		result *= 60 * 60;
+		break;
 	}
 	return result;
 }
@@ -482,8 +442,7 @@ VOID CALLBACK TimerAPCProc(LPVOID lpArg, DWORD dwTimerLowValue, DWORD dwTimerHig
 VOID InitTimer()
 {
 	CancelWaitableTimer(Timer);
-	if(UpdateOnPeriod)
-	{
+	if (UpdateOnPeriod) {
 		LONG interval = PeriodToMilliseconds(Period, PeriodMeasure);
 
 		_int64 qwDueTime = -10000i64 * interval;

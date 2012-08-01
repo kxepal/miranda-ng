@@ -79,13 +79,6 @@ struct FILEINFO
 	BYTE Force;
 };
 
-struct PackUpdaterIconList
-{
-	char*  szIconName;
-	TCHAR*  tszDescr;
-	int    IconID;
-};
-
 struct PopupDataText
 {
 	TCHAR*  Title;
@@ -115,7 +108,7 @@ extern BYTE Reminder, UpdateOnStartup, UpdateOnPeriod, OnlyOnceADay, PeriodMeasu
 extern TCHAR tszRoot[MAX_PATH], tszDialogMsg[2048];
 extern FILEINFO* pFileInfo;
 //extern FILEURL* pFileUrl;
-extern HANDLE CheckThread, hOnPreShutdown, hOptHook, hLoadHook;
+extern HANDLE CheckThread;
 extern MYOPTIONS MyOptions;
 extern aPopups PopupsList[POPUPS];
 extern HANDLE Timer;
