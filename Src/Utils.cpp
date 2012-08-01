@@ -32,6 +32,11 @@ HANDLE CheckThread = NULL, hNetlibUser = NULL;
 MYOPTIONS MyOptions = {0};
 aPopups PopupsList[POPUPS];
 
+int CalculateModuleHash(const TCHAR* tszFileName, char* dest);
+
+typedef map<string, string> hashMap;
+typedef pair<string, string> hashItem;
+
 struct
 {
 	char*  szIconName;
@@ -182,12 +187,79 @@ BOOL Exists(LPCTSTR strName)
 	return GetFileAttributes(strName) != INVALID_FILE_ATTRIBUTES;
 }
 
-BOOL IsPluginDisabled(TCHAR* filename)
+BOOL IsPluginDisabled(const char *filename)
 {
-	char* fname = mir_t2a(filename);
-	int res = DBGetContactSettingByte(NULL, "PluginDisable", fname, 0);
-	mir_free(fname);
-	return res;
+	return DBGetContactSettingByte(NULL, "PluginDisable", filename, 0);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+static void ScanFolder(const TCHAR* tszFolder, hashMap& hashes, vector<FILEINFO>& UpdateFiles)
+{
+	TCHAR tszMask[MAX_PATH];
+	mir_sntprintf(tszMask, SIZEOF(tszMask), _T("%s\\*"), tszFolder);
+
+	WIN32_FIND_DATA ffd;
+	HANDLE hFind = FindFirstFile(tszMask, &ffd);
+	if (hFind == INVALID_HANDLE_VALUE)
+		return;
+
+	do {
+		if (!_tcscmp(ffd.cFileName, _T(".")) || !_tcscmp(ffd.cFileName, _T("..")))
+			continue;
+
+		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+			mir_sntprintf(tszMask, SIZEOF(tszMask), _T("%s\\%s"), tszFolder, ffd.cFileName);
+			ScanFolder(tszMask, hashes, UpdateFiles);
+			continue;
+		}
+
+		TCHAR *p = _tcsrchr(ffd.cFileName, '.');
+		if (!p) continue;
+		if ( _tcsicmp(p, _T(".dll")) && _tcsicmp(p, _T(".exe")))
+			continue;
+
+		char szFileName[MAX_PATH];
+		strncpy(szFileName, _T2A(ffd.cFileName), SIZEOF(szFileName));
+		if ( IsPluginDisabled(szFileName)) //check if plugin disabled
+			continue;
+
+		TCHAR *plugname = ffd.cFileName;
+		FILEINFO FileInfo = { 0 };
+		DBVARIANT dbv;
+		if ( !DBGetContactSettingString(NULL, MODNAME, szFileName, &dbv)) {
+			//считать хэш файла
+			lstrcpynA(FileInfo.curhash, dbv.pszVal, SIZEOF(FileInfo.curhash));
+			_strlwr(FileInfo.curhash);
+			DBFreeVariant(&dbv);
+		}
+		else {
+			mir_sntprintf(tszMask, SIZEOF(tszMask), _T("%s\\%s"), tszFolder, ffd.cFileName);
+			CalculateModuleHash(tszMask, FileInfo.curhash);
+			DBWriteContactSettingString(NULL, MODNAME, szFileName, FileInfo.curhash);
+		}
+
+		// Read version info
+		hashMap::iterator boo = hashes.find(szFileName);
+		if (boo == hashes.end())
+			continue;
+
+		strncpy(FileInfo.newhash, boo->second.c_str(), SIZEOF(FileInfo.newhash));
+
+		// Compare versions
+		if ( strcmp(FileInfo.curhash, FileInfo.newhash)) { // Yeah, we've got new version.
+			_tcscpy(FileInfo.tszDescr, ffd.cFileName);
+			mir_sntprintf(FileInfo.File.tszDiskPath, SIZEOF(FileInfo.File.tszDiskPath), _T("%s\\%s"), tszFolder, ffd.cFileName);
+
+			*p = 0;
+			mir_sntprintf(FileInfo.File.tszDownloadURL, SIZEOF(FileInfo.File.tszDownloadURL), _T("%s/%s.zip"), _T(DEFAULT_UPDATE_URL), ffd.cFileName);
+
+			UpdateFiles.push_back(FileInfo);
+		} // end compare versions
+	}
+		while (FindNextFile(hFind, &ffd) != 0);
+
+	FindClose(hFind);
 }
 
 static void CheckUpdates(void *)
@@ -235,136 +307,31 @@ static void CheckUpdates(void *)
 		return;
 	}
 
+	FILE* fp = _tfopen(tszTmpIni, _T("r"));
+	if (!fp)
+		return;
 
-	WIN32_FIND_DATA ffd;
-	TCHAR *dirname = Utils_ReplaceVarsT(_T("%miranda_path%\\Plugins\\*"));
-	HANDLE hFind = INVALID_HANDLE_VALUE;
+	hashMap hashes;
+	char str[200];
+	while(fgets(str, SIZEOF(str), fp) != NULL) {
+		char* p = strchr(str, ' ');
+		if (p == NULL)
+			continue;
 
-	hFind = FindFirstFile(dirname, &ffd);
-	mir_free(dirname);
-	while( hFind != INVALID_HANDLE_VALUE ) {
-		if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && !lstrcmp(&ffd.cFileName[lstrlen(ffd.cFileName)-4], _T(".dll"))) {
-			TCHAR *plugname = ffd.cFileName;
-			FILEINFO FileInfo = {_T(""), _T(""), _T(""), _T(""), _T(""), _T(""), {_T(""), _T("")}};
-
-			//dbVar.ptszVal = NULL;
-			//mir_snprintf(szKey, SIZEOF(szKey), "File_%d_CurrentVersion", CurrentFile + 1);
-			if (!DBGetContactSettingTString(NULL, MODNAME, _T2A(ffd.cFileName), &dbVar))
-				//считать хэш файла
-				lstrcpyn(FileInfo.curhash, _T(""), SIZEOF(FileInfo.curhash));
-			else
-				lstrcpyn(FileInfo.curhash, dbVar.ptszVal, SIZEOF(FileInfo.curhash));
-			DBFreeVariant(&dbVar);
-			//dbVar.ptszVal = NULL;
-			//Files.push_back(FileInfo);
-
-			// Read version info
-			//mir_sntprintf(tszFileInfo, SIZEOF(tszFileInfo), _T("FileInfo_%d"), CurrentFile + 1);
-			GetPrivateProfileString(ffd.cFileName, _T("Hash"), _T(""), FileInfo.newhash, SIZEOF(FileInfo.newhash), tszTmpIni);
-
-			// Compare versions
-			if (lstrcmp(FileInfo.curhash, FileInfo.newhash)) { // Yeah, we've got new version.
-				GetPrivateProfileString(ffd.cFileName, _T("Message"), _T(""), FileInfo.tszMessage, SIZEOF(FileInfo.tszMessage), tszTmpIni);
-				GetPrivateProfileString(ffd.cFileName, _T("DownloadURL"), _T(""), FileInfo.File.tszDownloadURL, SIZEOF(FileInfo.File.tszDownloadURL), tszTmpIni);
-				GetPrivateProfileString(ffd.cFileName, _T("AdvFolder"), _T(""), FileInfo.tszAdvFolder, SIZEOF(FileInfo.tszAdvFolder), tszTmpIni);
-				GetPrivateProfileString(ffd.cFileName, _T("Descr"), _T(""), FileInfo.tszDescr, SIZEOF(FileInfo.tszDescr), tszTmpIni);
-				GetPrivateProfileString(ffd.cFileName, _T("DiskFileName"), _T(""), tszBuff, MAX_PATH, tszTmpIni);
-
-				if ( _tcsstr(tszBuff, _T("\\"))) { //check update name
-					LPCTSTR Title = TranslateT("Pack Updater");
-					LPCTSTR Text = TranslateT("Name of Update's file is not supported.");
-					if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL, MODNAME, "Popups1", DEFAULT_POPUP_ENABLED)) {
-						Number = 1;
-						show_popup(0, Title, Text, Number, 0);
-					}
-					else if (DBGetContactSettingByte(NULL, MODNAME, "Popups1M", DEFAULT_MESSAGE_ENABLED))
-						MessageBox(NULL, Text, Title, MB_ICONINFORMATION);
-					continue;
-				} // end check update name
-				lstrcpyn(FileInfo.File.tszDiskPath, tszBuff, SIZEOF(FileInfo.File.tszDiskPath));
-				GetPrivateProfileString(ffd.cFileName, _T("InfoURL"), _T(""), FileInfo.tszInfoURL, SIZEOF(FileInfo.tszInfoURL), tszTmpIni);
-				FileInfo.FileType = GetPrivateProfileInt(ffd.cFileName, _T("FileType"), 0, tszTmpIni);
-				FileInfo.Force = GetPrivateProfileInt(ffd.cFileName, _T("Force"), 0, tszTmpIni);
-				//FileInfo.FileNum = CurrentFile+1;
-
-				if (FileInfo.FileType == 2) {
-					TCHAR pluginFolgerName[MAX_PATH];
-					if (!lstrcmp(FileInfo.tszAdvFolder, _T("")))
-						mir_sntprintf(tszBuff, SIZEOF(tszBuff), _T("Plugins\\%s"), FileInfo.File.tszDiskPath);
-					else
-						mir_sntprintf(tszBuff, SIZEOF(tszBuff), _T("Plugins\\%s\\%s"), FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
-					CallService(MS_UTILS_PATHTOABSOLUTET, (WPARAM)tszBuff, (LPARAM)pluginFolgerName);
-					if ((IsPluginDisabled(FileInfo.File.tszDiskPath) || !Exists(pluginFolgerName))) //check if plugin disabled or not exists
-						continue;
-				}
-				TCHAR* tszSysRoot = Utils_ReplaceVarsT(_T("%SystemRoot%"));
-				TCHAR* tszProgFiles = Utils_ReplaceVarsT(_T("%ProgramFiles%"));
-
-				if (FileInfo.FileType != 1 && !IsUserAnAdmin() && (_tcsstr(tszRoot, tszSysRoot) || _tcsstr(tszRoot, tszProgFiles))) {
-					LPCTSTR Title = TranslateT("Pack Updater");
-					MessageBox(NULL, TranslateT("Update is not possible!\nYou have no Administrator's rights.\nPlease run Miranda IM with Administrator's rights."), Title, MB_ICONINFORMATION);
-					DeleteFile(tszTmpIni);
-					CheckThread = NULL;
-					return;
-				} // user have not admin's rights
-				else {
-					//добавить проверку на существование файла
-					TCHAR tszFilePathDest[MAX_PATH] = {0};
-					TCHAR* tszUtilRootPlug = NULL; 
-					TCHAR* tszUtilRootIco = NULL;
-					TCHAR* tszUtilRoot = NULL;
-
-					switch (FileInfo.FileType) {
-					case 0:
-					case 1:
-						break;
-					case 2:
-						tszUtilRootPlug = Utils_ReplaceVarsT(_T("%miranda_path%\\Plugins"));
-						if (lstrcmp(FileInfo.tszAdvFolder, _T("")) == 0)
-							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootPlug, FileInfo.File.tszDiskPath);
-						else
-							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootPlug, FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
-						mir_free(tszUtilRootPlug);
-						break;
-					case 3:
-						tszUtilRootIco = Utils_ReplaceVarsT(_T("%miranda_path%\\Icons"));
-						if (lstrcmp(FileInfo.tszAdvFolder, _T("")) == 0)
-							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootIco, FileInfo.File.tszDiskPath);
-						else
-							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootIco, FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
-						mir_free(tszUtilRootIco);
-						break;
-					case 4:
-					case 5:
-						tszUtilRoot = Utils_ReplaceVarsT(_T("%miranda_path%"));
-						if (lstrcmp(FileInfo.tszAdvFolder, _T("")) == 0)
-							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRoot, FileInfo.File.tszDiskPath);
-						else
-							mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRoot, FileInfo.tszAdvFolder, FileInfo.File.tszDiskPath);
-						mir_free(tszUtilRoot);
-						break;
-					}//end* switch (Files[CurrentFile].FileType)
-
-					if (FileInfo.Force || Exists(tszFilePathDest))
-						UpdateFiles.push_back(FileInfo);
-					// Save last version
-					//убрать отсюда
-					DBWriteContactSettingTString(NULL, MODNAME, _T2A(ffd.cFileName), FileInfo.newhash);
-				} // user have admin's rights
-				mir_free(tszSysRoot);
-				mir_free(tszProgFiles);
-			} // end compare versions
-		}
-
-		if (!FindNextFile(hFind, &ffd ))
-			break;
+		*p++ = 0;
+		_strlwr(p);
+		hashes[str] = p;
 	}
-	FindClose(hFind);
+	fclose(fp);
+	DeleteFile(tszTmpIni);
+
+	TCHAR *dirname = Utils_ReplaceVarsT(_T("%miranda_path%"));
+	ScanFolder(dirname, hashes, UpdateFiles);
+	mir_free(dirname);
 
 	// Show dialog
-	if (UpdateFiles.size()>0)
+	if (UpdateFiles.size() > 0)
 		upd_ret = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_UPDATE), GetDesktopWindow(), DlgUpdate, (LPARAM)&UpdateFiles);
-	DeleteFile(tszTmpIni);
 	if (upd_ret == IDCANCEL) {
 		CheckThread = NULL;
 		return;

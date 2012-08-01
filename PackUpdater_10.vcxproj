@@ -173,6 +173,7 @@
     <ClInclude Include="src\Version.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\checksum.cpp" />
     <ClCompile Include="Src\Events.cpp" />
     <ClCompile Include="Src\Notifications.cpp" />
     <ClCompile Include="Src\Options.cpp" />

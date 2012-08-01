@@ -211,6 +211,140 @@ void DlgDownloadProc(FILEURL *pFileUrl, PopupDataText temp)
 	DestroyWindow(hDlgDld);
 }
 
+static void ApplyUpdates(HWND hDlg)
+{
+	vector<FILEINFO> &todo = *(vector<FILEINFO> *)GetWindowLongPtr(hDlg, GWLP_USERDATA);
+	ShowWindow(hDlg, SW_HIDE);
+	TCHAR tszBuff[2048], tszFileDest[MAX_PATH], tszFileBack[MAX_PATH];
+
+	SetWindowLongPtr(hDlg, GWLP_USERDATA, 0);
+	Utils_SaveWindowPosition(hDlg, NULL, MODNAME, "ConfirmWindow");
+
+	mir_sntprintf(tszFileBack, SIZEOF(tszFileBack), _T("%s\\Backups"), tszRoot);
+	CreateDirectory(tszFileBack, NULL);
+
+	for(size_t i=0; i < todo.size(); ++i) {
+		if ( !todo[i].enabled) {
+			todo.erase( todo.begin() + i);
+			i--;
+			continue;
+		}
+		
+		UpdatesCount++;
+
+		// download update
+		FILEURL *pFileUrl = &todo[i].File;
+		PopupDataText temp;
+		temp.Title = TranslateT("Pack Updater");
+		if (todo[i].FileType == 1)
+			temp.Text = TranslateT("Downloading pack updates...");
+		else
+			temp.Text = TranslateT("Downloading update...");
+		DlgDownloadProc(pFileUrl, temp);
+		if (!DlgDld) {
+			if (UpdatesCount)
+				UpdatesCount--;
+			continue;
+		}
+	}
+
+	if (UpdatesCount == 0)
+		return;
+
+	INT rc = -1;
+	PopupDataText temp;
+	temp.Title = TranslateT("Pack Updater");
+	temp.Text = tszBuff;
+	lstrcpyn(tszBuff, TranslateT("Download complete. Start updating? All your data will be saved and Miranda IM will be closed."), SIZEOF(tszBuff));
+	if (ServiceExists(MS_POPUP_ADDPOPUPEX) && ServiceExists(MS_POPUP_REGISTERACTIONS) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL,MODNAME, "Popups0", DEFAULT_POPUP_ENABLED) && (DBGetContactSettingDword(NULL, "PopUp", "Actions", 0) & 1))
+		rc = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_POPUPDUMMI), NULL, DlgMsgPop, (LPARAM)&temp);
+	else
+		rc = MessageBox(NULL, temp.Text, temp.Title, MB_YESNO | MB_ICONQUESTION);
+	if (rc != IDYES) {
+		mir_sntprintf(tszBuff, SIZEOF(tszBuff), TranslateT("You have chosen not to install the pack update immediately.\nYou can install it manually from this location:\n\n%s"), tszFileBack);
+		LPCTSTR Title = TranslateT("Pack Updater");
+		LPCTSTR Text = tszBuff;
+		if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL, MODNAME, "Popups2", DEFAULT_POPUP_ENABLED)) {
+			Number = 2;
+			show_popup(0, Title, Text, Number, 0);
+		}
+		else if (DBGetContactSettingByte(NULL, MODNAME, "Popups2M", DEFAULT_MESSAGE_ENABLED))
+			MessageBox(NULL, Text, Title, MB_ICONINFORMATION);
+		return;
+	}
+
+	for (int i = 0; i < UpdatesCount; i++) {
+		TCHAR* tszUtilRootPlug = NULL; 
+		TCHAR* tszUtilRootIco = NULL;
+		TCHAR* tszUtilRoot = NULL;
+
+		switch (arFileType[i]) {
+		case 0:
+			break;
+		case 1:
+			if (Reminder == 2)
+				DBWriteContactSettingByte(NULL, MODNAME, "Reminder", 1);
+			memset(&si, 0, sizeof(STARTUPINFO));
+			memset(&pi, 0, sizeof(PROCESS_INFORMATION));
+			si.cb = sizeof(STARTUPINFO);
+			CreateProcess(arFilePath[i].c_str(), _T(""), NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi);
+			i = UpdatesCount;
+			CallFunctionAsync(ExitMe, 0);
+			break;
+		case 2:
+			tszUtilRootPlug = Utils_ReplaceVarsT(_T("%miranda_path%\\Plugins"));
+			if (lstrcmp(arAdvFolder[i].c_str(), _T("")) == 0)
+				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootPlug, arFileName[i].c_str());
+			else
+				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootPlug, arAdvFolder[i].c_str(), arFileName[i].c_str());
+			mir_sntprintf(tszFilePathBack, SIZEOF(tszFilePathBack), _T("%s\\Backups\\%s"), tszRoot, arFileName[i].c_str());
+			MoveFile(tszFilePathDest, tszFilePathBack);
+			MoveFile(arFilePath[i].c_str(), tszFilePathDest);
+			mir_free(tszUtilRootPlug);
+			if (i == UpdatesCount - 1)
+				CallFunctionAsync(RestartMe, 0);
+			break;
+		case 3:
+			tszUtilRootIco = Utils_ReplaceVarsT(_T("%miranda_path%\\Icons"));
+			if (lstrcmp(arAdvFolder[i].c_str(), _T("")) == 0)
+				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootIco, arFileName[i].c_str());
+			else
+				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootIco, arAdvFolder[i].c_str(), arFileName[i].c_str());
+			mir_sntprintf(tszFilePathBack, SIZEOF(tszFilePathBack), _T("%s\\Backups\\%s"), tszRoot, arFileName[i].c_str());
+			MoveFile(tszFilePathDest, tszFilePathBack);
+			MoveFile(arFilePath[i].c_str(), tszFilePathDest);
+			mir_free(tszUtilRootIco);
+			if (i == UpdatesCount - 1)
+				CallFunctionAsync(RestartMe, 0);
+			break;
+		case 4:
+			tszUtilRoot = Utils_ReplaceVarsT(_T("%miranda_path%"));
+			if (lstrcmp(arAdvFolder[i].c_str(), _T("")) == 0)
+				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRoot, arFileName[i].c_str());
+			else
+				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRoot, arAdvFolder[i].c_str(), arFileName[i].c_str());
+			mir_sntprintf(tszFilePathBack, SIZEOF(tszFilePathBack), _T("%s\\Backups\\%s"), tszRoot, arFileName[i].c_str());
+			MoveFile(tszFilePathDest, tszFilePathBack);
+			MoveFile(arFilePath[i].c_str(), tszFilePathDest);
+			mir_free(tszUtilRoot);
+			if (i == UpdatesCount - 1)
+				CallFunctionAsync(RestartMe, 0);
+			break;
+		case 5:
+			tszUtilRoot = Utils_ReplaceVarsT(_T("%miranda_path%"));
+			if (lstrcmp(arAdvFolder[i].c_str(), _T("")) == 0)
+				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRoot, arFileName[i].c_str());
+			else
+				mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRoot, arAdvFolder[i].c_str(), arFileName[i].c_str());
+			mir_sntprintf(tszFilePathBack, SIZEOF(tszFilePathBack), _T("%s\\Backups\\%s"), tszRoot, arFileName[i].c_str());
+			MoveFile(tszFilePathDest, tszFilePathBack);
+			MoveFile(arFilePath[i].c_str(), tszFilePathDest);
+			mir_free(tszUtilRoot);
+			break;
+		}
+	}
+}
+
 INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	HWND hwndList = GetDlgItem(hDlg, IDC_LIST_UPDATES);
@@ -221,27 +355,20 @@ INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 		SetWindowLongPtr(hDlg, GWLP_USERDATA, 0);
 		SendMessage(hwndList, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, LVS_EX_FULLROWSELECT | LVS_EX_CHECKBOXES);
 		{
+			RECT r;
+			GetClientRect(hwndList, &r);
+
 			LVCOLUMN lvc = {0};
 			// Initialize the LVCOLUMN structure.
 			// The mask specifies that the format, width, text, and
 			// subitem members of the structure are valid.
-			lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+			lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
 			lvc.fmt = LVCFMT_LEFT;
 
 			lvc.iSubItem = 0;
 			lvc.pszText = TranslateT("Component Name");
-			lvc.cx = 145; // width of column in pixels
+			lvc.cx = r.right - GetSystemMetrics(SM_CXVSCROLL); // width of column in pixels
 			ListView_InsertColumn(hwndList, 0, &lvc);
-
-			lvc.iSubItem = 1;
-			lvc.pszText = TranslateT("Current Version");
-			lvc.cx = 95; // width of column in pixels
-			ListView_InsertColumn(hwndList, 1, &lvc);
-
-			lvc.iSubItem = 2;
-			lvc.pszText = TranslateT("New Version");
-			lvc.cx = 82; // width of column in pixels
-			ListView_InsertColumn(hwndList, 2, &lvc);
 
 			//enumerate plugins, fill in list
 			//bool one_enabled = false;
@@ -262,16 +389,6 @@ INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 				lvI.pszText = todo[i].tszDescr;
 				lvI.iItem = i;
 				ListView_InsertItem(hwndList, &lvI);
-
-				lvI.mask = LVIF_TEXT;// | LVIF_IMAGE;
-
-				lvI.iSubItem = 1;
-				//lvI.pszText = todo[i].tszCurVer;
-				ListView_SetItem(hwndList, &lvI);
-
-				lvI.iSubItem = 2;
-				//lvI.pszText = todo[i].tszNewVer;
-				ListView_SetItem(hwndList, &lvI);
 
 				// remember whether the user has decided not to update this component with this particular new version
 				ListView_SetCheckState(hwndList, lvI.iItem, true);
@@ -312,13 +429,8 @@ INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 						HWND hwOk = GetDlgItem(hDlg, IDOK);
 						EnableWindow(hwOk, enableOk ? TRUE : FALSE);
 					}
-					if (nmlv->uNewState & LVIS_SELECTED) {
-						if (lstrcmp(todo[lvI.iItem].tszInfoURL, _T("")))
-							EnableWindow(GetDlgItem(hDlg, IDC_INFO), TRUE);
-						else
-							EnableWindow(GetDlgItem(hDlg, IDC_INFO), FALSE);
-						SetDlgItemText(hDlg, IDC_MESSAGE, TranslateTS(todo[lvI.iItem].tszMessage));
-					}
+					if (nmlv->uNewState & LVIS_SELECTED)
+						EnableWindow(GetDlgItem(hDlg, IDC_INFO), FALSE);
 				}
 				break;
 			}
@@ -330,207 +442,19 @@ INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 			switch(LOWORD(wParam)) {
 			case IDOK:
 				{
-					vector<FILEINFO> &todo = *(vector<FILEINFO> *)GetWindowLongPtr(hDlg, GWLP_USERDATA);
-					ShowWindow(hDlg, SW_HIDE);
-					TCHAR tszBuff[2048] = {0}, tszFileDest[MAX_PATH] = {0}, tszFilePathDest[MAX_PATH] = {0}, tszFilePathBack[MAX_PATH] = {0}, tszFileName[MAX_PATH] = {0};
-					TCHAR* tszExt = NULL;
-					char szKey[64] = {0};
-					vector<int> arFileType;
-					vector<tString> arFilePath;
-					vector<tString> arFileName;
-					vector<tString> arAdvFolder;
-					vector<tString> arExt;
-					STARTUPINFO si;
-					PROCESS_INFORMATION pi;
-
-					SetWindowLongPtr(hDlg, GWLP_USERDATA, 0);
-					Utils_SaveWindowPosition(hDlg, NULL, MODNAME, "ConfirmWindow");
-
-					arFileType.clear();
-					arFilePath.clear();
-					arFileName.clear();
-					arAdvFolder.clear();
-					arExt.clear();
-					for(int i=0; i<(int)todo.size(); ++i) {
-						if(todo[i].enabled) {
-							switch (todo[i].FileType) {
-							case 1:
-								mir_sntprintf(tszFileDest, SIZEOF(tszFileDest), _T("%s\\Pack"), tszRoot);
-								CreateDirectory(tszFileDest, NULL);
-								break;
-							case 2:
-								mir_sntprintf(tszFileDest, SIZEOF(tszFileDest), _T("%s\\Plugins"), tszRoot);
-								CreateDirectory(tszFileDest, NULL);
-								break;
-							case 3:
-								mir_sntprintf(tszFileDest, SIZEOF(tszFileDest), _T("%s\\Icons"), tszRoot);
-								CreateDirectory(tszFileDest, NULL);
-								break;
-							case 4:
-								mir_sntprintf(tszFileDest, SIZEOF(tszFileDest), _T("%s\\Others"), tszRoot);
-								CreateDirectory(tszFileDest, NULL);
-								break;
-							case 5:
-								mir_sntprintf(tszFileDest, SIZEOF(tszFileDest), _T("%s\\Others"), tszRoot);
-								CreateDirectory(tszFileDest, NULL);
-								break;
-							default:
-								lstrcpyn(tszFileDest, tszRoot, SIZEOF(tszFileDest));
-								break;
-							}
-							mir_sntprintf(tszBuff, SIZEOF(tszBuff), _T("%s\\Backups"), tszRoot);
-							CreateDirectory(tszBuff, NULL);
-							lstrcpyn(tszFileName, todo[i].File.tszDiskPath, SIZEOF(tszFileName));
-							mir_sntprintf(todo[i].File.tszDiskPath, SIZEOF(todo[i].File.tszDiskPath), _T("%s\\%s"), tszFileDest, tszFileName);
-							UpdatesCount++;
-
-							tszExt = &todo[i].File.tszDownloadURL[lstrlen(todo[i].File.tszDownloadURL)-5];
-							if (lstrcmp(tszExt, _T(".html")) == 0) {
-								char* szUrl = mir_t2a(todo[i].File.tszDownloadURL);
-								CallService(MS_UTILS_OPENURL, TRUE, (LPARAM)szUrl);
-								mir_free(szUrl);
-							}
-							else {
-								// download update
-								FILEURL *pFileUrl = &todo[i].File;
-								PopupDataText temp;
-								temp.Title = TranslateT("Pack Updater");
-								if (todo[i].FileType == 1)
-									temp.Text = TranslateT("Downloading pack updates...");
-								else
-									temp.Text = TranslateT("Downloading update...");
-								DlgDownloadProc(pFileUrl, temp);
-								if (!DlgDld)
-								{
-									if (UpdatesCount)
-										UpdatesCount--;
-									continue;
-								}
-							}
-
-							arFileType.push_back(todo[i].FileType);
-							arFilePath.push_back(todo[i].File.tszDiskPath);
-							arFileName.push_back(tszFileName);
-							arAdvFolder.push_back(todo[i].tszAdvFolder);
-							arExt.push_back(tszExt);
-							if (todo[i].FileType == 1)
-								i = (int)todo.size();
-						}
-					}
-
-					if (UpdatesCount > 1 && lstrcmp(arExt[0].c_str(), _T(".html")) != 0)
-						lstrcpyn(tszBuff, TranslateT("Downloads complete. Start updating? All your data will be saved and Miranda IM will be closed."), SIZEOF(tszBuff));
-					else if (UpdatesCount == 1 && lstrcmp(arExt[0].c_str(), _T(".html")) != 0)
-						lstrcpyn(tszBuff, TranslateT("Download complete. Start updating? All your data will be saved and Miranda IM will be closed."), SIZEOF(tszBuff));
-					if (UpdatesCount > 0 && lstrcmp(arExt[0].c_str(), _T(".html")) != 0) {
-						INT rc = -1;
-						PopupDataText temp;
-						temp.Title = TranslateT("Pack Updater");
-						temp.Text = tszBuff;
-						if (ServiceExists(MS_POPUP_ADDPOPUPEX) && ServiceExists(MS_POPUP_REGISTERACTIONS) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL,MODNAME, "Popups0", DEFAULT_POPUP_ENABLED) && (DBGetContactSettingDword(NULL, "PopUp", "Actions", 0) & 1))
-							rc = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_POPUPDUMMI), NULL, DlgMsgPop, (LPARAM)&temp);
-						else
-							rc = MessageBox(NULL, temp.Text, temp.Title, MB_YESNO | MB_ICONQUESTION);
-						if (rc == IDYES) {
-							for (int i = 0; i < UpdatesCount; i++) {
-								TCHAR* tszUtilRootPlug = NULL; 
-								TCHAR* tszUtilRootIco = NULL;
-								TCHAR* tszUtilRoot = NULL;
-
-								switch (arFileType[i]) {
-								case 0:
-									break;
-								case 1:
-									if (Reminder == 2)
-										DBWriteContactSettingByte(NULL, MODNAME, "Reminder", 1);
-									memset(&si, 0, sizeof(STARTUPINFO));
-									memset(&pi, 0, sizeof(PROCESS_INFORMATION));
-									si.cb = sizeof(STARTUPINFO);
-									CreateProcess(arFilePath[i].c_str(), _T(""), NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi);
-									i = UpdatesCount;
-									CallFunctionAsync(ExitMe, 0);
-									break;
-								case 2:
-									tszUtilRootPlug = Utils_ReplaceVarsT(_T("%miranda_path%\\Plugins"));
-									if (lstrcmp(arAdvFolder[i].c_str(), _T("")) == 0)
-										mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootPlug, arFileName[i].c_str());
-									else
-										mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootPlug, arAdvFolder[i].c_str(), arFileName[i].c_str());
-									mir_sntprintf(tszFilePathBack, SIZEOF(tszFilePathBack), _T("%s\\Backups\\%s"), tszRoot, arFileName[i].c_str());
-									MoveFile(tszFilePathDest, tszFilePathBack);
-									MoveFile(arFilePath[i].c_str(), tszFilePathDest);
-									mir_free(tszUtilRootPlug);
-									if (i == UpdatesCount - 1)
-										CallFunctionAsync(RestartMe, 0);
-									break;
-								case 3:
-									tszUtilRootIco = Utils_ReplaceVarsT(_T("%miranda_path%\\Icons"));
-									if (lstrcmp(arAdvFolder[i].c_str(), _T("")) == 0)
-										mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRootIco, arFileName[i].c_str());
-									else
-										mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRootIco, arAdvFolder[i].c_str(), arFileName[i].c_str());
-									mir_sntprintf(tszFilePathBack, SIZEOF(tszFilePathBack), _T("%s\\Backups\\%s"), tszRoot, arFileName[i].c_str());
-									MoveFile(tszFilePathDest, tszFilePathBack);
-									MoveFile(arFilePath[i].c_str(), tszFilePathDest);
-									mir_free(tszUtilRootIco);
-									if (i == UpdatesCount - 1)
-										CallFunctionAsync(RestartMe, 0);
-									break;
-								case 4:
-									tszUtilRoot = Utils_ReplaceVarsT(_T("%miranda_path%"));
-									if (lstrcmp(arAdvFolder[i].c_str(), _T("")) == 0)
-										mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRoot, arFileName[i].c_str());
-									else
-										mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRoot, arAdvFolder[i].c_str(), arFileName[i].c_str());
-									mir_sntprintf(tszFilePathBack, SIZEOF(tszFilePathBack), _T("%s\\Backups\\%s"), tszRoot, arFileName[i].c_str());
-									MoveFile(tszFilePathDest, tszFilePathBack);
-									MoveFile(arFilePath[i].c_str(), tszFilePathDest);
-									mir_free(tszUtilRoot);
-									if (i == UpdatesCount - 1)
-										CallFunctionAsync(RestartMe, 0);
-									break;
-								case 5:
-									tszUtilRoot = Utils_ReplaceVarsT(_T("%miranda_path%"));
-									if (lstrcmp(arAdvFolder[i].c_str(), _T("")) == 0)
-										mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s"), tszUtilRoot, arFileName[i].c_str());
-									else
-										mir_sntprintf(tszFilePathDest, SIZEOF(tszFilePathDest), _T("%s\\%s\\%s"), tszUtilRoot, arAdvFolder[i].c_str(), arFileName[i].c_str());
-									mir_sntprintf(tszFilePathBack, SIZEOF(tszFilePathBack), _T("%s\\Backups\\%s"), tszRoot, arFileName[i].c_str());
-									MoveFile(tszFilePathDest, tszFilePathBack);
-									MoveFile(arFilePath[i].c_str(), tszFilePathDest);
-									mir_free(tszUtilRoot);
-									break;
-								}//end* switch (arFileType[i])
-							}//end* for (int i = 0; i < UpdatesCount; i++)
-						}//end* if (IDYES == MessageBox(NULL, tszBuff, Title, MB_YESNO | MB_ICONQUESTION))
-						else
-						{
-							//reminder for not installed pack update
-							if (Reminder && (UpdatesCount == 1) && (arFileType[0] == 1))
-								DBWriteContactSettingByte(NULL, MODNAME, "Reminder", 2);
-							mir_sntprintf(tszBuff, SIZEOF(tszBuff), TranslateT("You have chosen not to install the pack update immediately.\nYou can install it manually from this location:\n\n%s"), arFilePath[0].c_str());
-							LPCTSTR Title = TranslateT("Pack Updater");
-							LPCTSTR Text = tszBuff;
-							if (ServiceExists(MS_POPUP_ADDPOPUPEX) && DBGetContactSettingByte(NULL, "PopUp", "ModuleIsEnabled", 1) && DBGetContactSettingByte(NULL, MODNAME, "Popups2", DEFAULT_POPUP_ENABLED)) {
-								Number = 2;
-								show_popup(0, Title, Text, Number, 0);
-							}
-							else if (DBGetContactSettingByte(NULL, MODNAME, "Popups2M", DEFAULT_MESSAGE_ENABLED))
-								MessageBox(NULL, Text, Title, MB_ICONINFORMATION);
-						}
-					}//end* if (UpdatesCount > 0)
-
+					ApplyUpdates(hDlg);
 					EndDialog(hDlg, IDOK);
 					return TRUE;
 				}
 
 			case IDC_INFO:
 				{
-					int sel = ListView_GetSelectionMark(hwndList);
+					int sel = ListView_GetSelectionMark(hwndList); 
+					/*
 					vector<FILEINFO> &todo = *(vector<FILEINFO> *)GetWindowLongPtr(hDlg, GWLP_USERDATA);
 					char* szUrl = mir_t2a(todo[sel].tszInfoURL);
 					CallService(MS_UTILS_OPENURL, TRUE, (LPARAM)szUrl);
-					mir_free(szUrl);
+					mir_free(szUrl); */
 				}
 				break;
 

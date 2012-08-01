@@ -26,7 +26,9 @@ Boston, MA 02111-1307, USA.
 #include <stdio.h>
 #include <windows.h>
 #include <Windowsx.h>
-#include "vector"       // stl vector header
+#include <vector>       // stl vector header
+#include <map>
+#include <string>
 #include <Shlobj.h>
 
 // Miranda header files
@@ -39,6 +41,7 @@ Boston, MA 02111-1307, USA.
 #include <m_database.h>
 #include <m_utils.h>
 #include <m_system.h>
+#include <m_system_cpp.h>
 #include <m_popup.h>
 #include <m_hotkeys.h>
 #include <m_netlib.h>
@@ -66,11 +69,8 @@ struct FILEURL
 
 struct FILEINFO
 {
-	TCHAR curhash[32];
-	TCHAR newhash[32];
-	TCHAR tszAdvFolder[256];
-	TCHAR tszInfoURL[2048];
-	TCHAR tszMessage[5000];
+	char  curhash[32+1];
+	char  newhash[32+1];
 	TCHAR tszDescr[256];
 	FILEURL File;
 	BOOL enabled;
@@ -92,7 +92,12 @@ struct PopupDataText
 #define DEFAULT_PERIOD						1
 #define DEFAULT_PERIODMEASURE				1
 #define DEFAULT_FILETYPE					0 //0 - not defined, 1 - pack, 2 - plugin, 3 - icon, 4 - files in miranda root (e.g. langpack, dbtool), 5 - same as 4 without restart
-#define DEFAULT_UPDATE_URL					"http://nightly.miranda.im/x32/checksum.txt"
+
+#ifdef WIN32
+	#define DEFAULT_UPDATE_URL					"http://nightly.miranda.im/x32/"
+#else
+	#define DEFAULT_UPDATE_URL					"http://nightly.miranda.im/x64/"
+#endif
 
 #define IDINFO				3
 #define IDDOWNLOAD			4

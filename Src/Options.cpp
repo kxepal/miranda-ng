@@ -78,7 +78,8 @@ INT_PTR CALLBACK UpdateNotifyOptsProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPA
 				DBFreeVariant(&dbVar);
 			}
 			else {
-				SetDlgItemText(hwndDlg, IDC_UPDATE_URL, _T(DEFAULT_UPDATE_URL));
+				std::tstring url = _T(DEFAULT_UPDATE_URL); url.append( _T("hashes.txt"));
+				SetDlgItemText(hwndDlg, IDC_UPDATE_URL, url.c_str());
 				DBWriteContactSettingTString(NULL, MODNAME, "UpdateURL", _T(DEFAULT_UPDATE_URL));
 			}
 		}
