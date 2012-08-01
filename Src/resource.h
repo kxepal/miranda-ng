@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Resource.rc
+// Used by D:\Myranda\plugins\PackUpdater\res\Resource.rc
 //
 #define IDI_MENU                        101
 #define IDD_UPDATE                      102
@@ -14,8 +14,10 @@
 #define IDC_UPDATETEXT                  1001
 #define IDC_CURVER                      1002
 #define IDC_NEWVER                      1003
-#define IDC_INFO                        1004
+#define IDC_SELALL                      1004
 #define IDC_PB                          1005
+#define IDC_INFO2                       1005
+#define IDC_SELNONE                     1005
 #define IDC_LABEL                       1006
 #define IDC_USEWINCOLORS                1007
 #define IDC_RC                          1008

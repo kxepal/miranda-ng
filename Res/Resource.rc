@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Русский (Россия) resources
+// Russian (Russia) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
 LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
@@ -41,13 +41,12 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_SETFOREGROUND | DS_FIXEDSYS | DS_CENTER | 
 CAPTION "Updates found!"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "Update",IDOK,24,187,50,14
-    DEFPUSHBUTTON   "View info",IDC_INFO,84,187,66,14,WS_DISABLED | NOT WS_TABSTOP
-    PUSHBUTTON      "Cancel",IDCANCEL,160,187,50,14
+    DEFPUSHBUTTON   "Update",IDOK,12,187,50,14
+    PUSHBUTTON      "Select &all",IDC_SELALL,68,187,50,14,NOT WS_TABSTOP
+    PUSHBUTTON      "Cancel",IDCANCEL,180,187,50,14
     CTEXT           "PackUpdater has detected updated versions\nof the following Miranda components:",IDC_UPDATETEXT,9,9,217,22
-    CONTROL         "",IDC_LIST_UPDATES,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,9,37,217,105
-    GROUPBOX        "Description",IDC_DESCR,9,142,217,43
-    EDITTEXT        IDC_MESSAGE,12,152,212,30,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
+    CONTROL         "",IDC_LIST_UPDATES,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,6,37,229,145
+    PUSHBUTTON      "Select &none",IDC_SELNONE,124,187,50,14,NOT WS_TABSTOP
 END
 
 IDD_DOWNLOAD DIALOGEX 0, 0, 172, 39
@@ -176,14 +175,26 @@ BEGIN
         BOTTOMMARGIN, 201
     END
 
+    IDD_DOWNLOAD, DIALOG
+    BEGIN
+    END
+
+    IDD_POPUPDUMMI, DIALOG
+    BEGIN
+    END
+
     IDD_OPT_UPDATENOTIFY, DIALOG
     BEGIN
         BOTTOMMARGIN, 95
     END
+
+    IDD_POPUP, DIALOG
+    BEGIN
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Русский (Россия) resources
+#endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

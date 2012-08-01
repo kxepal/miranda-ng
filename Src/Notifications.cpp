@@ -211,6 +211,17 @@ void DlgDownloadProc(FILEURL *pFileUrl, PopupDataText temp)
 	DestroyWindow(hDlgDld);
 }
 
+void SelectAll(HWND hDlg, bool bEnable)
+{
+	vector<FILEINFO> &todo = *(vector<FILEINFO> *)GetWindowLongPtr(hDlg, GWLP_USERDATA);
+	HWND hwndList = GetDlgItem(hDlg, IDC_LIST_UPDATES);
+
+	for (size_t i=0; i < todo.size(); i++) {
+		ListView_SetCheckState(hwndList, i, bEnable);
+		todo[i].enabled = bEnable;
+	}
+}
+
 static void ApplyUpdates(HWND hDlg)
 {
 	vector<FILEINFO> &todo = *(vector<FILEINFO> *)GetWindowLongPtr(hDlg, GWLP_USERDATA);
@@ -280,6 +291,8 @@ LBL_Skip:
 
 		DBWriteContactSettingString(NULL, MODNAME, _T2A(p.tszDescr), p.newhash);
 	}
+
+	CallFunctionAsync(RestartMe, 0);
 }
 
 INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -366,8 +379,6 @@ INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 						HWND hwOk = GetDlgItem(hDlg, IDOK);
 						EnableWindow(hwOk, enableOk ? TRUE : FALSE);
 					}
-					if (nmlv->uNewState & LVIS_SELECTED)
-						EnableWindow(GetDlgItem(hDlg, IDC_INFO), FALSE);
 				}
 				break;
 			}
@@ -384,15 +395,12 @@ INT_PTR CALLBACK DlgUpdate(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 					return TRUE;
 				}
 
-			case IDC_INFO:
-				{
-					int sel = ListView_GetSelectionMark(hwndList); 
-					/*
-					vector<FILEINFO> &todo = *(vector<FILEINFO> *)GetWindowLongPtr(hDlg, GWLP_USERDATA);
-					char* szUrl = mir_t2a(todo[sel].tszInfoURL);
-					CallService(MS_UTILS_OPENURL, TRUE, (LPARAM)szUrl);
-					mir_free(szUrl); */
-				}
+			case IDC_SELALL:
+				SelectAll(hDlg, true);
+				break;
+
+			case IDC_SELNONE:
+				SelectAll(hDlg, false);
 				break;
 
 			case IDCANCEL:
