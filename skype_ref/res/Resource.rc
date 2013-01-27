@@ -1,0 +1,328 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "..\src\resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(1251)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_CHATROOM_INVITE DIALOGEX 0, 0, 190, 179
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOPMOST
+CAPTION "Invite Contact To Chat"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "sid",-1,7,128,43,9
+    PUSHBUTTON      "&Invite",IDOK,29,159,46,14
+    PUSHBUTTON      "&Cancel",IDCANCEL,112,159,45,14
+    CONTROL         "",IDC_CCLIST,"CListControl",WS_TABSTOP | 0x16f,7,4,174,119,WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_EDITSCR,7,138,121,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Add",IDC_ADDSCR,133,136,49,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_CHATROOM_INVITE, DIALOG
+    BEGIN
+        RIGHTMARGIN, 188
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 173
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral (Default) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUD)
+LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
+#pragma code_page(1251)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PASSWORD_REQUEST DIALOGEX 0, 0, 157, 71
+STYLE DS_SETFONT | DS_MODALFRAME | DS_SETFOREGROUND | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Enter password"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "Enter a password for skype name %d:",IDC_INSTRUCTION,7,7,142,8
+    EDITTEXT        IDC_PASSWORD,17,16,122,14,ES_PASSWORD | ES_AUTOHSCROLL
+    CONTROL         "Remember this session password",IDC_SAVEPASSWORD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,32,120,10
+    DEFPUSHBUTTON   "OK",IDOK,46,50,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,99,50,50,14
+END
+
+IDD_INFO_SKYPE DIALOGEX 0, 0, 222, 132
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "Skype name:",IDC_STATIC,5,5,71,8
+    EDITTEXT        IDC_SID,74,5,143,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
+    LTEXT           "Status text:",IDC_STATIC,5,18,71,8
+    EDITTEXT        IDC_STATUSTEXT,74,18,74,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
+    LTEXT           "Online since:",IDC_STATIC,5,31,71,8
+    EDITTEXT        IDC_ONLINESINCE,74,31,139,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
+    LTEXT           "Last event date:",IDC_STATIC,5,44,71,8
+    EDITTEXT        IDC_LASTEVENTDATE,74,44,141,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
+    LTEXT           "Last profile change:",IDC_STATIC,5,57,71,8
+    EDITTEXT        IDC_LASTPROFILECHANGE,74,57,142,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
+END
+
+IDD_OWNINFO_SKYPE DIALOGEX 0, 0, 222, 151
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,2,2,218,133
+    PUSHBUTTON      "&Save changes",IDC_SAVE,140,137,80,13,WS_DISABLED
+    EDITTEXT        IDC_UPLOADING,2,138,127,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_VISIBLE | NOT WS_BORDER
+END
+
+IDD_PASSWORD_CHANGE DIALOGEX 0, 0, 201, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_SETFOREGROUND | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Change password"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "Old password",IDC_INSTRUCTION,7,9,75,8
+    EDITTEXT        IDC_PASSWORD,88,7,105,14,ES_PASSWORD | ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,88,69,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,142,69,51,14
+    LTEXT           "New password",IDC_INSTRUCTION2,7,27,75,8
+    EDITTEXT        IDC_PASSWORD2,88,24,105,14,ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "Confirmation",IDC_INSTRUCTION3,7,44,75,8
+    EDITTEXT        IDC_PASSWORD3,88,41,105,14,ES_PASSWORD | ES_AUTOHSCROLL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_PASSWORD_REQUEST, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 149
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 64
+    END
+
+    IDD_INFO_SKYPE, DIALOG
+    BEGIN
+        LEFTMARGIN, 5
+        RIGHTMARGIN, 217
+        VERTGUIDE, 61
+        TOPMARGIN, 5
+        BOTTOMMARGIN, 129
+        HORZGUIDE, 22
+        HORZGUIDE, 35
+        HORZGUIDE, 48
+        HORZGUIDE, 61
+        HORZGUIDE, 74
+    END
+
+    IDD_OWNINFO_SKYPE, DIALOG
+    BEGIN
+        LEFTMARGIN, 2
+        RIGHTMARGIN, 220
+        TOPMARGIN, 2
+        BOTTOMMARGIN, 150
+    END
+
+    IDD_PASSWORD_CHANGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 193
+        VERTGUIDE, 82
+        VERTGUIDE, 88
+        VERTGUIDE, 138
+        VERTGUIDE, 142
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Neutral (Default) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Russian (Russia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ACCMGR DIALOGEX 0, 0, 199, 92
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Skype name:",IDC_STATIC,14,8,46,12
+    EDITTEXT        IDC_SL,66,7,119,12,ES_AUTOHSCROLL
+    LTEXT           "Password:",IDC_STATIC,14,24,46,12
+    EDITTEXT        IDC_PW,66,23,119,12,ES_PASSWORD | ES_AUTOHSCROLL
+    PUSHBUTTON      "Register new account",IDC_REGISTER,66,39,119,14,WS_DISABLED
+END
+
+IDD_OPT_MAIN DIALOGEX 0, 0, 305, 238
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "User Details",IDC_STATIC,7,7,291,60
+    LTEXT           "Skype login:",IDC_STATIC,15,19,63,8
+    EDITTEXT        IDC_SL,78,17,121,13,ES_AUTOHSCROLL
+    LTEXT           "Password:",IDC_STATIC,15,35,63,8
+    EDITTEXT        IDC_PW,78,33,121,13,ES_PASSWORD | ES_AUTOHSCROLL
+    GROUPBOX        "Connection",IDC_STATIC,7,69,291,47
+    LTEXT           "Use port",IDC_STATIC,15,81,44,8
+    EDITTEXT        IDC_PORT,78,79,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "for incoming connections",IDC_STATIC,115,81,176,8
+    CONTROL         "Use ports 80 and 443 as alternative incoming",IDC_USE_ALT_PORTS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,97,276,10
+    PUSHBUTTON      "Register new account",IDC_REGISTER,204,17,87,14,WS_DISABLED
+    PUSHBUTTON      "Chande password",IDC_CHANGE_PWD,204,33,87,14,WS_DISABLED
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ACCMGR, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 192
+        VERTGUIDE, 14
+        VERTGUIDE, 60
+        VERTGUIDE, 66
+        VERTGUIDE, 185
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 85
+    END
+
+    IDD_OPT_MAIN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        VERTGUIDE, 15
+        VERTGUIDE, 78
+        VERTGUIDE, 108
+        VERTGUIDE, 115
+        VERTGUIDE, 199
+        VERTGUIDE, 204
+        VERTGUIDE, 291
+        VERTGUIDE, 298
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 231
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON                ICON                    "Main.ico"
+IDI_AUTH_GRANT          ICON                    "auth_grant.ico"
+IDI_AUTH_REQUEST        ICON                    "auth_request.ico"
+IDI_AUTH_REVOKE         ICON                    "auth_revoke.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// BIN
+//
+
+IDR_RUNTIME             BIN                     "..\\..\\..\\..\\SkypeKit\\SDK\\bin\\windows-x86\\windows-x86-skypekit.exe"
+IDR_KEY                 BIN                     "..\\..\\..\\..\\SkypeKit\\keypair.bin"
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "..\\src\\resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Russian (Russia) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
