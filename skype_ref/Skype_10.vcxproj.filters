@@ -10,6 +10,12 @@
     <Filter Include="Header Files">
       <UniqueIdentifier>{b14a0070-da9c-49e8-8a47-d93df5eed672}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\wrapper">
+      <UniqueIdentifier>{9b86353d-a2e0-4a69-87e1-5f00649941dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\wrapper">
+      <UniqueIdentifier>{ef8efa05-1c99-4201-8679-e098a16a9b89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\skype.cpp">
@@ -19,9 +25,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\skype_dialogs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\skype_subclassing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\skype_events.cpp">
@@ -66,10 +69,37 @@
     <ClCompile Include="src\skype_runtime.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\aes\aes.c">
+    <ClCompile Include="src\base64\base64.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\base64\base64.cpp">
+    <ClCompile Include="src\wrapper\contact.cpp">
+      <Filter>Source Files\wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\account.cpp">
+      <Filter>Source Files\wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\conversation.cpp">
+      <Filter>Source Files\wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\group.cpp">
+      <Filter>Source Files\wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\message.cpp">
+      <Filter>Source Files\wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\participant.cpp">
+      <Filter>Source Files\wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\search.cpp">
+      <Filter>Source Files\wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\skype.cpp">
+      <Filter>Source Files\wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\transfer.cpp">
+      <Filter>Source Files\wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\aes\aes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,10 +116,40 @@
     <ClInclude Include="src\skype_proto.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\skype_subclassing.h">
+    <ClInclude Include="src\base64\base64.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\base64\base64.h">
+    <ClInclude Include="src\wrapper\account.h">
+      <Filter>Header Files\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\common.h">
+      <Filter>Header Files\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\contact.h">
+      <Filter>Header Files\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\conversation.h">
+      <Filter>Header Files\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\group.h">
+      <Filter>Header Files\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\message.h">
+      <Filter>Header Files\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\participant.h">
+      <Filter>Header Files\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\search.h">
+      <Filter>Header Files\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\transfer.h">
+      <Filter>Header Files\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\skype.h">
+      <Filter>Header Files\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\skype_settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

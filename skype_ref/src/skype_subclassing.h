@@ -19,6 +19,25 @@ public:
 	CMessage(unsigned int oid, SERootObject* root);
 };
 
+class CTransfer : public Transfer
+{
+public:
+	typedef void (CSkypeProto::* OnTransferChanged)(CTransfer::Ref transfer, int);
+
+	typedef DRef<CTransfer, Transfer> Ref;
+	typedef DRefs<CTransfer, Transfer> Refs;
+
+	CTransfer(unsigned int oid, SERootObject* root);
+
+void SetOnTransferChangedCallback(OnTransferChanged callback, CSkypeProto* proto);
+
+private:
+	CSkypeProto* proto;
+	OnTransferChanged callback;
+
+	void OnChange(int prop);
+};
+
 class CParticipant : public Participant
 {
 public:
@@ -33,7 +52,7 @@ public:
 class CConversation : public Conversation
 {
 public:
-	typedef void (CSkypeProto::* OnMessageReceived)(CMessage::Ref message);
+	typedef void (CSkypeProto::* OnMessaged)(CConversation::Ref conversation, CMessage::Ref message);
 
 	typedef DRef<CConversation, Conversation> Ref;
 	typedef DRefs<CConversation, Conversation> Refs;
@@ -42,11 +61,11 @@ public:
 
 	static CConversation::Ref FindBySid(CSkype *skype, SEString sid);
 
-	void SetOnMessageReceivedCallback(OnMessageReceived callback, CSkypeProto* proto);
+	void SetOnMessageCallback(OnMessaged callback, CSkypeProto* proto);
 
 private:
-	CSkypeProto* proto;
-	OnMessageReceived messageReceivedCallback;
+	CSkypeProto*	proto;
+	OnMessaged		onMessageCallback;
 	
 	void OnMessage(const MessageRef & message);
 };
@@ -126,6 +145,8 @@ public:
 
 	typedef DRef<CAccount, Account> Ref;
 	typedef DRefs<CAccount, Account> Refs;
+
+	Transfer::Refs TransferList;
 	
 	CAccount(unsigned int oid, SERootObject* root);
 	
@@ -140,27 +161,28 @@ private:
 class CSkype : public Skype
 {
 public:
-	typedef void (CSkypeProto::* OnMessaged)(CConversation::Ref conversation, CMessage::Ref message);
+	//typedef void (CSkypeProto::* OnMessage)(CConversation::Ref conversation, CMessage::Ref message);
 
 	CAccount*		newAccount(int oid);
 	CContactGroup*	newContactGroup(int oid);
 	CConversation*	newConversation(int oid);
 	CContactSearch*	newContactSearch(int oid);
 	CParticipant*	newParticipant(int oid);
-	CContact*		newContact(int oid);	
+	CContact*		newContact(int oid);
+	CTransfer*		newTransfer(int oid);
 	CMessage*		newMessage(int oid);
 
 	CConversation::Refs inbox;
 
 	CSkype(int num_threads = 1);
 
-	void SetOnMessageCallback(OnMessaged callback, CSkypeProto* proto);
+	void SetOnMessageCallback(CConversation::OnMessaged callback, CSkypeProto* proto);
 
 	static CSkype *GetInstance(HINSTANCE hInstance, const wchar_t *profileName, const wchar_t *dbPath);
 
 private:
-	CSkypeProto*	proto;
-	OnMessaged		onMessagedCallback;
+	CSkypeProto*				proto;
+	CConversation::OnMessaged	onMessageCallback;
 
 	void OnMessage(
 		const MessageRef & message,

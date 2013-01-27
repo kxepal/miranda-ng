@@ -181,14 +181,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\base64\base64.h" />
-    <ClInclude Include="src\skype_subclassing.h" />
     <ClInclude Include="src\skype.h" />
     <ClInclude Include="src\skype_proto.h" />
+    <ClInclude Include="src\skype_settings.h" />
     <ClInclude Include="src\version.h" />
     <ClInclude Include="src\resource.h" />
+    <ClInclude Include="src\wrapper\account.h" />
+    <ClInclude Include="src\wrapper\common.h" />
+    <ClInclude Include="src\wrapper\contact.h" />
+    <ClInclude Include="src\wrapper\conversation.h" />
+    <ClInclude Include="src\wrapper\group.h" />
+    <ClInclude Include="src\wrapper\message.h" />
+    <ClInclude Include="src\wrapper\participant.h" />
+    <ClInclude Include="src\wrapper\search.h" />
+    <ClInclude Include="src\wrapper\skype.h" />
+    <ClInclude Include="src\wrapper\transfer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\aes\aes.c" />
+    <ClCompile Include="src\aes\aes.cpp" />
     <ClCompile Include="src\base64\base64.cpp" />
     <ClCompile Include="src\skype.cpp" />
     <ClCompile Include="src\skype_account.cpp" />
@@ -206,8 +216,16 @@
     <ClCompile Include="src\skype_runtime.cpp" />
     <ClCompile Include="src\skype_services.cpp" />
     <ClCompile Include="src\skype_settings.cpp" />
-    <ClCompile Include="src\skype_subclassing.cpp" />
     <ClCompile Include="src\skype_utils.cpp" />
+    <ClCompile Include="src\wrapper\account.cpp" />
+    <ClCompile Include="src\wrapper\contact.cpp" />
+    <ClCompile Include="src\wrapper\conversation.cpp" />
+    <ClCompile Include="src\wrapper\group.cpp" />
+    <ClCompile Include="src\wrapper\message.cpp" />
+    <ClCompile Include="src\wrapper\participant.cpp" />
+    <ClCompile Include="src\wrapper\search.cpp" />
+    <ClCompile Include="src\wrapper\skype.cpp" />
+    <ClCompile Include="src\wrapper\transfer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="res\Version.rc" />

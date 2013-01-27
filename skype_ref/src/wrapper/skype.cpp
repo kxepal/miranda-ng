@@ -1,57 +1,69 @@
 #include "skype.h"
 
-#include "base64/base64.h"
-extern "C" 
-{ 
-#include "aes\aes.h" 
-}
+#include <win2k.h>
+#include <shlwapi.h>
+#include <ShellAPI.h>
+#include <tlhelp32.h>
+
+#include "..\..\..\skypekit\key.h"
+#include "..\base64\base64.h"
+
+//extern "C" 
+//{ 
+#include "..\aes\aes.h" 
+//}
+
+//#include "group.h"
+//#include "search.h"
+//#include "account.h"
+//#include "contact.h"
+//#include "message.h"
+//#include "transfer.h"
+//#include "participant.h"
+//#include "conversation.h"
 
 // CSkype
 
-CSkype::CSkype(int num_threads) : Skype(num_threads)
-{
-	this->proto = NULL;
-	this->onMessageCallback = NULL;
-}
+CSkype::CSkype(int num_threads) : Skype(num_threads) { }
 
 CAccount* CSkype::newAccount(int oid) 
 { 
-	return new CAccount(oid, this); 
+	return new CAccount(oid, this, this->proto); 
 }
 
-CContactGroup* CSkype::newContactGroup(int oid)
+CGroup* CSkype::newContactGroup(int oid)
 { 
-	return new CContactGroup(oid, this); 
+	return new CGroup(oid, this, this->proto); 
 }
 
 CContact* CSkype::newContact(int oid) 
 { 
-	return new CContact(oid, this); 
+	return new CContact(oid, this, this->proto); 
 }
 
 CConversation* CSkype::newConversation(int oid) 
 { 
-	return new CConversation(oid, this); 
+	return new CConversation(oid, this, this->proto); 
 }
 
 CParticipant* CSkype::newParticipant(int oid) 
 { 
-	return new CParticipant(oid, this); 
+	return new CParticipant(oid, this, this->proto); 
 }
 
 CMessage* CSkype::newMessage(int oid) 
 { 
-	return new CMessage(oid, this); 
+	return new CMessage(oid, this, this->proto); 
 }
 
 CTransfer* CSkype::newTransfer(int oid) 
 { 
-	return new CTransfer(oid, this); 
+	return new CTransfer(oid, this, this->proto); 
 }
 
-CContactSearch*	CSkype::newContactSearch(int oid)
+CSearch* CSkype::newContactSearch(int oid)
 {
-	return new CContactSearch(oid, this);
+	return new CSearch(oid, this, this->proto);
 }
 
 void CSkype::OnMessage (
@@ -64,15 +76,11 @@ void CSkype::OnMessage (
     skype->GetUnixTimestamp(now);
     conversation->SetConsumedHorizon(now);*/
 
-	if (this->proto)
-		(proto->*onMessageCallback)(conversation->ref(), message->ref());
+	/*if (this->proto)
+		(proto->*onMessageCallback)(conversation->ref(), message->ref());*/
+	//this->proto->OnMessage(conversation->ref(), message->ref());
 }
 
-void CSkype::SetOnMessageCallback(CConversation::OnMessaged callback, CSkypeProto* proto)
-{
-	this->proto = proto;
-	this->onMessageCallback = callback;
-}
 
 BOOL CSkype::IsRunAsAdmin()
 {
@@ -273,7 +281,9 @@ int CSkype::StartSkypeRuntime(HINSTANCE hInstance, const wchar_t *profileName, i
 	return startingrt;
 }
 
-CSkype *CSkype::GetInstance(HINSTANCE hInstance, const wchar_t *profileName, const wchar_t *dbPath)
+HINSTANCE	g_hInstance;
+
+CSkype *CSkype::GetInstance(HINSTANCE hInstance, const wchar_t *profileName, const wchar_t *dbPath, CSkypeProto *proto)
 {
 	int port = 8963;
 	if (!CSkype::StartSkypeRuntime(hInstance, profileName, port, dbPath)) return NULL;
@@ -281,222 +291,14 @@ CSkype *CSkype::GetInstance(HINSTANCE hInstance, const wchar_t *profileName, con
 	char *keyPair = CSkype::LoadKeyPair(hInstance);
 
 	CSkype *skype = new CSkype();
-	TransportInterface::Status status = skype->init(keyPair, "127.0.0.1", port, 0, 2, 3);
+	TransportInterface::Status status = skype->init(keyPair, "127.0.0.1", port);
 	if (status != TransportInterface::OK)
 		return NULL;
 	skype->start();
 
-	free(keyPair);
+	::free(keyPair);
 
 	//this->skype->SetOnMessageCallback((CSkype::OnMessaged)&CSkypeProto::OnMessage, this);
+	skype->proto = proto;
 	return skype;
 }
-
-// CAccount
-
-CAccount::CAccount(unsigned int oid, SERootObject* root) : Account(oid, root) 
-{
-	this->proto = NULL;
-	this->callback == NULL;
-}
-
-void CAccount::SetOnAccountChangedCallback(OnAccountChanged callback, CSkypeProto* proto)
-{
-	this->proto = proto;
-	this->callback = callback;
-}
-
-void CAccount::OnChange(int prop)
-{
-  if (this->proto)
-	  (proto->*callback)(prop);
-}
-
-// CContactGroup
-
-CContactGroup::CContactGroup(unsigned int oid, SERootObject* root) : ContactGroup(oid, root) 
-{
-	this->proto = NULL;
-	this->callback == NULL;
-}
-
-void CContactGroup::SetOnContactListChangedCallback(OnContactListChanged callback, CSkypeProto* proto)
-{
-	this->proto = proto;
-	this->callback = callback;
-}
-
-void CContactGroup::OnChange(const ContactRef& contact)
-{
-	if (this->proto)
-		(proto->*callback)(contact);
-}
-
-// CContactSearch
-
-CContactSearch::CContactSearch(unsigned int oid, SERootObject* root) : ContactSearch(oid, root)
-{
-	this->proto = NULL;
-	this->SearchCompletedCallback == NULL;
-	this->ContactFindedCallback == NULL;
-}
-
-void CContactSearch::OnChange(int prop)
-{
-	if (prop == P_CONTACT_SEARCH_STATUS)
-	{
-		CContactSearch::STATUS status;
-		this->GetPropContactSearchStatus(status);
-		if (status == FINISHED || status == FAILED)
-		{
-			this->isSeachFinished = true;
-			if (this->proto)
-				(proto->*SearchCompletedCallback)(this->hSearch);
-		}
-	}
-}
-
-void CContactSearch::OnNewResult(const ContactRef& contact, const uint& rankValue)
-{
-	if (this->proto)
-		(proto->*ContactFindedCallback)(this->hSearch, contact->ref());
-}
-
-void CContactSearch::BlockWhileSearch()
-{
-	this->isSeachFinished = false;
-	this->isSeachFailed = false;
-	while (!this->isSeachFinished && !this->isSeachFailed) 
-		Sleep(1); 
-}
-
-void CContactSearch::SetProtoInfo(CSkypeProto* proto, HANDLE hSearch)
-{
-	this->proto = proto;
-	this->hSearch = hSearch;
-}
-
-void CContactSearch::SetOnSearchCompleatedCallback(OnSearchCompleted callback)
-{
-	this->SearchCompletedCallback = callback;
-}
-
-void CContactSearch::SetOnContactFindedCallback(OnContactFinded callback)
-{
-	this->ContactFindedCallback = callback;
-}
-
-// CParticipant
-
-CParticipant::CParticipant(unsigned int oid, SERootObject* root) : Participant(oid, root) { }
-
-SEString CParticipant::GetRankName(CParticipant::RANK rank)
-{
-	char *result = NULL;
-	switch (rank)
-	{
-	case CParticipant::CREATOR:
-		result = "Creator";
-		break;
-	case CParticipant::ADMIN:
-		result = "Admin";
-		break;
-	case CParticipant::SPEAKER:
-		result = "Speaker";
-		break;
-	case CParticipant::WRITER:
-		result = "Writer";
-		break;
-	case CParticipant::SPECTATOR:
-		result = "Spectator";
-		break;
-	case CParticipant::RETIRED:
-		result = "Retried";
-		break;
-	case CParticipant::OUTLAW:
-		result = "Outlaw";
-		break;
-	}
-	return result;
-}
-
-// CContact
-
-CContact::CContact(unsigned int oid, SERootObject* root) : Contact(oid, root) 
-{
-	this->proto = NULL;
-	this->callback == NULL;
-}
-
-void CContact::SetOnContactChangedCallback(OnContactChanged callback, CSkypeProto* proto)
-{
-	this->proto = proto;
-	this->callback = callback;
-}
-
-//bool CContact::SentAuthRequest(SEString message)
-//{
-//	this->SetBuddyStatus(Contact::AUTHORIZED_BY_ME);
-//	this->SendAuthRequest(message);
-//}
-
-void CContact::OnChange(int prop)
-{
-	if (this->proto)
-		(proto->*callback)(this->ref(), prop);
-}
-
-// Conversation
-
-CConversation::CConversation(unsigned int oid, SERootObject* root) : Conversation(oid, root) 
-{
-	this->proto = NULL;
-	this->onMessageCallback = NULL;
-}
-
-void CConversation::OnMessage(const MessageRef & message)
-{
-	if (this->proto)
-		(proto->*onMessageCallback)(this->ref(), message->ref());
-}
-
-CConversation::Ref CConversation::FindBySid(CSkype *skype, SEString sid)
-{
-	SEStringList participants;
-	participants.append(sid);
-	
-	CConversation::Ref conversation;
-	skype->GetConversationByParticipants(participants, conversation);
-
-	return conversation;
-}
-
-void CConversation::SetOnMessageCallback(OnMessaged callback, CSkypeProto* proto)
-{
-	this->proto = proto;
-	this->onMessageCallback = callback;
-}
-
-// CTransfer
-
-CTransfer::CTransfer(unsigned int oid, SERootObject* root) : Transfer(oid, root) 
-{ 
-	this->proto = NULL;
-	this->callback == NULL;
-}
-
-void CTransfer::SetOnTransferChangedCallback(OnTransferChanged callback, CSkypeProto* proto)
-{
-	this->proto = proto;
-	this->callback = callback;
-}
-
-void CTransfer::OnChange(int prop)
-{
-	if (this->proto)
-		(proto->*callback)(this->ref(), prop);
-}
-
-// CMessage
-
-CMessage::CMessage(unsigned int oid, SERootObject* root) : Message(oid, root) { }

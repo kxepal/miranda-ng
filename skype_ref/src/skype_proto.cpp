@@ -1,4 +1,7 @@
 #include "skype_proto.h"
+#include <sys/stat.h>
+
+//int hLangpack;
 
 CSkypeProto::CSkypeProto(const char* protoName, const TCHAR* userName)
 {
@@ -12,30 +15,31 @@ CSkypeProto::CSkypeProto(const char* protoName, const TCHAR* userName)
 	this->m_szProtoName[0] = ::toupper(this->m_szProtoName[0]);
 
 	//this->login = NULL;
-	this->password = NULL;
-	this->rememberPassword = false;
+	//this->password = NULL;
+	//this->rememberPassword = false;
 
-	this->signin_lock = CreateMutex(0, false, 0);
-	this->SetAllContactStatus(ID_STATUS_OFFLINE);
+	//this->signin_lock = CreateMutex(0, false, 0);
+	//this->SetAllContactStatus(ID_STATUS_OFFLINE);
 
-	this->CreateService(PS_CREATEACCMGRUI, &CSkypeProto::OnAccountManagerInit);
-	// Chat API
-	this->CreateService(PS_JOINCHAT, &CSkypeProto::OnJoinChat);
-	this->CreateService(PS_LEAVECHAT, &CSkypeProto::OnLeaveChat);
-	// Avatar API
-	this->CreateService(PS_GETAVATARINFOT, &CSkypeProto::GetAvatarInfo);
-	this->CreateService(PS_GETAVATARCAPS, &CSkypeProto::GetAvatarCaps);
-	this->CreateService(PS_GETMYAVATART, &CSkypeProto::GetMyAvatar);
-	this->CreateService(PS_SETMYAVATART, &CSkypeProto::SetMyAvatar);
+	//this->CreateService(PS_CREATEACCMGRUI, &CSkypeProto::OnAccountManagerInit);
+	//// Chat API
+	//this->CreateService(PS_JOINCHAT, &CSkypeProto::OnJoinChat);
+	//this->CreateService(PS_LEAVECHAT, &CSkypeProto::OnLeaveChat);
+	//// Avatar API
+	//this->CreateService(PS_GETAVATARINFOT, &CSkypeProto::GetAvatarInfo);
+	//this->CreateService(PS_GETAVATARCAPS, &CSkypeProto::GetAvatarCaps);
+	//this->CreateService(PS_GETMYAVATART, &CSkypeProto::GetMyAvatar);
+	//this->CreateService(PS_SETMYAVATART, &CSkypeProto::SetMyAvatar);
 }
 
 CSkypeProto::~CSkypeProto()
 {
-	::CloseHandle(this->signin_lock);
+	/*::CloseHandle(this->signin_lock);
 
 	::mir_free(this->login);
-	::mir_free(this->password);
-
+	if ( this->rememberPassword)
+		::mir_free(this->password);*/
+	
 	::mir_free(this->m_szProtoName);
 	::mir_free(this->m_szModuleName);
 	::mir_free(this->m_tszUserName);
@@ -44,13 +48,14 @@ CSkypeProto::~CSkypeProto()
 HANDLE __cdecl CSkypeProto::AddToList(int flags, PROTOSEARCHRESULT* psr) 
 {
 	//todo:ref
-	return this->AddContactBySid(::mir_u2a(psr->id), ::mir_u2a(psr->nick), 0);
+	//return this->AddContactBySid(::mir_u2a(psr->id), ::mir_u2a(psr->nick), 0);
+	return NULL;
 }
 
 HANDLE __cdecl CSkypeProto::AddToListByEvent(int flags, int iContact, HANDLE hDbEvent) 
 {
-	DBEVENTINFO dbei = {0};
-	dbei.cbSize = sizeof(dbei);
+	//DBEVENTINFO dbei = {0};
+	//dbei.cbSize = sizeof(dbei);
 
 	/*if ((dbei.cbBlob = CallService(MS_DB_EVENT_GETBLOBSIZE, (WPARAM)hDbEvent, 0)) != -1) 
 	{
@@ -71,35 +76,35 @@ HANDLE __cdecl CSkypeProto::AddToListByEvent(int flags, int iContact, HANDLE hDb
 
 int __cdecl CSkypeProto::Authorize(HANDLE hDbEvent) 
 {
-	if (this->IsOnline() && hDbEvent)
+	/*if (this->IsOnline() && hDbEvent)
 	{
 		HANDLE hContact = this->GetContactFromAuthEvent(hDbEvent);
 		if (hContact == INVALID_HANDLE_VALUE)
 			return 1;
 
 		return CSkypeProto::GrantAuth((WPARAM)hContact, NULL);
-	}
+	}*/
 
 	return 1;
 }
 
 int __cdecl CSkypeProto::AuthDeny(HANDLE hDbEvent, const TCHAR* szReason) 
 {
-	if (this->IsOnline())
+	/*if (this->IsOnline())
 	{
 		HANDLE hContact = this->GetContactFromAuthEvent(hDbEvent);
 		if (hContact == INVALID_HANDLE_VALUE)
 			return 1;
 
 		return CSkypeProto::RevokeAuth((WPARAM)hContact, NULL);
-	}
+	}*/
 
 	return 1; 
 }
 
 int __cdecl CSkypeProto::AuthRecv(HANDLE hContact, PROTORECVEVENT* pre) 
 {
-	DWORD flags = 0;
+	/*DWORD flags = 0;
 
 	if (pre->flags & PREF_CREATEREAD) 
 		flags |= DBEF_READ;
@@ -113,25 +118,25 @@ int __cdecl CSkypeProto::AuthRecv(HANDLE hContact, PROTORECVEVENT* pre)
 		pre->timestamp, 
 		flags, 
 		pre->lParam, 
-		(PBYTE)pre->szMessage);
+		(PBYTE)pre->szMessage);*/
 
 	return 0;
 }
 
 int __cdecl CSkypeProto::AuthRequest(HANDLE hContact, const TCHAR* szMessage) 
 {
-	if (this->IsOnline() && hContact)
-	{
-		CContact::Ref contact;
-		SEString sid(::mir_u2a(this->GetSettingString(hContact, "sid")));
-		if (this->skype->GetContact(sid, contact)) 
-		{
-			contact->SetBuddyStatus(Contact::AUTHORIZED_BY_ME);
-			contact->SendAuthRequest(::mir_utf8encodeW(szMessage));
-		}
-		
-		return 0;
-	}
+	//if (this->IsOnline() && hContact)
+	//{
+	//	CContact::Ref contact;
+	//	SEString sid(::mir_u2a(this->GetSettingString(hContact, "sid")));
+	//	if (this->skype->GetContact(sid, contact)) 
+	//	{
+	//		contact->SetBuddyStatus(Contact::AUTHORIZED_BY_ME);
+	//		contact->SendAuthRequest(::mir_utf8encodeW(szMessage));
+	//	}
+	//	
+	//	return 0;
+	//}
 
 	return 1;
 }
@@ -148,7 +153,7 @@ DWORD_PTR __cdecl CSkypeProto:: GetCaps(int type, HANDLE hContact)
 	switch(type)
 	{        
 	case PFLAGNUM_1:
-		return PF1_IM  | PF1_BASICSEARCH | PF1_ADDSEARCHRES | PF1_SEARCHBYEMAIL/* | PF1_SEARCHBYNAME*/;
+		return PF1_IM | PF1_FILE | PF1_BASICSEARCH | PF1_ADDSEARCHRES | PF1_SEARCHBYEMAIL/* | PF1_SEARCHBYNAME*/;
 	case PFLAGNUM_2:
 	case PFLAGNUM_3:
 		return PF2_ONLINE | PF2_SHORTAWAY | PF2_HEAVYDND | PF2_INVISIBLE;
@@ -166,11 +171,11 @@ DWORD_PTR __cdecl CSkypeProto:: GetCaps(int type, HANDLE hContact)
 
 HICON  __cdecl CSkypeProto::GetIcon( int iconIndex )
 {
-	if (LOWORD(iconIndex) == PLI_PROTOCOL)
+	/*if (LOWORD(iconIndex) == PLI_PROTOCOL)
 	{
 		HICON ico = Skin_GetIcon("Skype_main");
 		return CopyIcon(ico);
-	} else
+	} else*/
 		return 0;
 }
 
@@ -178,29 +183,29 @@ int    __cdecl CSkypeProto::GetInfo( HANDLE hContact, int infoType ) { return 0;
 
 HANDLE __cdecl CSkypeProto::SearchBasic(const TCHAR* id) 
 { 
-	if ( !this->IsOnline())
+	//if ( !this->IsOnline())
 		return 0;
 
-	wchar_t *data = ::mir_tstrdup(id);
+	/*char *data = ::mir_u2a(id);
 	this->ForkThread(&CSkypeProto::SearchBySidAsync, data);
 
-	return (HANDLE)SKYPE_SEARCH_BYSID;
+	return (HANDLE)SKYPE_SEARCH_BYSID;*/
 }
 
 HANDLE __cdecl CSkypeProto::SearchByEmail(const TCHAR* email) 
 { 
-	if ( !this->IsOnline())
+	//if ( !this->IsOnline())
 		return 0;
 
-	wchar_t *data = ::mir_tstrdup(email);
+	/*char *data = ::mir_u2a(email);
 	this->ForkThread(&CSkypeProto::SearchByEmailAsync, data);
 
-	return (HANDLE)SKYPE_SEARCH_BYEMAIL;
+	return (HANDLE)SKYPE_SEARCH_BYEMAIL;*/
 }
 
 HANDLE __cdecl CSkypeProto::SearchByName(const TCHAR* nick, const TCHAR* firstName, const TCHAR* lastName) 
 { 
-	PROTOSEARCHRESULT isr = {0};
+	/*PROTOSEARCHRESULT isr = {0};
 	isr.cbSize = sizeof(isr);
 	isr.flags = PSR_TCHAR;
 	isr.nick = ::mir_wstrdup(nick);
@@ -209,7 +214,8 @@ HANDLE __cdecl CSkypeProto::SearchByName(const TCHAR* nick, const TCHAR* firstNa
 
 	this->ForkThread(&CSkypeProto::SearchByNamesAsync, &isr);
 
-	return (HANDLE)SKYPE_SEARCH_BYNAMES;
+	return (HANDLE)SKYPE_SEARCH_BYNAMES;*/
+	return 0;
 }
 
 HWND   __cdecl CSkypeProto::SearchAdvanced( HWND owner ) { return 0; }
@@ -217,22 +223,80 @@ HWND   __cdecl CSkypeProto::SearchAdvanced( HWND owner ) { return 0; }
 HWND   __cdecl CSkypeProto::CreateExtendedSearchUI( HWND owner ){ return 0; }
 
 int    __cdecl CSkypeProto::RecvContacts( HANDLE hContact, PROTORECVEVENT* ) { return 0; }
-int    __cdecl CSkypeProto::RecvFile( HANDLE hContact, PROTORECVFILET* ) { return 0; }
+
+int    __cdecl CSkypeProto::RecvFile( HANDLE hContact, PROTORECVFILET* evt) 
+{ 
+	return ::Proto_RecvFile(hContact, evt);
+}
 
 int    __cdecl CSkypeProto::RecvMsg( HANDLE hContact, PROTORECVEVENT* pre) 
 { 
-	this->UserIsTyping(hContact, PROTOTYPE_SELFTYPING_OFF);
+	//this->UserIsTyping(hContact, PROTOTYPE_SELFTYPING_OFF);
 	return ::Proto_RecvMessage(hContact, pre);
 }
 
 int    __cdecl CSkypeProto::RecvUrl( HANDLE hContact, PROTORECVEVENT* ) { return 0; }
 
 int    __cdecl CSkypeProto::SendContacts( HANDLE hContact, int flags, int nContacts, HANDLE* hContactsList ) { return 0; }
-HANDLE __cdecl CSkypeProto::SendFile( HANDLE hContact, const TCHAR* szDescription, TCHAR** ppszFiles ) { return 0; }
+
+HANDLE __cdecl CSkypeProto::SendFile( HANDLE hContact, const TCHAR* szDescription, TCHAR** ppszFiles ) 
+{ 
+	//if ( !this->IsOnline())
+		return 0;
+
+	//if (this->GetSettingWord(hContact, "Status", ID_STATUS_OFFLINE) == ID_STATUS_OFFLINE)
+	//	return 0;
+
+	//CConversation::Ref transferConv;
+	//transferConv = CConversation::FindBySid(this->skype, ::DBGetString(hContact, this->m_szModuleName, "sid"));
+	//transferConv.fetch();
+
+	//SEFilenameList fileList;
+	//TRANSFER_SENDFILE_ERROR errCode;
+	//SEFilename errFile;
+	//CMessage::Ref msgRef;
+	//
+	//CSkypeTransfer *transfer = new CSkypeTransfer(this);
+	//transfer->pfts.ptszFiles = ppszFiles;
+	//transfer->pfts.hContact = hContact;
+	//transfer->pfts.flags |= PFTS_SENDING;
+
+	//int i = 0;
+	//while (ppszFiles[i] != NULL)
+	//{
+	//	fileList.append(::mir_u2a(ppszFiles[i]));
+	//	
+	//	struct _stati64 statbuf;
+	//	if (_tstati64(ppszFiles[i++], &statbuf) == 0 && (statbuf.st_mode & _S_IFDIR) == 0)
+	//	{
+	//		transfer->pfts.totalBytes += statbuf.st_size;
+	//		++transfer->pfts.totalFiles;
+	//	}
+	//}
+
+	///*if ( !transferConv->PostFiles(fileList, "Sending file", errCode, errFile, msgRef))
+	//{
+	//	SEString cid;
+	//	transferConv->GetPropIdentity(cid);
+	//	transfer->cid = ::mir_strdup(cid);
+
+	//	this->SendBroadcast(hContact, ACKTYPE_FILE, ACKRESULT_SENTREQUEST, transfer, 0);
+	//	return 100500;
+	//}*/
+
+	//SEString cid;
+	//	transferConv->GetPropIdentity(cid);
+	//	char *ccid = ::mir_strdup(cid);
+
+	//return (HANDLE)ccid; 
+}
 
 int    __cdecl CSkypeProto::SendMsg(HANDLE hContact, int flags, const char* msg) 
 { 
-	int result = ::InterlockedIncrement((LONG volatile*)&dwCMDNum);
+	//if ( !this->IsOnline())
+		return 0;
+
+	/*int result = ::InterlockedIncrement((LONG volatile*)&dwCMDNum);
 
 	CConversation::Ref conversation = CConversation::FindBySid(
 		this->skype,
@@ -249,7 +313,7 @@ int    __cdecl CSkypeProto::SendMsg(HANDLE hContact, int flags, const char* msg)
 		ACKRESULT_SUCCESS,
 		(HANDLE)result, 0);
 	
-	return result; 
+	return result; */
 }
 
 int    __cdecl CSkypeProto::SendUrl( HANDLE hContact, int flags, const char* url ) { return 0; }
@@ -258,7 +322,7 @@ int    __cdecl CSkypeProto::SetApparentMode( HANDLE hContact, int mode ) { retur
 
 int CSkypeProto::SetStatus(int new_status)
 {
-	switch (new_status)
+	/*switch (new_status)
 	{
 	case ID_STATUS_OCCUPIED:
 		new_status = ID_STATUS_DND;
@@ -311,7 +375,7 @@ int CSkypeProto::SetStatus(int new_status)
 	}
 
 	this->SetSettingWord("Status", this->m_iStatus);
-	this->SendBroadcast(NULL, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)old_status, this->m_iStatus); 
+	this->SendBroadcast(NULL, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)old_status, this->m_iStatus); */
 	return 0;
 }
 
@@ -322,35 +386,35 @@ int    __cdecl CSkypeProto::SetAwayMsg( int m_iStatus, const TCHAR* msg ) { retu
 
 int    __cdecl CSkypeProto::UserIsTyping( HANDLE hContact, int type ) 
 { 
-	if (hContact && this->IsOnline() && this->m_iStatus != ID_STATUS_INVISIBLE)
-	{
-		if (::strcmp(::DBGetString(hContact, this->m_szModuleName, "sid"), this->login) != 0)
-		{
-			CConversation::Ref conversation = CConversation::FindBySid(
-				this->skype,
-				::DBGetString(hContact, this->m_szModuleName, "sid"));
-			if (conversation) 
-			{
-				switch (type) 
-				{
-					case PROTOTYPE_SELFTYPING_ON:
-						conversation->SetMyTextStatusTo(Participant::WRITING);
-						return 0;
+	//if (hContact && this->IsOnline() && this->m_iStatus != ID_STATUS_INVISIBLE)
+	//{
+	//	if (::strcmp(::DBGetString(hContact, this->m_szModuleName, "sid"), this->login) != 0)
+	//	{
+	//		CConversation::Ref conversation = CConversation::FindBySid(
+	//			this->skype,
+	//			::DBGetString(hContact, this->m_szModuleName, "sid"));
+	//		if (conversation) 
+	//		{
+	//			switch (type) 
+	//			{
+	//				case PROTOTYPE_SELFTYPING_ON:
+	//					conversation->SetMyTextStatusTo(Participant::WRITING);
+	//					return 0;
 
-					case PROTOTYPE_SELFTYPING_OFF:
-						conversation->SetMyTextStatusTo(Participant::READING); //todo: mb TEXT_UNKNOWN?
-						return 0;
-				}
-			}
-		}
-	}
+	//				case PROTOTYPE_SELFTYPING_OFF:
+	//					conversation->SetMyTextStatusTo(Participant::READING); //todo: mb TEXT_UNKNOWN?
+	//					return 0;
+	//			}
+	//		}
+	//	}
+	//}
 
 	return 1; 
 }
 
 int    __cdecl CSkypeProto::OnEvent(PROTOEVENTTYPE eventType, WPARAM wParam, LPARAM lParam)
 {
-	switch (eventType) 
+	/*switch (eventType) 
 	{
 	case EV_PROTO_ONLOAD:
 		return this->OnModulesLoaded(wParam, lParam);
@@ -363,7 +427,7 @@ int    __cdecl CSkypeProto::OnEvent(PROTOEVENTTYPE eventType, WPARAM wParam, LPA
 
 	case EV_PROTO_ONCONTACTDELETED:
 		return this->OnContactDeleted(wParam, lParam);
-	}
+	}*/
 
 	return 1;
 }
