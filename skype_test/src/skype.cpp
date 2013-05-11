@@ -4,13 +4,14 @@
 #include "..\..\..\skypekit\key.h"
 
 int hLangpack;
-CSkype *g_skype;
 HINSTANCE g_hInstance;
 
 TIME_API tmi = {0};
 
 int g_cbCountries;
 struct CountryListEntry* g_countries;
+
+int g_port = 8963;
 
 PLUGININFOEX pluginInfo =
 {
@@ -246,42 +247,18 @@ int StartSkypeRuntime(HINSTANCE hInstance, const wchar_t *profileName, int &port
 
 extern "C" int __declspec(dllexport) Load(void)
 {
-	mir_getTMI(&tmi);
-	mir_getLP(&pluginInfo);
-
-	int port = 8963;
 	VARST profilename( _T("%miranda_profilename%"));
 
-	if ( !StartSkypeRuntime(g_hInstance, (TCHAR *)profilename, port))
+	if ( !StartSkypeRuntime(g_hInstance, (TCHAR *)profilename, g_port))
 	{
 		::MessageBox(NULL, TranslateT("Proccess SkypeKit.exe did not start."), _T(MODULE), MB_OK | MB_ICONERROR);
 		return 1;
 	}
 
-	char *keyPair = LoadKeyPair(g_hInstance);
-	if ( !keyPair)
-	{
-		::MessageBox(NULL, TranslateT("Initialization key corrupted or not valid."), _T(MODULE), MB_OK | MB_ICONERROR);
-		return 1;
-	}
-
-	g_skype = new CSkype(1);
-	TransportInterface::Status status = g_skype->init(keyPair, "127.0.0.1", port);
-	if (status != TransportInterface::OK)
-	{
-		::MessageBox(NULL, TranslateT("SkypeKit did not initialize."), _T(MODULE), MB_OK | MB_ICONERROR);
-		return 1;
-	}
-
-	free(keyPair);
-
-	if ( !g_skype->start())
-	{
-		::MessageBox(NULL, TranslateT("SkypeKit did not start."), _T(MODULE), MB_OK | MB_ICONERROR);
-		return 1;
-	}
-
 	// ---
+
+	mir_getTMI(&tmi);
+	mir_getLP(&pluginInfo);
 
 	PROTOCOLDESCRIPTOR pd = { sizeof(pd) };
 	pd.szName = "SKYPE";
@@ -307,8 +284,8 @@ extern "C" int __declspec(dllexport) Unload(void)
 	CSkypeProto::UninitIcons();
 	CSkypeProto::UninitMenus();
 
-	g_skype->stop();
-	delete g_skype;
+	//this->skypeKit->stop();
+	//delete this->skypeKit;
 
 	return 0;
 }

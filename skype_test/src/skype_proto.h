@@ -180,6 +180,7 @@ public:
 	int SendBroadcast(HANDLE hContact, int type, int result, HANDLE hProcess, LPARAM lParam);
 
 protected:
+	CSkypeKit *skypeKit;
 	CAccount::Ref account;
 	CContact::Refs contactList;
 	CTransfer::Refs transferList;

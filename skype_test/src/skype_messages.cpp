@@ -52,7 +52,7 @@ void CSkypeProto::OnMessageReceived(CConversation::Ref &conversation, CMessage::
 	message->GetPropAuthor(data);			
 		
 	CContact::Ref author;
-	g_skype->GetContact(data, author);
+	this->skypeKit->GetContact(data, author);
 
 	HANDLE hContact = this->AddContact(author);
 	this->UserIsTyping(hContact, PROTOTYPE_SELFTYPING_OFF);
@@ -99,7 +99,7 @@ void CSkypeProto::OnMessageSent(CConversation::Ref &conversation, CMessage::Ref 
 	participants[0]->GetPropIdentity(data);
 		
 	CContact::Ref receiver;
-	g_skype->GetContact(data, receiver);
+	this->skypeKit->GetContact(data, receiver);
 
 	HANDLE hContact = this->AddContact(receiver);
 	this->SendBroadcast(
@@ -150,7 +150,7 @@ void CSkypeProto::OnMessageEvent(CConversation::Ref conversation, CMessage::Ref 
 			message->GetPropAuthor(identity);
 
 			CContact::Ref author;
-			g_skype->GetContact(identity, author);
+			this->skypeKit->GetContact(identity, author);
 
 			HANDLE hContact = this->AddContact(author);
 		

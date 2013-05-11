@@ -68,10 +68,10 @@
 
 #define SMI_CHAT_INVITE 1
 
-class CSkype;
-
-extern CSkype *g_skype;
 extern HINSTANCE g_hInstance;
 
 extern int g_cbCountries;
 extern struct CountryListEntry* g_countries;
+
+extern int g_port;
+extern char *LoadKeyPair(HINSTANCE hInstance);

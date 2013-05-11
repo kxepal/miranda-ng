@@ -321,7 +321,7 @@ CConversation::Ref CSkypeProto::StartChat(StringList &invitedContacts)
 		}
 
 		CConversation::Ref conversation;
-		if (g_skype->CreateConferenceWithConsumers(conversation, needToAdd))
+		if (this->skypeKit->CreateConferenceWithConsumers(conversation, needToAdd))
 		{
 			delete param;
 
@@ -388,7 +388,7 @@ void CSkypeProto::JoinToChat(CConversation::Ref conversation, bool showWindow)
 		participants[i]->GetPropRank(rank);
 
 		CContact::Ref contact;
-		g_skype->GetContact(std::string(::mir_utf8encodeW(sid.c_str())).c_str(), contact);
+		this->skypeKit->GetContact(std::string(::mir_utf8encodeW(sid.c_str())).c_str(), contact);
 
 		auto status = Contact::OFFLINE;
 		contact->GetPropAvailability(status);
@@ -420,7 +420,7 @@ void CSkypeProto::AddConactsToChat(CConversation::Ref conversation, const String
 		if (invitedContacts.contains(sid) && !alreadyInChat.contains(sid))
 		{
 			CContact::Ref contact;
-			g_skype->GetContact((char *)mir_ptr<char>(::mir_utf8encodeW(sid)), contact);
+			this->skypeKit->GetContact((char *)mir_ptr<char>(::mir_utf8encodeW(sid)), contact);
 
 			CContact::AVAILABILITY status;
 			contact->GetPropAvailability(status);
@@ -511,9 +511,9 @@ INT_PTR __cdecl CSkypeProto::OnJoinChat(WPARAM wParam, LPARAM)
 		CConversation::Ref conversation;
 
 		//todo: fixme
-		g_skype->GetConversationByIdentity(::mir_utf8encodeW(cid), conversation);
+		this->skypeKit->GetConversationByIdentity(::mir_utf8encodeW(cid), conversation);
 		conversation->GetJoinBlob(data);
-		g_skype->GetConversationByBlob(data, conversation, false);
+		this->skypeKit->GetConversationByBlob(data, conversation, false);
 		conversation->Join();
 
 		this->JoinToChat(conversation);
@@ -545,7 +545,7 @@ int __cdecl CSkypeProto::OnGCEventHook(WPARAM, LPARAM lParam)
 	CConversation::Ref conversation;
 	switch (gch->pDest->iType) {
 	case GC_SESSION_TERMINATE:
-		if (g_skype->GetConversationByIdentity(::mir_utf8encodeW(cid), conversation, false))
+		if (this->skypeKit->GetConversationByIdentity(::mir_utf8encodeW(cid), conversation, false))
 		{
 			Participant::Refs participants;
 			conversation->GetParticipants(participants, CConversation::MYSELF);
@@ -556,7 +556,7 @@ int __cdecl CSkypeProto::OnGCEventHook(WPARAM, LPARAM lParam)
 	case GC_USER_MESSAGE:
 		if (gch->ptszText && gch->ptszText[0])
 		{
-			if (g_skype->GetConversationByIdentity(::mir_utf8encodeW(cid), conversation, false))
+			if (this->skypeKit->GetConversationByIdentity(::mir_utf8encodeW(cid), conversation, false))
 			{
 				CMessage::Ref message;
 				mir_ptr<char> text(::mir_utf8encodeW(gch->ptszText));
@@ -566,7 +566,7 @@ int __cdecl CSkypeProto::OnGCEventHook(WPARAM, LPARAM lParam)
 		break;
 
 	/*case GC_USER_CHANMGR:
-		if (g_skype->GetConversationByIdentity(::mir_utf8encodeW(cid), conversation, false))
+		if (this->skypeKit->GetConversationByIdentity(::mir_utf8encodeW(cid), conversation, false))
 		{
 			StringList invitedContacts(this->GetChatUsers(cid));
 			this->InviteConactsToChat(conversation, invitedContacts); 
@@ -580,7 +580,7 @@ int __cdecl CSkypeProto::OnGCEventHook(WPARAM, LPARAM lParam)
 	case GC_USER_LOGMENU:
 		switch(gch->dwData) {
 		case 10:
-			if (g_skype->GetConversationByIdentity(::mir_utf8encodeW(cid), conversation, false))
+			if (this->skypeKit->GetConversationByIdentity(::mir_utf8encodeW(cid), conversation, false))
 			{
 				StringList invitedContacts(this->GetChatUsers(cid));
 				this->InviteConactsToChat(conversation, invitedContacts);

@@ -4,6 +4,8 @@ CSkypeProto::CSkypeProto(const char* protoName, const TCHAR* userName)
 {
 	::ProtoConstructor(this, protoName, userName);
 
+	this->skypeKit = new CSkypeKit(1);
+
 	this->rememberPassword = false;
 
 	::InitializeCriticalSection(&this->contact_search_lock);
@@ -37,13 +39,16 @@ CSkypeProto::~CSkypeProto()
 		this->password = NULL;
 	}
 
+	this->skypeKit->stop();
+	delete this->skypeKit;
+
 	::ProtoDestructor(this);
 }
 
 HANDLE __cdecl CSkypeProto::AddToList(int flags, PROTOSEARCHRESULT* psr)
 {
 	CContact::Ref contact;
-	g_skype->GetContact((char *)mir_ptr<char>(::mir_utf8encodeW(psr->id)), contact);
+	this->skypeKit->GetContact((char *)mir_ptr<char>(::mir_utf8encodeW(psr->id)), contact);
 	return this->AddContact(contact);
 }
 
@@ -124,7 +129,7 @@ int __cdecl CSkypeProto::AuthRequest(HANDLE hContact, const TCHAR* szMessage)
 	{
 		CContact::Ref contact;
 		SEString sid( mir_ptr<char>(::mir_u2a( mir_ptr<wchar_t>(::db_get_wsa(hContact, this->m_szModuleName, SKYPE_SETTINGS_LOGIN)))));
-		if (g_skype->GetContact(sid, contact))
+		if (this->skypeKit->GetContact(sid, contact))
 		{
 			contact->SetBuddyStatus(Contact::AUTHORIZED_BY_ME);
 			contact->SendAuthRequest(::mir_utf8encodeW(szMessage));
@@ -142,7 +147,7 @@ HANDLE __cdecl CSkypeProto::FileAllow( HANDLE hContact, HANDLE hTransfer, const 
 { 
 	uint oid = (uint)hTransfer;
 
-	CMessage *message = new CMessage(oid, g_skype);
+	CMessage *message = new CMessage(oid, this->skypeKit);
 
 	this->Log(L"Incoming file transfer is accepted");
 	CTransfer::Refs transfers;
@@ -319,7 +324,7 @@ HANDLE __cdecl CSkypeProto::SendFile(HANDLE hContact, const TCHAR *szDescription
 		targets.append((char *)mir_ptr<char>(::mir_utf8encodeW(sid)));
 
 		CConversation::Ref conversation;
-		g_skype->GetConversationByParticipants(targets, conversation);
+		this->skypeKit->GetConversationByParticipants(targets, conversation);
 
 		SEFilenameList fileList;
 		for (int i = 0; ppszFiles[i]; i++)
@@ -358,7 +363,7 @@ int __cdecl CSkypeProto::SendMsg(HANDLE hContact, int flags, const char *msg)
 	targets.append(identity);
 
 	CConversation::Ref conversation;
-	g_skype->GetConversationByParticipants(targets, conversation);
+	this->skypeKit->GetConversationByParticipants(targets, conversation);
 
 	if (conversation)
 	{
@@ -443,7 +448,7 @@ int __cdecl CSkypeProto::UserIsTyping(HANDLE hContact, int type)
 			targets.append(std::string(::mir_utf8encodeW(sid)).c_str());
 
 			CConversation::Ref conversation;
-			g_skype->GetConversationByParticipants(targets, conversation);
+			this->skypeKit->GetConversationByParticipants(targets, conversation);
 
 			if (conversation)
 			{

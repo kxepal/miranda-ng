@@ -29,8 +29,8 @@ int CSkypeProto::OnModulesLoaded(WPARAM, LPARAM)
 		HookEvent(ME_MSG_WINDOWEVENT, &CSkypeProto::OnSrmmWindowOpen);
 	}
 
-	g_skype->SetOnMessageCallback(
-		(CSkype::OnMessaged)&CSkypeProto::OnSkypeEvent, 
+	this->skypeKit->SetOnMessageCallback(
+		(CSkypeKit::OnMessaged)&CSkypeProto::OnSkypeEvent, 
 		this);
 
 	return 0;
@@ -53,6 +53,7 @@ int CSkypeProto::OnPreShutdown(WPARAM, LPARAM)
 	this->SetStatus(ID_STATUS_OFFLINE);
 
 	this->UninitNetLib();
+
 	return 0;
 }
 
@@ -67,7 +68,7 @@ int CSkypeProto::OnContactDeleted(WPARAM wParam, LPARAM lParam)
 			this->LeaveChat(chatID);
 
 			CConversation::Ref conversation;
-			g_skype->GetConversationByIdentity(::mir_utf8encodeW(chatID), conversation);
+			this->skypeKit->GetConversationByIdentity(::mir_utf8encodeW(chatID), conversation);
 			conversation->RetireFrom();
 			conversation->Delete();
 		}
@@ -310,7 +311,7 @@ void CSkypeProto::OnChatEvent(CConversation::Ref &conversation, CMessage::Ref &m
 					if (needToAdd.contains(sid.c_str()) && !alreadyInChat.contains(sid.c_str()))
 					{
 						CContact::Ref contact;
-						g_skype->GetContact(std::string(::mir_utf8encodeW(sid.c_str())).c_str(), contact);
+						this->skypeKit->GetContact(std::string(::mir_utf8encodeW(sid.c_str())).c_str(), contact);
 
 						CContact::AVAILABILITY status;
 						contact->GetPropAvailability(status);

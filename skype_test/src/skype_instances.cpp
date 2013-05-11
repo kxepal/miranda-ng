@@ -20,6 +20,23 @@ CSkypeProto* CSkypeProto::InitSkypeProto(const char* protoName, const wchar_t* u
 	}
 
 	CSkypeProto *ppro = new CSkypeProto(protoName, userName);
+
+	char *keyPair = LoadKeyPair(g_hInstance);
+	if ( !keyPair)
+	{
+		CSkypeProto::ShowNotification(::TranslateT("Initialization key corrupted or not valid."));
+		return NULL;
+	}
+
+	TransportInterface::Status status = ppro->skypeKit->init(keyPair, "127.0.0.1", g_port);
+	if (status != TransportInterface::OK)
+	{
+		CSkypeProto::ShowNotification(::TranslateT("SkypeKit did not initialize."));
+		return NULL;
+	}
+
+	free(keyPair);
+
 	CSkypeProto::instanceList.insert(ppro);
 
 	return ppro;

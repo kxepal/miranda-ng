@@ -11,7 +11,7 @@
 #include "participant.h"
 #include "conversation.h"
 
-class CSkype : public Skype
+class CSkypeKit : public Skype
 {
 public:
 	typedef void (CSkypeProto::* OnMessaged)(CConversation::Ref conversation, CMessage::Ref message);
@@ -25,7 +25,7 @@ public:
 	CMessage*		newMessage(int oid);
 	CTransfer*		newTransfer(int oid);
 
-	CSkype(int num_threads = 1);
+	CSkypeKit(int num_threads = 1);
 
 	void SetOnMessageCallback(OnMessaged callback, CSkypeProto* proto);
 

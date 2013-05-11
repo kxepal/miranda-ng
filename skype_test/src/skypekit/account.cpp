@@ -9,7 +9,7 @@ CAccount::CAccount(unsigned int oid, SERootObject* root) : Account(oid, root)
 
 void CAccount::SetOnAccountChangedCallback(OnAccountChanged callback, CSkypeProto* proto)
 {
-	this->skype = (CSkype *)root;
+	this->skype = (CSkypeKit *)root;
 
 	this->proto = proto;
 	this->callback = callback;
