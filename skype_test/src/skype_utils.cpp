@@ -19,11 +19,11 @@ std::map<std::wstring, std::wstring> CSkypeProto::languages;
 
 void CSkypeProto::InitLanguages()
 {
-	/*List_String languageCodeList;
+	List_String languageCodeList;
     List_String languageNameList;
-	if (this->skypeKit->GetISOLanguageInfo(languageCodeList, languageNameList))
+	if (this->GetISOLanguageInfo(languageCodeList, languageNameList))
 		for (size_t i = 0; i < languageCodeList.size(); i++)
-			CSkypeProto::languages[::mir_a2u(languageCodeList[i])] = ::mir_a2u(languageNameList[i]);*/
+			CSkypeProto::languages[::mir_a2u(languageCodeList[i])] = ::mir_a2u(languageNameList[i]);
 }
 
 void CSkypeProto::InitCustomFolders()

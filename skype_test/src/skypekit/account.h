@@ -2,8 +2,6 @@
 
 #include "common.h"
 
-class CSkypeKit;
-
 class CAccount : public Account
 {
 public:
@@ -20,7 +18,7 @@ public:
 	void SetOnAccountChangedCallback(OnAccountChanged callback, CSkypeProto* proto);
 
 private:
-	CSkypeKit *skype;
+	Skype *skype;
 	CSkypeProto* proto;
 	OnAccountChanged callback;
 	void OnChange(int prop);

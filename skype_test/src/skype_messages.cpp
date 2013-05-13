@@ -33,7 +33,7 @@ int CSkypeProto::OnMessagePreCreate(WPARAM, LPARAM lParam)
 	return 1;
 }
 
-void CSkypeProto::OnMessageReceived(CConversation::Ref &conversation, CMessage::Ref &message)
+void CSkypeProto::OnMessageReceived(const ConversationRef &conversation, const MessageRef &message)
 {
 	SEString data;
 
@@ -52,7 +52,7 @@ void CSkypeProto::OnMessageReceived(CConversation::Ref &conversation, CMessage::
 	message->GetPropAuthor(data);			
 		
 	CContact::Ref author;
-	this->skypeKit->GetContact(data, author);
+	this->GetContact(data, author);
 
 	HANDLE hContact = this->AddContact(author);
 	this->UserIsTyping(hContact, PROTOTYPE_SELFTYPING_OFF);
@@ -75,7 +75,7 @@ void CSkypeProto::OnMessageReceived(CConversation::Ref &conversation, CMessage::
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-void CSkypeProto::OnMessageSent(CConversation::Ref &conversation, CMessage::Ref &message)
+void CSkypeProto::OnMessageSent(const ConversationRef &conversation, const MessageRef &message)
 {
 	SEString data;
 
@@ -99,7 +99,7 @@ void CSkypeProto::OnMessageSent(CConversation::Ref &conversation, CMessage::Ref 
 	participants[0]->GetPropIdentity(data);
 		
 	CContact::Ref receiver;
-	this->skypeKit->GetContact(data, receiver);
+	this->GetContact(data, receiver);
 
 	HANDLE hContact = this->AddContact(receiver);
 	this->SendBroadcast(
@@ -119,7 +119,7 @@ void CSkypeProto::OnMessageSent(CConversation::Ref &conversation, CMessage::Ref 
 		status == CMessage::UNCONSUMED_NORMAL);
 }
 
-void CSkypeProto::OnMessageEvent(CConversation::Ref conversation, CMessage::Ref message)
+void CSkypeProto::OnMessageEvent(const ConversationRef &conversation, const MessageRef &message)
 {
 	CMessage::TYPE messageType;
 	message->GetPropType(messageType);
@@ -150,7 +150,7 @@ void CSkypeProto::OnMessageEvent(CConversation::Ref conversation, CMessage::Ref 
 			message->GetPropAuthor(identity);
 
 			CContact::Ref author;
-			this->skypeKit->GetContact(identity, author);
+			this->GetContact(identity, author);
 
 			HANDLE hContact = this->AddContact(author);
 		

@@ -215,7 +215,6 @@
     <ClCompile Include="src\skypekit\message.cpp" />
     <ClCompile Include="src\skypekit\participant.cpp" />
     <ClCompile Include="src\skypekit\search.cpp" />
-    <ClCompile Include="src\skypekit\skypekit.cpp" />
     <ClCompile Include="src\skypekit\transfer.cpp" />
     <ClCompile Include="src\skype_account.cpp" />
     <ClCompile Include="src\skype_avatars.cpp" />
@@ -233,7 +232,9 @@
     <ClCompile Include="src\skype_own_info.cpp" />
     <ClCompile Include="src\skype_profile.cpp" />
     <ClCompile Include="src\skype_proto.cpp" />
+    <ClCompile Include="src\skype_runtime.cpp" />
     <ClCompile Include="src\skype_services.cpp" />
+    <ClCompile Include="src\skype_skype.cpp" />
     <ClCompile Include="src\skype_transfers.cpp" />
     <ClCompile Include="src\skype_utils.cpp" />
   </ItemGroup>

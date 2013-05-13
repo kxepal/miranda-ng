@@ -72,6 +72,3 @@ extern HINSTANCE g_hInstance;
 
 extern int g_cbCountries;
 extern struct CountryListEntry* g_countries;
-
-extern int g_port;
-extern char *LoadKeyPair(HINSTANCE hInstance);
