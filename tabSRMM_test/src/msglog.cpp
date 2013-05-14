@@ -1034,6 +1034,13 @@ static char *Template_CreateRTFFromDbEvent(struct TWindowData *dat, HANDLE hCont
 								mir_free( tszFileName );
 							}
 							break;
+						default:
+							if (IsCustomEvent(dbei.eventType))
+							{
+								TCHAR* tszText = DbGetEventTextT(&dbei, CP_ACP);
+								AppendUnicodeToBuffer(&buffer, &bufferEnd, &bufferAlloced, tszText, 0);
+							}
+							break;
 					}
 					break;
 				case '*':       // bold
