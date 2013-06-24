@@ -519,7 +519,10 @@ void TSAPI UpdateStatusBar(const TWindowData *dat)
 {
 	if (dat && dat->pContainer->hwndStatus && dat->pContainer->hwndActive == dat->hwnd) {
 		if (dat->bType == SESSIONTYPE_IM) {
-			if (dat->szStatusBar[0]) {
+			/*if (dat->szStatusBarCustom[0]) {
+				SendMessage(dat->pContainer->hwndStatus, SB_SETICON, 0, 0);
+				SendMessage(dat->pContainer->hwndStatus, SB_SETTEXT, 0, (LPARAM)dat->szStatusBarCustom);
+			} else*/ if (dat->szStatusBar[0]) {
 				SendMessage(dat->pContainer->hwndStatus, SB_SETICON, 0, (LPARAM)PluginConfig.g_buttonBarIcons[ICON_DEFAULT_TYPING]);
 				SendMessage(dat->pContainer->hwndStatus, SB_SETTEXT, 0, (LPARAM)dat->szStatusBar);
 			}
@@ -2147,14 +2150,14 @@ void TSAPI ConfigureSmileyButton(TWindowData *dat)
 
 HICON TSAPI GetXStatusIcon(const TWindowData *dat)
 {
-	char szServiceName[128];
 	BYTE xStatus = dat->cache->getXStatusId();
+	if (xStatus == 0)
+		return NULL;
 
-	mir_snprintf(szServiceName, 128, "%s/GetXStatusIcon", dat->cache->getActiveProto());
+	if ( !ProtoServiceExists(dat->cache->getActiveProto(), PS_GETCUSTOMSTATUSICON))
+		return NULL;
 
-	if (ServiceExists(szServiceName) && xStatus > 0 && xStatus <= 32)
-		return (HICON)(CallProtoService(dat->cache->getActiveProto(), "/GetXStatusIcon", xStatus, 0));
-	return 0;
+	return (HICON)(CallProtoService(dat->cache->getActiveProto(), PS_GETCUSTOMSTATUSICON, xStatus, 0));
 }
 
 LRESULT TSAPI GetSendButtonState(HWND hwnd)
@@ -2181,10 +2184,7 @@ void TSAPI EnableSendButton(const TWindowData *dat, int iMode)
 
 void TSAPI SendNudge(const TWindowData *dat)
 {
-	char szServiceName[128];
-
-	mir_snprintf(szServiceName, 128, "%s/SendNudge", dat->cache->getActiveProto());
-	if (ServiceExists(szServiceName) && ServiceExists(MS_NUDGE_SEND))
+	if ( ProtoServiceExists(dat->cache->getActiveProto(), "/SendNudge") && ServiceExists(MS_NUDGE_SEND))
 		CallService(MS_NUDGE_SEND, (WPARAM)dat->cache->getActiveContact(), 0);
 	else
 		SendMessage(dat->hwnd, DM_ACTIVATETOOLTIP, IDC_MESSAGE,

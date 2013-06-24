@@ -532,10 +532,100 @@ static int RoomWndResize(HWND hwndDlg, LPARAM lParam, UTILRESIZECONTROL *urc)
 	return RD_ANCHORX_LEFT | RD_ANCHORY_TOP;
 }
 
-
 /*
  * subclassing for the message input control (a richedit text control)
  */
+
+static bool TabAutoComplete(HWND hwnd, MESSAGESUBDATA *dat, SESSION_INFO *si)
+{
+	LRESULT lResult = (LRESULT)SendMessage(hwnd, EM_GETSEL, 0, 0);
+	int start = LOWORD(lResult), end = HIWORD(lResult);
+	SendMessage(hwnd, EM_SETSEL, end, end);
+
+	GETTEXTEX gt = {0};
+	gt.codepage = 1200;
+	gt.flags = GTL_DEFAULT | GTL_PRECISE;
+	int iLen = SendMessage(hwnd, EM_GETTEXTLENGTHEX, (WPARAM)&gt, 0);
+	if (iLen <= 0)
+		return false;
+
+	bool isTopic = false, isRoom = false;
+	TCHAR *pszName = NULL;
+	TCHAR *pszText = (TCHAR*)Utils::safeMirCalloc((iLen + 10) * sizeof(TCHAR));
+
+	gt.flags = GT_DEFAULT;
+	gt.cb = (iLen + 9) * sizeof(TCHAR);
+	SendMessage(hwnd, EM_GETTEXTEX, (WPARAM)&gt, (LPARAM)pszText);
+
+	if (start > 1 && pszText[start-1] == ' ' && pszText[start-2] == ':')
+		start -= 2;
+
+	if (dat->szSearchResult != NULL) {
+		int cbResult = (int)_tcslen(dat->szSearchResult);
+		if (start >= cbResult && !_tcsncicmp(dat->szSearchResult, pszText+start-cbResult, cbResult)) {
+			start -= cbResult;
+			goto LBL_SkipEnd;
+		}
+	}
+
+	while(start > 0 && pszText[start-1] != ' ' && pszText[start-1] != 13 && pszText[start-1] != VK_TAB)
+		start--;
+
+LBL_SkipEnd:
+	while (end < iLen && pszText[end] != ' ' && pszText[end] != 13 && pszText[end-1] != VK_TAB)
+		end++;
+
+	if (pszText[start] == '#')
+		isRoom = TRUE;
+	else {
+		int topicStart = start;
+		while (topicStart > 0 && (pszText[topicStart-1] == ' ' || pszText[topicStart-1] == 13 || pszText[topicStart-1] == VK_TAB))
+			topicStart--;
+		if (topicStart > 5 && _tcsstr(&pszText[topicStart-6], _T("/topic")) == &pszText[topicStart-6])
+			isTopic = TRUE;
+	}
+	if (dat->szSearchQuery == NULL) {
+		size_t len = (end - start) + 1;
+		dat->szSearchQuery = (TCHAR*)Utils::safeMirAlloc(sizeof(TCHAR) * len);
+		wcsncpy(dat->szSearchQuery, pszText + start, len);
+		dat->szSearchQuery[len - 1] = 0;
+		dat->szSearchResult = mir_tstrdup(dat->szSearchQuery);
+		dat->lastSession = NULL;
+	}
+	if (isTopic)
+		pszName = si->ptszTopic;
+	else if (isRoom) {
+		dat->lastSession = SM_FindSessionAutoComplete(si->pszModule, si, dat->lastSession, dat->szSearchQuery, dat->szSearchResult);
+		if (dat->lastSession != NULL)
+			pszName = dat->lastSession->ptszName;
+	}
+	else pszName = UM_FindUserAutoComplete(si->pUsers, dat->szSearchQuery, dat->szSearchResult);
+
+	replaceStrT(dat->szSearchResult, NULL);
+
+	if (pszName != NULL) {
+		dat->szSearchResult = mir_tstrdup(pszName);
+		if (end != start) {
+			ptrT szReplace;
+			if (!isRoom && !isTopic && g_Settings.AddColonToAutoComplete && start == 0) {
+				szReplace = (TCHAR*)Utils::safeMirAlloc((wcslen(pszName) + 4) * sizeof(TCHAR));
+				wcscpy(szReplace, pszName);
+				wcscat(szReplace, L": ");
+				pszName = szReplace;
+			}
+			SendMessage(hwnd, EM_SETSEL, start, end);
+			SendMessage(hwnd, EM_REPLACESEL, TRUE, (LPARAM)pszName);
+		}
+		return true;
+	}
+
+	if (end != start) {
+		SendMessage(hwnd, EM_SETSEL, start, end);
+		SendMessage(hwnd, EM_REPLACESEL, TRUE, (LPARAM)dat->szSearchQuery);
+	}
+	replaceStrT(dat->szSearchQuery, NULL);
+	return false;
+}
 
 static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -775,7 +865,7 @@ static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, 
 				case VK_PRIOR:
 				case VK_NEXT:
 				case VK_HOME:
-				case VK_END: {
+				case VK_END:
 					WPARAM wp = 0;
 
 					if (wParam == VK_UP)
@@ -794,7 +884,6 @@ static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, 
 
 					SendMessage(GetDlgItem(hwndParent, IDC_CHAT_LOG), WM_VSCROLL, wp, 0);
 					return 0;
-								 }
 				}
 			}
 
@@ -843,95 +932,8 @@ static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, 
 				return TRUE;
 			}
 			if (wParam == VK_TAB && !isCtrl && !isShift) {    //tab-autocomplete
-				int 		iLen, end, topicStart;
-				BOOL 		isTopic = FALSE;
-				BOOL 		isRoom = FALSE;
-				wchar_t*	pszText = NULL;
-				GETTEXTEX	gt = {0};
-				LRESULT		lResult = (LRESULT)SendMessage(hwnd, EM_GETSEL, 0, 0);
-				bool		fCompleted = false;
-
 				SendMessage(hwnd, WM_SETREDRAW, FALSE, 0);
-				start = LOWORD(lResult);
-				end = HIWORD(lResult);
-				SendMessage(hwnd, EM_SETSEL, end, end);
-
-				gt.codepage = 1200;
-				gt.flags = GTL_DEFAULT | GTL_PRECISE;
-
-				iLen = SendMessage(hwnd, EM_GETTEXTLENGTHEX, (WPARAM)&gt, 0);
-				if (iLen > 0) {
-					wchar_t*	pszName = NULL;
-					pszText = reinterpret_cast<wchar_t*>(Utils::safeMirCalloc((iLen + 10) * sizeof(wchar_t)));
-					gt.flags = GT_DEFAULT;
-					gt.cb = (iLen + 9) * sizeof(wchar_t);
-
-					SendMessage(hwnd, EM_GETTEXTEX, (WPARAM)&gt, (LPARAM)pszText);
-
-					if (start > 1 && pszText[start-1] == ' ' && pszText[start-2] == ':')
-						start--;
-
-					while( start > 0 && pszText[start-1] != ' ' && pszText[start-1] != 13 && pszText[start-1] != VK_TAB)
-						start--;
-
-					while (end < iLen && pszText[end] != ' ' && pszText[end] != 13 && pszText[end-1] != VK_TAB)
-						end ++;
-
-					if (pszText[start] == '#')
-						isRoom = TRUE;
-					else {
-						topicStart = (int)start;
-						while ( topicStart >0 && (pszText[topicStart-1] == ' ' || pszText[topicStart-1] == 13 || pszText[topicStart-1] == VK_TAB))
-							topicStart--;
-						if (topicStart > 5 && _tcsstr(&pszText[topicStart-6], _T("/topic")) == &pszText[topicStart-6])
-							isTopic = TRUE;
-					}
-					if (dat->szSearchQuery == NULL) {
-						size_t len = (end - start) + 1;
-						dat->szSearchQuery = reinterpret_cast<wchar_t*>(Utils::safeMirAlloc(sizeof(wchar_t) * len));
-						wcsncpy( dat->szSearchQuery, pszText + start, len);
-						dat->szSearchQuery[len - 1] = 0;
-						dat->szSearchResult = mir_tstrdup(dat->szSearchQuery);
-						dat->lastSession = NULL;
-					}
-					if (isTopic) {
-						pszName = Parentsi->ptszTopic;
-					} else if (isRoom) {
-						dat->lastSession = SM_FindSessionAutoComplete(Parentsi->pszModule, Parentsi, dat->lastSession, dat->szSearchQuery, dat->szSearchResult);
-						if (dat->lastSession != NULL)
-							pszName = dat->lastSession->ptszName;
-					} else
-						pszName = UM_FindUserAutoComplete(Parentsi->pUsers, dat->szSearchQuery, dat->szSearchResult);
-
-					mir_free(pszText);
-					pszText = NULL;
-					mir_free(dat->szSearchResult);
-					dat->szSearchResult = 0;
-					if (pszName == 0) {
-						if ((int)end != (int)start) {
-							SendMessage(hwnd, EM_SETSEL, start, end);
-							SendMessage(hwnd, EM_REPLACESEL, TRUE, (LPARAM)dat->szSearchQuery);
-						}
-						mir_free(dat->szSearchQuery);
-						dat->szSearchQuery = NULL;
-					} else {
-						pszText = 0;
-						dat->szSearchResult = mir_tstrdup(pszName);
-						if ((int)end != (int)start) {
-							if (!isRoom && !isTopic && g_Settings.AddColonToAutoComplete && start == 0) {
-								pszText = reinterpret_cast<wchar_t*>(Utils::safeMirAlloc((wcslen(pszName) + 4) * sizeof(wchar_t)));
-								wcscpy(pszText, pszName);
-								wcscat(pszText, L": ");
-								pszName = pszText;
-							}
-							SendMessage(hwnd, EM_SETSEL, start, end);
-							SendMessage(hwnd, EM_REPLACESEL, TRUE, (LPARAM)pszName);
-						}
-						if (pszText)
-							mir_free(pszText);
-						fCompleted = true;
-					}
-				}
+				bool fCompleted = TabAutoComplete(hwnd, dat, Parentsi);
 				SendMessage(hwnd, WM_SETREDRAW, TRUE, 0);
 				RedrawWindow(hwnd, NULL, NULL, RDW_INVALIDATE);
 				if (!fCompleted && !PluginConfig.m_AllowTab) {
@@ -941,7 +943,8 @@ static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, 
 						SetFocus(GetDlgItem(mwdat->hwnd, IDC_CHAT_LOG));
 				}
 				return 0;
-			} else if (wParam != VK_RIGHT && wParam != VK_LEFT) {
+			}
+			if (wParam != VK_RIGHT && wParam != VK_LEFT) {
 				mir_free(dat->szSearchQuery);
 				dat->szSearchQuery = NULL;
 				mir_free(dat->szSearchResult);
@@ -1408,12 +1411,10 @@ static void ProcessNickListHovering(HWND hwnd, int hoveredItem, POINT * pt, SESS
 	static int currentHovered = -1;
 	static HWND hwndToolTip = NULL;
 	static HWND oldParent = NULL;
-	TOOLINFO ti = {0};
-	RECT clientRect;
-	BOOL bNewTip = FALSE;
-	USERINFO *ui1 = NULL;
 
-	if (hoveredItem == currentHovered) return;
+	if (hoveredItem == currentHovered)
+		return;
+
 	currentHovered = hoveredItem;
 
 	if (oldParent != hwnd && hwndToolTip) {
@@ -1421,52 +1422,49 @@ static void ProcessNickListHovering(HWND hwnd, int hoveredItem, POINT * pt, SESS
 		DestroyWindow(hwndToolTip);
 		hwndToolTip = NULL;
 	}
+
 	if (hoveredItem == -1) {
-
 		SendMessage(hwndToolTip, TTM_ACTIVATE, 0, 0);
+		return;
+	} 
 
-	} else {
-
-		if (!hwndToolTip) {
-			hwndToolTip = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS,  NULL,
-										 WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP,
-										 CW_USEDEFAULT, CW_USEDEFAULT,  CW_USEDEFAULT,  CW_USEDEFAULT,
-										 hwnd, NULL, g_hInst,  NULL);
-			bNewTip = TRUE;
-		}
-
-		GetClientRect(hwnd, &clientRect);
-		ti.cbSize = sizeof(TOOLINFO);
-		ti.uFlags = TTF_SUBCLASS;
-		ti.hinst = g_hInst;
-		ti.hwnd = hwnd;
-		ti.uId = 1;
-		ti.rect = clientRect;
-
-		ti.lpszText = NULL;
-
-		ui1 = SM_GetUserFromIndex(parentdat->ptszID, parentdat->pszModule, currentHovered);
-		if (ui1) {
-			char serviceName[256];
-			_snprintf(serviceName, SIZEOF(serviceName), "%s"MS_GC_PROTO_GETTOOLTIPTEXT, parentdat->pszModule);
-			if (ServiceExists(serviceName))
-				ti.lpszText = (TCHAR*)CallService(serviceName, (WPARAM)parentdat->ptszID, (LPARAM)ui1->pszUID);
-			else {
-				TCHAR ptszBuf[ 1024 ];
-				mir_sntprintf( ptszBuf, SIZEOF(ptszBuf), _T("%s: %s\r\n%s: %s\r\n%s: %s"),
-					TranslateT("Nick name"), ui1->pszNick,
-					TranslateT("Unique Id"), ui1->pszUID,
-					TranslateT("Status"), TM_WordToString( parentdat->pStatuses, ui1->Status ));
-				ti.lpszText = mir_tstrdup( ptszBuf );
-			}
-		}
-
-		SendMessage(hwndToolTip, bNewTip ? TTM_ADDTOOL : TTM_UPDATETIPTEXT, 0, (LPARAM)&ti);
-		SendMessage(hwndToolTip, TTM_ACTIVATE, (ti.lpszText != NULL) , 0);
-		SendMessage(hwndToolTip, TTM_SETMAXTIPWIDTH, 0 , 400);
-		if (ti.lpszText)
-			mir_free(ti.lpszText);
+	BOOL bNewTip = FALSE;
+	if (!hwndToolTip) {
+		hwndToolTip = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS,  NULL,
+										WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP,
+										CW_USEDEFAULT, CW_USEDEFAULT,  CW_USEDEFAULT,  CW_USEDEFAULT,
+										hwnd, NULL, g_hInst,  NULL);
+		bNewTip = TRUE;
 	}
+
+	RECT clientRect;
+	GetClientRect(hwnd, &clientRect);
+
+	TOOLINFO ti = { sizeof(ti) };
+	ti.uFlags = TTF_SUBCLASS;
+	ti.hinst = g_hInst;
+	ti.hwnd = hwnd;
+	ti.uId = 1;
+	ti.rect = clientRect;
+
+	TCHAR ptszBuf[1024];
+
+	USERINFO *ui1 = SM_GetUserFromIndex(parentdat->ptszID, parentdat->pszModule, currentHovered);
+	if (ui1) {
+		if ( ProtoServiceExists(parentdat->pszModule, MS_GC_PROTO_GETTOOLTIPTEXT))
+			ti.lpszText = (TCHAR*)ProtoCallService(parentdat->pszModule, MS_GC_PROTO_GETTOOLTIPTEXT, (WPARAM)parentdat->ptszID, (LPARAM)ui1->pszUID);
+		else {
+			mir_sntprintf(ptszBuf, SIZEOF(ptszBuf), _T("%s: %s\r\n%s: %s\r\n%s: %s"),
+				TranslateT("Nick name"), ui1->pszNick,
+				TranslateT("Unique Id"), ui1->pszUID,
+				TranslateT("Status"), TM_WordToString( parentdat->pStatuses, ui1->Status));
+			ti.lpszText = ptszBuf;
+		}
+	}
+
+	SendMessage(hwndToolTip, bNewTip ? TTM_ADDTOOL : TTM_UPDATETIPTEXT, 0, (LPARAM)&ti);
+	SendMessage(hwndToolTip, TTM_ACTIVATE, (ti.lpszText != NULL) , 0);
+	SendMessage(hwndToolTip, TTM_SETMAXTIPWIDTH, 0 , 400);
 }
 
 /*
@@ -1819,7 +1817,6 @@ static LRESULT CALLBACK NicklistSubclassProc(HWND hwnd, UINT msg, WPARAM wParam,
 			CLCINFOTIP ti = {0};
 			USERINFO *ui1 = NULL;
 			TCHAR ptszBuf[1024];
-			char serviceName[256];
 			POINT pt;
 
 			struct TWindowData *dat = (struct TWindowData *)GetWindowLongPtr(hwndParent, GWLP_USERDATA);
@@ -1841,15 +1838,14 @@ static LRESULT CALLBACK NicklistSubclassProc(HWND hwnd, UINT msg, WPARAM wParam,
 			ui1 = SM_GetUserFromIndex(parentdat->ptszID, parentdat->pszModule, currentHovered);
 			if (ui1) {
 				ti.cbSize = sizeof(ti);
-				mir_snprintf(serviceName, SIZEOF(serviceName), "%s"MS_GC_PROTO_GETTOOLTIPTEXT, parentdat->pszModule);
 
-				if (ServiceExists(serviceName))
-					mir_sntprintf(ptszBuf, SIZEOF(ptszBuf), _T("%s"), (TCHAR*)CallService(serviceName, (WPARAM)parentdat->ptszID, (LPARAM)ui1->pszUID));
-				else 
+				if (ProtoServiceExists(parentdat->pszModule, MS_GC_PROTO_GETTOOLTIPTEXT))
+					_tcsncpy(ptszBuf, (TCHAR*)ProtoCallService(parentdat->pszModule, MS_GC_PROTO_GETTOOLTIPTEXT, (WPARAM)parentdat->ptszID, (LPARAM)ui1->pszUID), SIZEOF(ptszBuf));
+				else
 					mir_sntprintf(ptszBuf, SIZEOF(ptszBuf), _T("<b>%s:</b>\t%s\n<b>%s:</b>\t%s\n<b>%s:</b>\t%s"),
-					TranslateT("Nick"), ui1->pszNick,
-					TranslateT("Unique id"), ui1->pszUID,
-					TranslateT("Status"), TM_WordToString(parentdat->pStatuses, ui1->Status));
+						TranslateT("Nick"), ui1->pszNick,
+						TranslateT("Unique id"), ui1->pszUID,
+						TranslateT("Status"), TM_WordToString(parentdat->pStatuses, ui1->Status));
 
 				if (ptszBuf != NULL)
 					if (CallService("mToolTip/ShowTipW", (WPARAM)mir_tstrdup(ptszBuf), (LPARAM)&ti))
@@ -3113,10 +3109,10 @@ LABEL_SHOWWINDOW:
 					if (GetSendButtonState(hwndDlg) != PBS_DISABLED) {
 						MODULEINFO *mi = MM_FindModule(si->pszModule);
 
-						mir_ptr<char> pszRtf( Chat_Message_GetFromStream(hwndDlg, si));
+						ptrA pszRtf( Chat_Message_GetFromStream(hwndDlg, si));
 						SM_AddCommand(si->ptszID, si->pszModule, pszRtf);
 
-						mir_ptr<TCHAR> ptszText( Chat_DoRtfToTags(pszRtf, si));
+						ptrT ptszText( Chat_DoRtfToTags(pszRtf, si));
 						if ((TCHAR*)ptszText == NULL)
 							break;
 

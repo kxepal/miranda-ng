@@ -160,7 +160,7 @@ CSendLaterJob::~CSendLaterJob()
 				ppd.lchIcon = fFailed ? PluginConfig.g_iconErr : PluginConfig.g_IconMsgEvent;
 				ppd.PluginData = (void*)hContact;
 				ppd.iSeconds = fFailed ? -1 : nen_options.iDelayMsg;
-				PUAddPopUpT(&ppd);
+				PUAddPopupT(&ppd);
 			}
 		}
 		if (fFailed && (bCode == JOB_AGE || bCode == JOB_REMOVABLE) && szId[0] == 'S')
@@ -455,10 +455,16 @@ int CSendLater::sendIt(CSendLaterJob *job)
 			return 0;
 		}
 	}
-	if (wContactStatus == ID_STATUS_OFFLINE) {
-		job->bCode = CSendLaterJob::JOB_STATUS;
-		return 0;
-	}
+
+	// RM: use offline only for protocols which doesn't support offline sending
+	// - but no protocol except facebook supports PF4_IMSENDOFFLINE so disabled at all
+	/*if (wContactStatus == ID_STATUS_OFFLINE) {
+		int pcaps = CallProtoService(szProto, PS_GETCAPS, PFLAGNUM_4, 0);
+		if (!(pcaps & PF4_IMSENDOFFLINE)) {
+			job->bCode = CSendLaterJob::JOB_STATUS;
+			return 0;
+		}
+	}*/
 
 	dwFlags = IsUtfSendAvailable(hContact) ? PREF_UTF : PREF_UNICODE;
 
@@ -901,7 +907,7 @@ INT_PTR CALLBACK CSendLater::DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 							job->writeFlags();
 							break;
 						case ID_QUEUEMANAGER_COPYMESSAGETOCLIPBOARD:
-							Utils::CopyToClipBoard((TCHAR*)mir_ptr<TCHAR>( mir_utf8decodeT(job->sendBuffer)), m_hwndDlg);
+							Utils::CopyToClipBoard((TCHAR*)ptrT( mir_utf8decodeT(job->sendBuffer)), m_hwndDlg);
 							break;
 						case ID_QUEUEMANAGER_RESETSELECTED:
 							if (job->bCode == CSendLaterJob::JOB_DEFERRED) {
