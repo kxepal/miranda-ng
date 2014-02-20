@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
+# Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Miranda", "..\src\miranda32_12.vcxproj", "{F9916510-9055-4C9F-997A-3755DEC1511B}"
@@ -407,6 +407,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MirandaG15", "..\plugins\MirandaG15\MirandaG15_12.vcxproj", "{8ACA3C8B-BDFA-47B2-8578-069555BA05B3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RemovePersonalSettings", "..\plugins\RemovePersonalSettings\rps_12.vcxproj", "{0D3EF7C4-B99C-E87E-D0D8-C6E003B7EB65}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tox", "..\plugins\Tox\Tox_12.vcxproj", "{BCFAB658-326E-466D-995B-E76636C1DEA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1808,6 +1810,14 @@ Global
 		{0D3EF7C4-B99C-E87E-D0D8-C6E003B7EB65}.Release|Win32.Build.0 = Release|Win32
 		{0D3EF7C4-B99C-E87E-D0D8-C6E003B7EB65}.Release|x64.ActiveCfg = Release|x64
 		{0D3EF7C4-B99C-E87E-D0D8-C6E003B7EB65}.Release|x64.Build.0 = Release|x64
+		{BCFAB658-326E-466D-995B-E76636C1DEA4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BCFAB658-326E-466D-995B-E76636C1DEA4}.Debug|Win32.Build.0 = Debug|Win32
+		{BCFAB658-326E-466D-995B-E76636C1DEA4}.Debug|x64.ActiveCfg = Debug|x64
+		{BCFAB658-326E-466D-995B-E76636C1DEA4}.Debug|x64.Build.0 = Debug|x64
+		{BCFAB658-326E-466D-995B-E76636C1DEA4}.Release|Win32.ActiveCfg = Release|Win32
+		{BCFAB658-326E-466D-995B-E76636C1DEA4}.Release|Win32.Build.0 = Release|Win32
+		{BCFAB658-326E-466D-995B-E76636C1DEA4}.Release|x64.ActiveCfg = Release|x64
+		{BCFAB658-326E-466D-995B-E76636C1DEA4}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

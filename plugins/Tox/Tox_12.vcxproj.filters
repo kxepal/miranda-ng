@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{86de5614-9de5-4ffc-bd34-21d9c671e172}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{ea03e4bb-b8dd-4b5b-b409-2513240d2511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\tox">
+      <UniqueIdentifier>{283e5715-d541-4bda-9ec6-31b29865e1f0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox_proto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\assoc.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\DHT.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\friend_requests.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\group_chats.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\LAN_discovery.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\Lossless_UDP.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\Messenger.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\misc_tools.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\net_crypto.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\network.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\onion.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\onion_announce.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\onion_client.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\ping.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\tox.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\util.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tox\sodium.h">
+      <Filter>Header Files\tox</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\tox_proto.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tox_instances.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
