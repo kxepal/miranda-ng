@@ -1,6 +1,4 @@
 #include "common.h"
-#include "tox_proto.h"
-#include <tox/tox.h>
 
 int hLangpack;
 HINSTANCE g_hInstance;

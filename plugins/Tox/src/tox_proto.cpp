@@ -1,4 +1,4 @@
-#include "tox_proto.h"
+#include "common.h"
 
 CToxProto::CToxProto(const char* protoName, const TCHAR* userName) :
 	PROTO<CToxProto>(protoName, userName)

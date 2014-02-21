@@ -13,5 +13,7 @@
 #include <m_langpack.h>
 
 #include "version.h"
+#include "tox_proto.h"
+#include "..\include\tox\tox.h"
 
 #endif //_COMMON_H_

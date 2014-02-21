@@ -21,55 +21,7 @@
     <ClInclude Include="src\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\tox\assoc.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\DHT.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\friend_requests.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\group_chats.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\LAN_discovery.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\Lossless_UDP.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\Messenger.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\misc_tools.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\net_crypto.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\network.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\onion.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\onion_announce.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\onion_client.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\ping.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\tox.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\util.h">
-      <Filter>Header Files\tox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tox\sodium.h">
+    <ClInclude Include="include\tox\tox.h">
       <Filter>Header Files\tox</Filter>
     </ClInclude>
   </ItemGroup>
@@ -81,6 +33,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\tox_instances.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

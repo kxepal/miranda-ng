@@ -1,4 +1,4 @@
-#include "tox_proto.h"
+#include "common.h"
 
 LIST<CToxProto> CToxProto::instanceList(1, CToxProto::CompareProtos);
 
