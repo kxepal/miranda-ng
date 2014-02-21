@@ -1,12 +1,16 @@
 #include "common.h"
 
+#include <tox/tox.h>
+
 CToxProto::CToxProto(const char* protoName, const TCHAR* userName) :
-	PROTO<CToxProto>(protoName, userName)
+	PROTO<CToxProto>(protoName, userName),
+	_tox(tox_new(0))
 {
 }
 
 CToxProto::~CToxProto()
 {
+	tox_kill(_tox);
 }
 
 MCONTACT __cdecl CToxProto::AddToList(int flags, PROTOSEARCHRESULT* psr) { return 0; }

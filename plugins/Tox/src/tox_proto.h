@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+struct Tox;
+
 struct CToxProto : public PROTO<CToxProto>
 {
 public:
@@ -73,6 +75,9 @@ private:
 	// instances
 	static LIST<CToxProto> instanceList;
 	static int CompareProtos(const CToxProto *p1, const CToxProto *p2);
+
+	// Instance data:
+	Tox *_tox;
 };
 
 #endif //_TOX_PROTO_H_
