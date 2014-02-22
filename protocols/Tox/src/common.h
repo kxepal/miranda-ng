@@ -13,7 +13,12 @@
 #include <m_langpack.h>
 
 #include "version.h"
-#include "tox_proto.h"
+#include "resource.h"
+
 #include "..\include\tox\tox.h"
+
+extern HINSTANCE g_hInstance;
+
+#include "tox_proto.h"
 
 #endif //_COMMON_H_

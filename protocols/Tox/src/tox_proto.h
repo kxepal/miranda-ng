@@ -76,8 +76,26 @@ private:
 	static LIST<CToxProto> instanceList;
 	static int CompareProtos(const CToxProto *p1, const CToxProto *p2);
 
+	static void CALLBACK TimerProc(HWND, UINT, UINT_PTR idEvent, DWORD);
+
 	// Instance data:
 	Tox *_tox;
+	UINT_PTR _timer;
+
+	//services
+	INT_PTR __cdecl CreateAccMgrUI(WPARAM, LPARAM);
+
+	//events
+	static void OnFriendRequest(uint8_t *userId, uint8_t *message, uint16_t messageSize, void *arg);
+    static void OnFriendMessage(Tox *tox, int friendId, uint8_t *message, uint16_t messageSize, void *arg);
+    static void OnFriendNameChange(Tox *tox, int friendId, uint8_t *name, uint16_t nameSize, void *arg);
+    static void OnStatusMessageChanged(Tox *tox, int friendId, uint8_t* message, uint16_t messageSize, void *arg);
+    static void OnUserStatusChanged(Tox *tox, int friendId, TOX_USERSTATUS userStatus, void *arg);
+    static void OnConnectionStatusChanged(Tox *tox, int friendId, uint8_t status, void *arg);
+    static void OnAction(Tox *tox, int friendId, uint8_t *message, uint16_t messageSize, void *arg);
+
+	// dialogs
+	static INT_PTR CALLBACK AccountManagerProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 #endif //_TOX_PROTO_H_

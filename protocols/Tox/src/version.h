@@ -9,7 +9,7 @@
 #define __INTERNAL_NAME            "Tox"
 #define __FILENAME                 "Tox.dll"
 #define __DESCRIPTION              "Tox protocol support for Miranda NG."
-#define __AUTHOR                   "unsane"
+#define __AUTHOR                   "ForNeVeR, unsane"
 #define __AUTHOREMAIL              ""
 #define __AUTHORWEB                "http://miranda-ng.org/p/Tox/"
 #define __COPYRIGHT                "© 2014 Miranda NG project"
