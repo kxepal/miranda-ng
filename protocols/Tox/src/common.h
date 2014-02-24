@@ -10,6 +10,7 @@
 #include <m_protomod.h>
 #include <m_protosvc.h>
 
+#include <m_database.h>
 #include <m_langpack.h>
 
 #include "version.h"

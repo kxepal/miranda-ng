@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-struct Tox;
+#define TOX_SEARCH_BYUID 1001
 
 struct CToxProto : public PROTO<CToxProto>
 {
@@ -93,6 +93,13 @@ private:
     static void OnUserStatusChanged(Tox *tox, int friendId, TOX_USERSTATUS userStatus, void *arg);
     static void OnConnectionStatusChanged(Tox *tox, int friendId, uint8_t status, void *arg);
     static void OnAction(Tox *tox, int friendId, uint8_t *message, uint16_t messageSize, void *arg);
+
+	// contacts
+	bool IsProtoContact(MCONTACT hContact);
+	MCONTACT GetContactByUserId(const wchar_t *userId);
+	MCONTACT CToxProto::AddContact(const wchar_t*userId, const wchar_t *nick, bool isHidden = false);
+	
+	void __cdecl SearchByUidAsync(void* arg);
 
 	// dialogs
 	static INT_PTR CALLBACK AccountManagerProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);

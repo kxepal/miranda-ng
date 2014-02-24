@@ -27,7 +27,13 @@ void CALLBACK CToxProto::TimerProc(HWND, UINT, UINT_PTR idEvent, DWORD)
 	tox_do(ppro->_tox);
 }
 
-MCONTACT __cdecl CToxProto::AddToList(int flags, PROTOSEARCHRESULT* psr) { return 0; }
+MCONTACT __cdecl CToxProto::AddToList(int flags, PROTOSEARCHRESULT* psr)
+{
+	MCONTACT hContact = AddContact(psr->id, psr->nick);
+
+	return hContact;
+}
+
 MCONTACT __cdecl CToxProto::AddToListByEvent(int flags, int iContact, HANDLE hDbEvent) { return 0; }
 
 int __cdecl CToxProto::Authorize(HANDLE hDbEvent) { return 0; }
@@ -47,20 +53,30 @@ DWORD_PTR __cdecl CToxProto::GetCaps(int type, MCONTACT hContact)
 	switch(type)
 	{
 	case PFLAGNUM_1:
-		return PF1_IM;
+		return PF1_IM | PF1_AUTHREQ | PF1_BASICSEARCH | PF1_ADDSEARCHRES;
 	case PFLAGNUM_2:
 		return PF2_ONLINE | PF2_SHORTAWAY | PF2_LIGHTDND;
+	case PFLAGNUM_4:
+		return PF4_SUPPORTTYPING;
 	case PFLAG_UNIQUEIDTEXT:
-		return (INT_PTR)"Username";
+		return (INT_PTR)"User Id";
 	case PFLAG_UNIQUEIDSETTING:
-		return (DWORD_PTR)"username";
+		return (DWORD_PTR)"UserId";
 	}
 
 	return 0;
 }
 int __cdecl CToxProto::GetInfo(MCONTACT hContact, int infoType) { return 0; }
 
-HANDLE __cdecl CToxProto::SearchBasic(const PROTOCHAR* id) { return 0; }
+HANDLE __cdecl CToxProto::SearchBasic(const PROTOCHAR* id)
+{
+	//if ( !IsOnline()) return 0;
+
+	this->ForkThread(&CToxProto::SearchByUidAsync, (void*)id);
+
+	return (HANDLE)TOX_SEARCH_BYUID;
+}
+
 HANDLE __cdecl CToxProto::SearchByEmail(const PROTOCHAR* email) { return 0; }
 HANDLE __cdecl CToxProto::SearchByName(const PROTOCHAR* nick, const PROTOCHAR* firstName, const PROTOCHAR* lastName) { return 0; }
 HWND __cdecl CToxProto::SearchAdvanced(HWND owner) { return 0; }
