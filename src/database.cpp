@@ -65,7 +65,10 @@ DWORD CDb3Mmap::ReallocSpace(DWORD ofs, int oldSize, int newSize)
 	}
 	else {
 		ofsNew = CreateNewSpace(newSize);
-		DBMoveChunk(ofsNew,ofs,oldSize);
+		if (ofsNew + newSize >= m_dwFileSize)
+			ReMap(ofsNew + newSize - m_dwFileSize);
+
+		DBMoveChunk(ofsNew, ofs, oldSize);
 		DeleteSpace(ofs,oldSize);
 	}
 	return ofsNew;

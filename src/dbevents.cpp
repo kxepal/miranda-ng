@@ -357,7 +357,7 @@ STDMETHODIMP_(HANDLE) CDb3Mmap::FindPrevEvent(HANDLE hDbEvent)
 void CDb3Mmap::ConvertContactEvents(DBContact *cc)
 {
 	mir_ptr<BYTE> pBlob((PBYTE)mir_alloc(65536));
-	DBEvent *pPrev = 0;
+	DWORD ofsPrev = 0;
 
 	for (DWORD ofsEvent = cc->ofsFirstEvent; ofsEvent != 0;) {
 		DBEvent_094 pOld = *(DBEvent_094*)DBRead(ofsEvent, sizeof(DBEvent_094), NULL);
@@ -370,29 +370,32 @@ void CDb3Mmap::ConvertContactEvents(DBContact *cc)
 		memcpy(&pNew->ofsPrev, &pOld.ofsPrev, offsetof(DBEvent_094, blob) - sizeof(DWORD));
 		memcpy(&pNew->blob, pBlob, pNew->cbBlob);
 
-		if (pPrev == NULL) // first event
+		if (ofsPrev == 0) // first event
 			cc->ofsFirstEvent = ofsNew, pNew->ofsPrev = 0;
-		else
-			pPrev->ofsNext = ofsNew, pNew->ofsPrev = DWORD(PBYTE(pPrev) - PBYTE(m_pDbCache));
+		else {
+			DBEvent *pPrev = (DBEvent*)&m_pDbCache[ofsPrev];
+			pPrev->ofsNext = ofsNew, pNew->ofsPrev = ofsPrev;
+		}
 
 		if (cc->ofsFirstUnread == ofsEvent)
 			cc->ofsFirstUnread = ofsNew;
 		if (cc->ofsLastEvent == ofsEvent)
 			cc->ofsLastEvent = ofsNew;
 
-		pPrev = pNew;
+		ofsPrev = ofsNew;
 		ofsEvent = pNew->ofsNext;
 	}
 }
 
 void CDb3Mmap::ConvertEvents()
 {
-	ConvertContactEvents((DBContact*)DBRead(m_dbHeader.ofsUser, sizeof(DBContact), NULL));
+	DBContact cc = *(DBContact*)DBRead(m_dbHeader.ofsUser, sizeof(DBContact), NULL);
+	ConvertContactEvents(&cc);
 
 	for (DWORD dwOffset = m_dbHeader.ofsFirstContact; dwOffset != 0;) {
-		DBContact *cc = (DBContact*)DBRead(dwOffset, sizeof(DBContact), NULL);
-		ConvertContactEvents(cc);
-		dwOffset = cc->ofsNext;
+		DBContact cc = *(DBContact*)DBRead(dwOffset, sizeof(DBContact), NULL);
+		ConvertContactEvents(&cc);
+		dwOffset = cc.ofsNext;
 	}
 
 	FlushViewOfFile(m_pDbCache, 0);
