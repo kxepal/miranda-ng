@@ -395,6 +395,7 @@ void CDb3Mmap::ConvertEvents()
 	for (DWORD dwOffset = m_dbHeader.ofsFirstContact; dwOffset != 0;) {
 		DBContact cc = *(DBContact*)DBRead(dwOffset, sizeof(DBContact), NULL);
 		ConvertContactEvents(&cc);
+		DBWrite(dwOffset, &cc, sizeof(cc));
 		dwOffset = cc.ofsNext;
 	}
 
