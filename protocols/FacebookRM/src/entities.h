@@ -28,6 +28,7 @@ struct facebook_user
 
 	std::string user_id;
 	std::string real_name;
+	std::string nick;
 
 	unsigned int status_id;
 	unsigned int gender;
@@ -43,7 +44,7 @@ struct facebook_user
 	facebook_user()
 	{
 		this->handle = NULL;
-		this->user_id = this->real_name = this->image_url = "";
+		this->user_id = this->real_name = this->nick = this->image_url = "";
 		this->status_id = ID_STATUS_OFFLINE;
 		this->gender = this->last_active = 0;
 		this->deleted = this->idle = false;
@@ -55,6 +56,7 @@ struct facebook_user
 		this->handle = fu->handle;
 		this->user_id = fu->user_id;
 		this->real_name = fu->real_name;
+		this->nick = fu->nick;
 		this->status_id = fu->status_id;
 		this->gender = fu->gender;
 		this->last_active = fu->last_active;
@@ -84,8 +86,6 @@ struct facebook_user
 
 struct facebook_chatroom
 {
-	HANDLE handle;
-
 	std::tstring chat_name;
 	std::tstring thread_id;
 	std::map<std::string, std::string> participants;
@@ -107,12 +107,15 @@ struct facebook_message
 	bool isUnread;
 	bool isChat;
 
+	int flag_;
+
 	facebook_message()
 	{
 		this->user_id = this->message_text = this->sender_name = this->message_id = this->thread_id = "";
 		this->time = 0;
 		this->isUnread = this->isIncoming = true;
 		this->isChat = false;
+		this->flag_ = 0;
 	}
 
 	facebook_message(const facebook_message& msg)
@@ -126,6 +129,7 @@ struct facebook_message
 		this->isIncoming = msg.isIncoming;
 		this->isUnread = msg.isUnread;
 		this->isChat = msg.isChat;
+		this->flag_ = msg.flag_;
 	}
 };
 
@@ -135,10 +139,14 @@ struct facebook_notification
 	std::string text;
 	std::string link;
 	std::string id;
+	bool seen;
+	HWND hWndPopup;
 
 	facebook_notification()
 	{
 		this->user_id = this->text = this->link = this->id = "";
+		this->seen = false;
+		this->hWndPopup = NULL;
 	}
 };
 

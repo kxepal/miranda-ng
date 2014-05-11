@@ -3,7 +3,7 @@
 Facebook plugin for Miranda Instant Messenger
 _____________________________________________
 
-Copyright © 2009-11 Michal Zelinka, 2011-13 Robert Pösel
+Copyright ï¿½ 2009-11 Michal Zelinka, 2011-13 Robert Pï¿½sel
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -70,8 +70,6 @@ public:
 	virtual	int      __cdecl AuthRecv(HANDLE hContact, PROTORECVEVENT*);
 	virtual	int      __cdecl AuthRequest(HANDLE hContact, const PROTOCHAR* szMessage);
 
-	virtual	HANDLE   __cdecl ChangeInfo(int iInfoType, void* pInfoData);
-
 	virtual	HANDLE   __cdecl FileAllow(HANDLE hContact, HANDLE hTransfer, const PROTOCHAR* szPath);
 	virtual	int      __cdecl FileCancel(HANDLE hContact, HANDLE hTransfer);
 	virtual	int      __cdecl FileDeny(HANDLE hContact, HANDLE hTransfer, const PROTOCHAR* szReason);
@@ -106,6 +104,7 @@ public:
 	virtual	int       __cdecl UserIsTyping(HANDLE hContact, int type);
 
 	virtual	int       __cdecl OnEvent(PROTOEVENTTYPE iEventType, WPARAM wParam, LPARAM lParam);
+	virtual	HANDLE   __cdecl ChangeInfo(int iInfoType, void* pInfoData);
 
 	////////////////////////
 
@@ -118,6 +117,8 @@ public:
 	INT_PTR __cdecl GetAvatarCaps(WPARAM, LPARAM);
 	INT_PTR __cdecl VisitProfile(WPARAM, LPARAM);
 	INT_PTR __cdecl VisitFriendship(WPARAM, LPARAM);
+	INT_PTR __cdecl VisitConversation(WPARAM, LPARAM);
+	INT_PTR __cdecl VisitNotifications(WPARAM, LPARAM);
 	INT_PTR __cdecl Poke(WPARAM, LPARAM);
 	INT_PTR __cdecl CancelFriendship(WPARAM, LPARAM);
 	INT_PTR __cdecl RequestFriendship(WPARAM, LPARAM);
@@ -126,6 +127,7 @@ public:
 	INT_PTR __cdecl CheckNewsfeeds(WPARAM, LPARAM);
 	INT_PTR __cdecl CheckFriendRequests(WPARAM, LPARAM);
 	INT_PTR __cdecl RefreshBuddyList(WPARAM, LPARAM);
+	INT_PTR __cdecl GetNotificationsCount(WPARAM, LPARAM);
 
 	INT_PTR __cdecl OnJoinChat(WPARAM,LPARAM);
 	INT_PTR __cdecl OnLeaveChat(WPARAM,LPARAM);
@@ -148,6 +150,7 @@ public:
 	int  __cdecl OnIdleChanged(WPARAM,LPARAM);
 	int  __cdecl OnGCEvent(WPARAM,LPARAM);
 	int  __cdecl OnGCMenuHook(WPARAM,LPARAM);
+	int  __cdecl OnDbEventRead(WPARAM, LPARAM);
 
 	// Loops
 	bool    NegotiateConnection();
@@ -189,9 +192,10 @@ public:
 	HANDLE  ContactIDToHContact(std::string);
 	HANDLE  ChatIDToHContact(std::tstring);
 	std::string ThreadIDToContactID(std::string thread_id);
-	HANDLE  AddToContactList(facebook_user*, ContactType type, bool dont_check = false);
-	void    SetAllContactStatuses(int status);
-	HANDLE  HContactFromAuthEvent(HANDLE hEvent);
+	void FacebookProto::LoadContactInfo(facebook_user* fbu);
+	HANDLE AddToContactList(facebook_user*, ContactType type, bool force_save = false);
+	void     SetAllContactStatuses(int status);
+	HANDLE HContactFromAuthEvent(HANDLE hEvent);
 
 	// Chats handling
  	void AddChat(const TCHAR *id, const TCHAR *name);
@@ -202,6 +206,7 @@ public:
 	void RemoveChatContact(const TCHAR *chat_id, const char *id);
 	void SetChatStatus(const char *chat_id, int status);
 	char *GetChatUsers(const TCHAR *chat_id);
+	void ReceiveMessages(std::vector<facebook_message*> messages, bool local_timestamp, bool check_duplicates = false);
 
 	// Connection client
 	facebook_client facy; // TODO: Refactor to "client" and make dynamic
@@ -232,5 +237,6 @@ public:
 	static void CALLBACK APC_callback(ULONG_PTR p);
 
 	// Information providing
-	void NotifyEvent(TCHAR* title, TCHAR* info, HANDLE contact, DWORD flags, std::string *url = NULL, std::string *notification_id = NULL);
+	HWND NotifyEvent(TCHAR* title, TCHAR* info, HANDLE contact, DWORD flags, std::string *url = NULL, std::string *notification_id = NULL);
+	void ShowNotifications();
 };

@@ -3,7 +3,7 @@
 Facebook plugin for Miranda Instant Messenger
 _____________________________________________
 
-Copyright © 2009-11 Michal Zelinka, 2011-13 Robert Pösel
+Copyright ï¿½ 2009-11 Michal Zelinka, 2011-13 Robert Pï¿½sel
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -209,6 +209,7 @@ DWORD facebook_client::choose_security_level(RequestType request_type)
 //	case REQUEST_HOME:
 //	case REQUEST_DTSG:
 //	case REQUEST_BUDDY_LIST:
+//	case REQUEST_LOAD_FRIEND:
 //	case REQUEST_LOAD_FRIENDS:
 //	case REQUEST_USER_INFO:
 //	case REQUEST_LOAD_REQUESTS:
@@ -276,6 +277,7 @@ int facebook_client::choose_method(RequestType request_type)
 //	case REQUEST_PAGES:
 //	case REQUEST_NOTIFICATIONS:
 //	case REQUEST_RECONNECT:
+//	case REQUEST_LOAD_FRIEND:
 //	case REQUEST_LOAD_FRIENDS:
 //	case REQUEST_USER_INFO:
 //	case REQUEST_LOAD_REQUESTS:
@@ -303,7 +305,7 @@ std::string facebook_client::choose_server(RequestType request_type, std::string
 	case REQUEST_MESSAGES_RECEIVE:
 	{
 		std::string server = FACEBOOK_SERVER_CHAT;
-		utils::text::replace_first(&server, "%s", "0");
+		utils::text::replace_first(&server, "%s", this->chat_conn_num_.empty() ? "0" : this->chat_conn_num_);
 		utils::text::replace_first(&server, "%s", this->chat_channel_host_);
 		return server;
 	}
@@ -318,6 +320,7 @@ std::string facebook_client::choose_server(RequestType request_type, std::string
 
 //	case REQUEST_LOGOUT:
 //	case REQUEST_BUDDY_LIST:
+//	case REQUEST_LOAD_FRIEND:
 //	case REQUEST_LOAD_FRIENDS:
 //	case REQUEST_FEEDS:
 //	case REQUEST_PAGES:
@@ -367,6 +370,16 @@ std::string facebook_client::choose_action(RequestType request_type, std::string
 
 	case REQUEST_BUDDY_LIST:
 		return "/ajax/chat/buddy_list.php?__a=1";
+
+	case REQUEST_LOAD_FRIEND:
+	{
+		std::string action = "/ajax/chat/user_info.php?__a=1&viewer=%s&__user=%s";
+		utils::text::replace_all(&action, "%s", self_.user_id);
+		if (get_data != NULL) {
+			action += "&" + (*get_data);
+		}
+		return action;
+	}
 
 	case REQUEST_LOAD_FRIENDS:
 	{
@@ -450,6 +463,8 @@ std::string facebook_client::choose_action(RequestType request_type, std::string
 	case REQUEST_NOTIFICATIONS:
 	{
 		std::string action = "/ajax/notifications/get.php?__a=1&user=%s&time=0&version=2&__user=%s";
+		// TODO: use better format notifications request
+		// std::string action = "/ajax/notifications/client/get.php?__a=1&user=%s&time=0&version=2&__user=%s";
 		utils::text::replace_all(&action, "%s", self_.user_id);
 		return action;
 	}
@@ -499,7 +514,12 @@ std::string facebook_client::choose_action(RequestType request_type, std::string
 		std::string action = "/pull?channel=" + (this->chat_channel_.empty() ? "p_" + self_.user_id : this->chat_channel_);
 		action += "&seq=" + (this->chat_sequence_num_.empty() ? "0" : this->chat_sequence_num_);
 		action += "&partition=" + (this->chat_channel_partition_.empty() ? "0" : this->chat_channel_partition_);
-		action += "&clientid=&cb=&idle=0&state=active";
+		action += "&clientid=" + this->chat_clientid_;
+		action += "&cb=" + utils::text::rand_string(4, "0123456789abcdefghijklmnopqrstuvwxyz");
+		action += "&idle=0&state=active";
+		if (!this->chat_sticky_num_.empty())
+			action += "&sticky_token=" + this->chat_sticky_num_;
+
 		return action;
 	}
 
@@ -659,6 +679,19 @@ void facebook_client::clear_cookies()
 
 	if (!cookies.empty())
 		cookies.clear();
+}
+
+void facebook_client::clear_notifications()
+{	
+	for (std::map<std::string, facebook_notification*>::iterator it = notifications.begin(); it != notifications.end(); ) {
+		if (it->second->hWndPopup != NULL)
+			PUDeletePopup(it->second->hWndPopup); // close popup
+
+		delete it->second;
+		it = notifications.erase(it);
+	}
+
+	notifications.clear();
 }
 
 void loginError(FacebookProto *proto, std::string error_str) {
@@ -883,15 +916,30 @@ bool facebook_client::home()
 	{
 	case HTTP_CODE_OK:
 	{		
-		// Get real_name
+		// Get real name
 		this->self_.real_name = utils::text::source_get_value(&resp.data, 2, "<strong class=\"profileName\">", "</strong>");
-		if (!this->self_.real_name.empty()) {
-			parent->SaveName(NULL, &this->self_);
-			parent->debugLogA("      Got self real name: %s", this->self_.real_name.c_str());
-		} else {
+		
+		// Try to get name again, if we've got some some weird version of Facebook
+		if (this->self_.real_name.empty())
+			this->self_.real_name = utils::text::source_get_value(&resp.data, 4, "id=\"root", "<strong", ">", "</strong>");
+
+		// Get and strip optional nickname
+		std::string::size_type pos = this->self_.real_name.find("<span class=\"alternate_name\">");
+		if (pos != std::string::npos) {
+			this->self_.nick = utils::text::source_get_value(&this->self_.real_name, 2, "<span class=\"alternate_name\">(", ")</span>");
+			parent->debugLogA("      Got self nick name: %s", this->self_.nick.c_str());
+
+			this->self_.real_name = this->self_.real_name.substr(0, pos - 1);
+		}
+		parent->debugLogA("      Got self real name: %s", this->self_.real_name.c_str());
+
+		if (this->self_.real_name.empty()) {
 			client_notify(TranslateT("Something happened to Facebook. Maybe there was some major update so you should wait for an update."));
 			return handle_error("home", FORCE_QUIT);
 		}
+
+		// Save name and nickname
+		parent->SaveName(NULL, &this->self_);
 
 		// Get avatar
 		this->self_.image_url = utils::text::source_get_value(&resp.data, 3, "class=\"l\"", "<img src=\"", "\"");
@@ -949,6 +997,9 @@ bool facebook_client::reconnect()
 
 		this->chat_sequence_num_ = utils::text::source_get_value2(&resp.data, "\"seq\":", ",}");
 		parent->debugLogA("      Got self sequence number: %s", this->chat_sequence_num_.c_str());
+
+		this->chat_conn_num_ = utils::text::source_get_value2(&resp.data, "\"max_conn\":", ",}");
+		parent->debugLogA("      Got self max_conn: %s", this->chat_conn_num_.c_str());
 
 		return handle_success("reconnect");
 	}
@@ -1089,39 +1140,37 @@ bool facebook_client::channel()
 	// Get update
 	http::response resp = flap(REQUEST_MESSAGES_RECEIVE);
 
-	if (resp.code != HTTP_CODE_OK)
-	{
+	if (resp.data.empty()) {
 		// Something went wrong
+		return handle_error("channel");
 	}
-	else if (resp.data.find("\"t\":\"continue\"") != std::string::npos)
-	{
+
+	std::string type = utils::text::source_get_value(&resp.data, 2, "\"t\":\"", "\"");
+	if (type == "continue" || type == "heartbeat") {
 		// Everything is OK, no new message received
 	}
-	else if (resp.data.find("\"t\":\"fullReload\"") != std::string::npos)
-	{
-		// Something went wrong (server flooding?)
+	else if (type == "lb") {
+		// Some new stuff (idk how does it work yet)
+		this->chat_channel_host_ = utils::text::source_get_value(&resp.data, 2, "\"vip\":\"", "\"");
+		parent->debugLogA("      Got self channel host: %s", this->chat_channel_host_.c_str());
 
-		parent->debugLogA("! ! ! Requested full reload");
-    
-		this->chat_sequence_num_ = utils::text::source_get_value2(&resp.data, "\"seq\":", ",}");
-		parent->debugLogA("      Got self sequence number: %s", this->chat_sequence_num_.c_str());
-
-		this->chat_reconnect_reason_ = utils::text::source_get_value2(&resp.data, "\"reason\":", ",}");
-		parent->debugLogA("      Reconnect reason: %s", this->chat_reconnect_reason_.c_str());
+		this->chat_sticky_num_ = utils::text::source_get_value2(&resp.data, "\"sticky\":\"", "\"");
+		parent->debugLogA("      Got self sticky number: %s", this->chat_sticky_num_.c_str());
 	}
-	else if (resp.data.find("\"t\":\"refresh\"") != std::string::npos)
-	{
+	else if (type == "fullReload" || type == "refresh") {
 		// Something went wrong (server flooding?)
-		parent->debugLogA("! ! ! Requested channel refresh");
-    
-		this->chat_reconnect_reason_ = utils::text::source_get_value2(&resp.data, "\"reason\":", ",}");
-		parent->debugLogA("      Reconnect reason: %s", this->chat_reconnect_reason_.c_str());
+		parent->debugLogA("! ! ! Requested %s", type.c_str());
 
 		this->chat_sequence_num_ = utils::text::source_get_value2(&resp.data, "\"seq\":", ",}");
 		parent->debugLogA("      Got self sequence number: %s", this->chat_sequence_num_.c_str());
 
-		return this->reconnect();
-	} else {
+		this->chat_reconnect_reason_ = utils::text::source_get_value2(&resp.data, "\"reason\":", ",}");
+		parent->debugLogA("      Reconnect reason: %s", this->chat_reconnect_reason_.c_str());
+
+		if (type == "refresh")
+			return this->reconnect();
+	}
+	else {
 		// Something has been received, throw to new thread to process
 		std::string* response_data = new std::string(resp.data);
 		parent->ForkThread(&FacebookProto::ProcessMessages, response_data);
@@ -1137,6 +1186,11 @@ bool facebook_client::channel()
 	case HTTP_CODE_OK:
 		return handle_success("channel");
 
+	case HTTP_CODE_GATEWAY_TIMEOUT:
+		// Maybe we have same clientid as other connected client, try to generate different one
+		this->chat_clientid_ = utils::text::rand_string(8, "0123456789abcdef");
+
+		// Intentionally fall to handle_error() below
 	case HTTP_CODE_FAKE_DISCONNECTED:
 	case HTTP_CODE_FAKE_ERROR:
 	default:
@@ -1146,6 +1200,8 @@ bool facebook_client::channel()
 
 bool facebook_client::send_message(std::string message_recipient, std::string message_text, std::string *error_text, MessageMethod method)
 {
+	ScopedLock s(send_message_lock_);
+
 	handle_entry("send_message");
 
 	http::response resp;

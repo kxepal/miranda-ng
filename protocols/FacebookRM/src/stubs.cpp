@@ -3,7 +3,7 @@
 Facebook plugin for Miranda Instant Messenger
 _____________________________________________
 
-Copyright © 2009-11 Michal Zelinka, 2011-13 Robert Pösel
+Copyright ï¿½ 2009-11 Michal Zelinka, 2011-13 Robert Pï¿½sel
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,9 +32,8 @@ int FacebookProto::AuthRecv(HANDLE hContact,PROTORECVEVENT *)
 	return 1;
 }
 
-HANDLE FacebookProto::ChangeInfo(int type,void *info_data)
+HANDLE FacebookProto::ChangeInfo(int iInfoType, void* pInfoData)
 {
-	MessageBoxA(0,"ChangeInfo","",0);
 	return NULL;
 }
 
@@ -55,12 +54,6 @@ int FacebookProto::FileDeny(HANDLE hContact,HANDLE hTransfer,const PROTOCHAR *re
 
 int FacebookProto::FileResume(HANDLE hTransfer,int *action,const PROTOCHAR **filename)
 {
-	return 1;
-}
-
-int FacebookProto::GetInfo(HANDLE hContact, int infoType)
-{
-	// TODO: Most probably some ProtoAck should be here instead
 	return 1;
 }
 

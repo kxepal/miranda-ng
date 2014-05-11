@@ -3,7 +3,7 @@
 Facebook plugin for Miranda Instant Messenger
 _____________________________________________
 
-Copyright © 2009-11 Michal Zelinka, 2011-13 Robert Pösel
+Copyright ï¿½ 2009-11 Michal Zelinka, 2011-13 Robert Pï¿½sel
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,37 +22,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "common.h"
 
-void FacebookProto::SaveName(HANDLE hContact, const facebook_user *fbu)
-{
-	if (fbu->real_name.empty()) {
-		delSetting(hContact, FACEBOOK_KEY_NICK);
-		delSetting(hContact, FACEBOOK_KEY_FIRST_NAME);
-		delSetting(hContact, FACEBOOK_KEY_SECOND_NAME);
-		delSetting(hContact, FACEBOOK_KEY_LAST_NAME);
-		return;
+void updateStringUtf(FacebookProto *proto, HANDLE hContact, const char *key, std::string value) {
+	bool update_required = true;
+	
+	DBVARIANT dbv;
+	if (!proto->getStringUtf(hContact, key, &dbv)) {
+		update_required = strcmp(dbv.pszVal, value.c_str()) != 0;
+		db_free(&dbv);
 	}
 
-	setStringUtf(hContact, FACEBOOK_KEY_NICK, fbu->real_name.c_str());
+	if (update_required) {
+		proto->setStringUtf(hContact, key, value.c_str());
+	}
+}
+
+void FacebookProto::SaveName(HANDLE hContact, const facebook_user *fbu)
+{
+	// Save nick
+	std::string nick = fbu->real_name;
+	if (!getBool(FACEBOOK_KEY_NAME_AS_NICK, 1) && !fbu->nick.empty())
+		nick = fbu->nick;
+
+	updateStringUtf(this, hContact, FACEBOOK_KEY_NICK, nick);
 
 	// Explode whole name into first, second and last name
 	std::vector<std::string> names;
 	utils::text::explode(fbu->real_name, " ", &names);
 
-	setStringUtf(hContact, FACEBOOK_KEY_FIRST_NAME, names.front().c_str());
-	setStringUtf(hContact, FACEBOOK_KEY_LAST_NAME, names.back().c_str());
+	updateStringUtf(this, hContact, FACEBOOK_KEY_FIRST_NAME, names.size() > 0 ? names.front().c_str() : "");
+	updateStringUtf(this, hContact, FACEBOOK_KEY_LAST_NAME, names.size() > 1 ? names.back().c_str() : "");
 
+	std::string middle = "";
 	if (names.size() > 2) {
-		std::string middle = "";
 		for (std::string::size_type i = 1; i < names.size() - 1; i++) {
 			if (!middle.empty())
 				middle += " ";
 
 			middle += names.at(i);
 		}
-		setStringUtf(hContact, FACEBOOK_KEY_SECOND_NAME, middle.c_str());
-	} else {
-		delSetting(hContact, FACEBOOK_KEY_SECOND_NAME);
 	}
+	updateStringUtf(this, hContact, FACEBOOK_KEY_SECOND_NAME, middle);
 }
 
 bool FacebookProto::IsMyContact(HANDLE hContact, bool include_chat)
@@ -138,23 +147,57 @@ std::string FacebookProto::ThreadIDToContactID(std::string thread_id)
 	return user_id;
 }
 
-HANDLE FacebookProto::AddToContactList(facebook_user* fbu, ContactType type, bool dont_check)
+void FacebookProto::LoadContactInfo(facebook_user* fbu)
+{
+	// TODO: support for more friends at once
+	std::string get_query = "&ids[0]=" + utils::url::encode(fbu->user_id);
+	
+	http::response resp = facy.flap(REQUEST_LOAD_FRIEND, NULL, &get_query);
+
+	if (resp.code == HTTP_CODE_OK) {
+		CODE_BLOCK_TRY
+
+		facebook_json_parser* p = new facebook_json_parser(this);
+		p->parse_user_info(&resp.data, fbu);
+		delete p;
+
+		debugLogA("***** Thread info processed");
+
+		CODE_BLOCK_CATCH
+
+			debugLogA("***** Error processing thread info: %s", e.what());
+
+		CODE_BLOCK_END
+	}
+}
+
+HANDLE FacebookProto::AddToContactList(facebook_user* fbu, ContactType type, bool force_save)
 {
 	HANDLE hContact;
 
-	if (!dont_check) {
-		// First, check if this contact exists
-		hContact = ContactIDToHContact(fbu->user_id);
-		if(hContact)
-			return hContact;
+	// First, check if this contact exists
+	hContact = ContactIDToHContact(fbu->user_id);
+
+	// If we have contact and don't need to force save data, just return it
+	if (hContact && !force_save)
+		return hContact;
+
+	force_save = !hContact;
+
+	// If not, try to make a new contact
+	if (!hContact) {
+		hContact = (HANDLE)CallService(MS_DB_CONTACT_ADD, 0, 0);
+
+		if (hContact && CallService(MS_PROTO_ADDTOCONTACT, (WPARAM)hContact, (LPARAM)m_szModuleName) != 0) {
+			CallService(MS_DB_CONTACT_DELETE, (WPARAM)hContact, 0);
+			hContact = NULL;
+		}
 	}
 
-	// If not, make a new contact!
-	hContact = (HANDLE)CallService(MS_DB_CONTACT_ADD, 0, 0);
-	if(hContact)
-	{
-		if(CallService(MS_PROTO_ADDTOCONTACT,(WPARAM)hContact,(LPARAM)m_szModuleName) == 0)
-		{
+	// If we have some contact, we'll save its data
+	if (hContact) {
+		if (force_save) {
+			// Save these values only when adding new contact, not when updating existing
 			setString(hContact, FACEBOOK_KEY_ID, fbu->user_id.c_str());
 
 			std::string homepage = FACEBOOK_URL_PROFILE + fbu->user_id;
@@ -163,32 +206,27 @@ HANDLE FacebookProto::AddToContactList(facebook_user* fbu, ContactType type, boo
 
 			db_unset(hContact, "CList", "MyHandle");
 
-			ptrT group( getTStringA(NULL, FACEBOOK_KEY_DEF_GROUP));
+			ptrT group(getTStringA(NULL, FACEBOOK_KEY_DEF_GROUP));
 			if (group)
 				db_set_ts(hContact, "CList", "Group", group);
-
-			if (!fbu->real_name.empty()) {
-				SaveName(hContact, fbu);
-			}
-
-			if (fbu->gender)
-				setByte(hContact, "Gender", fbu->gender);
-
-			if (!fbu->image_url.empty())
-				setString(hContact, FACEBOOK_KEY_AV_URL, fbu->image_url.c_str());
 
 			setByte(hContact, FACEBOOK_KEY_CONTACT_TYPE, type);
 
 			if (getByte(FACEBOOK_KEY_DISABLE_STATUS_NOTIFY, 0))
 				CallService(MS_IGNORE_IGNORE, (WPARAM)hContact, (LPARAM)IGNOREEVENT_USERONLINE);
-
-			return hContact;
 		}
 
-		CallService(MS_DB_CONTACT_DELETE,(WPARAM)hContact,0);
+		if (!fbu->real_name.empty())
+			SaveName(hContact, fbu);
+
+		if (fbu->gender)
+			setByte(hContact, "Gender", fbu->gender);
+
+		if (!fbu->image_url.empty())
+			setString(hContact, FACEBOOK_KEY_AV_URL, fbu->image_url.c_str());
 	}
 
-	return 0;
+	return hContact;
 }
 
 void FacebookProto::SetAllContactStatuses(int status)
@@ -353,14 +391,16 @@ void FacebookProto::SendPokeWorker(void *p)
 	http::response resp = facy.flap(REQUEST_POKE, &data);
 
 	if (resp.data.find("\"payload\":null", 0) != std::string::npos) {
-		std::string message = utils::text::source_get_value(&resp.data, 3, "__html\":\"", "\\/button>", "\"}");
+		resp.data = utils::text::slashu_to_utf8(
+				utils::text::source_get_value(&resp.data, 2, "__html\":\"", "\"}"));
 
-		if (message.empty()) // message has different format, try to get whole message
-			message = utils::text::source_get_value(&resp.data, 2, "__html\":\"", "\"}");
+		std::string message = utils::text::source_get_value(&resp.data, 4, "<img", "<div", ">", "<\\/div>");
+
+		if (message.empty()) // message has different format, show whole message
+			message = resp.data;
 
 		message = utils::text::special_expressions_decode(
-			utils::text::remove_html(
-				utils::text::slashu_to_utf8(message)));
+			utils::text::remove_html(message));
 
 		ptrT tmessage( mir_utf8decodeT(message.c_str()));
 		NotifyEvent(m_tszUserName, tmessage, NULL, FACEBOOK_EVENT_OTHER);

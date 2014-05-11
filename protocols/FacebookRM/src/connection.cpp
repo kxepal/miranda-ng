@@ -51,6 +51,7 @@ void FacebookProto::ChangeStatus(void*)
 		facy.logout();
 
 		facy.clear_cookies();
+		facy.clear_notifications();
 		facy.buddies.clear();
 		facy.messages_ignore.clear();
 		facy.pages.clear();
@@ -119,13 +120,8 @@ void FacebookProto::ChangeStatus(void*)
 		ToggleStatusMenuItems(true);
 		debugLogA("***** SignOn complete");
 	}
-	else if (new_status == ID_STATUS_INVISIBLE)
-	{
-		facy.buddies.clear();
-		this->SetAllContactStatuses(ID_STATUS_OFFLINE);
-	}
 
-	facy.chat_state(m_iDesiredStatus != ID_STATUS_INVISIBLE);	
+	facy.chat_state(m_iDesiredStatus != ID_STATUS_INVISIBLE);
 	facy.buddy_list();
 
 	m_iStatus = facy.self_.status_id = m_iDesiredStatus;
@@ -161,6 +157,9 @@ bool FacebookProto::NegotiateConnection()
 	// Get info about secured connection
 	facy.https_ = getByte(FACEBOOK_KEY_FORCE_HTTPS, DEFAULT_FORCE_HTTPS) != 0;
 
+	// Generate random clientid for this connection
+	facy.chat_clientid_ = utils::text::rand_string(8, "0123456789abcdef");
+
 	// Create default group for new contacts
 	ptrT groupName( getTStringA(FACEBOOK_KEY_DEF_GROUP));
 	if (groupName != NULL)
@@ -177,9 +176,8 @@ void FacebookProto::UpdateLoop(void *)
 	for (int i = -1; !isOffline(); i = ++i % 50)
 	{
 		if (i != -1) {
-			if (!facy.invisible_)
-				if (!facy.buddy_list())
-    				break;
+			if (!facy.buddy_list())
+    			break;
 		}
 		if (i == 2 && getByte(FACEBOOK_KEY_EVENT_FEEDS_ENABLE, DEFAULT_EVENT_FEEDS_ENABLE))
 			if (!facy.feeds())

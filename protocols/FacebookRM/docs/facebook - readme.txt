@@ -1,7 +1,7 @@
 --------------------------------
-| Facebook Protocol RM 0.2.2.1 |
+| Facebook Protocol RM 0.2.4.0 |
 |        for Miranda NG        |
-|         (27.11.2013)         |
+|          (21.4.2014)         |
 --------------------------------
 
 Autor: Robyer
@@ -18,7 +18,7 @@ Info:
    Information about statuses
 --------------------------------
  - Online = connected to fb, chat is online
- - Invisible = connected to fb, but only for getting feeds and notifications - CHAT is OFFLINE
+ - Invisible = connected to fb, chat is offline, but you can still see other people online, receive messages, newsfeeds and notifications
  - Offline = disconnected
  
 --------------------------------
@@ -30,10 +30,55 @@ Info:
 "Locale" (String) - Get facebook errors in specific language, "en_US", "cs_CZ", etc.
 "UseLocalTimestampUnread" (Byte) - 1 = Use local timestamp for offline (unread) messages
 "KeepUnread" (Byte) - 1 = Don't mark messages as read on server (works globally or per contact)
+"NaseemsSpamMode" (Byte) - 1 = Don't add contacts when we send message to them from other instances, add them only when they reply
+"NameAsNick" (Byte) - 0 = don't use real name as nickname, use nickname if possible (default is 1)
 
 --------------------------------
        Version history
 --------------------------------
+0.2.?.? - ?.?.2014
+ + Hidden setting "NameAsNick" to not save real name as nickname (but it's pretty useless now)
+ ! Improved saving names (save only when changed)
+ ! Fixed loading own name
+
+0.2.4.0 - 21.4.2014
+ + Support true invisible status (they don't see you, but you see them)
+ + Don't load "unread messages" which we received already (but didn't read them yet)
+ + Add support for showing unread notifications count as "unread emails" in clist
+ + Add status menu item "Visit Notifications" and icons for other items
+ + Hidden setting for Naseem's spam mode
+ * Respect "use local timestamp" setting also for "message read" events
+ * Refactor receiving multi-chat messages (it doesn't load chat participants and chat names, etc. but it will be fixed in future versions)
+ * Various typing notifications changes/fixes
+   + Support receiving typing notifications for multi chats (and prepare for sending it, when *srmm will be ready for that)
+   * Don't switch contact to online when he is typing (he can type from invisible)
+   * Send typing notifications even to offline contacts
+ ! Fix not to load offline multi chat messages to single contacts
+ ! Fix size of downloaded avatars (use 50x50 for smaller and 180x180 for bigger)
+ ! Various other fixes (crashes, poke/newsfeed texts,...)
+
+0.2.3.2 - 19.3.2014
+ + Working manual refreshing of contact info
+ + Load user info when we're receiving message from someone who isn't in clist yet (fixes contacts with our own name)
+
+0.2.3.1 - 15.3.2014
+ ! Allow more Miranda instances to be connected to same account at same time
+ ! Fix showing duplicates of sent messages (at the cost of slowing down whole processing and sending only one message at a time :()
+ ! Crash fix (thanks ghazan)
+
+0.2.3.0 - 11.3.2014
+ + Add option to keep messages unread and loading only inbox messages
+ + Add contact menu item to open "Conversation history" on website
+ * Mark messages as read when they are really read in Miranda (only for private conversations - group chats are still marked as read instantly)
+ * Don't notify errors marked as "silent" by Facebook
+ * Use user-defined account name in popups (thanks ghazan)
+ ! Hotfix for sticky number (some FB API update)
+ ! Fix loading unread (offline) messages
+ ! Fixed loading sent messages (from other connected devices)
+ ! Workaround to "receive" unsupported attachments in messages
+ ! Fixed url to (old) mobile website (thanks Naseem)
+ ! Various internal code fixes, changes and cleaning (thanks ghazan)
+
 0.2.2.1 - 27.11.2013
  ! Fixed marking messages of some multichats as read
  ! Fixed downloading avatars of some contacts (and repeated downloading of them again and again...)
@@ -391,15 +436,15 @@ Info:
  (Already in official version)
 --------------------------------
 0.0.2.0 (0.1.3.0) - 20.12.2010 (not released)
- ! Oprava zobrazování bublinového oznámení
- ! Oprava odhlašovací procedury
- ! Oprava zobrazení poètu nových zpráv
- ! Oprava správy neèinnosti  TODO
- ! Oprava naèítání stavových zpráv TODO
- ! Oprava naèítání avatarù TODO
- + Kontrola úspìšného odeslání zprávy
- * Aktualizována modifikovaná miranda32.exe na nejnovìjší verzi
- * Rozdìleno readme na èeské a anglické
+ ! Oprava zobrazovï¿½nï¿½ bublinovï¿½ho oznï¿½menï¿½
+ ! Oprava odhlaï¿½ovacï¿½ procedury
+ ! Oprava zobrazenï¿½ poï¿½tu novï¿½ch zprï¿½v
+ ! Oprava sprï¿½vy neï¿½innosti  TODO
+ ! Oprava naï¿½ï¿½tï¿½nï¿½ stavovï¿½ch zprï¿½v TODO
+ ! Oprava naï¿½ï¿½tï¿½nï¿½ avatarï¿½ TODO
+ + Kontrola ï¿½spï¿½nï¿½ho odeslï¿½nï¿½ zprï¿½vy
+ * Aktualizovï¿½na modifikovanï¿½ miranda32.exe na nejnovï¿½jï¿½ï¿½ verzi
+ * Rozdï¿½leno readme na ï¿½eskï¿½ a anglickï¿½
 1.21 - 27.11.2010
  + Notifying about received new "private" (not chat messages) messages
  + Pseudo idle management (when idle, miranda let facebook fall into his own idle)

@@ -3,7 +3,7 @@
 Facebook plugin for Miranda Instant Messenger
 _____________________________________________
 
-Copyright © 2009-11 Michal Zelinka, 2011-13 Robert Pösel
+Copyright ï¿½ 2009-11 Michal Zelinka, 2011-13 Robert Pï¿½sel
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int FacebookProto::RecvMsg(HANDLE hContact, PROTORECVEVENT *pre)
 {
-	ForkThread(&FacebookProto::ReadMessageWorker, hContact);
+	ForkThread(&FacebookProto::ReadMessageWorker, (void*)hContact);
 	CallService(MS_PROTO_CONTACTISTYPING, (WPARAM)hContact, (LPARAM)PROTOTYPE_CONTACTTYPING_OFF);
 
 	return Proto_RecvMessage(hContact, pre);
@@ -34,8 +34,6 @@ void FacebookProto::SendMsgWorker(void *p)
 {
 	if(p == NULL)
 		return;
-
-//	ScopedLock s(facy.send_message_lock_, 500);
 
 	send_direct *data = static_cast<send_direct*>(p);
 
@@ -128,14 +126,13 @@ int FacebookProto::UserIsTyping(HANDLE hContact,int type)
 
 void FacebookProto::SendTypingWorker(void *p)
 {
-	if(p == NULL)
+	if (p == NULL)
 		return;
 
 	send_typing *typing = static_cast<send_typing*>(p);
 
-	// TODO: don't send typing when we are not online?
-	// Dont send typing notifications to contacts, that are offline or not friends
-	if (getWord(typing->hContact, "Status", 0) == ID_STATUS_OFFLINE || getWord(typing->hContact, FACEBOOK_KEY_CONTACT_TYPE, 0) != CONTACT_FRIEND) {
+	// Dont send typing notifications to not friends - Facebook won't give them that info anyway
+	if (!isChatRoom(typing->hContact) && getWord(typing->hContact, FACEBOOK_KEY_CONTACT_TYPE, 0) != CONTACT_FRIEND) {
 		delete typing;
 		return;
 	}
@@ -149,16 +146,22 @@ void FacebookProto::SendTypingWorker(void *p)
 		return;
 	}
 	
-	ptrA id( getStringA(typing->hContact, FACEBOOK_KEY_ID));
+	const char *value = (isChatRoom(typing->hContact) ? FACEBOOK_KEY_TID : FACEBOOK_KEY_ID);
+	ptrA id( getStringA(typing->hContact, value));
 	if (id != NULL) {
 		std::string data = "&source=mercury-chat";
-		data += (typing->status == PROTOTYPE_SELFTYPING_ON ? "&typ=1" : "&typ=0"); // PROTOTYPE_SELFTYPING_OFF
-		data += "&to=" + utils::url::encode(std::string(id));
+		data += (typing->status == PROTOTYPE_SELFTYPING_ON ? "&typ=1" : "&typ=0");
+		
+		data += "&to=";
+		if (isChatRoom(typing->hContact))
+			data += "&thread=";
+		data += utils::url::encode(std::string(id));
+
 		data += "&fb_dtsg=" + (facy.dtsg_.length() ? facy.dtsg_ : "0");
 		data += "&lsd=&phstamp=0&__user=" + facy.self_.user_id;
 		
 		http::response resp = facy.flap(REQUEST_TYPING_SEND, &data);
-	}		
+	}
 
 	delete typing;
 }
@@ -177,6 +180,8 @@ void FacebookProto::ReadMessageWorker(void *p)
 	ptrA mid( getStringA(hContact, FACEBOOK_KEY_MESSAGE_ID));
 	if (mid == NULL)
 		return;
+
+	// TODO: for multi-chat messages we might need to mark as read threadID and not messageID, but I'm not sure about that now...
 
 	std::string data = "ids[" + utils::url::encode(std::string(mid)) + "]=true";
 	data += "&fb_dtsg=" + (facy.dtsg_.length() ? facy.dtsg_ : "0");

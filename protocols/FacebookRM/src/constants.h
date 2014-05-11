@@ -27,10 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FACEBOOK_URL_HOMEPAGE					"http://www.facebook.com"
 #define FACEBOOK_URL_REQUESTS					"http://www.facebook.com/n/?reqs.php"
 #define FACEBOOK_URL_MESSAGES					"http://www.facebook.com/n/?inbox"
-#define FACEBOOK_URL_NOTIFICATIONS				"http://www.facebook.com/n/?notifications.php"
+#define FACEBOOK_URL_NOTIFICATIONS				"http://www.facebook.com/n/?notifications"
 #define FACEBOOK_URL_PROFILE					"http://www.facebook.com/profile.php?id="
 #define FACEBOOK_URL_GROUP						"http://www.facebook.com/n/?home.php&sk=group_"
 #define FACEBOOK_URL_PICTURE					"http://graph.facebook.com/%s/picture"
+#define FACEBOOK_URL_CONVERSATION				"http://www.facebook.com/messages/"
 
 // Connection
 #define FACEBOOK_SERVER_REGULAR					"www.facebook.com"
@@ -110,8 +111,9 @@ enum RequestType {
 	REQUEST_NOTIFICATIONS_READ, // marking notifications read
 
 	REQUEST_BUDDY_LIST,			// getting regular updates (friends online, ...)
-	REQUEST_LOAD_FRIENDS,		// getting list of all friends
-	REQUEST_USER_INFO,			// getting info about particular user
+	REQUEST_LOAD_FRIEND,		// getting info about particular friend
+	REQUEST_LOAD_FRIENDS,		// getting info about all friends
+	REQUEST_USER_INFO,			// getting info about particular user (from mobile website)
 	REQUEST_REQUEST_FRIEND,		// requesting friendships
 	REQUEST_APPROVE_FRIEND,		// approving friendships
 	REQUEST_DELETE_FRIEND,		// deleting friendships

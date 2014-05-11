@@ -40,6 +40,7 @@ FacebookProto::FacebookProto(const char* proto_name,const TCHAR* username) :
 	CreateProtoService(PS_GETMYAVATART,   &FacebookProto::GetMyAvatar);
 	CreateProtoService(PS_GETAVATARINFOT, &FacebookProto::GetAvatarInfo);
 	CreateProtoService(PS_GETAVATARCAPS,  &FacebookProto::GetAvatarCaps);
+	CreateProtoService(PS_GETUNREADEMAILCOUNT, &FacebookProto::GetNotificationsCount);
 
 	CreateProtoService(PS_JOINCHAT,  &FacebookProto::OnJoinChat);
 	CreateProtoService(PS_LEAVECHAT, &FacebookProto::OnLeaveChat);
@@ -52,10 +53,10 @@ FacebookProto::FacebookProto(const char* proto_name,const TCHAR* username) :
 	HookProtoEvent(ME_TTB_MODULELOADED,         &FacebookProto::OnToolbarInit);
 	HookProtoEvent(ME_GC_EVENT,					&FacebookProto::OnGCEvent);
 	HookProtoEvent(ME_GC_BUILDMENU,				&FacebookProto::OnGCMenuHook);
+	//HookProtoEvent(ME_DB_EVENT_MARKED_READ,		&FacebookProto::OnDbEventRead);
 
 	db_set_resident(m_szModuleName, "Status");
 	db_set_resident(m_szModuleName, "IdleTS");
-	db_set_resident(m_szModuleName, FACEBOOK_KEY_MESSAGE_ID);
 
 	InitHotkeys();
 	InitPopups();
@@ -172,8 +173,6 @@ int FacebookProto::SetStatus(int new_status)
 		debugLogA("===== Statuses are same, no change");
 		return 0;
 	}
-
-	facy.invisible_ = (new_status == ID_STATUS_INVISIBLE);
 
 	ForkThread(&FacebookProto::ChangeStatus, this);
 	return 0;
@@ -310,6 +309,36 @@ int FacebookProto::AuthDeny(HANDLE hDbEvent, const PROTOCHAR *reason)
 	return 0;
 }
 
+int FacebookProto::GetInfo(HANDLE hContact, int infoType)
+{
+	ptrA user_id(getStringA(hContact, FACEBOOK_KEY_ID));
+
+	if (user_id == NULL)
+		return 1;
+	
+	facebook_user fbu;
+	fbu.user_id = user_id;
+
+	LoadContactInfo(&fbu);
+
+	// TODO: don't duplicate code this way, refactor all this userInfo loading
+	// TODO: load more info about user (authorization state,...)
+
+	std::string homepage = FACEBOOK_URL_PROFILE + fbu.user_id;
+	setString(hContact, "Homepage", homepage.c_str());
+
+	if (!fbu.real_name.empty()) {
+		SaveName(hContact, &fbu);
+	}
+
+	if (fbu.gender)
+		setByte(hContact, "Gender", fbu.gender);
+
+	CheckAvatarChange(hContact, fbu.image_url);
+
+	return 1;
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // SERVICES
 
@@ -346,6 +375,14 @@ int FacebookProto::OnIdleChanged(WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
+}
+
+INT_PTR FacebookProto::GetNotificationsCount(WPARAM wParam, LPARAM lParam)
+{
+	if (isOffline())
+		return 0;
+
+	return facy.notifications.size();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -474,6 +511,14 @@ INT_PTR FacebookProto::OnMind(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
+int FacebookProto::OnDbEventRead(WPARAM contactID, LPARAM dbei)
+{
+	if (!isOffline()) {
+		ForkThread(&FacebookProto::ReadMessageWorker, (void*)contactID);
+	}
+	return 0;
+}
+
 INT_PTR FacebookProto::CheckNewsfeeds(WPARAM, LPARAM)
 {
 	if (!isOffline()) {
@@ -539,6 +584,32 @@ INT_PTR FacebookProto::VisitFriendship(WPARAM wParam,LPARAM lParam)
 	url += "&and=" + std::string(id);
 
 	OpenUrl(url);
+	return 0;
+}
+
+INT_PTR FacebookProto::VisitConversation(WPARAM wParam, LPARAM lParam)
+{
+	HANDLE hContact = HANDLE(wParam);
+
+	if (wParam == 0 || !IsMyContact(hContact, true))
+		return 1;
+
+	std::string url = FACEBOOK_URL_CONVERSATION;
+
+	if (isChatRoom(hContact)) {
+		url += "conversation-";
+		url += ptrA(getStringA(hContact, FACEBOOK_KEY_TID));
+	} else {
+		url += ptrA(getStringA(hContact, FACEBOOK_KEY_ID));
+	}
+
+	OpenUrl(url);
+	return 0;
+}
+
+INT_PTR FacebookProto::VisitNotifications(WPARAM wParam, LPARAM lParam)
+{
+	OpenUrl(FACEBOOK_URL_NOTIFICATIONS);
 	return 0;
 }
 
