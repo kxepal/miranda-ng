@@ -343,7 +343,7 @@ bool bWriteConfigurationFile()
 	}
 
 	DWORD dwBytesWriten = 0;
-	if (! WriteFile(hFile, szXmlHeader, SIZEOF(szXmlHeader) - 1, &dwBytesWriten, NULL)) {
+	if (! WriteFile(hFile, szXmlHeader, SIZEOF(szXmlHeader) * sizeof(TCHAR), &dwBytesWriten, NULL)) {
 		TCHAR temp[200];
 		mir_sntprintf(temp, SIZEOF(temp), _T("%s%s"), TranslateT("Failed to write xml header to file "), szConfigFile);
 		MessageBox(NULL, temp, MSG_BOX_TITEL, MB_OK);
@@ -357,7 +357,7 @@ bool bWriteConfigurationFile()
 			    SplitIpAddress(pclCur->st.dwAllowedIP),
 			    SplitIpAddress(pclCur->st.dwAllowedMask));
 
-			if (! WriteFile(hFile, szBuf, dwBytesToWrite, &dwBytesWriten, NULL)) {
+			if (! WriteFile(hFile, szBuf, dwBytesToWrite * sizeof(TCHAR), &dwBytesWriten, NULL)) {
 				TCHAR temp[200];
 				mir_sntprintf(temp, SIZEOF(temp), _T("%s%s"), TranslateT("Failed to write xml data to file "), szConfigFile);
 				MessageBox(NULL, temp, MSG_BOX_TITEL, MB_OK);
@@ -366,7 +366,7 @@ bool bWriteConfigurationFile()
 			pclCur = pclCur->pclNext;
 		}
 
-		if (! WriteFile(hFile, szXmlTail, SIZEOF(szXmlTail) - 1, &dwBytesWriten, NULL)) {
+		if (! WriteFile(hFile, szXmlTail, SIZEOF(szXmlTail) * sizeof(TCHAR), &dwBytesWriten, NULL)) {
 				TCHAR temp[200];
 				mir_sntprintf(temp, SIZEOF(temp), _T("%s%s"), TranslateT("Failed to write xml tail to file "), szConfigFile);
 				MessageBox(NULL, temp, MSG_BOX_TITEL, MB_OK);
