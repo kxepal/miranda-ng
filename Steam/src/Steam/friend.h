@@ -18,7 +18,7 @@ namespace SteamWebApi
 	{
 	public:
 		BlockFriendRequest(const char *token, const char *sessionId, const char *steamId, const char *who) :
-			HttpsPostRequest(STEAM_COM_URL "/profiles/%s/friends")
+			HttpsPostRequest(STEAM_WEB_URL "/profiles/%s/friends", steamId)
 		{
 			char login[MAX_PATH];
 			mir_snprintf(login, SIZEOF(login), "%s||oauth:%s", steamId, token);
@@ -26,9 +26,9 @@ namespace SteamWebApi
 			char cookie[MAX_PATH];
 			mir_snprintf(cookie, SIZEOF(cookie), "steamLogin=%s;sessionid=%s;forceMobile=1", login, sessionId);
 
-			char url[MAX_PATH];
+			/*char url[MAX_PATH];
 			mir_snprintf(url, SIZEOF(url), STEAM_COM_URL "/profiles/%s/friends", steamId);
-			this->url = url;
+			this->url = url;*/
 
 			char data[128];
 			mir_snprintf(data, SIZEOF(data),
@@ -45,7 +45,7 @@ namespace SteamWebApi
 	{
 	public:
 		UnblockFriendRequest(const char *token, const char *sessionId, const char *steamId, const char *who) :
-			HttpsPostRequest(STEAM_COM_URL "/profiles/%s/friends")
+			HttpsPostRequest(STEAM_WEB_URL "/profiles/%s/friends", steamId)
 		{
 			char login[MAX_PATH];
 			mir_snprintf(login, SIZEOF(login), "%s||oauth:%s", steamId, token);
@@ -53,9 +53,9 @@ namespace SteamWebApi
 			char cookie[MAX_PATH];
 			mir_snprintf(cookie, SIZEOF(cookie), "steamLogin=%s;sessionid=%s;forceMobile=1", login, sessionId);
 
-			char url[MAX_PATH];
+			/*char url[MAX_PATH];
 			mir_snprintf(url, SIZEOF(url), STEAM_COM_URL "/profiles/%s/friends", steamId);
-			this->url = url;
+			this->url = url;*/
 
 			char data[128];
 			mir_snprintf(data, SIZEOF(data),

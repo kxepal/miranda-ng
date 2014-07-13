@@ -23,7 +23,7 @@ void CSteamProto::StartQueue()
 		if (token && lstrlenA(token) > 0)
 		{
 			PushRequest(
-				new SteamWebApi::LogonRequest("bb3aa8f8c29dab7a03ea35bf75150e95"),
+				new SteamWebApi::LogonRequest(token),
 				&CSteamProto::OnLoggedOn);
 		}
 		else
@@ -31,7 +31,7 @@ void CSteamProto::StartQueue()
 			ptrA username(mir_urlEncode(ptrA(mir_utf8encodeW(getWStringA("Username")))));
 			if (username == NULL || strlen(username) == 0)
 				return;
-			PushRequest(new SteamWebApi::RsaKeyRequest(username), (RESPONSE)&CSteamProto::OnGotRsaKey);
+			PushRequest(new SteamWebApi::RsaKeyRequest(username), &CSteamProto::OnGotRsaKey);
 		}
 
 		m_hQueueThread = ForkThreadEx(&CSteamProto::QueueThread, 0, NULL);
@@ -54,12 +54,9 @@ void CSteamProto::StopQueue()
 	ptrA token(getStringA("TokenSecret"));
 	ptrA umqid(getStringA("UMQID"));
 
-	SteamWebApi::HttpRequest *request = new SteamWebApi::LogoffRequest("bb3aa8f8c29dab7a03ea35bf75150e95", umqid);
-	debugLogA("CSteamProto::StopQueue: %s", request->szUrl);
-	request->szUrl = (char*)request->url.c_str();
-	NETLIBHTTPREQUEST *response = (NETLIBHTTPREQUEST*)CallService(MS_NETLIB_HTTPTRANSACTION, (WPARAM)m_hNetlibUser, (LPARAM)request);
+	mir_ptr<SteamWebApi::HttpRequest> request(new SteamWebApi::LogoffRequest(token, umqid));
+	NETLIBHTTPREQUEST *response = request->Send(m_hNetlibUser);
 	CallService(MS_NETLIB_FREEHTTPREQUESTSTRUCT, 0, (LPARAM)response);
-	delete request;
 
 	m_hQueueThread = NULL;
 }
@@ -94,10 +91,7 @@ void CSteamProto::ExecuteRequest(QueueItem *item)
 	if (isTerminated)
 		return;
 
-	debugLogA("CSteamProto::ExecuteRequest: %s", item->request->szUrl);
-
-	item->request->szUrl = (char*)item->request->url.c_str();
-	NETLIBHTTPREQUEST *response = (NETLIBHTTPREQUEST*)CallService(MS_NETLIB_HTTPTRANSACTION, (WPARAM)m_hNetlibUser, (LPARAM)item->request);
+	NETLIBHTTPREQUEST *response = item->request->Send(m_hNetlibUser);
 
 	if (item->responseCallback != NULL)
 		(this->*(item->responseCallback))(response, item->arg);

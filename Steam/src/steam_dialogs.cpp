@@ -261,11 +261,9 @@ LRESULT CALLBACK CSteamProto::BlockListOptionsSubProc(HWND hwnd, UINT msg, WPARA
 				ptrA steamId(ppro->getStringA("SteamID"));
 				ptrA who(ppro->getStringA(hContact, "SteamID"));
 
-				SteamWebApi::BlockFriendRequest *request = new SteamWebApi::BlockFriendRequest(token, sessionId, steamId, who);
-				request->szUrl = (char*)request->url.c_str();
-				NETLIBHTTPREQUEST *response = (NETLIBHTTPREQUEST*)CallService(MS_NETLIB_HTTPTRANSACTION, (WPARAM)ppro->m_hNetlibUser, (LPARAM)request);
+				mir_ptr<SteamWebApi::BlockFriendRequest> request(new SteamWebApi::BlockFriendRequest(token, sessionId, steamId, who));
+				NETLIBHTTPREQUEST *response = request->Send(ppro->m_hNetlibUser);
 				CallService(MS_NETLIB_FREEHTTPREQUESTSTRUCT, 0, (LPARAM)response);
-				delete request;
 
 				if (true /* todo: check unblock contact */)
 				{
@@ -390,11 +388,9 @@ INT_PTR CALLBACK CSteamProto::BlockListOptionsProc(HWND hwndDlg, UINT msg, WPARA
 					ptrA steamId(ppro->getStringA("SteamID"));
 					ptrA who(ppro->getStringA(hContact, "SteamID"));
 
-					SteamWebApi::BlockFriendRequest *request = new SteamWebApi::BlockFriendRequest(token, sessionId, steamId, who);
-					request->szUrl = (char*)request->url.c_str();
-					NETLIBHTTPREQUEST *response = (NETLIBHTTPREQUEST*)CallService(MS_NETLIB_HTTPTRANSACTION, (WPARAM)ppro->m_hNetlibUser, (LPARAM)request);
+					mir_ptr<SteamWebApi::BlockFriendRequest> request(new SteamWebApi::BlockFriendRequest(token, sessionId, steamId, who));
+					NETLIBHTTPREQUEST *response = request->Send(ppro->m_hNetlibUser);
 					CallService(MS_NETLIB_FREEHTTPREQUESTSTRUCT, 0, (LPARAM)response);
-					delete request;
 
 					if (true /*todo: block contact*/)
 					{

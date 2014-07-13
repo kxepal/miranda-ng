@@ -4,6 +4,12 @@
 #define STEAM_SEARCH_BYID 1001
 #define STEAM_SEARCH_BYNAME 1002
 
+struct PasswordParam
+{
+	char password[513];
+	char timestamp[16];
+};
+
 struct GuardParam
 {
 	char code[10];
@@ -184,6 +190,7 @@ protected:
 	void OnGotRsaKey(const NETLIBHTTPREQUEST *response, void *arg);
 	
 	void OnAuthorization(const NETLIBHTTPREQUEST *response, void *arg);
+	void OnTransfer(const NETLIBHTTPREQUEST *response, void *arg);
 	void OnGotSession(const NETLIBHTTPREQUEST *response, void *arg);
 
 	void OnLoggedOn(const NETLIBHTTPREQUEST *response, void *arg);

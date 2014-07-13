@@ -5,14 +5,20 @@ namespace SteamWebApi
 {
 	class RsaKeyRequest : public HttpsGetRequest
 	{
+	private:
+		void AddTimeParameter(LPCSTR name, time_t value)
+		{
+			AddParameter("%s=%lld", name, value);
+		}
+
 	public:
 		RsaKeyRequest(const char *username) :
-			HttpsGetRequest(STEAM_COM_URL "/mobilelogin/getrsakey")
+			HttpsGetRequest(STEAM_WEB_URL "/login/getrsakey")
 		{
 			flags = NLHRF_HTTP11 | NLHRF_SSL | NLHRF_NODUMP;
 
-			AddParameter("username", (char*)username);
-			AddParameter("donotcache", time(NULL));
+			AddParameter("username", username);
+			AddTimeParameter("donotcache", time(NULL));
 		}
 	};
 }

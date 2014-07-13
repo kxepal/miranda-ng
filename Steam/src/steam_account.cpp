@@ -32,9 +32,9 @@ void CSteamProto::OnGotRsaKey(const NETLIBHTTPREQUEST *response, void *arg)
 
 	node = json_get(root, "timestamp");
 	ptrA timestamp(mir_u2a(json_as_string(node)));
-	setString("Timestamp", timestamp);
+	//setString("Timestamp", timestamp);
 
-	// encrcrypt password
+	// encrypt password
 	ptrA base64RsaEncryptedPassword;
 	ptrA password(getStringA("Password"));
 
@@ -57,14 +57,19 @@ void CSteamProto::OnGotRsaKey(const NETLIBHTTPREQUEST *response, void *arg)
 	base64RsaEncryptedPassword = mir_base64_encode(encryptedPassword, encryptedSize);
 	mir_free(encryptedPassword);
 
-	setString("EncryptedPassword", base64RsaEncryptedPassword);
+	//setString("EncryptedPassword", base64RsaEncryptedPassword);
+
+	PasswordParam *param = (PasswordParam*)mir_alloc(sizeof(PasswordParam));
+	strcpy(param->password, base64RsaEncryptedPassword);
+	strcpy(param->timestamp, timestamp);
 	
 	// run authorization request
-	ptrA username(mir_urlEncode(ptrA(mir_utf8encodeW(getWStringA("Username")))));
+	ptrA username(mir_utf8encodeW(getWStringA("Username")));
 
 	PushRequest(
 		new SteamWebApi::DoLoginRequest(username, base64RsaEncryptedPassword, timestamp),
-		&CSteamProto::OnAuthorization);
+		&CSteamProto::OnAuthorization,
+		param);
 }
 
 void CSteamProto::OnAuthorization(const NETLIBHTTPREQUEST *response, void *arg)
@@ -80,6 +85,7 @@ void CSteamProto::OnAuthorization(const NETLIBHTTPREQUEST *response, void *arg)
 		{
 			ShowNotification(TranslateTS(message));
 			SetStatus(ID_STATUS_OFFLINE);
+			mir_free(arg);
 			return;
 		}
 
@@ -103,13 +109,13 @@ void CSteamProto::OnAuthorization(const NETLIBHTTPREQUEST *response, void *arg)
 				(LPARAM)&guard) != 1)
 				return;
 
-			ptrA username(mir_urlEncode(ptrA(mir_utf8encodeW(getWStringA("Username")))));
-			ptrA base64RsaEncryptedPassword(getStringA("EncryptedPassword"));
-			ptrA timestamp(getStringA("Timestamp"));
+			ptrA username(mir_utf8encodeW(getWStringA("Username")));
+			PasswordParam *param = (PasswordParam*)arg;
 
 			PushRequest(
-				new SteamWebApi::DoLoginRequest(username, base64RsaEncryptedPassword, timestamp, guardId, guard.code),
+				new SteamWebApi::DoLoginRequest(username, param->password, param->timestamp, guardId, guard.code, "MirandaNG"),
 				&CSteamProto::OnAuthorization);
+			return;
 		}
 
 		node = json_get(root, "captcha_needed");
@@ -118,13 +124,8 @@ void CSteamProto::OnAuthorization(const NETLIBHTTPREQUEST *response, void *arg)
 			node = json_get(root, "captcha_gid");
 			ptrA captchaId(mir_u2a(json_as_string(node)));
 
-			char url[MAX_PATH];
-			mir_snprintf(url, SIZEOF(url), STEAM_COM_URL "/public/captcha.php?gid=%s", captchaId);
-
-			SteamWebApi::GetCaptchaRequest *request = new SteamWebApi::GetCaptchaRequest(url);
-			request->szUrl = (char*)request->url.c_str();
-			NETLIBHTTPREQUEST *response = (NETLIBHTTPREQUEST*)CallService(MS_NETLIB_HTTPTRANSACTION, (WPARAM)m_hNetlibUser, (LPARAM)request);
-			delete request;
+			mir_ptr<SteamWebApi::GetCaptchaRequest> request(new SteamWebApi::GetCaptchaRequest(captchaId));
+			NETLIBHTTPREQUEST *response = request->Send(m_hNetlibUser);
 
 			CaptchaParam captcha = { 0 };
 			captcha.size = response->dataLength;
@@ -145,20 +146,25 @@ void CSteamProto::OnAuthorization(const NETLIBHTTPREQUEST *response, void *arg)
 			if (res != 1)
 			{
 				SetStatus(ID_STATUS_OFFLINE);
+				mir_free(arg);
 				return;
 			}
 
-			ptrA username(mir_urlEncode(ptrA(mir_utf8encodeW(getWStringA("Username")))));
-			ptrA base64RsaEncryptedPassword(getStringA("EncryptedPassword"));
-			ptrA timestamp(getStringA("Timestamp"));
+			ptrA username(mir_utf8encodeW(getWStringA("Username")));
+			PasswordParam *param = (PasswordParam*)arg;
 
 			PushRequest(
-				new SteamWebApi::DoLoginRequest(username, base64RsaEncryptedPassword, timestamp, "-1", "", captchaId, captcha.text),
+				new SteamWebApi::DoLoginRequest(username, param->password, param->timestamp, captchaId, captcha.text),
 				&CSteamProto::OnAuthorization);
+			return;
 		}
 
+		SetStatus(ID_STATUS_OFFLINE);
+		mir_free(arg);
 		return;
 	}
+
+	mir_free(arg);
 
 	node = json_get(root, "login_complete");
 	if (!json_as_bool(node))
@@ -189,6 +195,16 @@ void CSteamProto::OnAuthorization(const NETLIBHTTPREQUEST *response, void *arg)
 
 	PushRequest(
 		new SteamWebApi::TransferRequest(token, steamId, auth, webcookie),
+		&CSteamProto::OnTransfer);
+}
+
+void CSteamProto::OnTransfer(const NETLIBHTTPREQUEST *response, void *arg)
+{
+	ptrA token(getStringA("TokenSecret"));
+	ptrA steamId(getStringA("SteamID"));
+
+	PushRequest(
+		new SteamWebApi::RedirectToHomeRequest(token, steamId),
 		&CSteamProto::OnGotSession);
 }
 
@@ -209,11 +225,12 @@ void CSteamProto::OnGotSession(const NETLIBHTTPREQUEST *response, void *arg)
 
 	ptrA token(getStringA("TokenSecret"));
 
-	PushRequest(
-		new SteamWebApi::LogonRequest("bb3aa8f8c29dab7a03ea35bf75150e95"),
-		&CSteamProto::OnLoggedOn);
+	SetStatus(ID_STATUS_OFFLINE);
+	/*PushRequest(
+		new SteamWebApi::LogonRequest(token),
+		&CSteamProto::OnLoggedOn);*/
 }
-//{"success":true, "login_complete" : true, "transfer_url" : "https:\/\/store.steampowered.com\/\/login\/transfer", "transfer_parameters" : {"steamid":"76561198135362550", "token" : "B6B13E37C4B60F9BB30756D228BEDD7D0A9D663C", "auth" : "6c98bea837f26f4c79b3c8703f15dbd8", "remember_login" : false, "webcookie" : "EDE31D03F75CBB5024C1BF7729B66E25F37A55AC"}}
+
 void CSteamProto::OnLoggedOn(const NETLIBHTTPREQUEST *response, void *arg)
 {
 	JSONNODE *root = json_parse(response->pData), *node;
@@ -242,7 +259,7 @@ void CSteamProto::OnLoggedOn(const NETLIBHTTPREQUEST *response, void *arg)
 	ptrA steamId(getStringA("SteamID"));
 
 	PushRequest(
-		new SteamWebApi::GetFriendListRequest("bb3aa8f8c29dab7a03ea35bf75150e95", steamId),
+		new SteamWebApi::GetFriendListRequest(token, steamId),
 		&CSteamProto::OnGotFriendList);
 
 	// start polling thread

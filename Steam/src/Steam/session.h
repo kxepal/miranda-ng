@@ -55,7 +55,7 @@ namespace SteamWebApi
 	{
 	public:
 		GetSessionRequest(const char *token, const char *steamId, const char *cookie) :
-			HttpsPostRequest(STEAM_COM_URL "/mobileloginsucceeded")
+			HttpsPostRequest(STEAM_WEB_URL "/mobileloginsucceeded")
 		{
 			flags = NLHRF_HTTP11 | NLHRF_SSL | NLHRF_NODUMP;
 
