@@ -29,6 +29,7 @@
 
 #include <vector>
 #include <string>
+#include <regex>
 
 #include "resource.h"
 #include "version.h"

@@ -186,9 +186,11 @@ void CSteamProto::OnAuthorization(const NETLIBHTTPREQUEST *response, void *arg)
 
 	node = json_get(root, "auth");
 	ptrA auth(mir_u2a(json_as_string(node)));
+	setString("AuthToken", auth);
 
 	node = json_get(root, "webcookie");
 	ptrA webcookie(mir_u2a(json_as_string(node)));
+	setString("WebCookie", webcookie);
 
 	delSetting("Timestamp");
 	delSetting("EncryptedPassword");
@@ -210,6 +212,8 @@ void CSteamProto::OnTransfer(const NETLIBHTTPREQUEST *response, void *arg)
 
 void CSteamProto::OnGotSession(const NETLIBHTTPREQUEST *response, void *arg)
 {
+	std::string sessionId;
+
 	for (int i = 0; i < response->headersCount; i++)
 	{
 		if (lstrcmpiA(response->headers[i].szName, "Set-Cookie"))
@@ -218,17 +222,35 @@ void CSteamProto::OnGotSession(const NETLIBHTTPREQUEST *response, void *arg)
 		std::string cookies = response->headers[i].szValue;
 		size_t start = cookies.find("sessionid=") + 10;
 		size_t end = cookies.substr(start).find(';');
-		std::string sessionId = cookies.substr(start, end - start + 10);
+		sessionId = cookies.substr(start, end - start + 10);
 		setString("SessionID", sessionId.c_str());
 		break;
 	}
 
 	ptrA token(getStringA("TokenSecret"));
+	ptrA steamId(getStringA("SteamID"));
 
-	SetStatus(ID_STATUS_OFFLINE);
-	/*PushRequest(
-		new SteamWebApi::LogonRequest(token),
-		&CSteamProto::OnLoggedOn);*/
+	PushRequest(
+		new SteamWebApi::GetChatRequest(token, steamId, sessionId.c_str()),
+		&CSteamProto::OnGotChatPage);
+}
+
+void CSteamProto::OnGotChatPage(const NETLIBHTTPREQUEST *response, void *arg)
+{
+	std::string chatToken;
+	std::smatch match;
+	std::regex regex("WebAPI = new CWebAPI\\( '.+?', '.+?', \"(.+?)\" \\);");
+
+	const std::string content = response->pData;
+
+	if (std::regex_search(content, match, regex)) {
+		chatToken = match[1];
+		setString("ApiToken", chatToken.c_str());
+	}
+	
+	PushRequest(
+		new SteamWebApi::LogonRequest(chatToken.c_str()),
+		&CSteamProto::OnLoggedOn);
 }
 
 void CSteamProto::OnLoggedOn(const NETLIBHTTPREQUEST *response, void *arg)
@@ -255,7 +277,7 @@ void CSteamProto::OnLoggedOn(const NETLIBHTTPREQUEST *response, void *arg)
 	setDword("MessageID", json_as_int(node));
 
 	// load contact list
-	ptrA token(getStringA("TokenSecret"));
+	ptrA token(getStringA("ApiToken"));
 	ptrA steamId(getStringA("SteamID"));
 
 	PushRequest(

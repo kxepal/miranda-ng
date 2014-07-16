@@ -3,7 +3,7 @@
 
 namespace SteamWebApi
 {
-	class RsaKeyRequest : public HttpsGetRequest
+	class GetRsaKeyRequest : public HttpsGetRequest
 	{
 	private:
 		void AddTimeParameter(LPCSTR name, time_t value)
@@ -12,7 +12,7 @@ namespace SteamWebApi
 		}
 
 	public:
-		RsaKeyRequest(const char *username) :
+		GetRsaKeyRequest(const char *username) :
 			HttpsGetRequest(STEAM_WEB_URL "/login/getrsakey")
 		{
 			flags = NLHRF_HTTP11 | NLHRF_SSL | NLHRF_NODUMP;

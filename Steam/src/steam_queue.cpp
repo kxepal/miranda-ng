@@ -19,7 +19,7 @@ void CSteamProto::StartQueue()
 
 	if (m_hQueueThread == NULL)
 	{
-		ptrA token(getStringA("TokenSecret"));
+		ptrA token(getStringA("ApiToken"));
 		if (token && lstrlenA(token) > 0)
 		{
 			PushRequest(
@@ -31,7 +31,8 @@ void CSteamProto::StartQueue()
 			ptrA username(mir_urlEncode(ptrA(mir_utf8encodeW(getWStringA("Username")))));
 			if (username == NULL || strlen(username) == 0)
 				return;
-			PushRequest(new SteamWebApi::RsaKeyRequest(username), &CSteamProto::OnGotRsaKey);
+			PushRequest(new SteamWebApi::GetRsaKeyRequest(username),
+				&CSteamProto::OnGotRsaKey);
 		}
 
 		m_hQueueThread = ForkThreadEx(&CSteamProto::QueueThread, 0, NULL);
@@ -51,7 +52,7 @@ void CSteamProto::StopQueue()
 	}
 
 	// logoff
-	ptrA token(getStringA("TokenSecret"));
+	ptrA token(getStringA("ApiToken"));
 	ptrA umqid(getStringA("UMQID"));
 
 	mir_ptr<SteamWebApi::HttpRequest> request(new SteamWebApi::LogoffRequest(token, umqid));

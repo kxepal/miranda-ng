@@ -236,10 +236,10 @@ void CSteamProto::OnGotFriendList(const NETLIBHTTPREQUEST *response, void *arg)
 	if (!steamIds.empty())
 	{
 		steamIds.pop_back();
-		ptrA token(getStringA("TokenSecret"));
+		ptrA token(getStringA("ApiToken"));
 
 		PushRequest(
-			new SteamWebApi::GetUserSummariesRequest("bb3aa8f8c29dab7a03ea35bf75150e95", steamIds.c_str()),
+			new SteamWebApi::GetUserSummariesRequest(token, steamIds.c_str()),
 			&CSteamProto::OnGotUserSummaries);
 	}
 }

@@ -192,6 +192,7 @@ protected:
 	void OnAuthorization(const NETLIBHTTPREQUEST *response, void *arg);
 	void OnTransfer(const NETLIBHTTPREQUEST *response, void *arg);
 	void OnGotSession(const NETLIBHTTPREQUEST *response, void *arg);
+	void OnGotChatPage(const NETLIBHTTPREQUEST *response, void *arg);
 
 	void OnLoggedOn(const NETLIBHTTPREQUEST *response, void *arg);
 
