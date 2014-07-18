@@ -86,13 +86,13 @@ private:
 	INT_PTR __cdecl CreateAccMgrUI(WPARAM, LPARAM);
 
 	//events
-	static void OnFriendRequest(uint8_t *userId, uint8_t *message, uint16_t messageSize, void *arg);
-    static void OnFriendMessage(Tox *tox, int friendId, uint8_t *message, uint16_t messageSize, void *arg);
-    static void OnFriendNameChange(Tox *tox, int friendId, uint8_t *name, uint16_t nameSize, void *arg);
-    static void OnStatusMessageChanged(Tox *tox, int friendId, uint8_t* message, uint16_t messageSize, void *arg);
-    static void OnUserStatusChanged(Tox *tox, int friendId, TOX_USERSTATUS userStatus, void *arg);
-    static void OnConnectionStatusChanged(Tox *tox, int friendId, uint8_t status, void *arg);
-    static void OnAction(Tox *tox, int friendId, uint8_t *message, uint16_t messageSize, void *arg);
+	static void OnFriendRequest(Tox *tox, const uint8_t *userId, const uint8_t *message, const uint16_t messageSize, void *arg);
+    static void OnFriendMessage(Tox *tox, const int friendId, const uint8_t *message, const uint16_t messageSize, void *arg);
+    static void OnFriendNameChange(Tox *tox, const int friendId, const uint8_t *name, const uint16_t nameSize, void *arg);
+    static void OnStatusMessageChanged(Tox *tox, const int friendId, const uint8_t* message, const uint16_t messageSize, void *arg);
+	static void OnUserStatusChanged(Tox *tox, int32_t friendnumber, uint8_t TOX_USERSTATUS, void *userdata);
+    static void OnConnectionStatusChanged(Tox *tox, const int friendId, const uint8_t status, void *arg);
+    static void OnAction(Tox *tox, const int friendId, const uint8_t *message, const uint16_t messageSize, void *arg);
 
 	// contacts
 	bool IsProtoContact(MCONTACT hContact);

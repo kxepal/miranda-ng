@@ -1,29 +1,29 @@
 #include "common.h"
 
-void CToxProto::OnFriendRequest(uint8_t *userId, uint8_t *message, uint16_t messageSize, void *arg)
+void CToxProto::OnFriendRequest(Tox *tox, const uint8_t *userId, const uint8_t *message, const uint16_t messageSize, void *arg)
 {
 }
 
-void CToxProto::OnFriendMessage(Tox *tox, int friendId, uint8_t *message, uint16_t messageSize, void *arg)
+void CToxProto::OnFriendMessage(Tox *tox, const int friendId, const uint8_t *message, const uint16_t messageSize, void *arg)
 {
 }
 
-void CToxProto::OnFriendNameChange(Tox *tox, int friendId, uint8_t *name, uint16_t nameSize, void *arg)
+void CToxProto::OnFriendNameChange(Tox *tox, const int friendId, const uint8_t *name, const uint16_t nameSize, void *arg)
 {
 }
 
-void CToxProto::OnStatusMessageChanged(Tox *tox, int friendId, uint8_t* message, uint16_t messageSize, void *arg)
+void CToxProto::OnStatusMessageChanged(Tox *tox, const int friendId, const uint8_t* message, const uint16_t messageSize, void *arg)
 {
 }
 
-void CToxProto::OnUserStatusChanged(Tox *tox, int friendId, TOX_USERSTATUS userStatus, void *arg)
+void CToxProto::OnUserStatusChanged(Tox *tox, int32_t friendnumber, uint8_t TOX_USERSTATUS, void *userdata)
 {
 }
 
-void CToxProto::OnConnectionStatusChanged(Tox *tox, int friendId, uint8_t status, void *arg)
+void CToxProto::OnConnectionStatusChanged(Tox *tox, const int friendId, const uint8_t status, void *arg)
 {
 }
 
-void CToxProto::OnAction(Tox *tox, int friendId, uint8_t *message, uint16_t messageSize, void *arg)
+void CToxProto::OnAction(Tox *tox, const int friendId, const uint8_t *message, const uint16_t messageSize, void *arg)
 {
 }
