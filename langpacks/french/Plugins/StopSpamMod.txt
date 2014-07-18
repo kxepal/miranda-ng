@@ -13,7 +13,7 @@
 [Restore defaults]
 Restaurer les valeurs par défaut
 [Answer:]
-Réponse:
+Réponse :
 [Congratulation:]
 
 [Auth. request reply:]
@@ -60,7 +60,7 @@ Ajouter le contact
 
 [Automatically grant authorization]
 
-[Request authorization from contacts which pass stopspam test]
+[Request authorization from contacts which pass StopSpam test]
 
 [Remove all temporary contacts after restart]
 

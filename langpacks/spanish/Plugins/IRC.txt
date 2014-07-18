@@ -8,16 +8,46 @@
 [Internet Relay Chat (IRC) protocol support for Miranda NG.]
 
 ;file \protocols\IRCG\res\IRC.rc
+[Default network]
+
+[Enable]
+Habilitar
+[Server name]
+
+[Internet address]
+
+[SSL]
+SSL
+[Port range]
+
+[Password]
+Contraseña
 [&Add]
 &Añadir
 [&Edit]
 &Editar
 [&Del]
 
-[Enable]
-Habilitar
+[User info - Required]
+
+[Nick]
+Apodo
+[Alternative nick]
+
+[Full name (e-mail)]
+
+[User ID (Ident)]
+
+[Ident]
+
+[System]
+Sistema
+[Port]
+Puerto
 [only while connecting]
 
+[Other]
+Otro
 [Force visible (-i)]
 
 [Rejoin channel if kicked]
@@ -40,39 +70,9 @@ Mantener viva la conexión
 
 [Update online statuses for users]
 
-[Update statuses in channel nick list]
-
-[Internet address]
-
-[Port range]
-
-[Nick]
-Apodo
-[User ID (Ident)]
-
-[Full name (e-mail)]
-
-[Password]
-Contraseña
-[Server name]
-
-[Alternative nick]
-
-[Ident]
-
-[System]
-Sistema
-[Port]
-Puerto
-[Default network]
-
-[User info - Required]
-
-[Other]
-Otro
 [Check every (s):]
 
-[SSL]
+[Update statuses in channel nick list]
 
 [Don't check if more than (users):]
 
@@ -111,8 +111,6 @@ Autenticación
 [CTCP information]
 
 [Question]
-
-[&OK]
 
 [&Cancel]
 &Cancelar
@@ -209,7 +207,7 @@ Normal
 [Attempt reverse DCC (good if firewalled)]
 
 [none]
-
+ninguno
 [everyone on the contact list]
 
 [everyone]
@@ -226,7 +224,7 @@ Normal
 
 [Send mode:]
 
-[Packet size (b):]
+[Packet size (bytes):]
 
 [Get IP address from server]
 
@@ -244,7 +242,7 @@ Normal
 
 [Ignore channel messages by default]
 
-[Ignore filetransfer requests]
+[Ignore file transfer requests]
 
 [Ignore DCC Chat requests]
 
@@ -264,7 +262,7 @@ Avisos
 
 [DCC]
 
-[Ignore mask ( nick!user@host )]
+[Ignore mask (nick!user@host)]
 
 [Network (*)]
 
@@ -276,8 +274,6 @@ Avisos
 
 [Password:]
 Contraseña:
-[Alternate nick]
-
 ;file \protocols\IRCG\src\clist.cpp
 [CTCP chat request from %s]
 
@@ -392,17 +388,13 @@ Ignorar
 ;file \protocols\IRCG\src\irclib.cpp
 [Failed to connect to]
 
-[DCC ERROR: Unable to bind local port for passive filetransfer]
+[DCC ERROR: Unable to bind local port for passive file transfer]
 
 ;file \protocols\IRCG\src\ircproto.cpp
 [%s server connection]
 %s conexión al servidor
 [%s client-to-client connections]
 
-[The IRC protocol depends on another plugin called 'Chat'\n\nDo you want to download it from the Miranda NG web site now?]
-
-[Information]
-Información
 [Nickname]
 Apodo
 [DCC ERROR: No valid files specified]
@@ -500,6 +492,26 @@ Cancelar
 
 [<Local IP: ]
 
+[Event: Available]
+
+[Event: Away]
+
+[Event: N/A]
+
+[Event: Occupied]
+
+[Event: DND]
+
+[Event: Free for chat]
+
+[Event: On the phone]
+
+[Event: Out for lunch]
+
+[Event: Disconnect]
+
+[ALL NETWORKS]
+Todas las redes
 [Click to set commands that will be performed for this event]
 
 [Click to delete the commands for this event]
@@ -522,7 +534,7 @@ Cancelar
 
 [Account]
 Cuenta
-[DCC'n CTCP]
+[DCC and CTCP]
 
 [Advanced]
 Avanzado
@@ -572,9 +584,9 @@ Avanzado
 
 [Please enter a unique nickname]
 
-[Please enter your authentification code]
+[Please enter your authentication code]
 
-[Authentificate nick]
+[Authenticate nick]
 
 [Are you sure you want to unregister your current nick?]
 

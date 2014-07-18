@@ -206,7 +206,7 @@ Popup заглавие
 Максимална
 [Sunrise]
 Изгрев
-[Dewpoint]
+[Dew point]
 Точка на оросяване
 [Humidity]
 Влажност
@@ -320,18 +320,20 @@ HTTP грешка: Лош шлюз
 HTTP грешка: Услугата не е налична (503)
 [HTTP Error: Gateway timeout (504)]
 
-[%c\nTemperature: %t\nFeel-Like: %f\nPressure: %p\nWind: %i  %w\nHumidity: %m\nDew Point: %e\nVisibility: %v\n\nSun Rise: %r\nSun Set: %y\n\n5 Days Forecast:\n%[Forecast Day 1]\n%[Forecast Day 2]\n%[Forecast Day 3]\n%[Forecast Day 4]\n%[Forecast Day 5]]
-%c\nТемпература: %t\nУсеща се като: %f\nАтм. налягане: %p\nВятър: %i  %w\nВлажност: %m\nТочка на оросяване: %e\nВидимост: %v\n\nИзгрев: %r\nЗалез: %y\n\n5-дневна прогноза:\n%[Forecast Day 1]\n%[Forecast Day 2]\n%[Forecast Day 3]\n%[Forecast Day 4]\n%[Forecast Day 5]
-[Feel-Like: %f\nPressure: %p\nWind: %i  %w\nHumidity: %m\nDew Point: %e\nVisibility: %v\n\nSun Rise: %r\nSun Set: %y\n\n5 Days Forecast:\n%[Forecast Day 1]\n%[Forecast Day 2]\n%[Forecast Day 3]\n%[Forecast Day 4]\n%[Forecast Day 5]]
-Усеща се като: %f\nАтм. налягане: %p\nВятър: %i  %w\nВлажност: %m\nТочка на оросяване: %e\nВидимост: %v\n\nИзгрев: %r\nЗалез: %y\n\n5-дневна прогноза:\n%[Forecast Day 1]\n%[Forecast Day 2]\n%[Forecast Day 3]\n%[Forecast Day 4]\n%[Forecast Day 5]
+[%c\\nTemperature: %t\\nFeel-Like: %f\\nPressure: %p\\nWind: %i  %w\\nHumidity: %m\\nDew Point: %e\\nVisibility: %v\\n\\nSun Rise: %r\\nSun Set: %y\\n\\n5 Days Forecast:\\n%[Forecast Day 1]\\n%[Forecast Day 2]\\n%[Forecast Day 3]\\n%[Forecast Day 4]\\n%[Forecast Day 5]]
+%c\\nТемпература: %t\\nУсеща се като: %f\\nАтм. налягане: %p\\nВятър: %i  %w\\nВлажност: %m\\nТочка на оросяване: %e\\nВидимост: %v\\n\\nИзгрев: %r\\nЗалез: %y\\n\\n5-дневна прогноза:\\n%[Forecast Day 1]\\n%[Forecast Day 2]\\n%[Forecast Day 3]\\n%[Forecast Day 4]\\n%[Forecast Day 5]
+[Feel-Like: %f\\nPressure: %p\\nWind: %i  %w\\nHumidity: %m\\nDew Point: %e\\nVisibility: %v\\n\\nSun Rise: %r\\nSun Set: %y\\n\\n5 Days Forecast:\\n%[Forecast Day 1]\\n%[Forecast Day 2]\\n%[Forecast Day 3]\\n%[Forecast Day 4]\\n%[Forecast Day 5]]
+Усеща се като: %f\\nАтм. налягане: %p\\nВятър: %i  %w\\nВлажност: %m\\nТочка на оросяване: %e\\nВидимост: %v\\n\\nИзгрев: %r\\nЗалез: %y\\n\\n5-дневна прогноза:\\n%[Forecast Day 1]\\n%[Forecast Day 2]\\n%[Forecast Day 3]\\n%[Forecast Day 4]\\n%[Forecast Day 5]
 [Weather Condition for %n as of %u]
 Атмосферни условия за %n от %u
 [%c, %t (feel-like %f)	Wind: %i %w	Humidity: %m]
 %c, %t (усеща се като %f)	Вятър: %i %w	Влажност: %m
 [%n at %u:	%c, %t (feel-like %f)	Wind: %i %w	Humidity: %m]
 %n at %u:	%c, %t (усеща се като %f)	Вятър: %i %w	Влажност: %m
-[%c, %t\nToday:  High %h, Low %l]
-%c, %t\nДнес:	Максимална %h, Минимална %l
+[%n   (%u)]
+
+[%c, %t\\nToday:  High %h, Low %l]
+%c, %t\\nДнес:	Максимална %h, Минимална %l
 [Temperature: %[Temperature]]
 
 ;file \plugins\Weather\src\weather_addstn.cpp
@@ -350,7 +352,7 @@ HTTP грешка: Услугата не е налична (503)
 ;file \plugins\Weather\src\weather_contacts.cpp
 [Weather condition was not logged.]
 
-[The URL for complete forcast have not been set. You can set it from the Edit Settings dialog.]
+[The URL for complete forecast have not been set. You can set it from the Edit Settings dialog.]
 Не е зададен адрес за пълната прогноза. Можете да го зададете от менюто на контактите>"Редактиране на настройките".
 [The URL for weather map have not been set. You can set it from the Edit Settings dialog.]
 Не е зададен URL адрес за метеокартата. Можете да го зададете от менюто на контактите>"Редактиране на настройките".
@@ -474,7 +476,7 @@ HTTP връзки на метео протокола
 Изобразяване
 [Popups]
 Popups
-[%c\tcurrent condition\n%d\tcurrent date\n%e\tdewpoint\n%f\tfeel-like temp\n%h\ttoday's high\n%i\twind direction\n%l\ttoday's low\n%m\thumidity\n%n\tstation name\n%p\tpressure\n%r\tsunrise time\n%s\tstation ID\n%t\ttemperature\n%u\tupdate time\n%v\tvisibility\n%w\twind speed\n%y\tsun set]
+[%c\tcurrent condition\n%d\tcurrent date\n%e\tdewpoint\n%f\tfeel-like temp\n%h\ttoday's high\n%i\twind direction\n%l\ttoday's low\n%m\thumidity\n%n\tstation name\n%p\tpressure\n%r\tsunrise time\n%s\tstation ID\n%t\ttemperature\n%u\tupdate time\n%v\tvisibility\n%w\twind speed\n%y\tsun set\n----------\n\\n\tnew line]
 %c\tтекущи условия\n%d\tтекуща дата\n%e\tточка на оросяване\n%f\tусеща се като\n%h\tмаксимална\n%i\tвятър (посока)\n%l\tминимална\n%m\tвлажност\n%n\tиме на станцията\n%p\tатм. налягане\n%r\tизгрев\n%s\tstation ID\n%t\tтемпература\n%u\tобновено на\n%v\tвидимост\n%w\tвятър (скорост)\n%y\tзалез
 [Weather Protocol Text Preview]
 

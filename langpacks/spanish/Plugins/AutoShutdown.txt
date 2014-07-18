@@ -28,8 +28,6 @@ segundos
 
 [&Thunderstorm warning is issued (Weather)]
 
-[&Harddrive overheats (HDD Info)]
-
 [Automatic Shutdown]
 
 [Select the automatic shutdown event]
@@ -46,7 +44,7 @@ segundos
 
 [Configure]
 Configurar
-[Shutdown when &prozessor usage drops below:]
+[Shutdown when &processor usage drops below:]
 
 [(current: 0%)]
 
@@ -56,8 +54,6 @@ Configurar
 
 [&Action:]
 
-[OK]
-Aceptar
 [Cancel]
 Cancelar
 [Unsaved data in open applications except Miranda NG might get lost.]
@@ -101,7 +97,7 @@ Eventos
 [Second(s)]
 
 [Minute(s)]
-
+Minuto(s)
 [Hour(s)]
 
 [Day(s)]
@@ -179,7 +175,7 @@ Desconocido
 
 [Saves the current Windows session in memory and sets the system to suspend mode.]
 
-[Saves the current Windows session on harddisc, so that the power can be turned off.]
+[Saves the current Windows session on hard drive, so that the power can be turned off.]
 
 [Locks the computer. To unlock the computer, you must log in.]
 

@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: TabSRMM.dll
 ;  Plugin: TabSRMM
-;  Version: 3.3.0.3
+;  Version: 3.3.1.4
 ;  Authors: The Miranda developers team and contributors
 ;============================================================
 [IM and group chat module for Miranda NG.]
@@ -10,8 +10,6 @@ Komunikační modul pro rozhovory a chaty pro Mirandu NG.
 ;file \plugins\TabSRMM\res\chat.rc
 [You can add the user by user name or his ID. Wildcards are allowed and recommended.]
 Můžete přidat uživatelské jméno nebo identifikátor. Zástupné znaky jsou povoleny a doporučeny.
-[OK]
-OK
 [Cancel]
 Zrušit
 [Show these events]
@@ -118,8 +116,6 @@ Vy&mazat záznam
 Zko&pírovat vše
 [Word lookup]
 Vyhledávání slova
-[Google]
-Google
 [Wikipedia]
 Wikipedie
 [Link]
@@ -408,7 +404,7 @@ min.
 Zobrazení globálního záznamu komunikace
 [Typing Notification]
 Upozornění na psaní zprávy
-[Send typing notifications to the following users when you are typing a message to the them:]
+[Send typing notifications to the following users when you are typing a message to them:]
 Poslat upozornění na psaní zprávy těmto vybraným kontaktům:
 [        Show typing notifications in the message window]
         Zobrazit oznámení o psaní v komunikačním okně
@@ -486,7 +482,7 @@ ms
 Nápověda ke kontejnerům
 [Windows Aero settings]
 Nastavení Windows Aero
-[Use Aero UI elements(only when not using a custom skin)]
+[Use Aero UI elements (only when not using a custom skin)]
 Použít Aero UI elementy (pouze pokud není použito vlastní téma)
 [Use Windows 7 task bar enhancements (restart required)]
 Použít vylepšení lišty úloh z Windows 7 (vyžadován restart)
@@ -964,19 +960,9 @@ Rozhovor...
 Výchozí kontejner
 [Attach to]
 Připojit k
-[Meta Contact]
-Meta kontakt
-[(Forced)]
-(Vynucený)
-[Autoselect]
-Automatický výběr
-[Use Protocol]
-Použít protokol
-[Set Default Protocol]
-Nastavit výchozí protokol
 ;file \plugins\TabSRMM\src\containeroptions.cpp
 [General options]
-Hlavní možnosti
+Obecná nastavení
 [Window layout]
 Vzhled okna
 [Tabs and switch bar]
@@ -1043,12 +1029,14 @@ Počet zahájených odeslání: %d\nDélka zprávy: %d bytů\nLimit délky zprá
 ;file \plugins\TabSRMM\src\eventpopups.cpp
 [One of your popup actions is set to DISMISS EVENT.\nNote that this options may have unwanted side effects as it REMOVES the event from the unread queue.\nThis may lead to events not showing up as "new". If you don't want this behavior, please review the Event Notifications settings page.]
 Jedna z akcí pro oznámení je nastavena na ZAVŘÍT UDÁLOST.\nToto nastavení může mít nechtěné vedlejší účinky, neboť odstraňuje nepřečtené události z fronty.\nDíky tomu se nemusí zobrazovat události jako \"nové\". Pokud chcete zamezit tomuto chování, zkontrolujte nastavení v hlavní nabídce -> Možnosti -> Komunikace -> Oznámení události.
+[TabSRMM warning message]
+TabSRMM varování
 [Incoming file]
 Příchozí soubor
 [No description given]
 Bez popisu
-[Incoming file (invalid format]
-Příchozí soubor (neplatný formát
+[Incoming file (invalid format)]
+Příchozí soubor (neplatný formát)
 [Unknown event]
 Neznámá událost
 [New messages: ]
@@ -1062,15 +1050,19 @@ Rich Edit soubor
 Problém v nastavení|Funkce bezobslužného odesílání je zakázána. Funkce \\b1 zpožděné odesílání\\b0  a \\b1 poslat více kontaktům\\b0  ji však vyžadují.\n\nNutno povolit v \\b1Možnosti->Komunikace->Pokročilé úpravy\\b0. Změna tohoto nastavení vyžaduje restart.
 [You cannot edit user notes when there are unsent messages]
 Nemůžete upravovat poznámky k uživateli pokud existují neodeslané zprávy.
-[%s is typing a message.]
-%s píše zprávu.
+[Version]
+Verze
+[%s is typing a message...]
+%s píše zprávu...
 [Last received: %s at %s]
 Poslední zpráva přijata %s v %s
 [%s has entered text.]
 %s dopsal/a zprávu.
-[Autoscrolling is disabled, %d message(s) queued (press F12 to enable it)]
+[%s is typing a message]
+%s píše zprávu
+[Auto scrolling is disabled, %d message(s) queued (press F12 to enable it)]
 Automatické posouvání je vypnuto, %d zpráva/y) ve frontě (stiskněte F12 pro zapnutí)
-[UID: %s (SHIFT click -> copy to clipboard)\nClick for User's Details\nRight click for MetaContact control\nClick dropdown to add or remove user from your favorites.]
+[UID: %s (SHIFT click -> copy to clipboard)\nClick for User's Details\nRight click for metacontact control\nClick dropdown to add or remove user from your favorites.]
 UID: %s (SHIFT klik -> kopírovat do schránky)\nKliknout pro zobrazení detailů uživatele\nKliknout pravým pro správu metakontaktů\nTáhnout pro přidání nebo odebrání uživatele z oblíbených.
 [No UID]
 Žádné UID
@@ -1246,7 +1238,7 @@ UPOZORNĚNÍ: Zpráva, kterou se pokoušíte vložit, je delší, než povolený
 UPOZORNĚNÍ: Zpráva, kterou se pokoušíte vložit, je delší, než povolený limit pro tento protokol. Bude odesláno prvních %d znaků
 [Save and close session]
 Uložit a zavřít rozhovor
-[Autoscrolling is disabled (press F12 to enable it)]
+[Auto scrolling is disabled (press F12 to enable it)]
 Automatické posouvání je vypnuto (stiskněte F12 pro zapnutí)
 [Click for contact menu\nClick dropdown for window settings]
 Kliknutím zobrazíte uživatelské menu\nKliknutím na šipku možnosti okna
@@ -1262,12 +1254,6 @@ Chyba při odesílání: %s
 Čas na odeslání vypršel
 [You are editing the user notes. Click the button again or use the hotkey (default: Alt-N) to save the notes and return to normal messaging mode]
 Editujete poznámky k uživateli. Stiskněte tlačítko znovu nebo použijte klávesovou zkratku (výchozí: Alt-N) pro uložení poznámek a návrat do normálního režimu
-[Unforce failed]
-Chyba při rušení vynuceného
-[The selected protocol cannot be forced at this time]
-Vybraný protokol nelze právě teď vynutit
-[Warning: you have selected a subprotocol for sending the following messages which is currently offline]
-Upozornění: vybrali jste offline protokol pro odeslání následujících zpráv
 [Contact is offline and this protocol does not support sending files to offline users.]
 Kontakt je offline a tento protokol nepodporuje posílání souborů offline uživatelům
 ;file \plugins\TabSRMM\src\msgdlgutils.cpp
@@ -1625,6 +1611,8 @@ Změnit skin
 ;file \plugins\TabSRMM\src\translator.cpp
 [Message window tweaks]
 Komunikační okno
+[Display metacontact icons]
+Zobrazit ikonu metakontaktu
 [Error feedback]
 Hlášení o chybách
 [Show skinnable tooltip in chat (Tipper plugin required)]
@@ -1635,14 +1623,18 @@ Povolit zvuky psaní
 Zakázat animované GIF avatary (nebude mít vliv na právě otevřená komunikační okna)
 [Close current tab on send]
 Zavřít panel po odeslání
-[Disable error popups on sending failures]
-Zakázat chybové oznámení při neodeslání zprávy
 [Automatic keyboard layout: Do not load the system default for new contacts]
 Automatické rozložení klávesnice: Nenahrávat výchozí rozložení systému pro nový kontakt
 [Enable unattended send (experimental feature, required for multisend and send later) (*)]
 Povolit bezobslužné odesílání (experimentální funkce vyžadovaná pro mnohonásobné či zpožděné odesílání) (*)
 [Show client description in info panel]
-
+Zobrazit popis klienta v info panelu
+[On tab control]
+Na záložkách
+[On the button bar]
+Na tlačítkové liště
+[Disable error popups on sending failures]
+Zakázat chybové oznámení při neodeslání zprávy
 [Show a preview of the event]
 Zobrazit náhled události
 [Don't announce event when message dialog is open]
@@ -1711,7 +1703,7 @@ Automaticky kopírovat vybraný text
 Vzhled záznamu komunikace
 [Support for external plugins]
 Podpora externích doplňků
-[Timestamp settings (note: timstamps also depend on your templates)]
+[Timestamp settings (note: timestamps also depend on your templates)]
 Nastavení časových údajů (pozn.: rovněž závisí na vašich šablonách)
 [Message log icons]
 Ikony v záznamu komunikace
@@ -1807,7 +1799,7 @@ Editovat poznámky k uživateli|Editujete poznámky k uživateli. Klikněte na t
 
 [Aero peek warning|You have enabled Aero Peek features and loaded a custom container window skin\n\nThis can result in minor visual anomalies in the live preview feature.]
 Aero náhled - varování|Máte povolen Aero náhled a nahrán vlastní styl kontejneru\n\nTo může vést k vedlejším vizuálním anomáliím.
-[Filetransfer problem|Sending the image by file transfer failed.\n\nPossible reasons: File transfers not supported, either you or the target contact is offline, or you are invisible and the target contact is not on your visibilty list.]
+[File transfer problem|Sending the image by file transfer failed.\n\nPossible reasons: File transfers not supported, either you or the target contact is offline, or you are invisible and the target contact is not on your visibilty list.]
 
 [Settings problem|The option \\b1 History->Imitate IEView API\\b0  is enabled and the History++ plugin is active. This can cause problems when using IEView as message log viewer.\n\nShould I correct the option (a restart is required)?]
 Problém v nastavení|Možnost \\b1 History->Imitate IEView API\\b0 je povolena a plugin History++ je aktivní. To může vést k problémům při použití IEView jako prohlížeče záznamu komunikace.\n\nMohu napravit nastavení (vyžaduje restart)?
@@ -1817,8 +1809,6 @@ Zavírání okna|Pokoušíte se zavřít okno s několika otevřenými panely.\n
 Zavření okna|Pro projevení změn nahraného tématu v okně možností, musí být po nahrání tématu toto okno zavřeno\\b1 a neuložené změny mohou být ztraceny\\b0 .\n\nPřejete si pokračovat?
 [Loading a theme|Loading a color and font theme can overwrite the settings defined by your skin.\n\nDo you want to continue?]
 Nahrání tématu|Nahrání barev a písma tématu může přepsat nastavení definované vaším skinem.\n\nPřejete si pokračovat?
-[TabSRMM warning message]
-TabSRMM varování
 ;file \plugins\TabSRMM\src\chat\colorchooser.cpp
 [Text color]
 Barva textu
@@ -1948,7 +1938,7 @@ Příchozí časový údaj (starý)
 * Změny stavu
 [* Dividers]
 * Oddělovače
-[* Error and warning Messages]
+[* Error and warning messages]
 * Chyby a upozornění
 [* Symbols (incoming)]
 * Symboly (příchozí)
@@ -2008,7 +1998,7 @@ Odsadit druhý řádek dlouhé zprávy
 Omezit délku jmen v záznamu na 20 znaků
 [Add a colon (:) to auto-completed user names]
 Přidat dvojtečku za automaticky doplněné jméno
-[Start private conversation on doubleclick in nick list (insert nick if unchecked)]
+[Start private conversation on double click in nick list (insert nick if unchecked)]
 Zahájit soukromý rozhovor dvojklikem v seznamu uživatelů (jinak vložit přezdívku)
 [Strip colors from messages in the log]
 Záznam ukládat bez kódů definující barvy
@@ -2098,9 +2088,11 @@ Pozadí seznamu účastníků
 Pozadí skupinového rozhovoru
 [nick of current contact (if defined)]
 přezdívka stávajícího kontaktu (pokud je definováno)
-[protocol name of current contact (if defined). Account name is used when protocol supports multiaccounts]
+[protocol name of current contact (if defined). Account name is used when protocol supports multiple accounts]
 název protokolu stávajícího kontaktu (pokud je definován). Název účtu je použit pokud protokol podporuje možnost více účtů
-[User ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
+[user-defined account name of current contact (if defined).]
+uživatelem definovaný název účtu (pokud je definován)
+[user ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
 Identifikátor stávajícího kontaktu (pokud je definován). To znamená UIN pro ICQ, JID pro Jabber atd.
 [path to Miranda root folder]
 cesta ke kořenové složce Mirandy
@@ -2194,7 +2186,7 @@ minut
 minuta
 [, %d %s idle]
 , %d %s nečinný
-[The filter canoot be enabled, because there are no event types selected either global or for this chat room]
+[The filter cannot be enabled, because there are no event types selected either global or for this chat room]
 Filtr nelze povolit, neboť nejsou vybrány žádné typy událostí, ať už globální, nebo pro tuto místnost.
 [Event filter error]
 Chyba filtru událostí

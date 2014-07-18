@@ -1,7 +1,7 @@
 #include "common.h"
 
 extern HANDLE hTTButton;
-extern HGENMENU hMenuRoot, hMenuItem, hMenuItemHistory;
+extern HGENMENU hMenuRoot, hMenuItem;
 static HANDLE hEventNotify;
 
 void StripBBCodesInPlace(wchar_t *text)
@@ -70,7 +70,7 @@ static INT_PTR CreatePopup(WPARAM wParam, LPARAM lParam)
 	pd_out->timeout = pd_in->iSeconds;
 
 	lstPopupHistory.Add(pd_out->pwzTitle, pd_out->pwzText, time(0));
-	if (!db_get_b(0, MODULE, "Enabled", 1)) {
+	if (!db_get_b(0, "Popup", "ModuleIsEnabled", 1)) {
 		mir_free(pd_out->pwzTitle);
 		mir_free(pd_out->pwzText);
 		mir_free(pd_out);
@@ -111,7 +111,7 @@ static INT_PTR CreatePopupW(WPARAM wParam, LPARAM lParam)
 	pd_out->timeout = pd_in->iSeconds;
 
 	lstPopupHistory.Add(pd_out->pwzTitle, pd_out->pwzText, time(0));
-	if (!db_get_b(0, MODULE, "Enabled", 1)) {
+	if (!db_get_b(0, "Popup", "ModuleIsEnabled", 1)) {
 		mir_free(pd_out->pwzTitle);
 		mir_free(pd_out->pwzText);
 		mir_free(pd_out);
@@ -151,7 +151,7 @@ void ShowPopup(PopupData &pd_in)
 
 	lstPopupHistory.Add(pd_out->pwzTitle, pd_out->pwzText, time(0));
 
-	if (!db_get_b(0, MODULE, "Enabled", 1)) {
+	if (!db_get_b(0, "Popup", "ModuleIsEnabled", 1)) {
 		mir_free(pd_out->pwzTitle);
 		mir_free(pd_out->pwzText);
 		mir_free(pd_out);
@@ -191,14 +191,9 @@ static INT_PTR GetOpaque(WPARAM wParam, LPARAM lParam)
 	return (INT_PTR)data;
 }
 
-static INT_PTR IsSecondLineShown(WPARAM wParam, LPARAM lParam)
-{
-	return TRUE;
-}
-
 void UpdateMenu()
 {
-	bool isEnabled = db_get_b(0, MODULE, "Enabled", 1) == 1;
+	bool isEnabled = db_get_b(0, "Popup", "ModuleIsEnabled", 1) == 1;
 
 	CLISTMENUITEM mi = { sizeof(mi) };
 	mi.ptszName = (isEnabled ? LPGENT("Disable Popups") : LPGENT("Enable Popups"));
@@ -218,21 +213,21 @@ INT_PTR PopupQuery(WPARAM wParam, LPARAM lParam)
 	switch(wParam) {
 	case PUQS_ENABLEPOPUPS:
 		{
-			bool enabled = db_get_b(0, MODULE, "Enabled", 1) != 0;
-			if (!enabled) db_set_b(0, MODULE, "Enabled", 1);
+			bool enabled = db_get_b(0, "Popup", "ModuleIsEnabled", 1) != 0;
+			if (!enabled) db_set_b(0, "Popup", "ModuleIsEnabled", 1);
 			return !enabled;
 		}
 		break;
 	case PUQS_DISABLEPOPUPS:
 		{
-			bool enabled = db_get_b(0, MODULE, "Enabled", 1) != 0;
-			if (enabled) db_set_b(0, MODULE, "Enabled", 0);
+			bool enabled = db_get_b(0, "Popup", "ModuleIsEnabled", 1) != 0;
+			if (enabled) db_set_b(0, "Popup", "ModuleIsEnabled", 0);
 			return enabled;
 		}
 		break;
 
 	case PUQS_GETSTATUS:
-		return db_get_b(0, MODULE, "Enabled", 1);
+		return db_get_b(0, "Popup", "ModuleIsEnabled", 1);
 
 	default:
 		return 1;
@@ -243,8 +238,8 @@ INT_PTR PopupQuery(WPARAM wParam, LPARAM lParam)
 
 static INT_PTR TogglePopups(WPARAM wParam, LPARAM lParam)
 {
-	BYTE val = db_get_b(0, MODULE, "Enabled", 1);
-	db_set_b(0, MODULE, "Enabled", !val);
+	BYTE val = db_get_b(0, "Popup", "ModuleIsEnabled", 1);
+	db_set_b(0, "Popup", "ModuleIsEnabled", !val);
 	UpdateMenu();
 	return 0;
 }
@@ -293,7 +288,7 @@ static INT_PTR ShowMessage(WPARAM wParam, LPARAM lParam)
 	if (bShutdown)
 		return -1;
 
-	if (db_get_b(0, MODULE, "Enabled", 1)) {
+	if (db_get_b(0, "Popup", "ModuleIsEnabled", 1)) {
 		POPUPDATAT pd = {0};
 		_tcscpy(pd.lptzContactName, lParam == SM_WARNING ? _T("Warning") : _T("Notification"));
 		pd.lchIcon = LoadIcon(0, lParam == SM_WARNING ? IDI_WARNING : IDI_INFORMATION);
@@ -308,7 +303,7 @@ static INT_PTR ShowMessageW(WPARAM wParam, LPARAM lParam)
 	if (bShutdown)
 		return -1;
 
-	if (db_get_b(0, MODULE, "Enabled", 1)) {
+	if (db_get_b(0, "Popup", "ModuleIsEnabled", 1)) {
 		POPUPDATAW pd = {0};
 		wcscpy(pd.lpwzContactName, lParam == SM_WARNING ? L"Warning" : L"Notification");
 		pd.lchIcon = LoadIcon(0, lParam == SM_WARNING ? IDI_WARNING : IDI_INFORMATION);
@@ -384,21 +379,21 @@ static INT_PTR CreateClassPopup(WPARAM wParam, LPARAM lParam)
 	if (pdc->cbSize < sizeof(POPUPDATACLASS)) return 1;
 
 	POPUPCLASS *pc = 0;
-	if (wParam) 
+	if (wParam)
 		pc = (POPUPCLASS *)wParam;
 	else {
 		for (int i = 0; i < arClasses.getCount(); i++) {
-			if ( strcmp(arClasses[i]->pszName, pdc->pszClassName) == 0) {
+			if (strcmp(arClasses[i]->pszName, pdc->pszClassName) == 0) {
 				pc = arClasses[i];
 				break;
 			}
 		}
 	}
 	if (pc) {
-		if ( NotifyEventHooks(hEventNotify, (WPARAM)pdc->hContact, (LPARAM)pc->PluginWindowProc))
+		if (NotifyEventHooks(hEventNotify, (WPARAM)pdc->hContact, (LPARAM)pc->PluginWindowProc))
 			return 0;
 
-		PopupData pd = {sizeof(PopupData)};
+		PopupData pd = { sizeof(PopupData) };
 		if (pc->flags & PCF_UNICODE) pd.flags |= PDF_UNICODE;
 		pd.colorBack = pc->colorBack;
 		pd.colorText = pc->colorText;
@@ -410,7 +405,7 @@ static INT_PTR CreateClassPopup(WPARAM wParam, LPARAM lParam)
 		pd.opaque = pdc->PluginData;
 		pd.pszTitle = (char *)pdc->pszTitle;
 		pd.pszText = (char *)pdc->pszText;
-	
+
 		ShowPopup(pd);
 	}
 	return 0;
@@ -432,14 +427,13 @@ void InitServices()
 	CreateServiceFunction(MS_POPUP_CHANGEW, PopupChangeW);
 	CreateServiceFunction(MS_POPUP_GETCONTACT, GetContact);
 	CreateServiceFunction(MS_POPUP_GETPLUGINDATA, GetOpaque);
-	CreateServiceFunction(MS_POPUP_ISSECONDLINESHOWN, IsSecondLineShown);
 	CreateServiceFunction(MS_POPUP_QUERY, PopupQuery);
 
 	CreateServiceFunction(MS_POPUP_SHOWMESSAGE, ShowMessage);
 	CreateServiceFunction(MS_POPUP_SHOWMESSAGE"W", ShowMessageW);
 
 	CreateServiceFunction(MS_POPUP_SHOWHISTORY, Popup_ShowHistory);
-	CreateServiceFunction("Popup/ToggleEnabled", TogglePopups);
+	CreateServiceFunction("Popup/EnableDisableMenuCommand", TogglePopups);
 }
 
 void DeinitServices()

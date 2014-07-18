@@ -19,7 +19,7 @@ Zapisywanie
 [Log to File]
 Zapisz do pliku
 [Log Filename:]
-Nazwa pliku Logu
+Nazwa dziennika:
 [Network]
 Protokoły
 [Popups]
@@ -60,8 +60,6 @@ Do góry
 W dół
 [Edit Host]
 Edytuj Host
-[OK]
-OK
 [Cancel]
 Anuluj
 [Address:]
@@ -93,7 +91,7 @@ Wykres
 [Enable]
 Włącz
 [Disable all pings]
-Wyłącz wszystkie pingi:
+Wyłącz wszystkie pingi
 [Enable all pings]
 Włącz wszystkie pingi
 [Options...]
@@ -104,10 +102,12 @@ Hosty...
 [Ping]
 Ping
 ;file \plugins\Ping\src\options.cpp
+[Text Files (*.txt)]
+Pliki tekstowe (*.txt)
+[All Files]
+Wszystkie pliki
 [Open log file]
-Otwórz raport pliku
-[All\0*.*\0Text\0*.TXT\0]
-Wszystkie\0*.*\0Tekst\0*.TXT\0
+Otwórz plik raportu
 [<none>]
 <brak>
 [<all>]
@@ -152,7 +152,7 @@ włączone
 [double clicked]
 dwuklik
 [Show/Hide &Ping Window]
-Pokaż/Ukryj okno Pingu
+Pokaż/Ukryj okno &Pingu
 [List]
 Lista
 ;file \plugins\Ping\src\rawping.cpp

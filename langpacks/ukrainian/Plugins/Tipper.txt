@@ -7,64 +7,66 @@
 ;============================================================
 [Tool Tip notification windows.]
 Плагін спливаючих підказок для списку контактів.
-[Options]
-Налаштування
 [Layout]
 Розміщення
 [Text indent:]
 Відступ тексту:
-[Window]
-Вікно
-[Max width:]
-Макс. ширина:
-[Max height:]
-Макс. висота:
-[Avatar size:]
-Аватар:
-[Show if list not focused]
-Список не у фокусі
+[Title indent:]
+Відступ заголовків:
+[Value indent:]
+Відступ значення:
 [General padding:]
 Основний відступ:
-[Hover time:]
-Затримка:
-[Status bar tips]
-Підказки в панелі статусу
+[Text padding:]
+Міжрядковий відступ:
+[Outer avatar padding:]
+Зовнішній відступ аватара:
+[Inner avatar padding:]
+Внут. відступ аватара:
 [Alignment]
 Вирівнювання
 [Labels:]
 Назви:
 [Values:]
 Значення:
+[Window]
+Вікно
+[Max width:]
+Макс. ширина:
 [Min width:]
 Мін. ширина:
+[Max height:]
+Макс. висота:
 [Min height:]
 Мін. висота:
+[Avatar size:]
+Аватар:
 [Sidebar width:]
 Ширина врізки:
-[Text padding:]
-Міжрядковий відступ:
-[Outer avatar padding:]
-Зовнішній відступ аватара:
+[Hover time:]
+Затримка:
+[Show if list not focused]
+Список не у фокусі
+[Options]
+Налаштування
+[Show title]
+Показувати заголовок
+[Status bar tips]
+Підказки в панелі статусів
+[Avatar border]
+Рамка аватару
 [Round corners (avatar)]
 Заокруглені кути аватарів
 [Keep original avatar size]
 Зберігати розмір аватара
-[Avatar border]
-Рамка аватара
-[Title indent:]
-Відступ заголовків:
-[Value indent:]
-Відступ значення:
-[Inner avatar padding:]
-Внут. відступ аватара:
 [Substitution]
 Підстановка
 [Label:]
 Мітка:
-[Contact protocol module]
-Модуль протоколу контакту
 [Module:]
 Модуль:
+[Contact protocol module]
+Модуль протоколу контакту
 [Setting or prefix:]
 Параметр, префікс:
 [Translation:]
@@ -101,76 +103,76 @@
 Змінити
 [Separator]
 Роздільник
-[Advanced options]
-Додатково
-[Retrieve XStatus details if auto-retrieve is disabled]
-Запитувати докладний хСтатус, якщо автозапит вимкнено
 [Extra icons]
 Екстра значки
 [Smileys support]
 Смайли
 [Enable SmileyAdd support]
 Підтримка смайлів
-[Resize smileys]
-Масштабувати смайли
 [Use protocol smileys]
 Смайли протоколу
+[Resize smileys]
+Масштабувати смайли
 [Replace only isolated smileys]
 Тільки смайли, оточені пробілами
-[Retrieve new status message]
-Запитувати повідомлення статусу
+[Advanced options]
+Додатково
 [Show tooltip after all content is ready (avatar && status message)]
 Показати підказку тільки після завантаження усього вмісту
-[Status bar and tray tooltip]
-Панель статусу і підказка в треї
-[Limit status messages in status bar and tray tooltips to:]
-Обмежити повідомлення в панелі статусу і в підказці трею до:
-[characters]
-символів
+[Retrieve new status message]
+Запитувати повідомлення статусу
 [Disable in invisible status]
 Вимкнути запит, коли невидимий
+[Retrieve XStatus details if auto-retrieve is disabled]
+Запитувати докладний хСтатус, якщо автозапит вимкнено
+[Status bar and tray tooltip]
+Панель статусів і підказка в треї
+[Limit status messages in status bar and tray tooltips to:]
+Обмежити повідомлення в панелі статусів та в підказці трею до:
+[characters]
+символів
 [Skins]
 Скіни
-[Opacity (%):]
-Непрозорість (%):
-[Transparency]
-Прозорість
-[Effects]
-Ефекти
-[Border]
-Рамка
-[Shadow]
-Тінь
-[Round corners (window)]
-Заокруглені кути вікна
-[Aero Glass (Vista+)]
-Ефект Aero Glass (Vista+)
-[Animation speed:]
-Швидкість анімації:
-[Preview]
-Тест
-[No preview]
-Немає превью
-[Skin option]
-Налаштування скіна
-[Load fonts and colors]
-Завантажувати шрифти і кольори
-[Enable skin coloring]
-Розмальовка скінів
 [Reload skin list]
 Оновити список скінів
 [Apply skin]
 Застосувати скін
-[Load tooltip proportions]
-Завантажувати пропорції підказки
 [Get more skins]
 Скачати скіни
+[Preview]
+Тест
+[No preview]
+Немає превью
+[Effects]
+Ефекти
+[Animation speed:]
+Швидкість анімації:
+[Shadow]
+Тінь
+[Border]
+Рамка
+[Round corners (window)]
+Заокруглені кути вікна
+[Skin option]
+Налаштування скіна
+[Enable skin coloring]
+Розмальовка скінів
+[Load tooltip proportions]
+Завантажувати пропорції підказки
+[Load fonts and colors]
+Завантажувати шрифти і кольори
+[Transparency]
+Прозорість
+[Opacity (%):]
+Непрозорість (%):
+[Aero Glass (Vista+)]
+Ефект Aero Glass (Vista+)
 [Enable tray tooltips]
 Підказки в треї
 [Handle tray tooltips by Tipper]
 Перехоплювати підказки в треї
-[Favorite contacts]
-Обрані контакти
+[Hide offline protocols]
+Ховати відключені протоколи
 [Expand to second level after:]
 Другий рівень підказки через:
 [ms]
@@ -179,8 +181,8 @@
 Підказка першого рівня
 [Second level tooltip]
 Підказка другого рівня
-[Hide offline protocols]
-Ховати відключені протоколи
+[Favorite contacts]
+Обрані контакти
 [Hide offline]
 Ховати відключених
 [Append protocol name]
@@ -201,14 +203,12 @@
 Вище
 [Move down]
 Нижче
+[No icon]
+Без значка
 [Icon on left]
 Значок ліворуч
 [Icon on right]
 Значок праворуч
-[No icon]
-Без значка
-[No title]
-Без заголовка
 [Bottom right]
 Внизу праворуч
 [Bottom left]
@@ -447,6 +447,12 @@
 Вітер:
 [# Solid color fill]
 \# Заливка кольором
+[%dd %dh %dm]
+%dдн %dгод %dхв
+[%dh %dm]
+%dгод %dхв
+[%dm]
+%dхв
 [Background]
 Фон
 [Dividers]
@@ -467,6 +473,10 @@
 Жіноча
 [Male]
 Чоловіча
+[%dy %dd %dh %dm]
+%dр %dдн %dгод %dхв
+[%dd]
+%dдн
 [[No translation]]
 (без перетворення)
 [WORD to status description]
@@ -481,7 +491,7 @@
 Байт - в стать (Ч/Ж) (ICQ)
 [WORD to country name]
 Слово - в назву країни
-[DWORD to ip address]
+[DWORD to IP address]
 Подв. слово - в IP-адресу
 [<prefix>Day|Month|Year to date]
 <префікс>день|місяць|рік - у дату

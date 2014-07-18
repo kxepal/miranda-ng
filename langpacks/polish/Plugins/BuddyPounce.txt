@@ -18,8 +18,6 @@ Anuluj
 Pounce jest wysyłane do
 [Buddy Pounce]
 Buddy Pounce
-[OK]
-OK
 [The Message:]
 Wiadomość:
 [Delete Pounce]
@@ -45,7 +43,7 @@ Okno
 [Status]
 Status
 [Use Advanced Dialog]
-Użyj Zaawansowanego Okna
+Użyj zaawansowanego okna
 [The Message (characters: )]
 Wiadomość (znaków)
 [Default Settings]
@@ -118,15 +116,15 @@ błąd......
 [The Message    (0 Characters)]
 Wiadomość (0 znaków)
 [Reuse this message? (0 to use it once)]
-Użyj wiadomości ponownie (0 = tylko raz)
+Użyj wiadomości ponownie (0 - tylko raz)
 [Times]
 razy
 [Give up after... (0 to not give up)]
-Zrezygnuj po... (0 = nie rezygnuj)
+Zrezygnuj po... (0 - nie rezygnuj)
 [Days]
 dniach
 [Show confirmation window? (0 to not Show)]
-Pokaż okno potwierdzające (0 = nie pokazuj)
+Pokaż okno potwierdzające (0 - nie pokazuj)
 [Seconds to wait before sending]
 sekund przed wysłaniem
 [Pounce being sent to %s in %d seconds]
@@ -138,5 +136,7 @@ Wiadomość wysłano pomyślnie do %s
 [Message failed to send to %s]
 Nie udało się wysłać wiadomości do %s
 ;file \plugins\BuddyPounce\src\main.cpp
+[&Buddy Pounce]
+&Buddy Pounce
 [Message Sessions]
 Okno rozmowy

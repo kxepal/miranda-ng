@@ -34,12 +34,8 @@ BossKey
 Клавишна комбинация
 [Password:]
 Парола:
-[OK]
-ОК
 [Cancel]
 Отказ
-[EN]
-EN
 [Workstation is locked]
 
 [Screen Saver is running]

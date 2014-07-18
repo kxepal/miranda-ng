@@ -53,13 +53,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #include <m_userinfo.h>
 #include <m_extraicons.h>
 #include <m_message.h>
+#include <m_metacontacts.h>
 
 #include <m_fingerprint.h>
 
 //plugins header
 #include "version.h"
 #include "resource.h"
-#include "utilities.h"
 
 typedef struct {
 	BYTE	b;

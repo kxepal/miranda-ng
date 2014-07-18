@@ -40,17 +40,19 @@ Boston, MA 02111-1307, USA.
 #include <m_netlib.h>
 #include <m_icolib.h>
 #include <win2k.h>
+#include <m_pluginupdater.h>
 
 #include <m_folders.h>
-#include <m_popup2.h>
 
 #include "version.h"
 #include "resource.h"
-#include "Notifications.h"
 
 #if MIRANDA_VER < 0x0A00
+#include <m_popup2.h>
 #include "compat.h"
 #endif
+
+#include "Notifications.h"
 
 // Enable Visual Style
 #if defined _M_IX86
@@ -92,19 +94,25 @@ struct PopupDataText
 
 struct PlugOptions
 {
-	BYTE bUpdateOnStartup, bUpdateOnPeriod, bOnlyOnceADay, bForceRedownload;
+	BYTE bUpdateOnStartup, bUpdateOnPeriod, bOnlyOnceADay, bForceRedownload, bSilentMode;
 	BOOL bSilent, bDlgDld;
 
 	BYTE bPeriodMeasure;
 	int  Period;
 };
 
-#define DEFAULT_UPDATEICONS       0
 #define DEFAULT_UPDATEONSTARTUP   1
-#define DEFAULT_ONLYONCEADAY      1
 #define DEFAULT_UPDATEONPERIOD    0
 #define DEFAULT_PERIOD            1
 #define DEFAULT_PERIODMEASURE     1
+
+#if MIRANDA_VER < 0x0A00
+	#define DEFAULT_UPDATEICONS       1
+	#define DEFAULT_ONLYONCEADAY      0
+#else
+	#define DEFAULT_UPDATEICONS       0
+	#define DEFAULT_ONLYONCEADAY      1
+#endif
 
 #define DEFAULT_UPDATE_URL                "http://miranda-ng.org/distr/stable/x%platform%"
 #define DEFAULT_UPDATE_URL_TRUNK          "http://miranda-ng.org/distr/x%platform%"
@@ -122,15 +130,15 @@ extern HINSTANCE hInst;
 
 extern TCHAR tszRoot[MAX_PATH], tszDialogMsg[2048], tszTempPath[MAX_PATH];
 extern FILEINFO *pFileInfo;
-extern HANDLE hCheckThread, hListThread, hPluginUpdaterFolder;
 extern PlugOptions opts;
 extern POPUP_OPTIONS PopupOptions;
 extern aPopups PopupsList[POPUPS];
 extern HANDLE Timer, hPipe;
-extern HWND hwndDialog;
 
 void DoCheck(int iFlag);
-void DoGetList(int iFlag);
+
+void UninitCheck(void);
+void UninitListNew(void);
 
 struct AutoHandle
 {
@@ -174,15 +182,17 @@ typedef OBJLIST<ServListEntry> SERVLIST;
 
 void  InitPopupList();
 void  LoadOptions();
-BOOL  NetlibInit();
-void  IcoLibInit();
-void  ServiceInit();
-void  NetlibUnInit();
-int   ModulesLoaded(WPARAM wParam, LPARAM lParam);
+void  InitNetlib();
+void  InitIcoLib();
+void  InitServices();
+void  InitEvents();
+void  InitOptions();
+void  InitListNew();
+void  InitCheck();
 
-int   OnFoldersChanged(WPARAM, LPARAM);
-int   OnPreShutdown(WPARAM, LPARAM);
-int   OptInit(WPARAM, LPARAM);
+void  UnloadCheck();
+void  UnloadListNew();
+void  UnloadNetlib();
 
 void  BackupFile(TCHAR *ptszSrcFileName, TCHAR *ptszBackFileName);
 
@@ -190,17 +200,15 @@ bool  ParseHashes(const TCHAR *ptszUrl, ptrT &baseUrl, SERVLIST &arHashes);
 int   CompareHashes(const ServListEntry *p1, const ServListEntry *p2);
 
 TCHAR* GetDefaultUrl();
-BOOL   DownloadFile(LPCTSTR tszURL, LPCTSTR tszLocal, int CRCsum, HANDLE &nlc);
+bool   DownloadFile(FILEURL *pFileURL, HANDLE &nlc);
 
-void  ShowPopup(HWND hDlg, LPCTSTR Title, LPCTSTR Text, int Number, int ActType);
+void  ShowPopup(HWND hDlg, LPCTSTR Title, LPCTSTR Text, int Number, int ActType, bool NoMessageBox = false);
 void  __stdcall RestartMe(void*);
 void  __stdcall OpenPluginOptions(void*);
 BOOL  AllowUpdateOnStartup();
 void  InitTimer(int type = 0);
 
-INT_PTR MenuCommand(WPARAM wParam,LPARAM lParam);
-INT_PTR ShowListCommand(WPARAM wParam,LPARAM lParam);
-INT_PTR EmptyFolder(WPARAM wParam,LPARAM lParam);
+INT_PTR EmptyFolder(WPARAM,LPARAM);
 
 INT_PTR CALLBACK DlgMsgPop(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

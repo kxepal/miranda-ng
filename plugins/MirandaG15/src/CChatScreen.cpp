@@ -179,7 +179,7 @@ void CChatScreen::UpdateObjects()
 void CChatScreen::UpdateLabels()
 {
 	tstring strNickname = CAppletManager::GetContactDisplayname(m_hContact);
-	char *szProto = (char*)CallService(MS_PROTO_GETCONTACTBASEPROTO,(UINT)m_hContact,0);
+	char *szProto = GetContactProto(m_hContact);
 	char *szStatus = NULL;
 	m_iStatus = ID_STATUS_OFFLINE;
 
@@ -233,7 +233,7 @@ bool CChatScreen::SetContact(MCONTACT hContact)
 	}
 	
 	// Check if the contact is valid
-	char *szProto = (char *) CallService(MS_PROTO_GETCONTACTBASEPROTO, hContact, 0);
+	char *szProto = GetContactProto(hContact);
 	m_strProto = toTstring(szProto);
 
 	CIRCConnection *pIRCCon = CAppletManager::GetInstance()->GetIRCConnection(m_strProto);
@@ -269,7 +269,7 @@ void CChatScreen::LoadHistory()
 	if(!m_hContact)
 		return;
 
-	char *szProto = (char *) CallService(MS_PROTO_GETCONTACTBASEPROTO, (WPARAM)m_hContact, 0);
+	char *szProto = GetContactProto(m_hContact);
 	
 	if(m_bIRCProtocol && db_get_b(m_hContact, szProto, "ChatRoom", 0) != 0)
 	{
@@ -314,18 +314,18 @@ void CChatScreen::LoadHistory()
 				LHandles.push_front(hEvent);
 				if(CConfig::GetBoolSetting(SESSION_LOADDB) && *(LHandles.begin()) == hUnread)
 					break;
-				hEvent = db_event_prev(hEvent);
+				hEvent = db_event_prev(m_hContact, hEvent);
 			}
 		}
 		else
 		{
 			for (int i = CConfig::GetIntSetting(SESSION_LOGSIZE); i > 0 && hEvent!=NULL; i--)
 			{
-					LHandles.push_front(hEvent);
-					hEvent = db_event_prev(hEvent);
+				LHandles.push_front(hEvent);
+				hEvent = db_event_prev(m_hContact, hEvent);
 			}
 		}
-		
+
 		bool bRead = true;
 		while(!(LHandles.empty()))
 		{
@@ -361,7 +361,8 @@ bool CChatScreen::Update()
 			if(!m_bCloseTimer && CConfig::GetIntSetting(SESSION_CLOSETIMER) != 0) {
 				m_bCloseTimer = true;
 				m_dwCloseTimer = GetTickCount();
-			} else if(CConfig::GetIntSetting(SESSION_CLOSETIMER) == 0 || GetTickCount() - m_dwCloseTimer >= CConfig::GetIntSetting(SESSION_CLOSETIMER)) {
+			}
+			else if(CConfig::GetIntSetting(SESSION_CLOSETIMER) == 0 || GetTickCount() - m_dwCloseTimer >= CConfig::GetIntSetting(SESSION_CLOSETIMER)) {
 				m_bCloseTimer = false;
 				CAppletManager::GetInstance()->ActivateEventScreen();
 				return true;

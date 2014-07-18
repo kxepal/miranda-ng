@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Quotes.dll
 ;  Plugin: Quotes
-;  Version: 0.0.24.0
+;  Version: 0.0.26.0
 ;  Authors: Dioksin
 ;============================================================
 [Shows currency rates and economic quotes.]
@@ -40,7 +40,7 @@
 [Show &Popup Window]
 Показывать &всплывающее окно
 [Show Popup Window Only if Value &Changed]
-Показывать всплывающее окно только, если &изменилось значение
+Показывать всплывающее окно, только если &изменилось значение
 [Cancel]
 Отмена
 [Popup settings...]
@@ -91,8 +91,6 @@
 &Тенденция:
 [&Advanced Settings...]
 &Дополнительные настройки...
-[Static]
-Статический
 [Current Rate:]
 Текущее значение:
 [Rate Fetch Time:]
@@ -145,6 +143,12 @@
 Диаграмма...
 [Edit Settings...]
 Настройки...
+[Enable/Disable Quotes Auto Update]
+Вкл/Выкл автообновление котировок
+[Quotes Auto Update Enabled]
+Автообновление котировок включено
+[Quotes Auto Update Disabled]
+Автообновление котировок выключено
 [Network]
 Сеть
 [Quotes HTTP connections]
@@ -167,6 +171,8 @@ HTTP подключение Quotes
 Поменять местами
 [Import]
 Импорт
+[XML File (*.xml)]
+Файл XML (*.xml)
 [All files (*.*)]
 Все файлы (*.*)
 [Log File]

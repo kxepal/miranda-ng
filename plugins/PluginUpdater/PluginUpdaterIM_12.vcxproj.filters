@@ -59,12 +59,12 @@
     <ClInclude Include="src\Minizip\zlib.h">
       <Filter>Source Files\Minizip</Filter>
     </ClInclude>
+    <ClInclude Include="src\Compat\compat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Notifications.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Options.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PluginUpdater.cpp">
@@ -91,7 +91,7 @@
     <ClCompile Include="src\Minizip\unzip.c">
       <Filter>Source Files\Minizip</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scanner.cpp">
+    <ClCompile Include="src\DlgUpdate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -31,8 +31,6 @@
 Поддержка flash (*.swf) файлов в смайлах и BBкодах
 [Enable workaround for PNG transparency]
 Включить прозрачность для PNG
-[Enable MathModule support]
-Поддержка MathModule
 [Replace smileys in user names]
 Смайлы в именах
 [Hide window border]
@@ -69,16 +67,20 @@
 Буквенный формат даты
 [Use relative timestamp]
 Относительное время
+[Outgoing File Transfer]
+Исходящий файл
 [Incoming File Transfer]
 Входящий файл
 [URL sent]
-Посылка URL'a
+Отправлен URL
 [URL received]
 Получен URL
 [(Unknown Contact)]
 (Неизвестный контакт)
 [ requested authorization]
  запросил(а) авторизацию
+[ was added.]
+ был добавлен.
 [RESULT]
 результат
 [ERROR]
@@ -120,6 +122,6 @@
 [Yesterday]
 Вчера
 [File sent]
-Посылка файла
+Отправка файла
 [File received]
 Файл получен

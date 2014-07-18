@@ -6,6 +6,7 @@
 // Copyright © 2001-2002 Jon Keating, Richard Hughes
 // Copyright © 2002-2004 Martin Öberg, Sam Kothari, Robert Rainwater
 // Copyright © 2004-2010 Joe Kucera
+// Copyright © 2012-2014 Miranda NG Team
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,12 +21,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-//
 // -----------------------------------------------------------------------------
 //  DESCRIPTION:
 //
 //  Global constants and default settings are defined here
-//
 // -----------------------------------------------------------------------------
 // Most of the protocol constants follow the naming conventions of the
 // Oscar documentation at http://iserverd.khstu.ru/oscar/index.html
@@ -34,7 +33,6 @@
 
 #ifndef __ICQ_CONSTANTS_H
 #define __ICQ_CONSTANTS_H
-
 
 /* Static icon indexes */
 #define ISI_AUTH_REQUEST            0
@@ -82,7 +80,6 @@
 #define DEFAULT_KILLSPAM_ENABLED    1
 
 #define DEFAULT_SLOWSEND            1
-#define DEFAULT_ONLYSERVERACKS      1
 
 #define DEFAULT_POPUPS_ENABLED      1
 #define DEFAULT_SPAM_POPUPS_ENABLED 1
@@ -627,7 +624,7 @@
 #define MAX_MESSAGESNACSIZE         8000
 #define CLIENTRATELIMIT             0
 #define COOKIE_TIMEOUT              3600      // One hour
-#define KEEPALIVE_INTERVAL          57000     // One minute
+#define KEEPALIVE_INTERVAL          57        // Slightly less than a minute
 #define WEBFRONTPORT                0x50
 #define CLIENTFEATURES              0x3
 #define URL_FORGOT_PASSWORD         "https://www.icq.com/password/"

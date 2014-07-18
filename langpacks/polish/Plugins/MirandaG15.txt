@@ -103,7 +103,7 @@ Kontakt loguje się
 [When a chat session is active, skip the following notifications for that contact:]
 Gdy aktywna jest sesja rozmowy, ignoruj następujące zdarzenia dla tego kontaktu:
 [Chat session specific]
-Dotyczące sesji rozmowy
+Sesja rozmowy
 [Show timestamps]
 Pokazuj czas
 [Messages]
@@ -202,7 +202,7 @@ Przewiń do ostatniej linii
 Odpowiadanie
 [Show line break indicators]
 Pokaż wskaźniki końca linii
-[Send messages with return, insert line breaks with ctrl+return]
+[Send messages with Enter, insert line breaks with Ctrl+Enter]
 Wysyłaj wiadomość po wciśnięciu enteru, wstawiaj nową linię po wciśnięciu Ctrl+Enter
 [Maximized replying]
 Zmaksymalizowane odpowiadanie

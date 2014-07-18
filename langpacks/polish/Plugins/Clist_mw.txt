@@ -31,11 +31,11 @@ Rozciągnij proporcjonalnie
 [Tile vertically according to Row Height]
 Układaj pionowo zależnie od wysokości wiersza
 [Warning!\r\nThis MenuObject not support user defined options.]
-Uwaga!\r\nTen obiekt menu nie obsługuje opcji użytkownika. 
+Uwaga!\r\nTen obiekt menu nie obsługuje opcji użytkownika.
 [MenuObjects]
 Obiekty menu
 [MenuItems]
-Elementy menu 
+Elementy menu
 [InsertSeparator]
 Wstaw separator
 [Service:]
@@ -81,7 +81,7 @@ Sortowanie po statusie
 [Sort contacts by protocol]
 Sortowanie po protokole
 [Single click interface]
-Pokaż/ukryj listę po pojedynczym kliknięciu
+Pokaż/Ukryj listę po pojedynczym kliknięciu
 [Always show status in tooltip]
 Zawsze pokazuj status w podpowiedzi
 [Disable icon blinking]
@@ -100,14 +100,14 @@ sekund(y), jeśli statusy się różnią
 Pokaż ikony osobno
 [Only when statuses differ]
 Tylko, jeśli statusy się różnią
-[Contact List]
+[Contact list]
 Lista kontaktów
 [System tray icon]
 Ikona w zasobniku
 [System tray icon when using multiple protocols]
 Ikona w zasobniku systemowym podczas korzystania z wielu protokołów
-[Contact List Sorting]
-Sortowanie kontaktów
+[Contact list sorting]
+Sortowanie listy kontaktów
 [Don't move offline user to bottom]
 Nie przesuwaj rozłączonych na dół
 [Pin to desktop]
@@ -139,9 +139,9 @@ Tekst paska tytułu:
 [Translucency options]
 Opcje przezroczystości
 [Fade contact list in/out]
-Wygaszaj/rozjaśniaj listę
+Wygaszaj/Rozjaśniaj listę
 [Transparent contact list]
-Przeźroczysta lista kontaktów
+Przezroczysta lista kontaktów
 [Inactive opacity:]
 Nieaktywne okno:
 [Active opacity:]
@@ -169,9 +169,9 @@ Wyłącz zmianę nazwy po podwójnym kliknięciu
 [Show selection even when list is not focused]
 Pokazuj zaznaczenie na nieaktywnej liście
 [Make selection highlight translucent]
-Przeźroczyste podświetlenie zaznaczenia 
-['Hide Offline' means to hide:]
-"Ukryj rozłączonych" tzn.:
+Przezroczyste podświetlenie zaznaczenia
+['Hide offline' means to hide:]
+"Ukryj rozłączonych" oznacza ukrycie:
 [Groups]
 Grupy
 [Draw a line alongside group names]
@@ -204,20 +204,20 @@ Przygaś bezczynne kontakty
 Ukryj pionowy pasek przewijania
 [Contact list background]
 Tło listy kontaktów
-[Use 'Meta' protocol icons for Metacontacts]
-Użyj ikony "Meta" dla metakontaktów
-[Avoid doubleclick expand]
-Unikaj rozwijania podwójnym kliknięciem
-[Hide all 'Extra icons' for subcontacts]
-Ukryj wszystkie "dodatkowe ikony" dla subkontaktów
-[MetaContacts supporting]
+[Use 'Meta' protocol icons for metacontacts]
+Użyj ikon protokołu "meta" dla metakontaktów
+[Avoid double click expand]
+Unikaj rozwijania poprzez podwójne kliknięcie
+[Hide all extra icons for subcontacts]
+Ukryj wszystkie dodatkowe ikony podkontaktów
+[Metacontacts supporting]
 Wsparcie dla metakontaktów
-[Ignore Empty Extra icons places (arrange to right).]
-Ignoruj puste miejsca na ikony (przesuń do prawej).
-[Hide offline subcontacts.]
-Ukryj rozłączone subkontakty.
-[Status Bar]
-Pasek statusu
+[Ignore empty extra icons places (arrange to right)]
+Ignoruj puste miejsca na dodatkowe ikony (rozmieszczaj w prawo)
+[Hide offline subcontacts]
+Ukryj rozłączone podkontakty
+[Status bar]
+Pasek stanu
 [Show status bar]
 Pokaż pasek statusu
 [Show icons]
@@ -236,64 +236,64 @@ Sekcje tej samej szerokości
 Pokaż uchwyt
 [Show bevel effect on panels]
 Pokaz separatory na panelach
-[Use connecting Icon]
-Użyj ikony łączenia
+[Use connecting icon]
+Używaj ikony łączenia
 [Use new drawer for status bar]
 Nowe rysowanie paska statusu
 [&Main menu]
-Menu główne
+&Menu główne
 [E&xit]
-Wyjdź
+W&yjdź
 [&Status]
 &Status
 [&Offline\tCtrl+0]
-Rozłączony\tCtrl+0
+&Rozłączony\tCtrl+0
 [On&line\tCtrl+1]
-Dostępny\tCtrl+1
+&Dostępny\tCtrl+1
 [&Away\tCtrl+2]
-Zaraz wracam\tCtrl+2
+&Zaraz wracam\tCtrl+2
 [&NA\tCtrl+3]
-Wrócę później
+&Wrócę później
 [Occ&upied\tCtrl+4]
-Zajęty
+Za&jęty
 [&DND\tCtrl+5]
-Nie przeszkadzać
+&Nie przeszkadzać
 [&Free for chat\tCtrl+6]
 &Chętny do rozmowy\tCtrl+6
 [&Invisible\tCtrl+7]
-Niewidoczny\tCtrl+7
-[On the &Phone\tCtrl+8]
-Przy telefonie\tCtrl+8
-[Out to &Lunch\tCtrl+9]
-Poszedłem na obiad\tCtrl+9
+N&iewidoczny\tCtrl+7
+[On the &phone\tCtrl+8]
+Przy &telefonie\tCtrl+8
+[Out to &lunch\tCtrl+9]
+Na &obiedzie\tCtrl+9
 [Tray]
 Zasobnik
 [&Hide/Show]
-Pokaż/Ukryj
+&Pokaż/Ukryj
 [Nowhere]
 Nigdzie
-[&New Group]
-Nowa grupa
-[&Hide Offline Users]
-Ukryj rozłączonych
-[Hide &Offline Users out here]
-Ukryj rozłączonych tutaj
-[Hide &Empty Groups]
-Ukryj puste grupy
-[Disable &Groups]
-Wyłącz grupy
+[&New group]
+&Nowa grupa
+[&Hide offline users]
+&Ukryj rozłączonych
+[Hide &offline users out here]
+Ukryj &rozłączonych poza tą grupą
+[Hide &empty groups]
+Ukryj &puste grupy
+[Disable &groups]
+Wyłącz &grupy
 [Hide Miranda]
 Ukryj Mirandę
 [Group]
 Grupa
-[&New Subgroup]
-Nowa podgrupa
-[&Hide Offline Users in here]
-Ukryj tu rozłączonych
-[&Rename Group]
-Zmień nazwę grupy
-[&Delete Group]
-Usuń grupę
+[&New subgroup]
+&Nowa podgrupa
+[&Hide offline users in here]
+&ukryj rozłączonych tutaj
+[&Rename group]
+&zmień nazwę grupy
+[&Delete group]
+&usuń grupę
 ;file \plugins\Clist_mw\src\BkgrCfg.cpp
 [Customize]
 Personalizacja
@@ -316,31 +316,29 @@ Rozłączone kontakty
 [Contacts which are 'not on list']
 Kontakty spoza listy
 [Group member counts]
-Liczba członków grupy 
+Liczba członków grupy
 [Dividers]
 Separatory
 [Offline contacts to whom you have a different visibility]
 Rozłączone kontakty, dla których mam różną widoczność
 [Status messages]
 Opisy
-[Group Closed]
-Grupy zamknięte
-[Hover Contacts]
-Kontakty po najechaniu
+[Group closed]
+Grupa zamknięta
+[Hovered contacts]
+Podświetlone kontakty
 [Background]
 Tło
-[Contact list]
-Lista kontaktów
-[Selected Text]
-Wybrany tekst
-[Hottrack Text]
-Tekst pod kursorem
-[Quicksearch Text]
+[Selected text]
+Zaznaczony tekst
+[Hottrack text]
+Śledzony tekst
+[Quicksearch text]
 Tekst szybkiego wyszukiwania
 ;file \plugins\Clist_mw\src\clcopts.cpp
 [List]
 Lista
-[List MetaContacts]
+[List metacontacts]
 Lista metakontaktów
 [Not focused]
 Nieaktywne
@@ -375,13 +373,15 @@ Brak protokołu
 ;file \plugins\Clist_mw\src\clisttray.cpp
 [Tray menu]
 Menu zasobnika
-[&Find/Add Contacts...]
-Szukaj/dodaj kontakty...
+[&Find/Add contacts...]
+&Szukaj/dodaj kontakty
 [&Options...]
-Opcje...
+&Opcje...
 [&About]
-Informacje
+&Informacje
 ;file \plugins\Clist_mw\src\clui.cpp
+[My contacts]
+Moje kontakty
 [My Contacts]
 Moje kontakty
 ;file \plugins\Clist_mw\src\cluiopts.cpp
@@ -390,8 +390,6 @@ Moje kontakty
 Menu grupy
 [Subgroup menu]
 Menu podgrupy
-[&New SubGroup]
-Nowa podgrupa
 ;file \plugins\Clist_mw\src\keyboard.cpp
 [Close Miranda]
 Wyłącz Mirandę NG
@@ -399,42 +397,42 @@ Wyłącz Mirandę NG
 Przywróć ostatni status
 ;file \plugins\Clist_mw\src\CLUIFrames\cluiframes.cpp
 [&FrameTitle]
-Nazwa ramki
+&Nazwa ramki
 [&Visible]
-Widoczny
+&Widoczny
 [&Show title bar]
-Pokaż pasek tytułu
+&Pokaż pasek tytułu
 [&Locked]
-Zablokowany
+&Zablokowany
 [&Collapsed]
-Zwinięty
-[&Floating Mode]
-Pływające okno
+&Zwinięty
+[&Floating mode]
+Tryb &pływający
 [&Border]
-Obramowanie
+&Obramowanie
 [&Align]
-Wyrównanie
+&Wyrównanie
 [&Top]
-Góra
+&Góra
 [&Client]
-Klient
+&Klient
 [&Bottom]
-Dół
+&Dół
 [&Position]
-Pozycja
+&Pozycja
 [&Up]
-Góra
+&Góra
 [&Down]
-Dół
+&Dół
 [Frames]
 Ramki
-[Show All Frames]
+[Show all frames]
 Pokaż wszystkie ramki
 [Show all title bars]
 Pokaż wszystkie paski tytułów
 [Hide all title bars]
 Ukryj wszystkie paski tytułów
-[Lock Frame]
+[Lock frame]
 Zablokuj ramkę
 [Visible]
 Widoczny

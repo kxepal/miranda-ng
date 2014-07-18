@@ -1,19 +1,17 @@
 ﻿#muuid {144e80a2-d198-428b-acbe-9d55dacc7fde}
 ;============================================================
 ;  File: Jabber.dll
-;  Plugin: Jabber Protocol
+;  Plugin: Jabber protocol
 ;  Version: 0.11.0.4
 ;  Authors: George Hazan, Maxim Mluhov, Victor Pavlychko, Artem Shpynov, Michael Stepura
 ;============================================================
-[Jabber protocol support for Miranda NG.]
-Compatibilidad con el protocolo Jabber para Miranda NG.
+[Jabber (XMPP) protocol support for Miranda NG.]
+Compatibilidad con el protocolo Jabber (XMPP) para Miranda NG.
 ;file \protocols\JabberG\res\jabber.rc
 [Edit Note]
 Editar Nota
 [Tags:]
 Etiquetas:
-[OK]
-Aceptar
 [Cancel]
 Cancelar
 [Type:]
@@ -50,8 +48,6 @@ Subir
 Importar desde archivo
 [Export to file]
 Importar a archivo
-[Jabber]
-Jabber
 [Username:]
 Usuario:
 [Change password]
@@ -205,7 +201,7 @@ Eliminar
 [Description:]
 Detalles:
 [Change Password]
-
+Cambiar contraseña
 [Current Password:]
 
 [New Password:]
@@ -473,7 +469,7 @@ Enlaces
 
 [Can inform about its Jabber capabilities]
 
-[Supports stream initiation (for filetransfers for ex.)]
+[Supports stream initiation (e.g., for filetransfers)]
 
 [Supports stream initiation for file transfers]
 
@@ -535,7 +531,7 @@ Enlaces
 
 [Receives information about the music to which a user is listening]
 
-[Supports private XML Storage (for bookmakrs and other)]
+[Supports private XML Storage (for bookmarks and other)]
 
 [Supports attention requests ('nudge')]
 
@@ -873,39 +869,39 @@ Tipo
 
 [FAQ Entry]
 
-[Whether to Allow Occupants to Invite Others]
+[Whether to allow occupants to invite others]
 
-[Whether to Allow Occupants to Change Subject]
+[Whether to allow occupants to change subject]
 
-[Whether to Enable Logging of Room Conversations]
+[Whether to enable logging of room conversations]
 
-[Natural Language for Room Discussions]
+[Natural language for room discussions]
 
-[Maximum Number of Room Occupants]
+[Maximum number of room occupants]
 
-[Whether an Make Room Members-Only]
+[Whether to make room members-only]
 
-[Whether to Make Room Moderated]
+[Whether to make room moderated]
 
-[Whether a Password is Required to Enter]
+[Whether a password is required to enter]
 
-[Whether to Make Room Persistent]
+[Whether to make room persistent]
 
-[Roles for which Presence is Broadcast]
+[Roles for which presence is broadcast]
 
-[Whether to Allow Public Searching for Room]
+[Whether to allow public searching for room]
 
-[Full List of Room Admins]
+[Full list of room admins]
 
-[Short Description of Room]
+[Short description of room]
 
-[Natural-Language Room Name]
+[Natural-language room name]
 
-[Full List of Room Owners]
+[Full list of room owners]
 
-[The Room Password]
+[The room password]
 
-[Affiliations that May Discover Real JIDs of Occupants]
+[Affiliations that may discover real JIDs of occupants]
 
 [Precondition: node configuration with the specified access model]
 
@@ -923,7 +919,7 @@ Tipo
 
 [The minimum number of milliseconds between sending any two notification digests]
 
-[The DateTime at which a leased subscription will end or has ended]
+[The date and time at which a leased subscription will end or has ended]
 
 [Whether an entity wants to receive an XMPP message body in addition to the payload format]
 
@@ -983,7 +979,7 @@ Tipo
 
 [The JIDs of those to contact with questions]
 
-[The datetime when the node was created]
+[The date and time when the node was created]
 
 [The JID of the node creator]
 
@@ -1248,7 +1244,7 @@ Servicios...
 [Create/Join group chat]
 
 [Roster editor]
-
+Editor del Registro
 [Resource priority]
 
 [Increase priority by %d]
@@ -1863,13 +1859,13 @@ Avanzado
 
 [** Default **]
 
-[** Subsription: both **]
+[** Subscription: both **]
 
-[** Subsription: to **]
+[** Subscription: to **]
 
-[** Subsription: from **]
+[** Subscription: from **]
 
-[** Subsription: none **]
+[** Subscription: none **]
 
 [<none>]
 <Nada>
@@ -1890,7 +1886,7 @@ Mensaje
 [all.]
 
 [messages]
-
+mensajes
 [ and ]
 
 [incoming presences]
@@ -1938,7 +1934,7 @@ Mensaje
 [List Editor...]
 
 ;file \protocols\JabberG\src\jabber_proto.cpp
-[No compatible file transfer machanism exist]
+[No compatible file transfer mechanism exists]
 
 [Protocol is offline or no JID]
 
@@ -2040,7 +2036,7 @@ Fuera de línea
 [sent unknown presence type]
 
 [Nick:]
-
+Nick:
 [Status:]
 
 [Status text:]
@@ -2100,11 +2096,11 @@ desconocido
 [both]
 
 [to]
-
+a
 [from]
 
 [none]
-
+ninguno
 [Last logoff time]
 
 [Uptime]
@@ -2197,8 +2193,6 @@ Contactos
 [%s connection]
 
 ;file \protocols\JabberG\src\jabber_xstatus.cpp
-[OK (%d)]
-
 [Afraid]
 
 [Amazed]
@@ -2494,7 +2488,7 @@ Contactos
 [in real life]
 
 [on the phone]
-
+en el teléfono
 [on video phone]
 
 [Traveling]

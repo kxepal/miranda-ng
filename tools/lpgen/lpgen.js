@@ -110,7 +110,7 @@ sln_stream=FSO.GetFile(slnfile).OpenAsTextStream(ForReading, TristateUseDefault)
      // if exist sln_project_regexp, add to array, adding leading path to "trunk"
      if (sln_project_regexp) {
         //RegExp for unneeded modules, such as crypting library, mimcmd.exe, zlib.dll etc.
-        var unneeded_modules=/(Zlib|RC4|EkHtml|Libgcrypt|Libotr|Cryptlib|MimCmd|Dbx_tree_ARC4|Dbx_tree_Cast128|Dbx_tree_HC256|pu_stub|libcurl)/i;
+        var unneeded_modules=/(Zlib|RC4|EkHtml|Libgcrypt|Libotr|Cryptlib|MimCmd|Dbx_tree_ARC4|Dbx_tree_Cast128|Dbx_tree_HC256|pu_stub|libcurl|glib)/i;
         // Now check for unneeded modules NOT passed (module name are in sln_project_regexp[1]
         if (!unneeded_modules.test(sln_project_regexp[1]))
         //no, this is not unneeded module, put path to array. Trunk path + path to file in sln_project_regexp[2]
@@ -154,12 +154,22 @@ if (log) WScript.Echo("Finish getting strings from source files.");
 function GenerateCore() {
  //init arrays
  corestrings=new Array();
+ corehead=new Array();
  core_src=new Array();
  core_rc=new Array();
  //if log parameter specified, output a log.
  if (log) WScript.Echo("Processing CORE...");
+ //get current core version from build file and replace spaces with dots
+ ver=ReadFile(trunkPath+"\\build\\build.no").replace(new RegExp(/\s/g),"\.");
+ if (log) WScript.Echo("CORE version is "+ver);
  //first string is necessary for Miranda-NG to load langpack
  //corestrings.push("Miranda Language Pack Version 1"); // TODO: this need to be placed into =HEAD=.txt file or similar
+ //add header to =CORE=.txt
+ corehead.push(";============================================================")
+ corehead.push(";  File: miranda32/64.exe")
+ corehead.push(";  Module: Miranda Core")
+ corehead.push(";  Version: "+ver)
+ corehead.push(";============================================================")
  //define core filename. File will be overwritten!
  corefile=FSO.BuildPath(langpack_en,"=CORE=.txt");
  //find all *.rc files and list files in array
@@ -172,12 +182,14 @@ function GenerateCore() {
  ParseFiles(core_src,corestrings,ParseSourceFile);
  //Now we have all strings in "corestrings", next we remove duplicate strings from array and put results into "nodupes"
  nodupes=eliminateDuplicates(corestrings);
- //if dupes requred, make nodupes with dupes :)
+ //if dupes required, make nodupes with dupes :)
  if (dupes) nodupes=corestrings;
  //logging results
  if (log) WScript.Echo("Writing "+nodupes.length+" strings for CORE");
+ //concatenate head and nodupes
+ corestrings=corehead.concat(nodupes)
  //finally, write "nodupes" array to file
- WriteToUnicodeFile(nodupes,corefile);
+ WriteToUnicodeFile(corestrings,corefile);
 }
 
 //Make a translation template for plugin in "pluginpath", put generated file into "langpackfilepath"
@@ -419,10 +431,10 @@ function ParseRCFile(FileTextVar,array) {
  //now make a job, till end of matching regexp
  while ((string = find.exec(FileTextVar)) != null) {
       // check for some garbage like "List1","Tab1" etc. in *.rc files, we do not need this.
-      onestring=string[2].replace(/^(((List|Tab|Tree|Spin|Custom|Slider|DateTimePicker|Radio|Check|HotKey|Progress)\d)|(whiterect|IndSndList)|(%.(.*%)?))$/g,"");
-	  // ignore some popup menu craps
-	  if (string[1]=="POPUP" && onestring.match(/^([a-zA-Z ]*(menu|context|popup))|([A-Z][a-z]+([A-Z][a-z]*)+)|(new item)$/g))
-		continue;
+      onestring=string[2].replace(/^(((List|Tab|Tree|Spin|Custom|Slider|DateTimePicker|Radio|Check|HotKey|Progress)\d)|(whiterect|IndSndList|&?[Oo][Kk]|ICQ|Jabber|WhatsApp|OSD|Google|Miranda NG|SMS|Miranda|Windows|&\w)|(%.(.*%)?))$/g,"");
+      // ignore some popup menu craps
+      if (string[1]=="POPUP" && onestring.match(/^([a-zA-Z ]*(menu|context|popup))|([A-Z][a-z]+([A-Z][a-z]*)+)|(new item)$/g))
+        continue;
       //if there is double "", replace with single one
       onestring=onestring.replace(/\"{2}/g,"\"");
       //check result. If it does not match [a-z] (no any letter in results, such as "..." or "->") it's a crap, break further actions.
@@ -444,14 +456,14 @@ function ParseSourceFile (FileTextVar,array) {
     var string;
     //replace newlines with "" in second [1] subregexp ([\S\s]*?), and Delphi newlines "'#13#10+" replace 
     onestring=string[1].replace(/'?(\#13\#10)*?\\?\r\n(\x20*?\')?/g,"");
-	//remove trailing slash from the string. This is a tree item, slesh is a crap :)
-	noslashstring=onestring.replace(/\/(?=$)/g,"");
-	//remove first and last "
-	nofirstlaststring=noslashstring.slice(1, -1)
+    //remove trailing slash from the string. This is a tree item, slesh is a crap :)
+    noslashstring=onestring.replace(/\/(?=$)/g,"");
+    //remove first and last "
+    nofirstlaststring=noslashstring.slice(1, -1)
     //remove escape slashes before ' and "
-    stringtolangpack=nofirstlaststring.replace(/\\(['"])/g,"$1");
-    //if our string still exist, and length more than 1 symbol (nothing to translate if only one symbol)
-    if (stringtolangpack.length>1) {
+    stringtolangpack=nofirstlaststring.replace(/\\(")/g,"$1");
+    ///if our string still exist, and length at least one symbol
+    if (stringtolangpack.length>0) {
         //brand new _T() crap filtering engine :)
         clearstring=filter_T(stringtolangpack);
         //finally put string into array including cover brackets []
@@ -462,19 +474,19 @@ function ParseSourceFile (FileTextVar,array) {
 
 //filter _T() function results
 function filter_T(string) {
-//filter not begin with symbols :.]?;#~{!/_+$
-//var filter1=/^[^\:\]\?\;\#\~\|\{\!\/\_\+\\$].+$/g;
+//filter for exact matched strings
+var filter1=/^(&?[Oo][Kk]|ICQ|Jabber|WhatsApp|OSD|Google|Miranda NG|SMS|Miranda|Windows)$/g;
 //filter string starting from following words
-var filter2=/^(SOFTWARE\\|SYSTEM\\|http|ftp|UTF-|utf-|TEXT|EXE|exe|txt|css|html|dat[^a]|txt|MS\x20|CLVM|TM_|CLCB|CLSID|CLUI|HKEY_|MButton|BUTTON|WindowClass|MHeader|RichEdit|RICHEDIT|STATIC|EDIT|CList|listbox|LISTBOX|combobox|COMBOBOX|TitleB|std\w|iso-|windows-|<div|<html|<img|<span|<hr|<a\x20|<table|<td|miranda_|kernel32|user32|muc|pubsub|shlwapi|Tahoma|NBRichEdit|CreatePopup|<\/|<\w>|\w\\\w|urn\:|<\?xml|<\!|h\d|\.!\.).*$/g;
+var filter2=/^(SOFTWARE\\|SYSTEM\\|http|ftp|UTF-|utf-|TEXT|EXE|exe|txt|css|html|dat[^a]|txt|MS\x20|CLVM|TM_|CLCB|CLSID|CLUI|HKEY_|MButton|BUTTON|WindowClass|MHeader|RichEdit|RICHEDIT|STATIC|EDIT|CList|listbox|LISTBOX|combobox|COMBOBOX|TitleB|std\w|iso-|windows-|<div|<html|<img|<span|<hr|<a\x20|<table|<td|miranda_|kernel32|user32|muc|pubsub|shlwapi|Tahoma|NBRichEdit|CreatePopup|&?[Oo][Kk]|<\/|<\w>|\w\\\w|urn\:|<\?xml|<\!|h\d|\.!\.).*$/g;
 //filter string ending with following words
 var filter3=/^.+(001|\/value|\*!\*|=)$/g;
 //filter from Kildor
-var filter4=/^((%(\d+)?\w\w?)|(d\s\w)|\[\/?(\w|url|img|size|quote|color)(=\w*)?\]?|(\\\w)|(%\w+%)|(([\w-]+\.)*\.(\w{2,4}|travel|museum|xn--\w+))|\W|\s|\d)+$/gi;
+var filter4=/^((d\s\w)|\[\/?(\w|url|img|size|quote|color)(=\w*)?\]?|(\\\w)|(%\w+%)|(([\w-]+\.)*\.(\w{2,4}|travel|museum|xn--\w+))|\W|\s|\d)+$/gi;
 //filter from Kildor for remove filenames and pathes.
 var filter5=/^[\w_:%.\\\/*-]+\.\w+$/g;
 
 //apply filters to our string
-//test1=filter1.test(string);
+test1=filter1.test(string);
 test2=filter2.test(string);
 test3=filter3.test(string);
 test4=filter4.test(string);
@@ -482,7 +494,7 @@ test5=filter5.test(string);
 
 //if match (test1) first filter and NOT match other tests, thus string are good, return this string back.
 //if (test1 && !test2 && !test3 && !test4 && !test5) {
-if (!test2 && !test3 && !test4 && !test5) {
+if (!test1 && !test2 && !test3 && !test4 && !test5) {
     return string;
     } else {
         //in other case, string is a garbage, put into crap array.

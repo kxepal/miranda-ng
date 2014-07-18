@@ -1,7 +1,4 @@
 /*
- * astyle --force-indent=tab=4 --brackets=linux --indent-switches
- *		  --pad=oper --one-line=keep-blocks  --unpad=paren
- *
  * Miranda NG: the free IM client for Microsoft* Windows*
  *
  * Copyright (c) 2000-09 Miranda ICQ/IM project,
@@ -32,8 +29,6 @@
 
 #ifndef __COMMONHEADERS_H
 #define __COMMONHEADERS_H
-
-#define __FEAT_EXP_AUTOSPLITTER 1
 
 #define WINVER 0x0600
 #define _WIN32_WINNT 0x0600
@@ -86,9 +81,9 @@
 #include <m_xstatus.h>
 #include <m_toptoolbar.h>
 #include <m_string.h>
+#include <m_db_int.h>
 
 #include <m_ieview.h>
-#include <m_popup2.h>
 #include <m_metacontacts.h>
 #include <m_fingerprint.h>
 #include <m_nudge.h>

@@ -5,8 +5,6 @@ Zadejte název účtu (např. Google)
 Vyberte požadovaný protokol
 [Specify the internal account name (optional)]
 Zadejte interní název účtu (nepovinné)
-[OK]
-OK
 [Cancel]
 Zrušit
 [Add %s]
@@ -47,15 +45,15 @@ Tímto odstraníte celou historii a nastavení kontaktu!
 Možnosti zobrazení seznamu
 [Instead of displaying contacts by their nickname,\ndrag to choose another order:]
 Přetáhnutím změníte způsob zobrazení jména kontaktu:
-[Miranda NG Profile Manager]
+[Miranda NG profile manager]
 Miranda NG - správce profilů
 [&Run]
 &Spustit
 [&Exit]
 U&končit
-[Start in Service Mode with]
+[Start in service mode with]
 Nouzový režim s doplňkem
-[Find/Add contacts]
+[Find/add contacts]
 Vyhledání kontaktů
 [Search:]
 Prohledat:
@@ -81,7 +79,7 @@ Další možnosti
 Přidat do seznamu
 [Custom]
 Vlastní
-[Find/Add contacts\nHere you can add contacts to your contact list]
+[Find/add contacts\nHere you can add contacts to your contact list]
 Vyhledání kontaktů\nUmožní vyhledat a přidat nalezené do seznamu kontaktů
 [Options\nConfigure your Miranda NG options]
 Možnosti\nZměňte nastavení vaší Mirandy NG
@@ -159,7 +157,7 @@ Soubor
 Funkce OutputDebugString()
 [File]
 Soubor
-[Run program when Miranda NG starts (eg tail -f, dbgview, etc.):]
+[Run program when Miranda NG starts (e.g., tail -f, dbgview, etc.):]
 Spustit program při startu Mirandy NG (např. tail -f, dbgview, atd.):
 [Run now]
 Spustit
@@ -279,8 +277,8 @@ Profil
 např. Práce
 [You can select a different profile driver from the default, it may offer more features or abilities, if in doubt use the default.]
 Zde můžete vybrat i jiný ovladač databáze s větším množstvím funkcí a možností. Pokud si však nejste jisti, ponechte výchozí.
-[e.g., Miranda Database]
-pro databázi Mirandy
+[e.g., dbx mmap]
+např. dbx mmap
 [Driver]
 Ovladač
 [Problem: Unable to find any database drivers, this means you cannot create a new profile, you need to get dbx_mmap.dll]
@@ -409,8 +407,6 @@ M&ožnosti
 Aktualizovat
 [&Remove...]
 Odst&ranit...
-[Miranda NG]
-Miranda NG
 [Miranda NG is being restarted.\nPlease wait...]
 Restart programu Miranda NG.\nPočkejte prosím...
 [Error console]
@@ -423,11 +419,11 @@ Záhlaví:
 Používá se k zobrazení textu v záhlaví sekcí nebo odstavců.
 [Normal text:]
 Běžný text:
-[This font is used to display most text element or section bodies.]
+[This font is used to display most text elements or section bodies.]
 Používá se k zobrazení většiny textů v programu.
 [Minor notes:]
 Poznámky:
-[This font is used to display various addtional notes.]
+[This font is used to display various additional notes.]
 Používá se k zobrazení dodatkových textů a poznámek.
 [Welcome to Miranda NG's account manager!\nHere you can set up your IM accounts.\n\nSelect an account from the list on the left to see the available options. Alternatively, just click on the Plus sign underneath the list to set up a new IM account.]
 Vítejte ve správci účtů programu Miranda NG!\nZde si můžete založit nový účet ve vybrané síti, upravit stávající nebo naopak některý smazat.\n\nChcete-li založit nový účet, klikněte na tlačítko \"plus\" v levém dolním rohu okna. Pokud si přejete upravit stávající účet, vyberte požadovaný ze seznamu.
@@ -451,6 +447,64 @@ Zvolte doplňkové ikony, které budou zobrazeny v seznamu kontaktů:
 *bude zobrazeno pouze prvních %d ikon
 [You can group/ungroup icons by selecting them (CTRL+left click) and using the popup menu (right click)]
 Můžete vytvořit nebo zrušit skupinu ikon jejich vybráním (CTRL+levé tlačítko) a použitím kontextového menu (pravé tlačítko)
+[Add to existing metacontact]
+Přidat k existujícímu metakontaktu
+[Please select a metacontact:]
+Prosím vyberte metakontakt:
+[Sort alphabetically]
+Seřadit abecedně
+[Editing]
+Úprava
+[Information]
+Informace
+[Contacts]
+Kontakty
+[&Remove]
+Odst&ranit
+[&Set as default]
+&Jako výchozí
+[Move &up]
+Nahor&u
+[Move &down]
+&Dolů
+[Send &offline]
+Poslat offline
+[Context menu]
+Kontextová nabídka
+[Use contact's unique ID]
+Použít identifikátor kontaktu
+[Use contact's display name]
+Použít zobrazené jméno
+[Contact labels]
+Popisky kontaktu
+[When I click on a sub in the popup menu...]
+Při kliknutí na podkontakt v kontextové nabídce...
+[Set default and open message window]
+Nastavit jako výchozí a otevřít kom. okno
+[Show subcontact context menu]
+Zobrazit kontextovou nabídku kontaktu
+[Show user information]
+Zobrazit informace o uživateli
+[Contact list]
+Seznam kontaktů
+[Display subcontact nickname]
+Zobrazit přezdívku podkontaktu
+[Display subcontact display name]
+Zobrazit nastavené jméno podkontaktu
+[Lock name to first contact]
+Použít jméno prvního kontaktu
+[Current language:]
+Zvolený jazyk:
+[Last modified using:]
+Určeno pro:
+[Date:]
+Datum:
+[Locale:]
+Lokalizace:
+[Reload langpack]
+Znovu načíst jazyk
+[Download more language packs]
+Stáhnout další jazykové balíčky
 [Tray]
 Oznámení
 [&Hide/Show]
@@ -586,8 +640,6 @@ Odchody uživatelů
 Změny tématu
 [Status changes]
 Změny stavu
-[Information]
-Informace
 [Disconnects]
 Odpojení
 [User kicks]
@@ -646,8 +698,6 @@ Seznam
 Vy&mazat záznam
 [Word lookup]
 Vyhledávání slova
-[Google]
-Google
 [Wikipedia]
 Wikipedie
 [Link]
@@ -711,8 +761,6 @@ sek. (v případě, že se stavy liší)
 Zobrazit více ikon
 [Only when statuses differ]
 Pouze v případě, že se stavy liší
-[Contact list]
-Seznam kontaktů
 [System tray icon]
 Ikona v oznamovací oblasti
 [System tray icon when using multiple protocols]
@@ -914,8 +962,6 @@ Nabídka &uživatele
 O&dmítnout
 [From:]
 Od:
-[Date:]
-Datum:
 [Files:]
 Soubory:
 [Save to:]
@@ -1009,17 +1055,11 @@ Příjem souborů od lidí, kteří nejsou mezi kontakty, podléhá vždy dotazu
 ;file \src\core\stdhelp\resource.rc
 [About Miranda NG]
 O programu Miranda NG
-[Miranda NG\n%s]
-Miranda NG\n%s
 [Credits >]
 Poděkování >
 ;file \src\core\stdidle\resource.rc
 [Become idle if the following is left unattended:]
 Přejít do stavu nečinnosti pokud se nic neděje v:
-[Windows]
-Windows
-[Miranda]
-Miranda
 [Become idle if the screen saver is active]
 Přejít do stavu nečinnosti pokud běží spořič obrazovky
 [Become idle if the computer is locked]
@@ -1103,8 +1143,14 @@ Záznam událostí
 Zobrazit jména
 [Show timestamp]
 Zobrazit čas
+[Show seconds]
+Zobrazit sek.
 [Show dates]
 Zobrazit datum
+[Show formatting]
+Zobrazit formátování
+[Load history events]
+Načtení historie
 [Load unread events only]
 Pouze nepřečtené události
 [Load number of previous events]
@@ -1113,14 +1159,6 @@ Konkrétní počet předchozích událostí
 Předchozí události starší méně než
 [minutes old]
 min.
-[Show status changes]
-Zobrazit změny stavu
-[Show seconds]
-Zobrazit sek.
-[Load history events]
-Načtení historie
-[Show formatting]
-Zobrazit formátování
 [Send typing notifications to the following users when you are typing a message to them:]
 Poslat upozornění na psaní zprávy těmto vybraným kontaktům:
 [Show typing notifications when a user is typing a message]
@@ -1200,7 +1238,7 @@ Zájmy:
 [About:]
 Ostatní informace:
 [My notes:]
-Vzkazy:
+Poznámky:
 [Street:]
 Ulice:
 [City:]
@@ -2235,7 +2273,7 @@ Hledám
 Všechny sítě
 [Handle]
 Ukazatel
-[&Find/Add contacts...]
+[&Find/add contacts...]
 &Vyhledat kontakty...
 ;file \src\modules\findadd\searchresults.cpp
 [Could not start a search on '%s', there was a problem - is %s connected?]
@@ -2294,9 +2332,118 @@ Sada ikon
 ;file \src\modules\ignore\ignore.cpp
 [** All contacts **]
 ** všechny kontakty **
-[Contacts]
-Kontakty
+;file \src\modules\langpack\lpopts.cpp
+[(incompatible)]
+(nekompatibilní)
+[Unknown]
+Neznámý
+[built-in]
+interní
+[Languages]
+Jazyky
+;file \src\modules\metacontacts\metacontacts.h
+[You are going to remove all the contacts associated with this metacontact.\nThis will delete the metacontact.\n\nProceed anyway?]
+Chystáte se odstranit z metakontaktu všechny kontakty.\nTo způsobí smazání celého metakontaktu.\n\nUrčitě chcete pokračovat?
+;file \src\modules\metacontacts\meta_addto.cpp
+[Either there is no metacontact in the database (in this case you should first convert a contact into one)\nor there is none that can host this contact.\nAnother solution could be to convert this contact into a new metacontact.\n\nConvert this contact into a new metacontact?]
+Buď v databázi není definovaný ani jeden metakontakt,\nnebo žádný z existujících ten vybraný neakceptuje.\n\nChcete zkonvertovat vybraný kontakt na metakontakt?
+[This contact is a metacontact.\nYou can't add a metacontact to another metacontact.\n\nPlease choose another.]
+Vybraný kontakt je typu 'meta' a do takového nelze přidat další metakontakt.\n\nVyberte prosím jiný.
+[Metacontact conflict]
+Konflikt metakontaktu
+[This contact is already associated to a metacontact.\nYou cannot add a contact to multiple metacontacts.]
+Tento kontakt je už asociován s metakontaktem.\nKontakt nelze přidat k více metakontaktům najednou.
+[Multiple metacontacts]
+Více metakontaktů
+[No suitable metacontact found]
+Nenalezen příslušný metakontakt
+[a contact]
+kontakt
+[Adding %s...]
+Přidávání %s...
+[Please select a metacontact]
+Prosím vyberte metakontakt
+[No metacontact selected]
+Nebyl vybrán žádný metakontakt
+[Assignment to the metacontact failed.]
+Přiřazení k metakontaktu se nezdařilo.
+[Assignment failure]
+Chyba přiřazování
+;file \src\modules\metacontacts\meta_edit.cpp
+[ID]
+ID
+[Protocol]
+Protokol
+[Send offline]
+Poslat offline
+[Send &online]
+Poslat &online
+[Delete metacontact?]
+Smazat metakontakt?
+;file \src\modules\metacontacts\meta_main.cpp
+[Toggle off]
+Vypnout
+[Toggle on]
+Zapnout
+[Convert to metacontact]
+Zkonvertovat na metakontakt
+[Add to existing]
+Přidat k existujícímu
+[Edit]
+Upravit
+[Set to default]
+Nastavit jako výchozí
+;file \src\modules\metacontacts\meta_menu.cpp
+[There was a problem in assigning the contact to the metacontact]
+Během přiřazování kontaktu k metakontaktu se vyskytly problémy.
+[This will remove the metacontact permanently.\n\nProceed anyway?]
+Tímto odstraníte metakontakt natrvalo.\n\nUrčitě chcete pokračovat?
+[Are you sure?]
+Opravdu chcete pokračovat?
+[Remove from metacontact]
+Odstranit z metakontaktu
+[Toggle metacontacts off]
+Vypnout metakontakty
+[Toggle metacontacts on]
+Zapnout metakontakty
+[Add to existing metacontact...]
+Přidat k existujícímu metakontaktu...
+[Edit metacontact...]
+Upravit metakontakt...
+[Set as metacontact default]
+Nastavit jako výchozí
+[Delete metacontact]
+Smazat metakontakt
+[Subcontacts]
+Podkontakty
+;file \src\modules\metacontacts\meta_options.cpp
+[Metacontacts]
+Metakontakty
+;file \src\modules\metacontacts\meta_services.cpp
+[No online contacts found.]
+Nebyly nalezeny žádné online kontakty
+;file \src\modules\metacontacts\meta_utils.cpp
+[Sender]
+Odesílatel
+[Could not retrieve contact protocol]
+Nelze zjistit protokol kontaktu
+[Assignment error]
+Chyba přiřazování
+[Could not get unique ID of contact]
+Nelze zjistit identifikátor kontaktu
+[Contact is 'not on list' - please add the contact to your contact list before assigning.]
+Kontakt není v seznamu - před přiřazením přidejte prosím kontakt do seznamu.
+[Metacontact is full]
+Metakontakt je plný
+[Could not write contact protocol to metacontact]
+Nelze zapsat protokol kontaktu do metakontaktu
+[Could not write unique ID of contact to metacontact]
+Nelze zapsat identifikátor kontaktu do metakontaktu
+[Could not write nickname of contact to metacontact]
+Nelze zapsat přezdívku kontaktu do metakontaktu
 ;file \src\modules\netlib\netliblog.cpp
+[Standard netlib log]
+Výchozí záznam pro netlib
 [No times]
 Bez časového údaje
 [Standard hh:mm:ss times]
@@ -2311,9 +2458,9 @@ Záznam jádra Mirandy
 Zadejte požadovaný soubor pro záznam
 [Select program to be run]
 Vyberte požadovaný program
-[Standard netlib log]
-Výchozí záznam pro netlib
 ;file \src\modules\netlib\netlibopts.cpp
+[<mixed>]
+<různé>
 [<All connections>]
 <všechna spojení>
 [Network]
@@ -2347,7 +2494,7 @@ Není načten doplněk pro komunikační okno. Prosím nainstalujte/povolte jede
 '%s' není aktivní. Chcete ho aktivovat?
 [Re-enable Miranda plugin?]
 Chcete znovu aktivovat tento doplněk?
-[Unable to load plugin in Service Mode!]
+[Unable to load plugin in service mode!]
 Nelze načíst doplněk v nouzovém režimu
 [Unable to start any of the installed contact list plugins, I even ignored your preferences for which contact list couldn't load any.]
 Nelze spustit žádný z nainstalovaných doplňků pro seznam kontaktů a to i přesto, že byla ignorována vaše volba konkrétního doplňku.
@@ -2385,16 +2532,12 @@ Chyba účtu
 Vybraný účet je vypnutý. Nejdříve ho musíte aktivovat.
 [New account]
 Zřídit účet
-[Edit]
-Upravit
 [Remove account]
 Smazat účet
 [Configure...]
 Nastavit...
 [Upgrade account]
 Aktualizovat účet
-[Protocol]
-Protokol
 [Account ID]
 Identifikátor účtu
 [<unknown>]
@@ -2461,8 +2604,6 @@ Historie
 Šipka dolů
 [Find user]
 Vyhledat kontakt
-[SMS]
-SMS
 [Search all]
 Prohledat vše
 [Tick]
@@ -2543,9 +2684,6 @@ Obrázky typu JPEG
 Obrázky typu GIF
 [PNG bitmaps]
 Obrázky typu PNG
-;file \src\modules\utils\enterstring.cpp
-[OK (%d)]
-OK (%d)
 ;file \src\modules\utils\path.cpp
 [Avatars]
 Avatary
@@ -2557,8 +2695,6 @@ Kořenová složka pro avatary
 ;file \src\modules\utils\utils.cpp
 [Unspecified]
 <neuvedeno>
-[Unknown]
-neznámý
 [Afghanistan]
 Afghánistán
 [Aland Islands]

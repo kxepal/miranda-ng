@@ -6,18 +6,48 @@
 ;  Authors: Miranda team
 ;============================================================
 [Internet Relay Chat (IRC) protocol support for Miranda NG.]
-
+Support du protocole Internet Relay Chat (IRC) pour Miranda NG.
 ;file \protocols\IRCG\res\IRC.rc
+[Default network]
+Réseau par défaut
+[Enable]
+Activer
+[Server name]
+Nom du Serveur
+[Internet address]
+Adresse Internet
+[SSL]
+SSL
+[Port range]
+Ports
+[Password]
+Mot de passe
 [&Add]
 &Ajouter
 [&Edit]
 &Modifier
 [&Del]
 &Effacer
-[Enable]
-Activer
+[User info - Required]
+Info usager - Obligatoire
+[Nick]
+Pseudo
+[Alternative nick]
+Pseudo alternatif
+[Full name (e-mail)]
+Nom (e-mail)
+[User ID (Ident)]
+Identifiant
+[Ident]
+Ident.
+[System]
+Système
+[Port]
+Port
 [only while connecting]
 seulement à la connexion
+[Other]
+Autre
 [Force visible (-i)]
 Forcer visibilité (-i)
 [Rejoin channel if kicked]
@@ -40,42 +70,12 @@ Rejoindre auto. si invité
 Changer mode "à l'ancienne"
 [Update online statuses for users]
 Mise à jour de l'état des contacts
+[Check every (s):]
+Vérifier toutes les (secondes) :
 [Update statuses in channel nick list]
 Mise à jour de l'état dans la nicklist
-[Internet address]
-Adresse Internet
-[Port range]
-Ports
-[Nick]
-Pseudo
-[User ID (Ident)]
-Identifiant
-[Full name (e-mail)]
-Nom (e-mail)
-[Password]
-Mot de passe
-[Server name]
-Nom du Serveur
-[Alternative nick]
-Pseudo alternatif
-[Ident]
-Ident.
-[System]
-Système
-[Port]
-Port
-[Default network]
-Réseau par défaut
-[User info - Required]
-Info usager - Obligatoire
-[Other]
-Autre
-[Check every (s):]
-Vérifier toutes les (secondes):
-[SSL]
-SSL
 [Don't check if more than (users):]
-Ne pas vérifier si plus de (usagers):
+Ne pas vérifier si plus de (usagers) :
 [User information]
 Information usager
 [Ping]
@@ -112,8 +112,6 @@ Le serveur a retourné l'information suivante. Veuillez noter que cette informat
 Information CTCP
 [Question]
 Question
-[&OK]
-OK
 [&Cancel]
 &Annuler
 [Perform]
@@ -123,13 +121,13 @@ Action
 [Alias]
 
 [Perform on event:]
-Action sur l'évènement:
+Action sur l'évènement :
 [Scripting support]
 Support des scripts
 [Quit message:]
-Message de départ:
+Message de départ :
 [Server code page:]
-Page de code du serveur:
+Page de code du serveur :
 [Enable UTF8 autodetection]
 Auto-détection de l'UTF8
 [Add server]
@@ -183,9 +181,9 @@ Sur invitation
 [Moderated]
 Modéré
 [Key:]
-Code:
+Code :
 [User limit:]
-Nb max usager:
+Nb max usager :
 [Private]
 Privé
 [Secret]
@@ -225,13 +223,13 @@ Protocole client-à-client (CTCP)
 [Client-to-Client Chats]
 Chats client à client
 [Send mode:]
-Mode d'envoi:
-[Packet size (b):]
-Taille du paquet:
+Mode d'envoi :
+[Packet size (bytes):]
+Taille du paquet :
 [Get IP address from server]
 Adresse IP du serveur
 [Auto-accept from:]
-Accepter automatiq. de:
+Accepter automatiq. de :
 [Send notice]
 Envoyer une notice
 [CTCP Chat Request]
@@ -244,7 +242,7 @@ Requêtes CTCP
 Activer (*)
 [Ignore channel messages by default]
 Ignorer les messages du canal par défaut
-[Ignore filetransfer requests]
+[Ignore file transfer requests]
 Ignorer les requêtes de transferts de fichiers
 [Ignore DCC Chat requests]
 Ignorer les requêtes de DCC Chat
@@ -264,8 +262,8 @@ Notifications
 CTCP
 [DCC]
 DCC
-[Ignore mask ( nick!user@host )]
-Ignorer masque ( nick!user@host )
+[Ignore mask (nick!user@host)]
+Ignorer masque (nick!user@host)
 [Network (*)]
 Réseau (*)
 [Ignore events]
@@ -273,11 +271,9 @@ Ignorer les évènements
 [(*) blank to set this mask for all networks]
 (*) laisser vide pour couvrir tous les réseaux
 [Server:]
-Serveur:
+Serveur :
 [Password:]
-Passe:
-[Alternate nick]
-Pseudo alternatif
+Passe :
 ;file \protocols\IRCG\src\clist.cpp
 [CTCP chat request from %s]
 Requête de chat CTCP de %s
@@ -301,27 +297,27 @@ PING CTCP requis par %s
 [CTCP TIME requested by %s]
 HEURE CTCP requis par %s
 [DCC: Chat request from %s denied]
-DCC: Rejet de la requête de chat de %s
+DCC : Rejet de la requête de chat de %s
 [DCC: File transfer request from %s denied]
-DCC: Rejet de la requête de transfert de fichier DCC de %s
+DCC : Rejet de la requête de transfert de fichier DCC de %s
 [DCC: Reverse file transfer request from %s denied [No local IP]]
-DCC: Rejet de la requête de transfert inversé de fichier de %s [pas d'IP locale]
+DCC : Rejet de la requête de transfert inversé de fichier de %s [pas d'IP locale]
 [DCC ERROR: Malformed CTCP request from %s [%s]]
-Erreur DCC: Requête CTCP de s% mal formulée
+Erreur DCC : Requête CTCP de s% mal formulée
 [DCC: File transfer resume request from %s denied]
-DCC: Rejet de la requête de reprise de transfert de s%
+DCC : Rejet de la requête de reprise de transfert de s%
 [CTCP %s requested by %s]
 %s CTCP requis par %s
 [CTCP PING reply from %s: %u sec(s)]
-Réponse PING CTCP de %s: %u sec (s)
+Réponse PING CTCP de %s : %u sec (s)
 [CTCP %s reply from %s: %s]
-Réponse %s CTCP de %s: %s
+Réponse %s CTCP de %s : %s
 [Downloading list (%u%%) - %u channels]
 Chargement de la liste (%u%%) - %u canaux
 [Downloading list - %u channels]
 Chargement de la liste - u canaux
 [Done: %u channels]
-Terminé: %u canaux
+Terminé : %u canaux
 [(probably truncated by server)]
 (probablement tronqué par le serveur)
 [Change nickname]
@@ -331,7 +327,7 @@ Erreur IRC
 [Unknown]
 Inconnu
 [Please enter the hostmask (nick!user@host)\nNOTE! Contacts on your contact list are never ignored]
-Entrer le masque d'hôte nick!user@host)\nNote: les contacts de votre liste ne seront jamais ignorés
+Entrer le masque d'hôte nick!user@host)\nNote : les contacts de votre liste ne seront jamais ignorés
 [Ignore]
 Ignorer
 [Please enter the reason]
@@ -352,7 +348,7 @@ La fonction de vérification des amis est activée
 [The buddy check function is disabled]
 La fonction de vérification des amis est désactivée
 [Incorrect parameters. Usage: /sleep [ms], ms should be greater than 0 and less than 4000.]
-Paramètre incorrecte. Utiliser: /sleep [ms], ms doit être compris entre 0 et 4000.
+Paramètre incorrecte. Utiliser : /sleep [ms], ms doit être compris entre 0 et 4000.
 [Ignore system is enabled]
 Filtre usagers activé
 [Ignore system is disabled]
@@ -380,11 +376,11 @@ Abandon
 [CTCP %s request sent to %s]
 Requête CTCP %s envoyée à %s
 [DCC ERROR: Unable to automatically resolve external IP]
-Erreur DCC: Impossible de déterminer automatiquement l'IP externe
+Erreur DCC : Impossible de déterminer automatiquement l'IP externe
 [DCC CHAT request sent to %s]
 Requête de chat DCC envoyée à %s
 [DCC ERROR: Unable to bind port]
-Erreur DCC: Impossible de joindre le port
+Erreur DCC : Impossible de joindre le port
 [Input command]
 Saisir commande
 [Please enter the reply]
@@ -392,27 +388,23 @@ Veuillez saisir la réponse
 ;file \protocols\IRCG\src\irclib.cpp
 [Failed to connect to]
 N'a pas pu se connecter à
-[DCC ERROR: Unable to bind local port for passive filetransfer]
+[DCC ERROR: Unable to bind local port for passive file transfer]
 
 ;file \protocols\IRCG\src\ircproto.cpp
 [%s server connection]
 %s serveur connexion
 [%s client-to-client connections]
 /s client-to-client connexions
-[The IRC protocol depends on another plugin called 'Chat'\n\nDo you want to download it from the Miranda NG web site now?]
-Le protocole IRC dépends d'un autre plugin appelé 'Chat'\n\nVoulez-vous le télécharger à partir du site web Miranda NG?
-[Information]
-Informations
 [Nickname]
 Pseudo
 [DCC ERROR: No valid files specified]
-Erreur DCC: Fichiers spécifiés invalide
+Erreur DCC : Fichiers spécifiés invalide
 [DCC reversed file transfer request sent to %s [%s]]
 Requête de transfert de fichier DCC inversé à %s [%s]
 [DCC file transfer request sent to %s [%s]]
 Requête de transfert DCC envoyée à %s [%s]
 [DCC ERROR: Unable to bind local port]
-Erreur DCC: Impossible de joindre le port local
+Erreur DCC : Impossible de joindre le port local
 [The protocol is not online]
 Le protocole n'est pas en ligne
 [The dcc chat connection is not active]
@@ -495,11 +487,31 @@ Effacer le serveur
 [Edit server]
 Éditer le serveur
 [<Resolved IP: ]
-<IP trouvé:\s
+<IP trouvé :\s
 [<Automatic>]
 <Automatique>
 [<Local IP: ]
-<IP Local:\s
+<IP Local :\s
+[Event: Available]
+
+[Event: Away]
+
+[Event: N/A]
+
+[Event: Occupied]
+
+[Event: DND]
+
+[Event: Free for chat]
+
+[Event: On the phone]
+
+[Event: Out for lunch]
+
+[Event: Disconnect]
+
+[ALL NETWORKS]
+
 [Click to set commands that will be performed for this event]
 Cliquez pour définir la commande pour cet évènement
 [Click to delete the commands for this event]
@@ -522,25 +534,25 @@ Ignorer le masque
 
 [Account]
 Compte
-[DCC'n CTCP]
+[DCC and CTCP]
 
 [Advanced]
 Avancé
 ;file \protocols\IRCG\src\output.cpp
 [WallOps from %s: ]
-WallOps de %stify
+WallOps de %stify :\s
 [%s invites you to %s]
 %s vous invite à %s
 [%s is away]
 %s est sorti
 [These are online: ]
-Ils sont en ligne:\s
+Ils sont en ligne :\s
 [CTCP %s reply sent to %s]
 Réponse CTCP %s envoyée à %s
 [CTCP %s reply sent to %s: %s]
-Réponse CTCP %s envoyée à %s: %s
+Réponse CTCP %s envoyée à %s : %s
 [Notice to %s: ]
-Notice à %s: 
+Notice à %s :\s
 ;file \protocols\IRCG\src\services.cpp
 [&Quick connect]
 Connexion &rapide
@@ -572,12 +584,12 @@ Veuillez entrer un canal
 Veuillez sélectionner un réseau IRC et entrer le mot de passe si nécessaire.
 [Please enter a unique nickname]
 Veuillez entrer un pseudo unique
-[Please enter your authentification code]
+[Please enter your authentication code]
 Veuillez entrer votre code d'authentification
-[Authentificate nick]
+[Authenticate nick]
 
 [Are you sure you want to unregister your current nick?]
-Êtes vous sur de vouloir désenregistrer votre pseudo actuel? 
+Êtes vous sur de vouloir désenregistrer votre pseudo actuel?
 [Delete nick]
 Effacer le pseudo
 [Identify nick]

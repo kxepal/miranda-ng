@@ -49,10 +49,10 @@ void setClistIcon(MCONTACT hContact)
 	bool enabled = isContactSecured(hContact);
 	extern HANDLE g_hCLIcon;
 	MCONTACT hMC = hContact;
-	if(metaIsSubcontact(hContact))
-		hMC = metaGetContact(hContact);
+	if(db_mc_isSub(hContact))
+		hMC = db_mc_getMeta(hContact);
 	else if(metaIsProtoMetaContacts(hContact))
-		hMC = metaGetContact(hContact);
+		hMC = db_mc_getMeta(hContact);
 	const char *szIconId = (enabled) ? "secured" : NULL;
 	ExtraIcon_SetIcon(g_hCLIcon, hContact, szIconId);
 	if(hMC)
@@ -64,10 +64,10 @@ void setSrmmIcon(MCONTACT h)
 	MCONTACT hContact = metaIsProtoMetaContacts(h) ? metaGetMostOnline(h) : h;
 	bool enabled = isContactSecured(hContact);	
 	MCONTACT hMC = NULL;
-	if(metaIsSubcontact(hContact))
-		hMC = metaGetContact(hContact);
+	if(db_mc_isSub(hContact))
+		hMC = db_mc_getMeta(hContact);
 	else if(metaIsProtoMetaContacts(hContact))
-		hMC = metaGetContact(hContact);
+		hMC = db_mc_getMeta(hContact);
 
 	StatusIconData sid = { sizeof(sid) };
 	sid.szModule = szGPGModuleName;

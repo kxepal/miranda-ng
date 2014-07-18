@@ -33,17 +33,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 class CSendFTPFile : public CSend {
 	public:
 		// Deklaration Standardkonstruktor/Standarddestructor
-		CSendFTPFile(HWND Owner, MCONTACT hContact, bool bFreeOnExit);
+		CSendFTPFile(HWND Owner, MCONTACT hContact, bool bAsync);
 		~CSendFTPFile();
 
-		void					Send();
+		int Send();
 
 	protected:
-		LPSTR					m_pszFileName;
-		LPSTR					m_URL;
+		char*					m_pszFileName;
 		void					SendThread();
 		static void				SendThreadWrapper(void * Obj);
-
 };
 
 //---------------------------------------------------------------------------

@@ -27,8 +27,8 @@ static const LPSTR lpcszMailRuDomains[] =
 
 #define MAX_EMAIL_LEN                        1024
 #define MAX_FILEPATH                         32768 //internal
-#define BUFF_SIZE_RCV                        65535 //internal
-#define BUFF_SIZE_RCV_MIN_FREE               16384 //internal
+#define BUFF_SIZE_RCV                        (64 * 1024) //internal
+#define BUFF_SIZE_RCV_MIN_FREE               (16 * 1024) //internal
 #define BUFF_SIZE_BLOB                       16384 //internal
 #define BUFF_SIZE_URL                        4096 //internal
 #define NETLIB_SELECT_TIMEOUT                250 //internal // время ожидания событий на сокете
@@ -50,7 +50,6 @@ static const LPSTR lpcszMailRuDomains[] =
 #define MRA_EDIT_PROFILE                     "/EditProfile"
 #define MRA_EDIT_PROFILE_STR                 LPGEN("Edit &Profile")
 #define MRA_MY_ALBUM_STR                     LPGEN("My Album")
-#define MRA_MY_BLOG_STR                      LPGEN("My Blog")
 #define MRA_MY_BLOGSTATUS_STR                LPGEN("My Blog Status")
 #define MRA_MY_VIDEO_STR                     LPGEN("My Video")
 #define MRA_MY_ANSWERS_STR                   LPGEN("My Answers")
@@ -64,12 +63,12 @@ static const LPSTR lpcszMailRuDomains[] =
 #define MRA_REQ_AUTH_FOR_ALL                 "/ReqAuthForAll"
 #define MRA_REQ_AUTH_FOR_ALL_STR             LPGEN("Request authorization for all")
 
-#define MRA_MPOP_AUTH_URL                    "http://swa.mail.ru/cgi-bin/auth?Login=%s&agent=%s&page=%s"
+//#define MRA_MPOP_AUTH_URL                    "http://swa.mail.ru/cgi-bin/auth?Login=%s&agent=%s&page=%s"
+#define MRA_MPOP_AUTH_URL                    "https://auth.mail.ru/cgi-bin/auth?Login=%s&agent=%s&noredirecttologin=1&page=%s"
 
-#define MRA_WIN_INBOX_URL                    "http://win.mail.ru/cgi-bin/start"
+#define MRA_WIN_INBOX_URL                    "https://win.mail.ru/cgi-bin/start"
 #define MRA_PDA_INBOX_URL                    "http://pda.mail.ru/cgi-bin/start"
-#define MRA_EDIT_PROFILE_URL                 "http://win.mail.ru/cgi-bin/userinfo?mra=1"
-#define MRA_CHAT_URL                         "http://chat.mail.ru"
+#define MRA_EDIT_PROFILE_URL                 "https://win.mail.ru/cgi-bin/userinfo?mra=1"
 #define MRA_SEARCH_URL                       _T("http://go.mail.ru")
 
 // used spesialy! added: /domain/user
@@ -80,8 +79,8 @@ static const LPSTR lpcszMailRuDomains[] =
 #define MRA_WORLD_URL                        "http://my.mail.ru"
 
 // without auth
-#define MRA_REGISTER_URL                     _T("http://win.mail.ru/cgi-bin/signup")
-#define MRA_FORGOT_PASSWORD_URL              _T("http://win.mail.ru/cgi-bin/passremind")
+#define MRA_REGISTER_URL                     _T("https://win.mail.ru/cgi-bin/signup")
+#define MRA_FORGOT_PASSWORD_URL              _T("https://win.mail.ru/cgi-bin/passremind")
 
 
 // wParam = hContact
@@ -89,12 +88,12 @@ static const LPSTR lpcszMailRuDomains[] =
 #define MRA_REQ_AUTH_STR                     LPGEN("Request authorization")
 #define MRA_GRANT_AUTH                       "/GrantAuth"
 #define MRA_GRANT_AUTH_STR                   LPGEN("Grant authorization")
+#define MRA_SEND_EMAIL                       "/SendEMail"
+#define MRA_SEND_EMAIL_STR                   LPGEN("&Send E-Mail")
 #define MRA_SEND_POSTCARD                    "/SendPostcard"
 #define MRA_SEND_POSTCARD_STR                LPGEN("&Send postcard")
 #define MRA_VIEW_ALBUM                       "/ViewAlbum"
 #define MRA_VIEW_ALBUM_STR                   LPGEN("&View Album")
-#define MRA_READ_BLOG                        "/ReadBlog"
-#define MRA_READ_BLOG_STR                    LPGEN("&Read Blog")
 #define MRA_REPLY_BLOG_STATUS                "/ReplyBlogStatus"
 #define MRA_REPLY_BLOG_STATUS_STR            LPGEN("Reply Blog Status")
 #define MRA_VIEW_VIDEO                       "/ViewVideo"
@@ -155,6 +154,7 @@ static const LPSTR lpcszMailRuDomains[] =
 #define MRA_DEFAULT_AUTO_AUTH_REQ_ON_LOGON      FALSE
 #define MRA_DEFAULT_AUTO_AUTH_GRAND_IN_CLIST    FALSE
 #define MRA_DEFAULT_AUTO_AUTH_GRAND_NEW_USERS   FALSE
+#define MRA_DEFAULT_AUTO_AUTH_ON_WEB_SVCS	TRUE
 #define MRA_DEFAULT_SLOW_SEND                TRUE
 #define MRA_DEFAULT_CVT_SMILES_TO_TAGS       TRUE
 #define MRA_DEFAULT_MIRVER_RAW               FALSE // hidden option
@@ -180,6 +180,8 @@ static const LPSTR lpcszMailRuDomains[] =
 #define MRA_DEFAULT_INC_NEW_MAIL_NOTIFY             FALSE
 #define MRA_DEFAULT_TRAYICON_NEW_MAIL_NOTIFY        FALSE
 #define MRA_DEFAULT_TRAYICON_NEW_MAIL_CLK_TO_INBOX  FALSE
+
+#define MRA_DEFAULT_SHOW_ALL_XSTATUSES		FALSE /* Do not display some x statuses (like dating) in menu. */
 
 #define MRA_AVT_DEFAULT_ENABLE               TRUE
 #define MRA_AVT_DEFAULT_WRK_THREAD_COUNTS    4 // hidden
@@ -228,20 +230,22 @@ static const LPSTR lpcszMailRuDomains[] =
 extern const LPSTR  lpcszStatusUri[];
 extern const LPWSTR lpcszXStatusNameDef[];
 
-#define MRA_XSTATUS_MENU        "/menuXStatus"
-#define MRA_XSTATUS_COUNT       49
+#define MRA_XSTATUS_COUNT       50 /* index = 0 - virtual status "none" */
+#define MRA_XSTATUS_OFF_CLI_COUNT 49 /* MRA_XSTATUS_COUNT - dating */
 #define MRA_MIR_XSTATUS_NONE    0
 #define MRA_MIR_XSTATUS_UNKNOWN MRA_XSTATUS_COUNT
 
+/* Indexes in lpcszStatusUrip[]. */
 #define MRA_XSTATUS_OFFLINE     0
 #define MRA_XSTATUS_ONLINE      1
 #define MRA_XSTATUS_AWAY        2
 #define MRA_XSTATUS_INVISIBLE   3
 #define MRA_XSTATUS_DND         4
 #define MRA_XSTATUS_CHAT        5
-#define MRA_XSTATUS_MOBILE      54
-#define MRA_XSTATUS_UNKNOWN     100
+#define MRA_XSTATUS_MOBILE      6
+#define MRA_XSTATUS_UNKNOWN     255
+#define MRA_XSTATUS_UNKNOWN_STR "mra_xstatus50" // For icon name, keep sync with MRA_XSTATUS_COUNT
 
-#define MRA_XSTATUS_INDEX_OFFSET	6
+#define MRA_XSTATUS_INDEX_OFFSET	7
 
 #endif // !defined(AFX_MRA_CONSTANS_H__F58D13FF_F6F2_476C_B8F0_7B9E9357CF48__INCLUDED_)

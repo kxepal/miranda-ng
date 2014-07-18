@@ -7,22 +7,50 @@
 ;============================================================
 [Internet Relay Chat (IRC) protocol support for Miranda NG.]
 Підтримка протоколу Internet Relay Chat (IRC) в Miranda NG.
+[Default network]
+Мережа за замовчанням
+[Enable]
+Увімкнено
+[Server name]
+Ім'я сервера
+[Internet address]
+Адреса у мережі
+[Port range]
+Діапазон портів
+[Password]
+Пароль
 [&Add]
 &Додати
 [&Edit]
 &Правити
 [&Del]
 &Видалити
-[Enable]
-Увімкнено
+[User info - Required]
+Інфо користувача - Необхідно
+[Nick]
+Нік
+[Alternative nick]
+Запасний нік
+[Full name (e-mail)]
+Повне ім'я
+[User ID (Ident)]
+ID користувача
+[Ident]
+Ідентифікація
+[System]
+Система
+[Port]
+Порт
 [only while connecting]
 Тільки на час з'єднання
+[Other]
+Інше
 [Force visible (-i)]
 Ввімкнути видимість (-i)
 [Rejoin channel if kicked]
-Перезайти при перепідключенні
+Перезайти після стусана
 [Rejoin channels on reconnect]
-Зайти в чат-кімнати при підключенні
+Перезайти при перепідключенні
 [Disable tray balloon on error]
 Відключити повідомлення в треї
 [Show addresses]
@@ -38,41 +66,13 @@
 ['Old style' mode changes]
 "Старий" стиль режимів
 [Update online statuses for users]
-Оновлювати статуси для корист.
-[Update statuses in channel nick list]
-Оновл. статуси в списку чат-кімнати
-[Internet address]
-Адреса у мережі
-[Port range]
-Діапазон портів
-[Nick]
-Нік
-[User ID (Ident)]
-ID користувача
-[Full name (e-mail)]
-Повне ім'я
-[Password]
-Пароль
-[Server name]
-Ім'я сервера
-[Alternative nick]
-Альтернат. нік
-[Ident]
-Ідентифікація
-[System]
-Система
-[Port]
-Порт
-[Default network]
-Мережа за замовчанням
-[User info - Required]
-Інфо користувача - Необхідно
-[Other]
-Інше
+Оновлювати статуси для користувачів
 [Check every (s):]
 Перевіряти кожні (с):
+[Update statuses in channel nick list]
+Оновл. статуси в списку чат-кімнати
 [Don't check if more than (users):]
-Не перевіряти, якщо більше (користувачів):
+Не перевіряти, якщо корист. більше
 [User information]
 Інформація
 [Ping]
@@ -162,7 +162,7 @@ ID користувача
 [Wildcard enabled network search]
 Wildcard пошук по мережі
 [Channel manager]
-Управління каналом
+Керування каналом
 [Bans]
 Бани
 [Invites]
@@ -170,9 +170,9 @@ Wildcard пошук по мережі
 [Excepts]
 Винятки
 [Only Ops set topic]
-Зміна теми ОПами
+Зміна теми лише ОПами
 [No external messages]
-Повідом. ззовні вимк.
+Повідомлення ззовні вимк.
 [Invite only]
 За запрошеннями
 [Moderated]
@@ -202,13 +202,13 @@ Wildcard пошук по мережі
 [Send-ahead]
 Випереджальний
 [Attempt reverse DCC (good if firewalled)]
-Реверсивне DCC (для брандмауерів)
+Реверсний DCC (для брандмауерів)
 [none]
 Нічого
 [everyone on the contact list]
 у списку
 [everyone]
-всі
+всіх
 [Disconnect DCC chats when disconnecting from server]
 Відключати DCC-чати при виході з сервера
 [Manually set external IP:]
@@ -221,8 +221,8 @@ Wildcard пошук по мережі
 Чати СТСР
 [Send mode:]
 Режим відправки:
-[Packet size (b):]
-Розмір пакета (б):
+[Packet size (bytes):]
+Розмір пакета (байт):
 [Get IP address from server]
 Отримати IP сервера
 [Auto-accept from:]
@@ -236,10 +236,10 @@ Wildcard пошук по мережі
 [&Deny]
 &Відхилити
 [Enable (*)]
-Активувати (*)
+Увімкнено (*)
 [Ignore channel messages by default]
-Ігнорувати повідомлення чат-кімнати за замовчанням
-[Ignore filetransfer requests]
+Ігнорувати повідомлення чат-кімнати за замовч.
+[Ignore file transfer requests]
 Ігнорувати передачі файлів
 [Ignore DCC Chat requests]
 Ігнорувати запити DCC-чатів
@@ -248,14 +248,14 @@ Wildcard пошук по мережі
 [Ignore users]
 Ігнорувати користувачів
 [(*) Queries from users on your contact list are never ignored]
-(*) Не ігнорувати запити від користувачів зі списку
+(*) Запити від користувачів зі списку не ігноруються
 [Queries]
 Запити
 [Messages]
 Повідомлення
 [Notices]
 Повідомлення
-[Ignore mask ( nick!user@host )]
+[Ignore mask (nick!user@host)]
 Маска ігнорування (nick!user@host)
 [Network (*)]
 Мережа (*)
@@ -267,8 +267,6 @@ Wildcard пошук по мережі
 Сервер:
 [Password:]
 Пароль:
-[Alternate nick]
-Альтернативний нік
 [CTCP chat request from %s]
 Запит СТСР-чату від %s
 [%s sets mode %s]
@@ -312,7 +310,7 @@ DCC: Запит на продовження закачування файлу в
 [Done: %u channels]
 Готово: %u чат-кімнат
 [(probably truncated by server)]
-(можливо обмежена сервером)
+(можливо, обмежено сервером)
 [Change nickname]
 Змінити нік
 [IRC error]
@@ -338,7 +336,7 @@ DCC: Запит на продовження закачування файлу в
 [The buddy check function is disabled]
 Функція перевірки приятелів вимкнена
 [Incorrect parameters. Usage: /sleep [ms], ms should be greater than 0 and less than 4000.]
-Некоректні параметри. Використання: /sleep [ms], ms повинно бути більше 0 і менше, ніж 4000.
+Некоректні параметри. Використання: /sleep [мс], кількість мілісекунд слід вказувати в межах від 0 до 4000.
 [Ignore system is enabled]
 Система ігнорування ввімк.
 [Ignore system is disabled]
@@ -377,22 +375,18 @@ DCC: Запит на продовження закачування файлу в
 Введіть відповідь
 [Failed to connect to]
 Не вдалося підключитися до
-[DCC ERROR: Unable to bind local port for passive filetransfer]
+[DCC ERROR: Unable to bind local port for passive file transfer]
 Помилка DCC: Неможливо відкрити локальний порт для пасивної передачі файлів
 [%s server connection]
 Підключення до сервера %s
 [%s client-to-client connections]
 Підключення між клієнтами %s
-[The IRC protocol depends on another plugin called 'Chat'\n\nDo you want to download it from the Miranda NG web site now?]
-Цей протокол вимагає наявності плагіна StdChat.dll.\n\nЗавантажити його з сайту Miranda NG?
-[Information]
-Інформація
 [Nickname]
 Нік
 [DCC ERROR: No valid files specified]
 Помилка DCC: Немає доступних файлів
 [DCC reversed file transfer request sent to %s [%s]]
-DCC-запит на реверсивну передачу надісланий %s [%s]
+DCC-запит на реверсну передачу надісланий %s [%s]
 [DCC file transfer request sent to %s [%s]]
 DCC-запит на передачу файлу надісланий %s [%s]
 [DCC ERROR: Unable to bind local port]
@@ -483,6 +477,26 @@ DCC-запит на передачу файлу надісланий %s [%s]
 <Автоматично>
 [<Local IP: ]
 <Локальний IP:\s
+[Event: Available]
+Подія: В мережі
+[Event: Away]
+Подія: Відсутній
+[Event: N/A]
+Подія: Недоступний
+[Event: Occupied]
+Подія: Зайнятий
+[Event: DND]
+Подія: Не турбувати
+[Event: Free for chat]
+Подія: Готовий до чату
+[Event: On the phone]
+Подія: Телефоную
+[Event: Out for lunch]
+Подія: Обідаю
+[Event: Disconnect]
+Подія: Не в мережі
+[ALL NETWORKS]
+Усі мережі
 [Click to set commands that will be performed for this event]
 Клацніть, щоб встановити команди для обробки цієї події
 [Click to delete the commands for this event]
@@ -505,24 +519,26 @@ DCC-запит на передачу файлу надісланий %s [%s]
 Змінити ігнор
 [Account]
 Обліковий запис
+[DCC and CTCP]
+DCC і CTCP
 [Advanced]
 Додатково
 [WallOps from %s: ]
-WallOps від %s:
+WallOps від %s:\s
 [%s invites you to %s]
 %s запрошує вас на %s
 [%s is away]
 %s відсутній...
 [These are online: ]
-В мережі:
+В мережі:\s
 [CTCP %s reply sent to %s]
 СТСР %s відповідь надіслана для %s
 [CTCP %s reply sent to %s: %s]
-СТСР %s відповідь послана для %s: %s
+СТСР %s відповідь надіслана для %s: %s
 [Notice to %s: ]
-Повідомлення для %s:
+Повідомлення для %s:\s
 [&Quick connect]
-&Швидкий коннект
+&Швидке з'єдання
 [&Join channel]
 &Увійти в чат-кімнату
 [&Change your nickname]
@@ -551,9 +567,9 @@ WallOps від %s:
 Виберіть мережу IRC і введіть пароль, якщо необхідно
 [Please enter a unique nickname]
 Введіть унікальний нік
-[Please enter your authentification code]
+[Please enter your authentication code]
 Введіть код автентифікації
-[Authentificate nick]
+[Authenticate nick]
 Автентифікувати
 [Are you sure you want to unregister your current nick?]
 Ви впевнені, що хочете видалити ваш нік?
@@ -618,7 +634,7 @@ WallOps від %s:
 [Set info]
 Встановити інфо
 [Hide e-mail from info]
-Cховати E-mail
+Сховати E-mail
 [Show e-mail in info]
 Показати E-mail
 [Set security for nick]
@@ -640,7 +656,7 @@ Cховати E-mail
 [Kill unauthorized: quick]
 Вбити заборонених: швидко
 [Hide nick from list]
-Cховати нік у списку
+Сховати нік у списку
 [Show nick to list]
 Показати у списку
 [Show the server &window]
@@ -658,7 +674,7 @@ Nickserv інфо
 [Nickserv kill ghost]
 Nickserv вбити фантома
 [&Control]
-&Управління ->
+&Керування ->
 [Give Owner]
 Режим +q
 [Take Owner]
@@ -708,7 +724,7 @@ Nickserv вбити фантома
 [Slower! Searches the network for nicknames matching a wildcard string. The hostmask is mandatory and a minimum of 4 characters is necessary in the "Nick" field. Wildcards (? and *) are allowed.]
 Повільніше! Шукає в мережі ніки відповідно до шаблону. Хостмаска є обов'язковою, а поле "Нік" має містити не менше 4-х символів. Дозволені символи підстановки (? і *).
 [Settings could not be saved!\n\nThe "Nick" field must contain at least four characters including wildcards,\n and it must also match the default nickname for this contact.]
-Налаштування не збережені.\n\nПоле "Нік" має містити як мінімум чотири знаки (включаючи маски) і збігатися з псевдонімом за замовчанням для цього контакту.
+Налаштування не збережені.\n\nПоле "Нік" має містити як мінімум чотири символи (включаючи маски) і збігатися з ніком за замовчанням для цього контакту.
 [Settings could not be saved!\n\nA full hostmask must be set for this online detection mode to work.]
 Налаштування не збережені.\n\nДля цього режиму виявлення повинна бути встановлена повна хостмаска.
 [Please wait...]

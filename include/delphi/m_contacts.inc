@@ -22,23 +22,23 @@ type
   PCONTACTINFO = ^TCONTACTINFO;
   TCONTACTINFO = record
     cbSize  : int;
-    dwFlag  : Byte;
-    hContact: HCONTACT;
+    dwFlag  : byte;
+    hContact: TMCONTACT;
     szProto : PAnsiChar;
-    _type   : Byte;
+    _type   : byte;
     retval: record // in C this is a nameless union
       case longint of
-        0: (bVal  : Byte);
-        1: (wVal  : WORD);
-        2: (dVal  : DWORD);
+        0: (bVal  : byte);
+        1: (wVal  : word);
+        2: (dVal  : dword);
         3: (szVal : TChar);
-        4: (cchVal: Word);
+        4: (cchVal: word);
       end;
   end;
 
 const
 
-// CNF_* Types of information you can retreive by setting the dwFlag in CONTACTINFO
+// CNF_* Types of information you can retrieve by setting the dwFlag in CONTACTINFO
 
   CNF_FIRSTNAME  = 1;  // returns first name (string)
   CNF_LASTNAME   = 2;  // returns last name (string)

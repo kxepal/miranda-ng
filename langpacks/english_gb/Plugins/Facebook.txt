@@ -2,10 +2,12 @@
 ;============================================================
 ;  File: Facebook.dll
 ;  Plugin: Facebook RM
-;  Version: 0.2.2.1
+;  Version: 0.2.7.0
 ;  Authors: Michal Zelinka, Robert Pösel
 ;============================================================
 [Request for friendship was canceled.]
 Request for friendship was cancelled.
 [Error occurred when canceling friendship request.]
 Error occurred when cancelling friendship request.
+[Supports stream initiation (e.g., for filetransfers)]
+Supports stream initiation (e.g. for filetransfers)

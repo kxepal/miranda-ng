@@ -2,17 +2,17 @@
 
 #define SCBIFSI_LOCK_CHANGES_EVENTS	1
 #define SCBIF_ID			1
-#define SCBIF_GROUP_ID		2
+#define SCBIF_GROUP_ID			2
 #define SCBIF_FLAG			4
-#define SCBIF_SERVER_FLAG	8
-#define SCBIF_STATUS		16
+#define SCBIF_SERVER_FLAG		8
+#define SCBIF_STATUS			16
 #define SCBIF_EMAIL			32
 #define SCBIF_NICK			64
-#define SCBIF_PHONES		128
+#define SCBIF_PHONES			128
 
-#define MAIN_MENU_ITEMS_COUNT		13
+#define MAIN_MENU_ITEMS_COUNT		12
 #define CONTACT_MENU_ITEMS_COUNT	10
-#define ADV_ICON_MAX             5
+#define ADV_ICON_MAX			5
 
 struct MRA_FILES_QUEUE_ITEM;
 
@@ -120,13 +120,15 @@ struct CMraProto : public PROTO<CMraProto>
 
 	INT_PTR __cdecl MraSetListeningTo(WPARAM, LPARAM);
 
+	INT_PTR __cdecl MraSendSMS(WPARAM, LPARAM);
+
 	INT_PTR __cdecl MraSendNudge(WPARAM, LPARAM);
+
+	INT_PTR __cdecl GetUnreadEmailCount(WPARAM, LPARAM);
 
 	INT_PTR __cdecl MraGetAvatarCaps(WPARAM, LPARAM);
 	INT_PTR __cdecl MraGetAvatarInfo(WPARAM, LPARAM);
 	INT_PTR __cdecl MraGetMyAvatar(WPARAM, LPARAM);
-
-	INT_PTR __cdecl MraSendSMS(WPARAM, LPARAM);
 
 	INT_PTR __cdecl MraGotoInbox(WPARAM, LPARAM);
 	INT_PTR __cdecl MraShowInboxStatus(WPARAM, LPARAM);
@@ -138,9 +140,9 @@ struct CMraProto : public PROTO<CMraProto>
 
 	INT_PTR __cdecl MraRequestAuthorization(WPARAM, LPARAM);
 	INT_PTR __cdecl MraGrantAuthorization(WPARAM, LPARAM);
+	INT_PTR __cdecl MraSendEmail(WPARAM, LPARAM);
 	INT_PTR __cdecl MraSendPostcard(WPARAM, LPARAM);
 	INT_PTR __cdecl MraViewAlbum(WPARAM, LPARAM);
-	INT_PTR __cdecl MraReadBlog(WPARAM, LPARAM);
 	INT_PTR __cdecl MraReplyBlogStatus(WPARAM, LPARAM);
 	INT_PTR __cdecl MraViewVideo(WPARAM, LPARAM);
 	INT_PTR __cdecl MraAnswers(WPARAM, LPARAM);
@@ -171,9 +173,11 @@ struct CMraProto : public PROTO<CMraProto>
 
 	HANDLE   m_heNudgeReceived;
 	HANDLE   m_hConnection;
-	DWORD    m_dwThreadWorkerLastPingTime, m_dwNextPingSendTickTime, m_dwPingPeriod;
-	DWORD    m_dwThreadWorkerRunning;
-	DWORD    dwCMDNum;
+	DWORD	   m_dwNextPingSendTickTime;
+	DWORD    m_dwPingPeriod;
+	volatile DWORD	m_dwThreadWorkerLastPingTime;
+	volatile DWORD	m_dwThreadWorkerRunning;
+	volatile DWORD	dwCMDNum;
 
 	OBJLIST<MraGroupItem> m_groups;
 
@@ -216,7 +220,7 @@ struct CMraProto : public PROTO<CMraProto>
 	DWORD  MraProxyAck(DWORD dwStatus, const CMStringA &szEmail, DWORD dwIDRequest, DWORD dwDataType, const CMStringA &lpszData, const CMStringA &szAddresses, MRA_GUID mguidSessionID);
 	DWORD  MraChangeUserBlogStatus(DWORD dwFlags, const CMStringW &wszText, DWORDLONG dwBlogStatusID);
 
-	DWORD  MraSendPacket(HANDLE m_hConnection, DWORD dwCMDNum, DWORD dwType, LPVOID lpData, size_t dwDataSize);
+	DWORD  MraSendPacket(HANDLE hConnection, DWORD dwCMDNum, DWORD dwType, LPVOID lpData, size_t dwDataSize);
 	DWORD  MraSendCMD(DWORD dwType, LPVOID lpData, size_t dwDataSize);
 	DWORD  MraSendQueueCMD(HANDLE hSendQueueHandle, DWORD dwFlags, MCONTACT hContact, DWORD dwAckType, LPBYTE lpbDataQueue, size_t dwDataQueueSize, DWORD dwType, LPVOID lpData, size_t dwDataSize);
 
@@ -244,7 +248,7 @@ struct CMraProto : public PROTO<CMraProto>
 	DWORD  MraSetContactStatus(MCONTACT hContact, DWORD dwNewStatus);
 	DWORD  MraContactCapabilitiesGet(MCONTACT hContact);
 	void   MraContactCapabilitiesSet(MCONTACT hContact, DWORD dwFutureFlags);
-	void   MraUpdateEmailStatus(const CMStringA &szFrom, const CMStringA &szSubject, DWORD dwDate, DWORD dwUIDL);
+	void   MraUpdateEmailStatus(const CMStringA &szFrom, const CMStringA &szSubject, DWORD dwDate, DWORD dwUIDL, bool force_display);
 	DWORD  MraConvertToRTFW(const CMStringW &wszMessage, CMStringA &szMessageRTF);
 
 	DWORD  StartConnect();
@@ -294,7 +298,7 @@ struct CMraProto : public PROTO<CMraProto>
 
 	DWORD  MraMPopSessionQueueAddUrl(HANDLE hMPopSessionQueue, const CMStringA &szUrl);
 	DWORD  MraMPopSessionQueueAddUrlAndEMail(HANDLE hMPopSessionQueue, const CMStringA &, CMStringA &szEmail);
-	DWORD  MraMPopSessionQueueStart(HANDLE hMPopSessionQueue);
+	void   MraMPopSessionQueueStart(HANDLE hMPopSessionQueue);
 	void   MraMPopSessionQueueFlush(HANDLE hMPopSessionQueue);
 
 	size_t MraFilesQueueGetLocalAddressesList(LPSTR lpszBuff, size_t dwBuffSize, DWORD dwPort);
@@ -303,7 +307,7 @@ struct CMraProto : public PROTO<CMraProto>
 	DWORD  MraFilesQueueCancel(HANDLE hFilesQueueHandle, DWORD dwIDRequest, BOOL bSendDecline);
 	DWORD  MraFilesQueueStartMrimProxy(HANDLE hFilesQueueHandle, DWORD dwIDRequest);
 	DWORD  MraFilesQueueSendMirror(HANDLE hFilesQueueHandle, DWORD dwIDRequest, const CMStringA &szAddresses);
-	bool   MraFilesQueueHandCheck(HANDLE m_hConnection, MRA_FILES_QUEUE_ITEM *pmrafqFilesQueueItem);
+	bool   MraFilesQueueHandCheck(HANDLE hConnection, MRA_FILES_QUEUE_ITEM *pmrafqFilesQueueItem);
 	HANDLE MraFilesQueueConnectOut(MRA_FILES_QUEUE_ITEM *pmrafqFilesQueueItem);
 	HANDLE MraFilesQueueConnectIn(MRA_FILES_QUEUE_ITEM *pmrafqFilesQueueItem);
 	DWORD  MraFilesQueueAccept(HANDLE hFilesQueueHandle, DWORD dwIDRequest, LPCWSTR lpwszPath, size_t dwPathSize);

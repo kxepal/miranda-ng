@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: TabSRMM.dll
 ;  Plugin: TabSRMM
-;  Version: 3.3.0.3
+;  Version: 3.3.1.4
 ;  Authors: The Miranda developers team and contributors
 ;============================================================
 [IM and group chat module for Miranda NG.]
@@ -10,14 +10,12 @@
 ;file \plugins\TabSRMM\res\chat.rc
 [You can add the user by user name or his ID. Wildcards are allowed and recommended.]
 
-[OK]
-OK
 [Cancel]
 Annuler
 [Show these events]
 Afficher ces événements
 [Actions]
-
+Actions
 [Messages]
 Messages
 [Nick changes]
@@ -118,8 +116,6 @@ Effacer le journal
 &Tout copier
 [Word lookup]
 Consultation de mot
-[Google]
-Google
 [Wikipedia]
 Wikipedia
 [Link]
@@ -164,7 +160,7 @@ Ouvrir à cet endroit
 [&Add]
 &Ajouter
 [&Remove]
-
+&Supprimer
 ;file \plugins\TabSRMM\res\resource.rc
 [Customize the panel]
 
@@ -237,7 +233,7 @@ Erreurs
 [No compatible popup plugin was found. The event notification\nsystem is not available.]
 
 [Dialog]
-
+Dialogue
 [All modes]
 Tous les modes
 [Choose modes]
@@ -269,7 +265,7 @@ Ignorer l'envoi de timeouts
 [Load only actual history]
 Charger uniquement l'historique en cours
 [Always trim message log to]
-Toujours fixer à 
+Toujours fixer à
 [Events]
 Évènements
 [Only show tab bar when it's needed]
@@ -408,7 +404,7 @@ minutes
 Plugin pour l'historique
 [Typing Notification]
 Notification de frappe
-[Send typing notifications to the following users when you are typing a message to the them:]
+[Send typing notifications to the following users when you are typing a message to them:]
 Envoyez la notification de frappe aux contacts suivants quand vous leur écrivez un message :
 [        Show typing notifications in the message window]
           Afficher la notification de frappe dans la fenêtre de message
@@ -486,7 +482,7 @@ millisecondes
 
 [Windows Aero settings]
 
-[Use Aero UI elements(only when not using a custom skin)]
+[Use Aero UI elements (only when not using a custom skin)]
 
 [Use Windows 7 task bar enhancements (restart required)]
 
@@ -557,7 +553,7 @@ sortant
 [Bottom tabs vertical adjustment:]
 Ajustement vertical du bas de l'onglet :
 [NOTE: some settings will not affect open containers.]
-Note: certains paramètres n'affecteront pas les conteneurs ouverts.
+Note : certains paramètres n'affecteront pas les conteneurs ouverts.
 [Tab layout tweaks]
 
 [About TabSRMM]
@@ -691,7 +687,7 @@ Notifications :
 [URL events]
 Liens URL
 [Other events]
-
+Autres événements
 [Send message on Ctrl+Enter (always enabled)]
 
 [&Copy]
@@ -964,16 +960,6 @@ Session de message...
 
 [Attach to]
 Attache à
-[Meta Contact]
-Meta Contact
-[(Forced)]
-(Forcé)
-[Autoselect]
-Auto-sélection
-[Use Protocol]
-Utiliser le protocole
-[Set Default Protocol]
-Protocole par défaut
 ;file \plugins\TabSRMM\src\containeroptions.cpp
 [General options]
 Options générales
@@ -1043,16 +1029,18 @@ L'envoi de notification d'écriture est %s.
 ;file \plugins\TabSRMM\src\eventpopups.cpp
 [One of your popup actions is set to DISMISS EVENT.\nNote that this options may have unwanted side effects as it REMOVES the event from the unread queue.\nThis may lead to events not showing up as "new". If you don't want this behavior, please review the Event Notifications settings page.]
 Une des actions de popup a été désactivée.\nNotez que ces options peuvent avoir un effet non désiré, cela supprime l'évènement de la liste non-lue.\nDu coup, l'évènement peut être affiché comme "nouveau". Si cela ne vous convient pas, vérifiez la page des options de Notification d'évènement.
+[TabSRMM warning message]
+
 [Incoming file]
 Fichier reçu
 [No description given]
 
-[Incoming file (invalid format]
+[Incoming file (invalid format)]
 
 [Unknown event]
 Évènement inconnu
 [New messages: ]
-Nouveaux messages : 
+Nouveaux messages :\s
 [Unknown module or contact]
 
 ;file \plugins\TabSRMM\src\generic_msghandlers.cpp
@@ -1062,15 +1050,19 @@ Nouveaux messages :
 
 [You cannot edit user notes when there are unsent messages]
 
-[%s is typing a message.]
-
+[Version]
+Version
+[%s is typing a message...]
+%s écrit un message...
 [Last received: %s at %s]
 Dernière réception : le %s à %s
 [%s has entered text.]
 
-[Autoscrolling is disabled, %d message(s) queued (press F12 to enable it)]
+[%s is typing a message]
+%s écrit un message
+[Auto scrolling is disabled, %d message(s) queued (press F12 to enable it)]
 
-[UID: %s (SHIFT click -> copy to clipboard)\nClick for User's Details\nRight click for MetaContact control\nClick dropdown to add or remove user from your favorites.]
+[UID: %s (SHIFT click -> copy to clipboard)\nClick for User's Details\nRight click for metacontact control\nClick dropdown to add or remove user from your favorites.]
 
 [No UID]
 
@@ -1078,7 +1070,7 @@ Dernière réception : le %s à %s
 
 ;file \plugins\TabSRMM\src\globals.cpp
 [Instant messages]
-
+Messages instantanés
 [Incoming (Focused Window)]
 Entrant (fenêtre active)
 [Incoming (Unfocused Window)]
@@ -1190,7 +1182,7 @@ Information de TabSRMM
 [chat room]
 
 [contact]
-
+Contact
 [Do not synchronize the panel height with IM windows]
 
 [Do not synchronize the panel height with group chat windows]
@@ -1246,7 +1238,7 @@ ATTENTION : Votre message exède le nombre miximum de caractères du protocole. 
 Votre message exède le nombre miximum de caractères du protocole. Seul les %d premiers caractères seront envoyés.
 [Save and close session]
 Sauvegarde puis ferme la session
-[Autoscrolling is disabled (press F12 to enable it)]
+[Auto scrolling is disabled (press F12 to enable it)]
 
 [Click for contact menu\nClick dropdown for window settings]
 Clic pour le menu du contact\nClic sur la flèche pour le réglage de la fenêtre
@@ -1262,12 +1254,6 @@ Sélection mise dans le presse-papier
 Délai d'envoi du message expiré
 [You are editing the user notes. Click the button again or use the hotkey (default: Alt-N) to save the notes and return to normal messaging mode]
 
-[Unforce failed]
-Échec non-forcé
-[The selected protocol cannot be forced at this time]
-Le protocole sélectionné ne peut pas être forcé pour le moment
-[Warning: you have selected a subprotocol for sending the following messages which is currently offline]
-Attention : vous avez choisi un sous-protocole actuellement hors ligne pour envoyer les messages suivants
 [Contact is offline and this protocol does not support sending files to offline users.]
 Contact non connecté. Ce protocole ne supporte pas les envois hors-ligne.
 ;file \plugins\TabSRMM\src\msgdlgutils.cpp
@@ -1540,7 +1526,7 @@ Ce nom est déjà utilisé
 [Pending]
 
 [Contact]
-
+Contact
 [Original timestamp]
 
 [Message text]
@@ -1625,6 +1611,8 @@ Changer le skin
 ;file \plugins\TabSRMM\src\translator.cpp
 [Message window tweaks]
 
+[Display metacontact icons]
+
 [Error feedback]
 
 [Show skinnable tooltip in chat (Tipper plugin required)]
@@ -1635,14 +1623,18 @@ Changer le skin
 
 [Close current tab on send]
 Fermer l'onglet en cours dés l'envoi
-[Disable error popups on sending failures]
-Désactiver les popups en cas d'échec d'envoi
 [Automatic keyboard layout: Do not load the system default for new contacts]
 
 [Enable unattended send (experimental feature, required for multisend and send later) (*)]
 
 [Show client description in info panel]
 
+[On tab control]
+
+[On the button bar]
+
+[Disable error popups on sending failures]
+Désactiver les popups en cas d'échec d'envoi
 [Show a preview of the event]
 Afficher un aperçu de l'évènement
 [Don't announce event when message dialog is open]
@@ -1711,7 +1703,7 @@ Copier le texte sélectionné
 Apparence de l'historique récent
 [Support for external plugins]
 Support des plugins externes
-[Timestamp settings (note: timstamps also depend on your templates)]
+[Timestamp settings (note: timestamps also depend on your templates)]
 Configuration de l'horodatage (dépend également de vos modèles)
 [Message log icons]
 
@@ -1807,7 +1799,7 @@ Utiliser IEView
 
 [Aero peek warning|You have enabled Aero Peek features and loaded a custom container window skin\n\nThis can result in minor visual anomalies in the live preview feature.]
 
-[Filetransfer problem|Sending the image by file transfer failed.\n\nPossible reasons: File transfers not supported, either you or the target contact is offline, or you are invisible and the target contact is not on your visibilty list.]
+[File transfer problem|Sending the image by file transfer failed.\n\nPossible reasons: File transfers not supported, either you or the target contact is offline, or you are invisible and the target contact is not on your visibilty list.]
 
 [Settings problem|The option \\b1 History->Imitate IEView API\\b0  is enabled and the History++ plugin is active. This can cause problems when using IEView as message log viewer.\n\nShould I correct the option (a restart is required)?]
 
@@ -1816,8 +1808,6 @@ Utiliser IEView
 [Closing options dialog|To reflect the changes done by importing a theme in the options dialog, the dialog must be closed after loading a theme \\b1 and unsaved changes might be lost\\b0 .\n\nDo you want to continue?]
 
 [Loading a theme|Loading a color and font theme can overwrite the settings defined by your skin.\n\nDo you want to continue?]
-
-[TabSRMM warning message]
 
 ;file \plugins\TabSRMM\src\chat\colorchooser.cpp
 [Text color]
@@ -1838,7 +1828,7 @@ Vous êtes connu en tant que %s
 [%s kicked %s]
 %s a exclu %s
 [Notice from %s: ]
-Notice de %s : 
+Notice de %s :\s
 [The topic is '%s%s']
 Le sujet est '%s%s'
 [ (set by %s on %s)]
@@ -1948,7 +1938,7 @@ Fond du journal
 * Changements d'état
 [* Dividers]
 * Séparateurs
-[* Error and warning Messages]
+[* Error and warning messages]
 * Messages d'erreur et d'avertissements
 [* Symbols (incoming)]
 * Symboles (reçus)
@@ -2008,7 +1998,7 @@ Mettre la deuxième ligne d'un message en retrait
 Limiter les noms à 20 caractères dans la fenêtre de discussion
 [Add a colon (:) to auto-completed user names]
 
-[Start private conversation on doubleclick in nick list (insert nick if unchecked)]
+[Start private conversation on double click in nick list (insert nick if unchecked)]
 Démarrer une conversation sur double-clic dans la liste des noms (insère le nom si décoché)
 [Strip colors from messages in the log]
 Retirer la couleur des messages dans le journal
@@ -2098,9 +2088,11 @@ Fond de la liste
 
 [nick of current contact (if defined)]
 
-[protocol name of current contact (if defined). Account name is used when protocol supports multiaccounts]
+[protocol name of current contact (if defined). Account name is used when protocol supports multiple accounts]
 
-[User ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
+[user-defined account name of current contact (if defined).]
+
+[user ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
 
 [path to Miranda root folder]
 
@@ -2162,7 +2154,7 @@ Sélectionnez un répertoire
 [No word to look up]
 Aucun mot à chercher
 [&Message %s]
-
+&Message %s
 [Highlight User...]
 
 [Edit Highlight List...]
@@ -2194,7 +2186,7 @@ minutes
 
 [, %d %s idle]
 
-[The filter canoot be enabled, because there are no event types selected either global or for this chat room]
+[The filter cannot be enabled, because there are no event types selected either global or for this chat room]
 
 [Event filter error]
 Erreur dans le filtre d'évènements

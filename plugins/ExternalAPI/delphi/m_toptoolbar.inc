@@ -20,14 +20,14 @@ type
   TTBButton = record
     cbSize       :int;
     pszService   :PAnsiChar; // or program for lButtons
-    dwFlags      :DWORD;
+    dwFlags      :dword;
     lParamUp     :LPARAM;
     wParamUp     :WPARAM;
     lParamDown   :LPARAM;
     wParamDown   :WPARAM;
     name         :PAnsiChar;
-    hIconUp      :HICON;     // or hIconHandleUp:HANDLE
-    hIconDn      :HICON;     // or hIconHandleDn:HANDLE
+    hIconUp      :HICON;     // or hIconHandleUp:THANDLE
+    hIconDn      :HICON;     // or hIconHandleDn:THANDLE
     pszTooltipUp :PansiChar;
     pszTooltipDn :PansiChar;
   end;
@@ -151,12 +151,12 @@ type
     nButtonWidth :int;
     nButtonHeight:int;
     nButtonSpace :int;
-    nLastHeight  :int;         // fix against recursion in WM_SIZE
-    bOrderChanged:boolean;     // set by buttons' arrange procedure if the buttons' order was changed
+    nLastHeight  :int;     // fix against recursion in WM_SIZE
+    bOrderChanged:bool;    // set by buttons' arrange procedure if the buttons' order was changed
     bFlatButtons,
     bAutoSize,
-    bSingleLine  :boolean;
-    bHardUpdate  :boolean;    // clist modern requires to delete buttons to update them
+    bSingleLine  :bool;
+    bHardUpdate  :bool;    // clist modern requires to delete buttons to update them
 
     pButtonList  :PSortedList;
   end;

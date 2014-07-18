@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Clist_modern.dll
 ;  Plugin: Modern contact list
-;  Version: 0.9.0.12
+;  Version: 0.9.0.13
 ;  Authors: Artem Shpynov, Ricardo Pescuma Domenecci and Anton Senko based on clist_mw by Bethoven
 ;============================================================
 [Displays contacts, event notifications, protocol status with advantage visual modifications. Supported MW modifications, enhanced metacontact cooperation.]
@@ -14,7 +14,7 @@
 [List sorting:]
 Сортировка списка:
 [Status bar:]
-Панель статуса:
+Панель статусов:
 [List content:]
 Содержание списка:
 [Show counts of number of contacts in a group]
@@ -34,16 +34,16 @@
 [seconds]
 секунд
 [Fade contact list in/out]
-Плавно скрыть список
+Плавно скрывать список контактов
 [Transparent contact list]
 Прозрачный список контактов
 [Inactive opacity:]
 Окно неактивно:
 [Active opacity:]
 Окно активно:
-[Show Avatars]
+[Show avatars]
 Показывать аватары
-[Animate Avatars]
+[Animate avatars]
 Анимация аватаров
 [Show contact time in list]
 Показывать время контакта
@@ -75,7 +75,7 @@
 Растянуть
 [Tile vertically according to row height]
 Растягивать вертикально по высоте
-[Use Windows Colors]
+[Use Windows colors]
 Цвета Windows
 [Available skins]
 Доступные скины
@@ -87,50 +87,14 @@
 Инфо
 [\n\n\nPlease select one of available skins. \n\nOr browse for skin not in list.]
 \n\n\nВыберите скин. \n\nНажмите "Обзор" для поиска других.
-[Skin Preview]
+[Skin preview]
 Просмотр скина
 [WARNING: \tSkins can modify your current profile. Rollback is not possible. \n\t\tPlease BACKUP your database before applying skin.]
 ВНИМАНИЕ: \tСкины могут изменять Ваш профиль. Откат невозможен. \n\t\tПожалуйста, сделайте РЕЗЕРВНУЮ КОПИЮ профиля.
 [* Restart may be required for all changes to take effect]
 * Необходим рестарт для вступления изменений в силу
-[Available objects]
-Доступные объекты
-[Copy]
-Копировать
-[Paste]
-Вставить
-[Object properties]
-Свойства объекта
-[Type]
-Тип
-[Color]
-Цвет
-[Alpha]
-Альфа
-[Image file and fitting mode]
-Изображение и тип заполнения
-[File]
-Файл
-[Borders]
-Границы
-[Fit mode]
-Заливка
-[Fragment location]
-Место фрагмента
-[Position:]
-Должность:
-[Left]
-Слева
-[Top]
-Верх
-[Size:]
-Размер:
-[Width]
-Ширина
-[Height]
-Высота
-[W x H: 0 x 0 pixels]
-Ш х В: 0 х 0 пикс.
+[Skin folder]
+Папка скинов
 [Available view modes]
 Доступные режимы вида
 [Include protocols]
@@ -165,28 +129,30 @@
 Режим просмотра по умолчанию
 [Last message]
 Последнее сообщение
-[Status Bar]
-Панель статуса
+[Status bar]
+Панель статусов
 [Show status bar]
-Показывать панель статуса
+Показывать панель статусов
 [Make sections equal width]
 Разделы равной ширины
 [Space between]
 Промежуток
-[Vertical Align]
+[Borders]
+Границы
+[Vertical align]
 По вертикали
-[Horizontal Align]
+[Horizontal align]
 По горизонтали
 [Multiline status bar:]
-Многострочная панель статуса:
+Многострочная панель статусов:
 [Accounts per line]
 Уч. записей в строке
-[* To increase Status Bar height:\nSet in Main menu: Frames->Status Bar->Show title then pull appeared title of status bar up or down.]
-* Изменение высоты строки статуса: "Главное меню->Фреймы->Панель статуса->Плавающий режим" и растяните панель.
-[Hold [Shift] to inverse [Right Click] behavior]
+[* To increase status bar height:\nset in Main menu: Frames->Status Bar->Show title then pull appeared title of status bar up or down.]
+* Изменение высоты строки статусов: "Главное меню->Фреймы->Панель статусов->Плавающий режим" и растяните панель.
+[Hold [Shift] to inverse [Right Click] behavior.]
 Shift+Правый клик - Главное меню
-[[Ctrl]+[Left Click] to filter only protocol. Click on empty space to show all]
-Ctrl+Левый клик вкл. фильтр по протоколу, клик по пустому месту откл.
+[[Ctrl]+[Left Click] to filter only protocol. Click on empty space to show all.]
+Ctrl+Левый клик вкл. фильтр по протоколу, клик по пустому месту - откл.
 [Set options per account]
 Поаккаунтная настройка
 [Enable custom account settings]
@@ -215,11 +181,11 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Правый щелчок - меню статуса
 [Right click opens Miranda menu]
 Правый щелчок - главное меню
-[Space on Left]
+[Space on left]
 Отступ слева
 [Space on right]
 Отступ справа
-[Delete Contact]
+[Delete contact]
 Удалить контакт
 [No]
 Нет
@@ -243,9 +209,9 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Подтверждение удаления
 [Don't move offline user to bottom]
 Не перемещать отключённых вниз
-[Contact List]
+[Contact list]
 Список контактов
-[Contact List Sorting]
+[Contact list sorting]
 Сортировка списка контактов
 [Place offline users out of groups]
 Отключённых показывать вне групп
@@ -259,7 +225,7 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Только над текстом
 [No selection]
 Не выделять
-[Selection Mode]
+[Selection mode]
 Тип выделения
 [Bring to front if covered]
 Перемещать на передний план
@@ -277,7 +243,7 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Запретить изменение размера
 [Drag to]
 Перетаскивание
-[Easy Scroll]
+[Easy scroll]
 Простая прокрутка
 [Easy move]
 Простое перемещение
@@ -299,10 +265,10 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Фрейм "Область событий"
 [Disabled]
 Выключен
-[Show automaticaly]
+[Show automatically]
 Автоматически
-[Always Visible]
-Всегда видим
+[Always visible]
+Всегда видимый
 [Dock to sides]
 Парковать
 [and minimum]
@@ -316,14 +282,14 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 [Disable drag and drop of items]
 Отключить перетаскивание элементов
 [Disable rename of items by clicking twice]
-Отключить переименование по двойному щелчку
+Отключить переименование по дв. щелчку
 [Show selection even when list is not focused]
 Выделение, даже если окно неактивно
 [Make selection highlight translucent]
 Полупрозрачное выделение
 [Dim idle contacts]
 Затемнить неактивных пользователей
-['Hide Offline' means to hide:]
+['Hide offline' means to hide:]
 'Скрыть отключённых' - скрыть:
 [Groups]
 Группы
@@ -371,24 +337,22 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Поведение значка в системном трее
 [Use xStatus icon]
 Значок xСтатуса
-[Ignore Empty Extra icons places (arrange to right).]
+[Ignore empty extra icons places (arrange to right).]
 Игнорировать пустые дополнительные значки (справа)
-[Use 'Meta' protocol icons for Metacontacts]
+[Use 'Meta' protocol icons for metacontacts]
 'Мета' значки для метаконтактов
 [Expand metacontacts]
 Разворачивать метаконтакты
-[Avoid doubleclick expand]
+[Avoid double click expand]
 Не разворачивать по двойному клику
-[Hide all 'Extra icons' for subcontacts]
+[Hide all extra icons for subcontacts]
 Скрыть дополнительные значки для субконтактов
-[Hide offline subcontacts.]
+[Hide offline subcontacts]
 Прятать субконтакты не в сети
-[MetaContacts stuff]
+[Metacontacts stuff]
 Метаконтакты
 [Additional stuff]
 Дополнительно
-[For other stuff MetaContacts plugin should be loaded.\n\nhttp://miranda-ng.org/p/MetaContacts/]
-Для дополнительных возможностей загрузите плагин MetaContacts.\nhttp://miranda-ng.org/p/MetaContacts/
 [Allow internal requesting of status message text]
 Разрешить внутренние запросы статусных сообщений
 [Subcontacts indent:]
@@ -396,7 +360,7 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 [Remove status message if contact became offline]
 Удалить статусное сообщение, если контакт оффлайн
 [Use improved search method in contact list]
-Поиск по списку с фильтрацией результатов
+Поиск по списку контактов с фильтрацией результатов
 [Show time only if it is different from current time]
 Показывать время, только если оно отличается
 [Show contact time as row item]
@@ -404,7 +368,7 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 [Appearance]
 Внешний вид
 [Pin to desktop]
-Прикрепить к столу
+Прикрепить к рабочему столу
 [Client area margins]
 Границы списка контактов
 [Thin border main window]
@@ -433,13 +397,13 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 После заголовка
 [Gaps]
 Интервалы
-[Use Non-Layered mode]
+[Use non-layered mode]
 Режим без скина
 [Round corners]
 Закруглённые углы
 [Non-layered mode]
 Режим без скинов
-[Disable Skin Engine]
+[Disable skin engine]
 Выключить скины
 [Enable Aero Glass (Vista+)]
 Стиль Аэро (Vista и выше)
@@ -469,6 +433,8 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Рамки на аватарах
 [Draw overlay icons]
 Значки на аватарах
+[Size:]
+Размер:
 [Round corners of avatars]
 Закруглённые аватары
 [Ignore size for row height calcs]
@@ -501,10 +467,10 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Значок хСтатуса вместо протокола
 [Draw normal status as overlay]
 Обычный статус оверлеем
-[Right-To-Left reading mode (mirror template)]
+[Right-to-left reading mode (mirror template)]
 Режим справа налево (зеркальный шаблон)
 [Replace smileys in contact list]
-Заменять смайлы в списке
+Заменять смайлы в списке контактов
 [Use protocol smileys]
 Смайлы протокола
 [Draw smileys on first line]
@@ -529,7 +495,7 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Статус
 [Nickname]
 Ник
-[Status Message]
+[Status message]
 Статусное сообщение
 [Listening to]
 Слушаю
@@ -573,6 +539,8 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Плавающее
 [Frames Order]
 Порядок фреймов
+[UNDER CONSTRUCTION!!!           IT DOES NOT WORK]
+РАЗРАБАТЫВАЕТСЯ!!!           НЕ РАБОТАЕТ
 [Row template]
 Шаблон
 [Add container]
@@ -596,7 +564,7 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 [Move down]
 Ниже
 [OPTION PAGE IS UNDER CONSTRUCTION Please DO NOT notice about any issues here.\n Only high-level design comments are applicable.]
-ЭТА СТРАНИЦА ТОЛЬКО РАЗРАБАТЫВАЕТСЯ. Пожалуйста, НЕ СООБЩАЙТЕ об ошибках. Принимаются только комментарии к дизайну.
+ЭТА СТРАНИЦА ТОЛЬКО РАЗРАБАТЫВАЕТСЯ. Пожалуйста, НЕ СООБЩАЙТЕ об ошибках. Принимаются только замечания к дизайну.
 [&Main menu]
 &Главное меню
 [E&xit]
@@ -619,9 +587,9 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 &Готов болтать\tCtrl+7
 [&Invisible\tCtrl+7]
 &Невидимый\tCtrl+7
-[On the &Phone\tCtrl+8]
+[On the &phone\tCtrl+8]
 На &телефоне\tCtrl+8
-[Out to &Lunch\tCtrl+9]
+[Out to &lunch\tCtrl+9]
 Обед&аю\tCtrl+9
 [Tray]
 Трей
@@ -629,68 +597,66 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 С&крыть/Показать
 [Nowhere]
 Нигде
-[&New Group]
-&Новая группа
-[&Hide Offline Users]
+[&New group]
+Со&здать группу
+[&Hide offline users]
 &Скрыть отключённых
-[Hide &Offline Users out here]
+[Hide &offline users out here]
 Скрыть &отключённых вне группы
-[Hide &Empty Groups]
+[Hide &empty groups]
 Скрыть &пустые группы
-[Disable &Groups]
+[Disable &groups]
 Отключить &группы
 [Hide Miranda]
 Скрыть список контактов
-[&New Subgroup]
+[&New subgroup]
 &Создать подгруппу
-[&Hide Offline Users in here]
+[&Hide offline users in here]
 &Скрыть отключённых в группе
-[&Show Offline Users in here]
+[&Show offline users in here]
 &Показать отключённых в группе
-[&Rename Group]
+[&Rename group]
 &Переименовать группу
-[&Delete Group]
+[&Delete group]
 &Удалить группу
 [Skins]
 Скины
 [Modern contact list]
 Список контактов Modern
-[Avatar Overlay]
+[Avatar overlay]
 Оверлей аватара
-[Status Overlay]
+[Status overlay]
 Оверлей статуса
-[Contact List smileys]
+[Contact list smileys]
 Список контактов
 [List background]
 Фон списка
 [Menu background]
 Фон меню
 [Status bar background]
-Фон панели статуса
+Фон панели статусов
 [Frames title bar background]
 Фон заголовка фреймов
-[Do you want contact '%s' to be converted to MetaContact and '%s' be added to it?]
+[Do you want contact '%s' to be converted to metacontact and '%s' be added to it?]
 Хотите конвертировать '%s' в метаконтакт и добавить '%s' в него?
-[Converting to MetaContact]
+[Converting to metacontact]
 Конвертация в метаконтакт
-[Do you want contact '%s' to be converted to MetaContact and '%s' be added to it (remove it from '%s')?]
+[Do you want contact '%s' to be converted to metacontact and '%s' be added to it (remove it from '%s')?]
 Хотите конвертировать '%s' в метаконтакт и добавить '%s' в него (удалить его из '%s')?
-[Converting to MetaContact (Moving)]
+[Converting to metacontact (moving)]
 Конвертирование в метаконтакт (перемещение)
 [Do you want contact '%s' to be added to metacontact '%s'?]
 Хотите добавить '%s' в метаконтакт '%s'?
-[Adding contact to MetaContact]
+[Adding contact to metacontact]
 Добавление к метаконтакту
 [Do you want contact '%s' to be default?]
 Хотите сделать '%s' контактом по умолчанию?
 [Set default contact]
 Контакт по умолчанию
-[Do you want contact '%s' to be removed from MetaContact '%s' and added to '%s'?]
+[Do you want contact '%s' to be removed from metacontact '%s' and added to '%s'?]
 Хотите удалить '%s' из метаконтакта '%s' и добавить в '%s'?
-[Changing MetaContacts (Moving)]
+[Changing metacontacts (moving)]
 Изменение метаконтакта (перемещение)
-[Do you want contact '%s' to be added to MetaContact '%s'?]
-Хотите добавить контакт '%s' в метаконтакт '%s'?
 [Contact names]
 Контакты
 [Row items]
@@ -740,7 +706,7 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 [Third line]
 Третья строка
 [Status bar text]
-Строка статуса
+Текст панели статусов
 [Event area text]
 Текст области событий
 [Current view mode text]
@@ -789,7 +755,7 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Имя (включая локализацию)
 [Last message time]
 Последнее сообщение
-[Account Name]
+[Account name]
 Имя учётной записи
 [Rate]
 Рейтинг
@@ -809,12 +775,12 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Список
 [Window]
 Окно
-[Event area background]
-Фон области событий
-[Event Area]
-Область событий
 [No Events]
 Событий нет
+[Event area background]
+Фон области событий
+[Event area]
+Область событий
 [&Contact rate]
 Рейтинг &контакта
 [None]
@@ -825,14 +791,14 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Средний
 [High]
 Высокий
-[Contact rate None]
-Рейтинг контакта Нет
-[Contact rate Low]
-Рейтинг контакта Низкий
-[Contact rate Medium]
-Рейтинг контакта Средний
-[Contact rate High]
-Рейтинг контакта Высокий
+[Contact rate: none]
+Рейтинг контакта: не указан
+[Contact rate: low]
+Рейтинг контакта: низкий
+[Contact rate: medium]
+Рейтинг контакта: средний
+[Contact rate: high]
+Рейтинг контакта: высокий
 [Show even if offline]
 Показывать, даже если не в сети
 [Avatar]
@@ -855,24 +821,28 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Строка
 [Row design]
 Дизайн
-[Second Line]
-Вторая строка
-[Third Line]
-Третья строка
 [(Unknown Contact)]
 (Неизвестный контакт)
 [Tray menu]
 Меню в трее
-[&Find/Add Contacts...]
-Добавить &контакты
+[&Hide/show]
+С&крыть/Показать
+[&Find/add contacts...]
+Добавить &контакты...
 [&Options...]
 &Настройки...
 [&About]
 О &программе
-[Show Contact &Avatar]
+[Show avatar]
+Показать аватар
+[Hide avatar]
+Скрыть аватар
+[Show contact &avatar]
 Показать &аватар
-[Hide Contact &Avatar]
+[Hide contact &avatar]
 Скрыть &аватар
+[My contacts]
+Мои контакты
 [My Contacts]
 Мои контакты
 [Close Miranda]
@@ -895,52 +865,34 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 линий
 [%s, contain %s]
 %s, содержит %s
-[- Empty - (do not draw this object)]
- - НЕТ - (не рисовать этот объект)
-[Solid fill object]
-Сплошная заливка
-[Image (draw image)]
-Изображение
-[Fragment (draw portion of image)]
-Фрагмент изображения
-[Stretch Both directions]
-Растянуть во все стороны
-[Stretch Vertical, Tile Horizontal]
-Растянуть вер., замостить гориз.
-[Tile Vertical, Stretch Horizontal]
-Замостить вер., растянуть гориз.
-[Tile Both directions]
-Замостить оба направления
-[Image size is]
-Размер
+[ layered]
+ слои
 [You need an image services plugin to process PNG images.]
 Для поддержки PNG вам нужен плагин службы изображений.
 [Error]
 Ошибка
-[Load/Save]
-Загрузить/Сохранить
-[Object Editor]
-Редактор объектов
+[( unknown )]
+( неизвестно )
 [%s\n\n%s\n\nAuthor(s):\t %s\nContact:\t %s\nWeb:\t %s\n\nFile:\t %s]
 %s\n\n%s\n\nАвтор(ы):\t %s\nКонтакт:\t %s\nWeb:\t %s\n\nФайл:\t %s
 [%s\n\n%s\n\nAuthor(s): %s\nContact:\t %s\nWeb:\t %s\n\nFile:\t %s]
 %s\n\n%s\n\nАвтор(ы): %s\nКонтакт:\t %s\nВеб:\t %s\n\nФайл:\t %s
+[reVista for Modern v0.5]
+reVista для Modern v0.5
 [This is second default Modern Contact list skin in Vista Aero style]
 Это второй стандартный скин списка контактов в стиле Vista Aero
+[Angeli-Ka (graphics), FYR (template)]
+Angeli-Ka (графика), FYR (шаблон)
 [Inside library]
 Внутри библиотеки
 [Skin Information]
 Информация о скине
-[Skin editor contains not stored changes.\n\nAll changes will be lost.\n\n Continue to load new skin?]
-Есть несохранённые изменения.\n\nВсе изменения будут потеряны\n\nПродолжить загрузку?
-[Warning!]
-Внимание!
-[Current skin was not saved to file.\n\nAll changes will be lost.\n\n Continue to load new skin?]
-Текущий скин не сохранен.\n\nВсе изменения будут потеряны.\n\nПродолжить загрузку нового скина?
 [Preview is not available\n\n%s\n----------------------\n\n%s\n\nAUTHOR(S):\n%s\n\nCONTACT:\n%s\n\nHOMEPAGE:\n%s]
-Предпросмотр не доступен\n\n%s\n----------------------\n\n%s\n\nАвтор(ы):\n%s\n\nКонтакт:\n%s\n\nWeb:\n%s
+Предпросмотр недоступен\n\n%s\n----------------------\n\n%s\n\nАвтор(ы):\n%s\n\nКонтакт:\n%s\n\nWeb:\n%s
 [%s\n\n%s\n\nAUTHORS:\n%s\n\nCONTACT:\n%s\n\nWEB:\n%s\n\n\n]
 %s\n\n%s\n\nАВТОРЫ:\n%s\n\nКОНТАКТ:\n%s\n\nWEB:\n%s\n\n\n
+[graphics by Angeli-Ka\ntemplate by FYR]
+графика - Angeli-Ka\nшаблон - FYR
 [Select skin from list]
 Выберите скин из списка
 [Please select skin to apply]
@@ -951,10 +903,16 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 %Стандартный скин%
 [<<Global>>]
 <<Общее>>
+[Left]
+Слева
 [Center]
 В центре
 [Right]
 Справа
+[Top]
+Верх
+[Bottom]
+Внизу
 [Main menu]
 Главное меню
 [Status menu]
@@ -975,8 +933,6 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Вкл/Выкл группы
 [Use groups]
 Включить сортировку по группам
-[Disable Groups]
-Выключить сортировку по группам
 [Enable/Disable sounds]
 Вкл/Выкл звуки
 [Enable sounds]
@@ -1021,13 +977,11 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Действительно удалить режим? Отмена не возможна!
 [Delete a view mode]
 Удаление режима просмотра
-[A view mode with this name does alredy exist]
+[A view mode with this name does already exist]
 Режим отображения с таким именем уже присутствует
 [Duplicate name]
 Совпадающее имя
-[All Contacts]
-Все контакты
-[Setup View Modes...]
+[Setup view modes...]
 Настроить режимы вида...
 [Select a view mode]
 Выбор режима просмотра
@@ -1037,9 +991,9 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Сбросить режим и перейти в режим по умолчанию
 [Reset view mode]
 Сбросить режим
-[View Mode Background]
+[View mode background]
 Фон режимов вида
-[View Modes]
+[View modes]
 Режимы вида
 [&Visible]
 &Показывать
@@ -1049,7 +1003,7 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 &Закрепить
 [&Expanded]
 &Расширенный
-[&Floating Mode]
+[&Floating mode]
 &Плавающий режим
 [&Border]
 &Рамка
@@ -1067,7 +1021,7 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 &Вверх
 [&Down]
 В&низ
-[Show All Frames]
+[Show all frames]
 Показать все фреймы
 [Show all title bars]
 Показывать названия
@@ -1077,9 +1031,9 @@ Ctrl+Левый клик вкл. фильтр по протоколу, клик 
 Закрепить фрейм
 [Frame menu]
 Меню фреймов
+[New group]
+Новая группа
 [Group menu]
 Меню групп
 [Subgroup menu]
 Меню подгрупп
-[&New SubGroup]
-&Создать подгруппу

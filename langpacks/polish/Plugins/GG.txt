@@ -1,7 +1,7 @@
 ﻿#muuid {f3ff65f3-250e-416a-bee9-58c93f85ab33}
 ;============================================================
 ;  File: GG.dll
-;  Plugin: Gadu-Gadu Protocol
+;  Plugin: Gadu-Gadu protocol
 ;  Version: 0.11.0.3
 ;  Authors: Bartosz Bialek, Adam Strzelecki
 ;============================================================
@@ -81,7 +81,7 @@ IP wewnętrzne:
 [First name:]
 Imię:
 [Last name:]
-Nazwisko: 
+Nazwisko:
 [Family name:]
 Nazwisko rodz.:
 [Nickname:]
@@ -97,11 +97,9 @@ Rok urodzenia:
 [Description:]
 Opis:
 [&Save changes]
-Zapisz zmiany
+&Zapisz zmiany
 [Enter token to continue]
 Wprowadź token aby kontynuować
-[OK]
-OK
 [Cancel]
 Anuluj
 [Create Gadu-Gadu account]
@@ -115,7 +113,7 @@ Potwierdź hasło:
 [New e-mail:]
 Nowy e-mail:
 [&Create]
-Utwórz
+&Utwórz
 [Remove Gadu-Gadu account]
 Usuń konto Gadu-Gadu
 [Remove Gadu-Gadu account\nThis will remove your Gadu-Gadu account]
@@ -139,9 +137,9 @@ do:
 [Search online users only]
 Szukaj tylko wśród połączonych
 [&Close]
-Zamknij
+&Zamknij
 [&Send]
-Wyślij
+&Wyślij
 [Open new conference]
 Nowa konferencja
 [Open new conference\nSelect conference participants]
@@ -177,7 +175,7 @@ Połączenie z hubem Gadu-Gadu nie udało się.
 [Cannot establish secure connection.]
 Nie można nawiązać bezpiecznego połączenia.
 [Server disconnected asking you for changing your e-mail.]
-Serwer rozłączył się prosząc o zmianę Twojego adresu e-mail.
+Serwer rozłączył się prosząc o zmianę twojego adresu e-mail.
 [Too many login attempts with invalid password.]
 Za dużo prób połączeń z podaniem błędnego hasła.
 [Gadu-Gadu servers are now down. Try again later.]
@@ -189,7 +187,7 @@ Adres zewnętrzny dla połączeń bezpośrednich %s jest nieprawidłowy. Forward
 [Server hostname %s is invalid. Using default hostname provided by the network.]
 Adres serwera %s jest nieprawidłowy. Użyty zostanie adres podany przez sieć.
 [Connection cannot be established. errno=%d: %s]
-Nie można nawiązać połaczenia. errno=%d: %s
+Nie można nawiązać połączenia. errno=%d: %s
 [Age:]
 Wiek:
 [List import successful.]
@@ -236,7 +234,7 @@ Musisz najpierw wpisać w konfiguracji swój e-mail rejestracyjny.
 [Your password will be sent to your registration e-mail.\nDo you want to continue?]
 Twoje hasło zostanie wysłane na twój e-mail rejestracyjny.\nChcesz kontynuować ?
 [You should disconnect before making any permanent changes with your account.\nDo you want to disconnect now?]
-Powinieneś się rozłączyć przed wszelkimi trwałymi zmianami Twojego konta.\nCzy chcesz się rozłączyć ?
+Powinieneś się rozłączyć przed wszelkimi trwałymi zmianami twojego konta.\nCzy chcesz się rozłączyć ?
 [Allow]
 Zezwól
 [Ask]
@@ -266,9 +264,9 @@ HTTP błąd zapisu
 [Unknown HTTP error]
 Nieznany błąd HTTP
 [&Unblock]
-Odblokuj
+&Odblokuj
 [&Block]
-Zablokuj
+&Zablokuj
 [Contact list]
 Lista kontaktów
 ;file \protocols\Gadu-Gadu\src\gg_proto.cpp
@@ -292,7 +290,7 @@ To jest moja własna konferencja.
 [Participants]
 Uczestnicy
 ['Unknown']
-'Nieznany'
+"Nieznany"
 [You have to be connected to open new conference.]
 Musisz być połączony, żeby otworzyć nową konferencję.
 [All ignored conferences are now unignored and the conference policy will act again.]
@@ -332,7 +330,7 @@ Wyczyść ignorowane konferencje
 Równoległe sesje
 ;file \protocols\Gadu-Gadu\src\image.cpp
 [&Image]
-Wyślij obrazek
+Wyślij &obrazek
 [Image files (*.bmp,*.gif,*.jpeg,*.jpg,*.png)]
 Pliki obrazów (*.bmp,*.gif,*.jpeg,*.jpg,*.png)
 [Image cannot be written to disk.]
@@ -377,13 +375,13 @@ Nie można wyeksportować listy z powodu błędu:\n\t%s (Błąd: %d)
 [Import List From &Server]
 Importuj listę z &serwera
 [Import List From &Text File...]
-Importuj listę z pliku
+Importuj listę z &pliku
 [&Remove List From Server]
 &Usuń listę z serwera
 [Export List To &Server]
 Eksportuj listę na &serwer
 [Export List To &Text File...]
-Eksportuj listę do pliku
+Eksportuj listę do &pliku
 ;file \protocols\Gadu-Gadu\src\links.cpp
 [Gadu-Gadu account chooser]
 Wybór konta Gadu-Gadu
@@ -393,7 +391,7 @@ Powiązanie protokołu Gadu-Gadu
 [Password could not be reminded because of error:\n\t%s (Error: %d)]
 Hasło nie mogło zostać przypomniane z powodu błędu:\n\t%s (błąd: %d)
 [Password was sent to your e-mail.]
-Hasło zostało wysłane na Twój e-mail.
+Hasło zostało wysłane na twój e-mail.
 ;file \protocols\Gadu-Gadu\src\popups.cpp
 [Notify]
 Powiadomienia

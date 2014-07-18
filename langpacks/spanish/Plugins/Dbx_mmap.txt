@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Dbx_mmap.dll
 ;  Plugin: Miranda NG mmap database driver
-;  Version: 0.95.0.1
+;  Version: 0.95.1.1
 ;  Authors: Miranda-NG project
 ;============================================================
 [Provides Miranda database support: global settings, contacts, history, settings per contact.]
@@ -10,10 +10,6 @@
 ;file \plugins\Db3x_mmap\res\db3x_mmap.rc
 [Login to Miranda NG]
 
-[EN]
-
-[OK]
-Aceptar
 [Cancel]
 Cancelar
 [New password]
@@ -38,7 +34,7 @@ Eliminar
 
 [Only critical data are encrypted (passwords, security tokens, etc). All another settings and history remains unencrypted. Fast and effective, suitable for the most cases]
 
-[All string settings and all events in histories are encrypted. It also makes Miranda much slower and creates a risk of losing everything you've stored in a profile in case of losing password. Recommended only for paranoidal users]
+[All string settings and all events in histories are encrypted. It also makes Miranda much slower and creates a risk of losing everything you've stored in a profile in case of losing password. Recommended only for paranoid users]
 
 [Set password]
 
@@ -52,6 +48,16 @@ Eliminar
 [Miranda has detected corruption in your database. This corruption may be fixed by DbChecker plugin. Please download it from http://miranda-ng.org/p/DbChecker/. Miranda will now shut down.]
 
 [Database Panic]
+
+;file \plugins\Db3x_mmap\src\dbheaders.cpp
+[This profile is too old to be updated with PluginUpdater, your database must be converted first.\n\nWould you like to read how to fix this?]
+
+[Obsolete database format]
+
+;file \plugins\Db3x_mmap\src\dbintf.cpp
+[Your database must be converted into the new format. This is potentially dangerous operation, so please make a backup before.\n\nClick Yes to proceed with conversion or No to exit Miranda]
+
+[Database conversion required]
 
 ;file \plugins\Db3x_mmap\src\dbintf.h
 [Change/remove password]
@@ -108,8 +114,6 @@ Base de datos
 [Event chain corrupted, further entries ignored]
 
 [First event not marked as such: correcting]
-
-[Event marked as first which is not: correcting]
 
 [Extra flags found in event: removing]
 

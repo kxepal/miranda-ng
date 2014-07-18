@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: SendSS.dll
 ;  Plugin: Send ScreenShot+
-;  Version: 0.8.3.1
+;  Version: 0.8.7.0
 ;  Authors: Merlin
 ;============================================================
 [Take a screenshot and send it to a contact.]
@@ -33,6 +33,8 @@
 &Заповнити рядки опису.
 [Delete &after send]
 Видалити &після відправки
+[Open editor before sending]
+Редагувати перед надсиланням
 [Open again]
 Відкрити знову
 [&Capture]
@@ -45,24 +47,44 @@
 &Закрити
 [Edit]
 Змінити
-[C&lient Area]
-В&міст
 [Caption:]
 Заголовок:
 [Size (HxW):]
 Розмір (ВхШ):
+[C&lient Area]
+В&міст
 [Target Tool]
 Інструмент прицілювання
+[File:]
+Файл:
+[Description:]
+Опис:
+[Result]
+Результат
+[Thumbnail]
+Мініатюра
+[&Copy]
+&Копіювати
+[Close]
+Закрити
+[Copy]
+Копіювати
+[Error]
+Помилка
 [GCHAT error]
 Помилка GCHAT
 [An unknown error has occurred.]
 Невідома помилка.
-[Error]
-Помилка
 [Unable to initiate %s.]
 Не вдалося ініціювати %s.
 [MAPI error (%i):\n%s.]
 Помилка MAPI (%i):\n%s.
+[Unknown response from %s (%i)]
+Невідома відповідь від %s (%i)
+[Got no response from %s (%i)]
+Немає відповіді від %s (%i)
+[%s (%i):\nCould not add a share to the Dropbox plugin.]
+%s (%i):\nНеможливо додати ресурс у плагін Dropbox.
 [The specified attachment was not found]
 Вкладення не знайдено
 [The specified attachment could not be opened]
@@ -89,16 +111,16 @@
 Користувач скасував одне з діалогових вікон
 [Unknown Error]
 Невідома помилка
+[File transfer]
+Передача файлу
 [FTPFile transfer]
 Передача FTPFile
 [%s (%i):\nCould not add a share to the FTP File plugin.]
-Неможливо додати ресурс в плагін FTP File.
+%s (%i):\nНеможливо додати ресурс у плагін FTP File.
 [Could not start the HTTP Server plugin.]
 Неможливо запустити плагін HTTP Server.
 [%s (%i):\nCould not add a share to the HTTP Server plugin.]
-Неможливо додати ресурс в плагін HTTP Server.
-[Upload server did not respond timely.]
-Сервер не відповів вчасно.
+%s (%i):\nНеможливо додати ресурс у плагін HTTP Server.
 [Retry]
 Ще раз
 [Yes]
@@ -132,7 +154,7 @@ HTTP-з'єднання SendSS
 [Could not register Miranda service.]
 Неможливо зареєструвати сервіс.
 [Could not create Screenshot folder (error code: %d):\n%s\nDo you have write permissions?]
-Не вдалося створити папку знімків екрану (код помилки: %d:)\n%s\nУ вас є права на запис?
+Не вдалося створити папку знімків екрану (код помилки: %d):\n%s\nУ вас є права на запис?
 [Screenshot Icon1]
 Значок 1
 [Screenshot Icon2]
@@ -141,12 +163,6 @@ HTTP-з'єднання SendSS
 Ціль вікно у фокусі
 [Target Desktop]
 Ціль робочий стіл
-[Default]
-За замовчанням
-[Overlay on]
-Оверлей ввімк.
-[Overlay off]
-Оверлей вимк.
 [Help]
 Довідка
 [Open Folder]
@@ -165,8 +181,6 @@ HTTP-з'єднання SendSS
 Наступне
 [Update]
 Оновити
-[Apply]
-Застосувати
 [Down arrow]
 Стрілка вниз
 [Buttons]
@@ -193,10 +207,22 @@ HTTP-з'єднання SendSS
 Монітор
 [ (primary)]
  (основний)
+[File]
+Файл
 [<Only save>]
 <Тільки зберегти>
 [File Transfer]
 Передача файлу
+[E-mail]
+Пошта
+[FTP File]
+Файл на FTP
+[Upload Pie (30m)]
+Upload Pie (30 хв)
+[Upload Pie (1d)]
+Upload Pie (1 дн)
+[Upload Pie (1w)]
+Upload Pie (1 тижд)
 [Information]
 Інформація
 [Fill description textbox.]
@@ -207,10 +233,12 @@ HTTP-з'єднання SendSS
 Запис
 [Can't create a Screenshot]
 Неможливо створити знімок екрану
+[Select a file]
+Виберіть файл
 [Select a target window.]
 Виберіть вікно, щоб зробити знімок.
 [Screenshot ]
-Знімок екрану
+Знімок екрану\s
 [of "]
 з "
 [" Window]

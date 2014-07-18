@@ -33,7 +33,6 @@
 [Up]
 [Down]
 [Edit Host]
-[OK]
 [Cancel]
 [Address:]
 [Label:]
@@ -56,8 +55,9 @@
 ;file \plugins\Ping\src\menu.cpp
 [Ping]
 ;file \plugins\Ping\src\options.cpp
+[Text Files (*.txt)]
+[All Files]
 [Open log file]
-[All\0*.*\0Text\0*.TXT\0]
 [<none>]
 [<all>]
 [Settings]

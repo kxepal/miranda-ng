@@ -1,14 +1,14 @@
 ﻿#muuid {9584da04-fb4f-40c1-9325-e4f9caafcb5d}
 ;============================================================
-;  File: actman.dll
-;  Plugin: Action Manager
-;  Version: 0.2.0.1
+;  File: Actman.dll, Actman30.dll
+;  Plugin: Action manager
+;  Version: 0.2.0.1 - 0.3.0.1
 ;  Authors: Awkward
 ;============================================================
 [Plugin for manage hotkeys to open contact window, insert text, run program and call services]
 
 [Actions]
-
+Actions
 [No description]
 
 [New]
@@ -36,7 +36,7 @@ Aide
 [Open contact window]
 
 [Contact]
-
+Contact
 [Call service]
 
 [Service]
@@ -128,7 +128,7 @@ Nom
 [Alias]
 
 [Plugin]
-
+Plugin
 [Return]
 
 [Effect]
@@ -170,11 +170,11 @@ Texte
 [None]
 Aucun
 [Angry]
-
+En colère
 [Taking a bath]
-
+Prend un bain
 [Tired]
-
+Fatigué
 [Birthday]
 
 [Drinking beer]
@@ -182,7 +182,7 @@ Boit de la bière
 [Thinking]
 Pensif
 [Eating]
-
+Mange
 [Watching TV]
 Regarde la télé
 [Meeting]
@@ -214,15 +214,15 @@ Surfe
 [Browsing]
 
 [Working]
-
+Travail
 [Typing]
 Écrit
 [Picnic]
 Pique-nique
 [Cooking]
-
+Cuisine
 [Smoking]
-
+Fume
 [I'm high]
 Plane
 [On WC]
@@ -756,6 +756,8 @@ Commun
 
 [Number of arguments]
 
+[Argument]
+
 [Result]
 
 [DLL Handle Cache]
@@ -767,7 +769,7 @@ Commun
 [Close for macro]
 
 [Refresh]
-
+Actualiser
 [Get from active window]
 
 [Chain]
@@ -809,7 +811,7 @@ Respecter la casse
 [^s - selected (and replaced) part\r\n^e - replaced by empty string\r\n^v - paste text from Clipboard\r\n^t - replaced by tabulation\r\n^l - replaced by last result as unicode\r\n^h - replaced by last result as hex\r\n^f(name[,str])\r\n     paste line from text file.\r\n     brackets contents must be w/o spaces]
 
 [RTL]
-
+Lecture inversée
 [Right justified text]
 
 [Database]
@@ -867,13 +869,23 @@ Nom
 [Miranda event help]
 
 [contact list]
-
+Liste de contacts
 [database driver]
 
+[Main settings]
+
+[Custom settings]
+
+[Do not translate]
+
 ; these lines are not present in the sources, but they are present in compiled plugin
+[Param type]
+
 [Text Editor]
 
 [Script]
 
 [Wrap Text]
+
+[Structure size]
 

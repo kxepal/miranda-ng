@@ -1,9 +1,9 @@
 ﻿#muuid {e7c48bab-8ace-4cb3-8446-d4b73481f497}
 ;============================================================
 ;  File: MRA.dll
-;  Plugin: MRA
+;  Plugin: MRA protocol
 ;  Version: 2.1.0.8
-;  Authors: Ivan Rozhuk
+;  Authors: Rozhuk Ivan
 ;============================================================
 [Miranda Mail.ru Agent protocol plugin.]
 Miranda Mail.ru-Agent-Protokoll-Plugin.
@@ -30,6 +30,8 @@ Kontakte bei Login automatisch hinzufügen
 Autorisierung für Benutzer in Kontaktliste automatisch gewähren
 [Automatically grant authorization to new users]
 Autorisierung automatisch neuen Nutzern gewähren
+[Automatic authorization on Mail.ru web services]
+Automatisch bei Mail.ru-Webdiensten autorisieren
 [Notify me when a message delivery has failed]
 Teile mir mit, wenn eine Nachricht nicht gesendet werden konnte
 [Notify about new mail if increment]
@@ -64,7 +66,7 @@ von:
 bis:
 [Birthday:]
 Geburtstag:
-[Zodiak:]
+[Zodiac:]
 Sternzeichen;
 [Location]
 Ort
@@ -148,8 +150,6 @@ In %d schließen
 Titel:
 [Message:]
 Nachricht:
-[OK]
-OK
 [Cancel]
 Abbrechen
 [Notify]
@@ -236,8 +236,6 @@ Status vom Poste&ingang anzeigen
 &Profil bearbeiten
 [My Album]
 Mein Album
-[My Blog]
-Mein Blog
 [My Blog Status]
 Mein Blog Status
 [My Video]
@@ -258,12 +256,12 @@ Autorisierung für alle anfragen
 Autorisierung anfragen
 [Grant authorization]
 Autorisierung gewähren
+[&Send E-Mail]
+E-Mail &senden
 [&Send postcard]
 Postkarte &senden
 [&View Album]
 Album ansehen
-[&Read Blog]
-Blog lesen
 [Reply Blog Status]
 Blog-Status beantworten
 [View Video]
@@ -374,6 +372,8 @@ Avatare
 Bitte E-Mail-Einstellungen in den Einstellungen einrichten
 [Please, setup password in options]
 Bitte richten Sie ein Kennwort in den Einstellungen ein.
+[Thread creation failure]
+Fehler beim Erzeugen des Threads
 [Logon error: invalid login/password]
 Anmeldefehler: Falscher Benutzername/Kennwort
 [MRIM_CS_MESSAGE_STATUS: not found in queue]
@@ -495,3 +495,5 @@ Eichhörnchen
 Star
 [Music]
 Musik
+[Dating]
+Dating

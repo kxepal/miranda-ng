@@ -6,6 +6,7 @@
 // Copyright © 2001-2002 Jon Keating, Richard Hughes
 // Copyright © 2002-2004 Martin Öberg, Sam Kothari, Robert Rainwater
 // Copyright © 2004-2010 Joe Kucera
+// Copyright © 2012-2014 Miranda NG Team
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,15 +21,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-//
 // -----------------------------------------------------------------------------
-//  DESCRIPTION:
-//
-//  Describe me here please...
-//
-// -----------------------------------------------------------------------------
-#include "icqoscar.h"
 
+#include "icqoscar.h"
 
 struct gateway_index
 {
@@ -290,10 +285,9 @@ DWORD GetGatewayIndex(HANDLE hConn)
 {
 	icq_lock l(gatewayMutex);
 
-	for (int i = 0; i < gatewayCount; i++) {
+	for (int i = 0; i < gatewayCount; i++)
 		if (hConn == gateways[i].hConn)
 			return gateways[i].dwIndex;
-	}
 
 	return 1; // this is default
 }
@@ -344,10 +338,6 @@ void CIcqProto::AddToContactsCache(MCONTACT hContact, DWORD dwUin, const char *s
 {
 	if (!hContact || (!dwUin && !szUid))
 		return;
-
-#ifdef _DEBUG
-	debugLogA("Adding contact to cache: %u%s%s", dwUin, dwUin ? "" : " - ", dwUin ? "" : szUid);
-#endif
 
 	icq_contacts_cache *cache_item = (icq_contacts_cache*)SAFE_MALLOC(sizeof(icq_contacts_cache));
 	cache_item->hContact = hContact;
@@ -419,9 +409,6 @@ void CIcqProto::DeleteFromContactsCache(MCONTACT hContact)
 		icq_contacts_cache *cache_item = contactsCache[i];
 
 		if (cache_item->hContact == hContact) {
-#ifdef _DEBUG
-			debugLogA("Removing contact from cache: %u%s%s, position: %u", cache_item->dwUin, cache_item->dwUin ? "" : " - ", cache_item->dwUin ? "" : cache_item->szUid, i);
-#endif
 			contactsCache.remove(i);
 			// Release memory
 			SAFE_FREE((void**)&cache_item->szUid);
@@ -469,6 +456,8 @@ MCONTACT CIcqProto::HContactFromUIN(DWORD dwUin, int *Added)
 
 	//not present: add
 	if (Added) {
+		debugLogA("Attempt to create ICQ contact %u", dwUin);
+
 		hContact = (MCONTACT)CallService(MS_DB_CONTACT_ADD, 0, 0);
 		if (!hContact) {
 			debugLogA("Failed to create ICQ contact %u", dwUin);
@@ -497,7 +486,7 @@ MCONTACT CIcqProto::HContactFromUIN(DWORD dwUin, int *Added)
 		}
 		AddToContactsCache(hContact, dwUin, NULL);
 		*Added = 1;
-
+		debugLogA("ICQ contact %u created ok", dwUin);
 		return hContact;
 	}
 
@@ -507,7 +496,6 @@ MCONTACT CIcqProto::HContactFromUIN(DWORD dwUin, int *Added)
 
 	return INVALID_CONTACT_ID;
 }
-
 
 MCONTACT CIcqProto::HContactFromUID(DWORD dwUin, const char *szUid, int *Added)
 {
@@ -526,12 +514,11 @@ MCONTACT CIcqProto::HContactFromUID(DWORD dwUin, const char *szUid, int *Added)
 	while (hContact) {
 		DWORD dwContactUin;
 		uid_str szContactUid;
-
 		if (!getContactUid(hContact, &dwContactUin, &szContactUid)) {
 			if (!dwContactUin && !stricmpnull(szContactUid, szUid)) {
-				if (strcmpnull(szContactUid, szUid)) { // fix case in SN
+				if (strcmpnull(szContactUid, szUid)) // fix case in SN
 					setString(hContact, UNIQUEIDSETTING, szUid);
-				}
+
 				return hContact;
 			}
 		}
@@ -540,6 +527,8 @@ MCONTACT CIcqProto::HContactFromUID(DWORD dwUin, const char *szUid, int *Added)
 
 	//not present: add
 	if (Added) {
+		debugLogA("Attempt to create ICQ contact by string <%s>", szUid);
+
 		hContact = (MCONTACT)CallService(MS_DB_CONTACT_ADD, 0, 0);
 		CallService(MS_PROTO_ADDTOCONTACT, hContact, (LPARAM)m_szModuleName);
 
@@ -563,13 +552,12 @@ MCONTACT CIcqProto::HContactFromUID(DWORD dwUin, const char *szUid, int *Added)
 	return INVALID_CONTACT_ID;
 }
 
-
 MCONTACT CIcqProto::HContactFromAuthEvent(HANDLE hEvent)
 {
-	DBEVENTINFO dbei = { sizeof(dbei) };
 	DWORD body[3];
 
-	dbei.cbBlob = sizeof(DWORD)* 2;
+	DBEVENTINFO dbei = { sizeof(dbei) };
+	dbei.cbBlob = sizeof(DWORD) * 2;
 	dbei.pBlob = (PBYTE)&body;
 
 	if (db_event_get(hEvent, &dbei))
@@ -584,7 +572,7 @@ MCONTACT CIcqProto::HContactFromAuthEvent(HANDLE hEvent)
 	return DbGetAuthEventContact(&dbei);
 }
 
-char *NickFromHandle(MCONTACT hContact)
+char* NickFromHandle(MCONTACT hContact)
 {
 	if (hContact == INVALID_CONTACT_ID)
 		return null_strdup(Translate("<invalid>"));
@@ -592,7 +580,7 @@ char *NickFromHandle(MCONTACT hContact)
 	return null_strdup((char *)CallService(MS_CLIST_GETCONTACTDISPLAYNAME, hContact, 0));
 }
 
-char *NickFromHandleUtf(MCONTACT hContact)
+char* NickFromHandleUtf(MCONTACT hContact)
 {
 	if (hContact == INVALID_CONTACT_ID)
 		return ICQTranslateUtf(LPGEN("<invalid>"));
@@ -600,7 +588,7 @@ char *NickFromHandleUtf(MCONTACT hContact)
 	return tchar_to_utf8((TCHAR*)CallService(MS_CLIST_GETCONTACTDISPLAYNAME, hContact, GCDNF_TCHAR));
 }
 
-char *strUID(DWORD dwUIN, char *pszUID)
+char* strUID(DWORD dwUIN, char *pszUID)
 {
 	if (dwUIN && pszUID)
 		_ltoa(dwUIN, pszUID, 10);
@@ -743,7 +731,7 @@ void parseServerAddress(char* szServer, WORD* wPort)
 	szServer[i] = '\0';
 }
 
-char *DemangleXml(const char *string, int len)
+char* DemangleXml(const char *string, int len)
 {
 	char *szWork = (char*)SAFE_MALLOC(len + 1), *szChar = szWork;
 	int i;
@@ -779,7 +767,7 @@ char *DemangleXml(const char *string, int len)
 	return szWork;
 }
 
-char *MangleXml(const char *string, int len)
+char* MangleXml(const char *string, int len)
 {
 	int i, l = 1;
 	char *szWork, *szChar;
@@ -819,7 +807,7 @@ char *MangleXml(const char *string, int len)
 	return szWork;
 }
 
-char *EliminateHtml(const char *string, int len)
+char* EliminateHtml(const char *string, int len)
 {
 	char *tmp = (char*)SAFE_MALLOC(len + 1);
 	int i, j;
@@ -852,12 +840,13 @@ char *EliminateHtml(const char *string, int len)
 	return res;
 }
 
-char *ApplyEncoding(const char *string, const char *pszEncoding)
-{ // decode encoding to Utf-8
+char* ApplyEncoding(const char *string, const char *pszEncoding)
+{
+	// decode encoding to Utf-8
 	if (string && pszEncoding) { // we do only encodings known to icq5.1 // TODO: check if this is enough
-		if (!_strnicmp(pszEncoding, "utf-8", 5)) { // it is utf-8 encoded
+		if (!_strnicmp(pszEncoding, "utf-8", 5)) // it is utf-8 encoded
 			return null_strdup(string);
-		}
+
 		if (!_strnicmp(pszEncoding, "unicode-2-0", 11)) { // it is UCS-2 encoded
 			int wLen = strlennull((WCHAR*)string) + 1;
 			WCHAR *szStr = (WCHAR*)_alloca(wLen * 2);
@@ -867,13 +856,11 @@ char *ApplyEncoding(const char *string, const char *pszEncoding)
 
 			return make_utf8_string(szStr);
 		}
-		if (!_strnicmp(pszEncoding, "iso-8859-1", 10)) { // we use "Latin I" instead - it does the job
+		if (!_strnicmp(pszEncoding, "iso-8859-1", 10)) // we use "Latin I" instead - it does the job
 			return ansi_to_utf8_codepage(string, 1252);
-		}
 	}
-	if (string) { // consider it CP_ACP
+	if (string) // consider it CP_ACP
 		return ansi_to_utf8(string);
-	}
 
 	return NULL;
 }
@@ -1075,9 +1062,9 @@ void __cdecl CIcqProto::SetStatusNoteThread(void *pDelay)
 
 					m_ratesMutex->Leave();
 					cookieMutex->Leave();
-#ifdef _DEBUG
+
 					debugLogA("Rates: SetStatusNote delayed %dms", nDelay);
-#endif
+
 					SleepEx(nDelay, TRUE); // do not keep things locked during sleep
 					cookieMutex->Enter();
 					m_ratesMutex->Enter();
@@ -1106,9 +1093,9 @@ void __cdecl CIcqProto::SetStatusNoteThread(void *pDelay)
 
 					m_ratesMutex->Leave();
 					cookieMutex->Leave();
-#ifdef _DEBUG
+
 					debugLogA("Rates: SetStatusNote delayed %dms", nDelay);
-#endif
+
 					SleepEx(nDelay, TRUE); // do not keep things locked during sleep
 					cookieMutex->Enter();
 					m_ratesMutex->Enter();
@@ -1681,8 +1668,7 @@ char* CIcqProto::GetUserPassword(BOOL bAlways)
 		return m_szPassword;
 
 	if (GetUserStoredPassword(m_szPassword, sizeof(m_szPassword))) {
-		m_bRememberPwd = TRUE;
-
+		m_bRememberPwd = true;
 		return m_szPassword;
 	}
 

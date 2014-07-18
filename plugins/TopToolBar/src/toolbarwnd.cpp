@@ -248,20 +248,20 @@ INT_PTR OnEventFire(WPARAM wParam, LPARAM lParam)
 	if (parent == NULL) // no clist, no buttons
 		return -1;
 
-	WNDCLASS wndclass = { 0 };
-	wndclass.lpfnWndProc   = TopToolBarProc;
-	wndclass.cbWndExtra    = sizeof(void*);
-	wndclass.hInstance     = hInst;
-	wndclass.hCursor       = LoadCursor(NULL, IDC_ARROW);
-	wndclass.hbrBackground = (HBRUSH)(COLOR_BTNFACE+1);
+	WNDCLASS wndclass = {0};
+	wndclass.lpfnWndProc = TopToolBarProc;
+	wndclass.cbWndExtra = sizeof(void *);
+	wndclass.hInstance = hInst;
+	wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wndclass.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
 	wndclass.lpszClassName = pluginname;
 	RegisterClass(&wndclass);
 
-	g_ctrl->pButtonList = (SortedList*)&Buttons;
+	g_ctrl->pButtonList = (SortedList *)&Buttons;
 	g_ctrl->hWnd = CreateWindow(pluginname, _T("Toolbar"),
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
 		0, 0, 0, g_ctrl->nLastHeight, parent, NULL, hInst, NULL);
-	SetWindowLongPtr(g_ctrl->hWnd, 0, (LPARAM)g_ctrl);
+	SetWindowLongPtr(g_ctrl->hWnd, 0, (LONG_PTR)g_ctrl);
 
 	LoadBackgroundOptions();
 

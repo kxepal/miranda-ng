@@ -1,7 +1,7 @@
 ﻿;============================================================
-;  File: miranda32.exe
+;  File: miranda32/64.exe
 ;  Module: Miranda Core
-;  Versions: 0.8.0 - 0.94.6
+;  Version: 0.95.2
 ;============================================================
 [Enter account name (for example, My Google)]
 Вкажіть ім'я облікового запису (напр., Google)
@@ -14,7 +14,7 @@
 [Add %s]
 Додати %s
 [&Add]
-Додати
+&Додати
 [&Cancel]
 &Скасувати
 [Send "You were added"]
@@ -49,15 +49,15 @@
 Налаштування показу контактів
 [Instead of displaying contacts by their nickname,\ndrag to choose another order:]
 Виберіть інший пріоритет показу імен (замість показу ніків):
-[Miranda NG Profile Manager]
+[Miranda NG profile manager]
 Менеджер профілів
 [&Run]
 &Запуск
 [&Exit]
 &Вихід
-[Start in Service Mode with]
+[Start in service mode with]
 Запуск у сервісному режимі з
-[Find/Add contacts]
+[Find/add contacts]
 Знайти/додати контакт
 [Search:]
 Знайти:
@@ -83,7 +83,7 @@
 Додати до списку
 [Custom]
 Вказане
-[Find/Add contacts\nHere you can add contacts to your contact list]
+[Find/add contacts\nHere you can add contacts to your contact list]
 Знайти/додати контакт\nТут можна додати контакти до свого списку контактів
 [Options\nConfigure your Miranda NG options]
 Налаштування\nНалаштуйте Miranda NG згідно своїх вподобань
@@ -159,7 +159,7 @@
 Писати в
 [File]
 Файл
-[Run program when Miranda NG starts (eg tail -f, dbgview, etc.):]
+[Run program when Miranda NG starts (e.g., tail -f, dbgview, etc.):]
 Запустити програму при запуску Miranda (напр., tail -f, dbgview):
 [Run now]
 Запустити
@@ -279,12 +279,12 @@
 наприклад, "Робочий"
 [You can select a different profile driver from the default, it may offer more features or abilities, if in doubt use the default.]
 Виберіть драйвер бази даних. Інший драйвер може мати більше функцій та можливостей. Якщо не впевнені, користуйтеся стандартним драйвером.
-[e.g., Miranda Database]
-напр., Miranda Database
+[e.g., dbx mmap]
+наприклад, dbx_mmap
 [Driver]
 Драйвер
 [Problem: Unable to find any database drivers, this means you cannot create a new profile, you need to get dbx_mmap.dll]
-Проблема: Не знайдено жодного драйвера бази даних. Неможливо створити новий профиль, вам необхідний файл dbx_mmap.dll
+Проблема: Не знайдено жодного драйвера бази даних. Неможливо створити новий профіль, вам необхідний файл dbx_mmap.dll
 [Download more plugins]
 Завантажити більше плагінів
 [Description:]
@@ -421,11 +421,11 @@ Miranda NG перезапускається.\nЗачекайте...
 Шрифт для заголовків основних розділів чи текстових елементів.
 [Normal text:]
 Звичайний текст:
-[This font is used to display most text element or section bodies.]
+[This font is used to display most text elements or section bodies.]
 Шрифт для більшості текстових елементів чи розділів.
 [Minor notes:]
 Дрібний текст:
-[This font is used to display various addtional notes.]
+[This font is used to display various additional notes.]
 Шрифт для додаткового тексту, приміток.
 [Welcome to Miranda NG's account manager!\nHere you can set up your IM accounts.\n\nSelect an account from the list on the left to see the available options. Alternatively, just click on the Plus sign underneath the list to set up a new IM account.]
 Вітаємо у менеджері облікових записів програми Miranda NG!\nТут можна налаштувати свої облікові записи мереж обміну миттєвими повідомленнями.\n\nЩоб побачити доступні можливості, виберіть обліковий запис зі списку ліворуч. Щоб створити новий обліковий запис, натисніть значок "+" унизу.
@@ -449,6 +449,64 @@ Miranda NG перезапускається.\nЗачекайте...
 * буде показано тільки перші %d значків
 [You can group/ungroup icons by selecting them (CTRL+left click) and using the popup menu (right click)]
 Значки можна згрупувати/розгрупувати, виділивши їх (Ctrl+ЛКМ) та викликавши меню правою кнопкою миші.
+[Add to existing metacontact]
+Додати до метаконтакту
+[Please select a metacontact:]
+Виберіть метаконтакт:
+[Sort alphabetically]
+За абеткою
+[Editing]
+Редагування
+[Information]
+Інформація
+[Contacts]
+Контакти
+[&Remove]
+&Очистити
+[&Set as default]
+&Стандартний
+[Move &up]
+&Вгору
+[Move &down]
+&Вниз
+[Send &offline]
+В офлайн
+[Context menu]
+Контекстне меню
+[Use contact's unique ID]
+UIN, E-mail тощо
+[Use contact's display name]
+Використовувати ім'я
+[Contact labels]
+Мітки контактів
+[When I click on a sub in the popup menu...]
+При клацанні по контакту в меню субконтактів...
+[Set default and open message window]
+Відкрити вікно повідомлень
+[Show subcontact context menu]
+Показувати контекстне меню
+[Show user information]
+Показувати дані користувача
+[Contact list]
+Список контактів
+[Display subcontact nickname]
+Використовувати нік субконтакта
+[Display subcontact display name]
+Використовувати коротке ім'я
+[Lock name to first contact]
+Фіксувати ім'я
+[Current language:]
+Мова інтерфейсу:
+[Last modified using:]
+Перевірено на версії:
+[Date:]
+Дата:
+[Locale:]
+Мова:
+[Reload langpack]
+Перезавантажити мовний пакет
+[Download more language packs]
+Завантажити додаткові переклади
 [Tray]
 Трей
 [&Hide/Show]
@@ -460,9 +518,9 @@ Miranda NG перезапускається.\nЗачекайте...
 [&New group]
 &Створити групу
 [&Hide offline users]
-С&ховати від'єднаних
+С&ховати відключених
 [Hide &offline users out here]
-Сховати &від'єднаних поза групою
+Сховати &відключених поза групою
 [Hide &empty groups]
 Сховати порожні групи
 [Disable &groups]
@@ -474,7 +532,7 @@ Miranda NG перезапускається.\nЗачекайте...
 [&New subgroup]
 С&творити підгрупу
 [&Hide offline users in here]
-Сховати &від'єднаних у групі
+Сховати &відключених у групі
 [&Rename group]
 &Перейменувати групу
 [&Delete group]
@@ -550,7 +608,7 @@ Miranda NG перезапускається.\nЗачекайте...
 [&Send]
 Над&іслати
 [&Emoticons]
-Смайл
+Смайли
 [&Bold]
 &Жирний
 [&Italic]
@@ -581,8 +639,6 @@ Miranda NG перезапускається.\nЗачекайте...
 Зміни теми
 [Status changes]
 Зміни статусів
-[Information]
-Інформацію
 [Disconnects]
 Відключення
 [User kicks]
@@ -606,7 +662,7 @@ Miranda NG перезапускається.\nЗачекайте...
 [Trim to (KB)]
 Обрізати до (КБ)
 [Words to highlight (wildcards allowed)]
-Підсвічувати слова (дозволені шаблони заміни)
+Підсвічувати слова (дозволені маски)
 [Enable logging to disk]
 Записувати журнал на диск
 [Log directory]
@@ -638,7 +694,7 @@ Miranda NG перезапускається.\nЗачекайте...
 [&Message]
 Повідомлення
 [Clear lo&g]
-Очистити журнал
+&Очистити журнал
 [Word lookup]
 Пошук слова
 [Link]
@@ -670,7 +726,7 @@ Miranda NG перезапускається.\nЗачекайте...
 [&Open at this position]
 Від&крити на цій позиції
 [Hide offline users]
-Сховати від'єднаних
+Сховати відключених
 [Hide empty groups]
 Сховати порожні групи
 [Disable groups]
@@ -688,7 +744,7 @@ Miranda NG перезапускається.\nЗачекайте...
 [Always show status in tooltip]
 Завжди показувати статус у підказці
 [Disable icon blinking]
-Вимкнути миготіння
+Вимкнути блимання
 [ms delay]
 Затримка (мс)
 [icon when statuses differ]
@@ -701,8 +757,6 @@ Miranda NG перезапускається.\nЗачекайте...
 Декілька значків
 [Only when statuses differ]
 при різних статусах
-[Contact list]
-Список контактів
 [System tray icon]
 Значок у треї
 [System tray icon when using multiple protocols]
@@ -730,7 +784,7 @@ Miranda NG перезапускається.\nЗачекайте...
 [Pin to desktop]
 Прикріпити до столу
 [Hide contact list after it has been idle for]
-Сховати список після неактивності:
+Ховати список після неактивності:
 [seconds]
 секунд
 [Automatically resize window to height of list]
@@ -758,7 +812,7 @@ Miranda NG перезапускається.\nЗачекайте...
 [Items]
 Елементи
 [Show divider between online and offline contacts]
-Розділяти користувачів у мережі та від'єднаних
+Розділяти користувачів у мережі та відключених
 [Hot track items as mouse passes over]
 Підсвітка під курсором миші
 [Disable drag and drop of items]
@@ -772,7 +826,7 @@ Miranda NG перезапускається.\nЗачекайте...
 [Dim idle contacts]
 Затемняти неактивних користувачів
 ['Hide offline' means to hide:]
-Сховати від'єднаних = сховати:
+Сховати відключених - сховати:
 [Groups]
 Групи
 [Draw a line alongside group names]
@@ -830,9 +884,9 @@ Miranda NG перезапускається.\nЗачекайте...
 [Use Windows colors]
 Кольори Windows
 [Status bar]
-Панель статусу
+Панель статусів
 [Show status bar]
-Показувати панель статусу
+Показувати панель статусів
 [Show icons]
 Показувати значки
 [Show protocol names]
@@ -864,25 +918,25 @@ Miranda NG перезапускається.\nЗачекайте...
 [&Status]
 Статус
 [&Offline\tCtrl+0]
-Не в мережі\tCtrl+0
+Не в м&ережі\tCtrl+0
 [On&line\tCtrl+1]
-В мережі\tCtrl+1
+В &мережі\tCtrl+1
 [&Away\tCtrl+2]
-Відсутній\tCtrl+2
+&Відсутній\tCtrl+2
 [&NA\tCtrl+3]
-Недос&тупний\tCtrl+3
+Не&доступний\tCtrl+3
 [Occ&upied\tCtrl+4]
-Зайн&ятий\tCtrl+4
+&Зайнятий\tCtrl+4
 [&DND\tCtrl+5]
-Не турбу&вати\tCtrl+5
+Не т&урбувати\tCtrl+5
 [&Free for chat\tCtrl+6]
-Готовий до ч&ату\tCtrl+6
+&Готовий до чату\tCtrl+6
 [&Invisible\tCtrl+7]
-Невидимий\tCtrl+7
+&Невидимий\tCtrl+7
 [On the &phone\tCtrl+8]
 &Телефоную\tCtrl+8
 [Out to &lunch\tCtrl+9]
-Обі&даю\tCtrl+9
+Обід&аю\tCtrl+9
 [Send file(s)]
 Надіслати файл(и)
 [To:]
@@ -903,8 +957,6 @@ Miranda NG перезапускається.\nЗачекайте...
 Відхилити
 [From:]
 Від:
-[Date:]
-Дата:
 [Files:]
 Файли:
 [Save to:]
@@ -1054,7 +1106,7 @@ Miranda NG перезапускається.\nЗачекайте...
 [Show character count]
 Показувати лічильник символів
 [Show warning when message has not been received after]
-Сповіщати, якщо повідомлення не отримане протягом
+Сповіщати, якщо повідомл. не вдалося надіслати протягом
 [Support CTRL+Up/Down in message area to show previously sent messages]
 Показувати попередні повідомлення у полі набору клавішами Ctrl+Вгору/Вниз
 [Delete temporary contacts when closing message window]
@@ -1083,8 +1135,14 @@ Miranda NG перезапускається.\nЗачекайте...
 Показувати імена
 [Show timestamp]
 Показувати час
+[Show seconds]
+Секунди
 [Show dates]
 Показувати дату
+[Show formatting]
+Показувати форматування
+[Load history events]
+Показувати історію
 [Load unread events only]
 Лише непереглянуті події
 [Load number of previous events]
@@ -1093,24 +1151,16 @@ Miranda NG перезапускається.\nЗачекайте...
 Події, отримані пізніше ніж
 [minutes old]
 хвилин тому
-[Show status changes]
-Показувати зміни статусів
-[Show seconds]
-Секунди
-[Load history events]
-Показувати історію
-[Show formatting]
-Показувати форматування
 [Send typing notifications to the following users when you are typing a message to them:]
 Сповіщати цих користувачів, коли ви друкуєте повідомлення для них:
 [Show typing notifications when a user is typing a message]
-Cповіщати, коли співрозмовник друкує повідомлення
+Сповіщати, коли співрозмовник друкує повідомлення
 [Update inactive message window icons when a user is typing]
 Оновлювати значок неактивного вікна, коли користувач друкує
 [Show typing notification when no message dialog is open]
-Cповіщати про друк, коли вікно повідомлень закрите
+Сповіщати про друк, коли вікно повідомлень закрите
 [Flash in the system tray and in the contact list]
-Миготінням у треї та списку контактів
+Блиманням у треї та списку контактів
 [Show balloon popup]
 Підказкою у треї
 [Save the window position for each contact]
@@ -1120,7 +1170,7 @@ Cповіщати про друк, коли вікно повідомлень з
 [Messaging:]
 Повідомлення:
 [&Open link]
-Відкрити в браузері
+&Відкрити в браузері
 [Paste and send]
 Вставити й надіслати
 [Delete]
@@ -1138,9 +1188,9 @@ Cповіщати про друк, коли вікно повідомлень з
 [Add phone number]
 Додати номер телефону
 [Enter country, area code and phone number:]
-Вкажіть країну, код міста і номер телефону
+Вкажіть країну, код міста і номер телефону:
 [Or enter a full international number:]
-Або вкажіть повний міжнародний номер
+Або вкажіть повний міжнародний номер:
 [Phone can receive SMS text messages]
 Телефон може отримувати SMS
 [Add e-mail address]
@@ -1292,11 +1342,11 @@ Cповіщати про друк, коли вікно повідомлень з
 [Send message by pressing the 'Enter' key twice]
 Надсилати подвійним натисканням Enter
 [Flash window when someone speaks]
-Мигання вікна, якщо є нове повідомлення
+Блимання вікна, якщо є нове повідомлення
 [Flash window when a word is highlighted]
-Мигання вікна, якщо є підсвічене повідомлення
+Блимання вікна, якщо є підсвічене повідомлення
 [Show list of users in the chat room]
-Показувати у кімнаті чату список користувачів
+Показувати в кімнаті чату список користувачів
 [Show button for sending messages]
 Показувати кнопку надсилання повідомлення
 [Show buttons for controlling the chat room]
@@ -1304,7 +1354,7 @@ Cповіщати про друк, коли вікно повідомлень з
 [Show buttons for formatting the text you are typing]
 Показувати кнопки форматування тексту
 [Show button menus when right clicking the buttons]
-Показувати меню кнопоки за натисненням правої кнопки миші
+Показувати меню кнопки за натисненням правою кнопкою миші
 [Show new windows cascaded]
 Розміщувати нові вікна каскадом
 [Save the size and position of chat rooms]
@@ -1316,7 +1366,7 @@ Cповіщати про друк, коли вікно повідомлень з
 [Do not pop up the window when joining a chat room]
 Не відкривати вікно чату при вході до кімнати
 [Toggle the visible state when double clicking in the contact list]
-Перемикати видимість подвійним клацанням у списку контактів
+Показувати та ховати вікно чату за подвійним клацанням у списку контактів
 [Show contact statuses if protocol supports them]
 Показувати статуси (якщо підтримується протоколом)
 [Display contact status icon before user role icon]
@@ -1326,7 +1376,7 @@ Cповіщати про друк, коли вікно повідомлень з
 [Only prefix with timestamp if it has changed]
 Показувати час, якщо він змінився
 [Timestamp has same color as the event]
-Часова мітка того ж кольору що й подія
+Часова мітка того ж кольору, що й подія
 [Indent the second line of a message]
 Відступ другого рядка повідомлення
 [Limit user names in the message log to 20 characters]
@@ -1336,13 +1386,13 @@ Cповіщати про друк, коли вікно повідомлень з
 [Strip colors from messages in the log]
 Заборонити кольори в журналі
 [Enable the 'event filter' for new rooms]
-Ввімкнути "Фільтр подій" для нових кімнат
+Увімкнути "Фільтр подій" для нових кімнат
 [Show topic changes]
 Зміни теми
 [Show users joining]
 Входи до чату
 [Show users disconnecting]
-Від'єднання користувачів
+Відключення користувачів
 [Show messages]
 Повідомлення
 [Show actions]
@@ -1364,7 +1414,7 @@ Cповіщати про друк, коли вікно повідомлень з
 [Show icon for users joining]
 Входи до чату
 [Show icon for users disconnecting]
-Від'єднання користувачів
+Відключення користувачів
 [Show icon for messages]
 Повідомлення
 [Show icon for actions]
@@ -1390,7 +1440,7 @@ Cповіщати про друк, коли вікно повідомлень з
 [Show icon in tray for users joining]
 Входи до чату
 [Show icon in tray for users disconnecting]
-Від'єднання користувачів
+Відключення користувачів
 [Show icon in tray for messages]
 Повідомлення
 [Show icon in tray for actions]
@@ -1416,7 +1466,7 @@ Cповіщати про друк, коли вікно повідомлень з
 [Show popup for users joining]
 Входи до чату
 [Show popup for users disconnecting]
-Від'єднання користувачів
+Відключення користувачів
 [Show popup for messages]
 Повідомлення
 [Show popup for actions]
@@ -1450,9 +1500,9 @@ Cповіщати про друк, коли вікно повідомлень з
 [Room settings]
 Параметри кімнати
 [Event filter disabled]
-Ввімкнути фільтр
+Вимкнути фільтр подій
 [Event filter enabled]
-Вимкнути фільтр
+Увімкнути фільтр подій
 [Hide nick list]
 Сховати список користувачів
 [Show nick list]
@@ -1486,7 +1536,7 @@ Cповіщати про друк, коли вікно повідомлень з
 [Leave (10x10)]
 Вийти (10x10)
 [Quit (10x10)]
-Від'єднатися (10x10)
+Відключитися (10x10)
 [Kick (10x10)]
 Стусани (10x10)
 [Nick change (10x10)]
@@ -1512,7 +1562,7 @@ Cповіщати про друк, коли вікно повідомлень з
 [Appearance of the message log]
 Вигляд журналу повідомлень
 [Default events to show in new chat rooms if the 'event filter' is enabled]
-Показувати у новому вікні, якщо "Фільтр подій" ввімкнений
+Показувати в новому вікні, якщо "Фільтр подій" увімкнений
 [Icons to display in the message log]
 Значки в журналі повідомлень
 [Icons to display in the tray]
@@ -1574,7 +1624,7 @@ Cповіщати про друк, коли вікно повідомлень з
 [Online contacts to whom you have a different visibility]
 Контакти зі зміненою видимістю (в мережі)
 [Offline contacts]
-Від'єднані контакти
+Відключені контакти
 [Contacts which are 'not on list']
 Контакти поза списком
 [Group member counts]
@@ -1582,7 +1632,7 @@ Cповіщати про друк, коли вікно повідомлень з
 [Dividers]
 Роздільники
 [Offline contacts to whom you have a different visibility]
-Контакти зі зміненою видимістю (від'єднані)
+Контакти зі зміненою видимістю (відключені)
 [Selected text]
 Виділений текст
 [Hottrack text]
@@ -1590,7 +1640,7 @@ Cповіщати про друк, коли вікно повідомлень з
 [Quicksearch text]
 Швидкий пошук
 [Not focused]
-Cписок неактивний
+Список неактивний
 [Offline]
 Не в мережі
 [Online]
@@ -1630,7 +1680,7 @@ Cписок неактивний
 [&File]
 Ф&айл
 [File &transfers...]
-&Передача файлів
+&Передача файлів...
 [Incoming]
 Вхідні
 [Complete]
@@ -1668,7 +1718,7 @@ Cписок неактивний
 [Request sent, waiting for acceptance...]
 Запит надіслано, очікування підтвердження...
 [Waiting for connection...]
-Очікування з'єднання
+Очікування з'єднання...
 [Unable to initiate transfer.]
 Неможливо розпочати передачу.
 [Contact menu]
@@ -1862,7 +1912,7 @@ URL від %s
 [Owner]
 Власник
 [View/change my &details...]
-Особисті дані
+Особисті дані...
 [%s is online]
 %s в мережі
 [Add contact]
@@ -1878,7 +1928,7 @@ URL від %s
 [User has left]
 Виходи з чату
 [User has disconnected]
-Користувач від'єднався
+Користувач відключився
 [User kicked ...]
 Стусани
 [User is now known as ...]
@@ -1928,15 +1978,15 @@ URL від %s
 [%s has joined]
 %s увійшов
 [You have joined %s]
-Ви приєдналися %s
+Ви ввійшли до %s
 [%s has left]
 %s вийшов
 [%s has disconnected]
-%s від'єднався
+%s відключився
 [%s is now known as %s]
 %s змінив ім'я на %s
 [You are now known as %s]
-Ви відомі як %s
+Ви змінили ім'я на %s
 [%s kicked %s]
 %s вигнав %s
 [Notice from %s: ]
@@ -1950,7 +2000,7 @@ URL від %s
 [%s enables '%s' status for %s]
 %s вмикає статус '%s' для %s
 [%s disables '%s' status for %s]
-%s вимикає статус "%s" для %s
+%s вимикає статус '%s' для %s
 [<invalid>]
 <неправильно>
 [%s wants your attention in %s]
@@ -1978,7 +2028,7 @@ URL від %s
 [%s has left (%s)]
 %s вийшов (%s)
 [%s has disconnected (%s)]
-%s від'єднався (%s)
+%s відключився (%s)
 [%s kicked %s (%s)]
 %s вигнав %s (%s)
 [Notice from %s: %s]
@@ -1988,7 +2038,7 @@ URL від %s
 [The topic is '%s' (set by %s)]
 Тема %s (встановив %s)
 [Custom status]
-xСтатус
+хСтатус
 [%s (locked)]
 %s (заблокований)
 [Status menu]
@@ -2012,7 +2062,7 @@ xСтатус
 [FirstName]
 Ім'я
 [E-mail]
-Пошта 
+Пошта
 [LastName]
 Прізвище
 [Username]
@@ -2149,8 +2199,8 @@ Miranda не може відкрити цей профіль
 Усі мережі
 [Handle]
 Назва
-[&Find/Add contacts...]
-Зн&айти/додати контакти
+[&Find/add contacts...]
+Зн&айти/додати контакти...
 [Could not start a search on '%s', there was a problem - is %s connected?]
 Не можу запустити пошук у мережі %s. Перевірте з'єднання з %s.
 [Could not search on any of the protocols, are you online?]
@@ -2203,8 +2253,106 @@ Miranda не може відкрити цей профіль
 Набори значків
 [** All contacts **]
 ** Усі контакти **
-[Contacts]
-Контакти
+[(incompatible)]
+(несумісний)
+[Unknown]
+Невідомо
+[built-in]
+вбудований
+[Languages]
+Локалізації
+[You are going to remove all the contacts associated with this metacontact.\nThis will delete the metacontact.\n\nProceed anyway?]
+Ви збираєтеся очистити всі контакти цього метаконтакту.\nМетаконтакт буде видалено.\n\nПродовжити?
+[Either there is no metacontact in the database (in this case you should first convert a contact into one)\nor there is none that can host this contact.\nAnother solution could be to convert this contact into a new metacontact.\n\nConvert this contact into a new metacontact?]
+У базі ще немає жодного метаконтакту (потрібно спочатку зробити простий контакт метаконтактом).\nЦей контакт також можна конвертувати у новий метаконтакт.\n\nКонвертувати цей контакт у новий метаконтакт?
+[This contact is a metacontact.\nYou can't add a metacontact to another metacontact.\n\nPlease choose another.]
+Це метаконтакт.\nНе можна додати метаконтакт у ще один метаконтакт.\n\nБудь ласка, виберіть інший.
+[Metacontact conflict]
+Конфлікт метаконтактів
+[This contact is already associated to a metacontact.\nYou cannot add a contact to multiple metacontacts.]
+Цей контакт пов'язаний з метаконтактом.\nНе можна додати контакт у декілька метаконтактів.
+[Multiple metacontacts]
+Безліч метаконтактів
+[No suitable metacontact found]
+Не знайдено відповідного метаконтакту
+[a contact]
+контакт
+[Adding %s...]
+Додавання %s...
+[Please select a metacontact]
+Виберіть метаконтакт
+[No metacontact selected]
+Метаконтакт не вибрано
+[Assignment to the metacontact failed.]
+Не вдалося додати до метаконтакту.
+[Assignment failure]
+Невдале призначення
+[Protocol]
+Протокол
+[Send offline]
+Надсилати в офлайн
+[Send &online]
+В &онлайн
+[Delete metacontact?]
+Видалити метаконтакт?
+[Toggle off]
+Вимкнути
+[Toggle on]
+Ввімкнути
+[Convert to metacontact]
+Зробити метаконтактом
+[Add to existing]
+Додати
+[Edit]
+Редагувати
+[Set to default]
+За замовчанням
+[There was a problem in assigning the contact to the metacontact]
+Виявлена проблема додавання контакту до метаконтакту
+[This will remove the metacontact permanently.\n\nProceed anyway?]
+Видалення метаконтакту.\n\nПродовжити?
+[Are you sure?]
+Ви впевнені?
+[Remove from metacontact]
+Видалити з метаконтакту
+[Toggle metacontacts off]
+Вимкнути метаконтакти
+[Toggle metacontacts on]
+Ввімкнути метаконтакти
+[Add to existing metacontact...]
+Додати до метаконтакту...
+[Edit metacontact...]
+Змінити метаконтакт...
+[Set as metacontact default]
+Метаконтакт за замовчанням
+[Delete metacontact]
+Видалити метаконтакт
+[Subcontacts]
+Субконтакти
+[Metacontacts]
+Метаконтакти
+[No online contacts found.]
+Не знайдено контактів у мережі.
+[Sender]
+Відправник
+[Could not retrieve contact protocol]
+Не можу визначити протокол контакту
+[Assignment error]
+Помилка призначення
+[Could not get unique ID of contact]
+Не можу отримати унікальний ID контакту
+[Contact is 'not on list' - please add the contact to your contact list before assigning.]
+Контакт поза списком. Будь ласка, додайте контакт до списку перед призначенням.
+[Metacontact is full]
+Метаконтакт повний
+[Could not write contact protocol to metacontact]
+Помилка запису протоколу контакту в метаконтакт
+[Could not write unique ID of contact to metacontact]
+Помилка запису унікального ID контакту в метаконтакт
+[Could not write nickname of contact to metacontact]
+Не можу записати нік контакту в метаконтакт
+[Standard netlib log]
+Стандартний журнал netlib
 [No times]
 Без часу
 [Standard hh:mm:ss times]
@@ -2219,8 +2367,8 @@ Miranda не може відкрити цей профіль
 Вказати шлях до файлу журналу
 [Select program to be run]
 Вибрати програму для запуску
-[Standard netlib log]
-Стандартний журнал netlib
+[<mixed>]
+<різні>
 [<All connections>]
 <Усі з'єднання>
 [Network]
@@ -2240,7 +2388,7 @@ Miranda не може відкрити цей профіль
 [Miranda NG options]
 Налаштування Miranda NG
 [&Options...]
-&Налаштування
+&Налаштування...
 [Core plugin '%s' cannot be loaded or missing. Miranda will exit now]
 Не вдалося завантажити модуль ядра "%s" (можливо він відсутній). Программа змушена завершити работу.
 [Fatal error]
@@ -2251,7 +2399,7 @@ Miranda не може відкрити цей профіль
 "%s" вимкнений. Ввімкнути?
 [Re-enable Miranda plugin?]
 Ввімкнути плагін?
-[Unable to load plugin in Service Mode!]
+[Unable to load plugin in service mode!]
 Неможливо запустити плагін у сервісному режимі!
 [Unable to start any of the installed contact list plugins, I even ignored your preferences for which contact list couldn't load any.]
 Неможливо завантажити жоден встановлений плагін списку контактів. Навіть ігноруючи ваші налаштування, Miranda не може завантажити список контактів.
@@ -2287,16 +2435,12 @@ Miranda не може відкрити цей профіль
 Обліковий запис вимкнено. Активуйте його для доступу до налаштувань.
 [New account]
 Новий облік. запис
-[Edit]
-Редагувати
 [Remove account]
 Видалити
 [Configure...]
-Налаштувати
+Налаштувати...
 [Upgrade account]
 Оновити обліковий запис
-[Protocol]
-Протокол
 [Account ID]
 ID облікового запису
 [<unknown>]
@@ -2402,7 +2546,7 @@ ANSI-плагін
 [Grant authorization]
 Авторизувати
 [Revoke authorization]
-Скасувати авторизацію
+Відкликати авторизацію
 [Always visible]
 Завжди видимий
 [Always invisible]
@@ -2439,8 +2583,6 @@ ANSI-плагін
 <не вказано>
 [Unspecified]
 <не вказано>
-[Unknown]
-Невідомо
 [Afghanistan]
 Афганістан
 [Aland Islands]

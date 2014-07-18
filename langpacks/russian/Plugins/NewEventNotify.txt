@@ -83,6 +83,10 @@
 Вас добавили
 [Requests your authorization]
 Запрос вашей авторизации
+[SMS Message]
+SMS сообщение
+[SMS Confirmation]
+SMS подтверждение
 [Unknown Event]
 Неизвестное событие
 [Notify of new events]
@@ -110,4 +114,4 @@
 [Plugin Test]
 Тест плагина
 [[b]Number of new message(s): %d[/b]\n]
-[b]Количество новых сообщений: %d[/b]\n
+\[b]Количество новых сообщений: %d[/b]\n

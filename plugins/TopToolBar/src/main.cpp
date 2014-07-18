@@ -4,7 +4,7 @@
 HINSTANCE hInst;
 int hLangpack;
 
-PLUGININFOEX pluginInfo  =
+PLUGININFOEX pluginInfo =
 {
 	sizeof(PLUGININFOEX),
 	__PLUGIN_NAME,
@@ -19,7 +19,7 @@ PLUGININFOEX pluginInfo  =
 	{0xf593c752, 0x51d8, 0x4d46, {0xba, 0x27, 0x37, 0x57, 0x79, 0x53, 0xf5, 0x5c}}
 };
 
-extern "C" __declspec(dllexport) PLUGININFOEX* MirandaPluginInfoEx(DWORD mirandaVersion)
+extern "C" __declspec(dllexport) PLUGININFOEX *MirandaPluginInfoEx(DWORD mirandaVersion)
 {
 	return &pluginInfo;
 }

@@ -136,8 +136,6 @@
 
 [Execute task for specified contacts]
 
-[OK]
-ОК
 [Cancel]
 Отказ
 ;file \plugins\BasicHistory\src\BasicHistory.cpp
@@ -258,7 +256,7 @@
 [Authorization request]
 Молба за упълномощаване
 [You were added]
-
+Вие бяхте добавен
 [Contacts received]
 
 [SMTP Simple Email]
@@ -300,7 +298,7 @@ SMS съобщение
 [Window background]
 
 [Contact list background]
-
+Фон на списъка с контакти
 [Open global history]
 
 [Find]
@@ -333,7 +331,7 @@ SMS съобщение
 Входящи събития
 [Outgoing events]
 Изходящи събития
-[File do not exist. Enter correct file path.]
+[File does not exist. Enter correct file path.]
 
 [Invalid file]
 
@@ -441,7 +439,7 @@ SMS съобщение
 
 [Path to file]
 
-[FTP path must contain '/' instead '\' and start with '/'.]
+[FTP path must contain '/' instead '\\' and start with '/'.]
 
 [FTP path cannot contain <date> in import task.]
 

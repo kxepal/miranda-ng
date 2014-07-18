@@ -48,7 +48,7 @@
 [Preview]
 Тест
 [Alarm]
-Напоминание 
+Напоминание
 [Cancel]
 Отмена
 [Title:]
@@ -106,13 +106,15 @@
 [&Suspend]
 &Отложить
 [&Edit...]
-&Изменить
+&Изменить...
 [&Delete]
 &Удалить
 [&Options...]
 &Настройки...
 [&New alarm...]
 Новое напоминание...
+[Unknown command issued: "%s"]
+Неизвестная команда: "%s"
 [Set alarm]
 Дать напоминание
 [Example alarm]
@@ -137,6 +139,10 @@
 Фон
 [Window]
 Окно
+[%dh %dm]
+%dчас(ов) %dмин
+[%dm]
+%dмин
 [Hide reminders]
 Скрыть напоминания
 [Show reminders]

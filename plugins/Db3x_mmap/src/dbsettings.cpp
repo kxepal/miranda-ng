@@ -45,6 +45,17 @@ BOOL CDb3Mmap::IsSettingEncrypted(LPCSTR szModule, LPCSTR szSetting)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
+static bool ValidLookupName(LPCSTR szModule, LPCSTR szSetting)
+{
+	if (!strcmp(szModule, META_PROTO))
+		return strcmp(szSetting, "IsSubcontact") && strcmp(szSetting, "ParentMetaID");
+
+	if (!strcmp(szModule, "Ignore"))
+		return false;
+
+	return true;
+}
+
 int CDb3Mmap::GetContactSettingWorker(MCONTACT contactID, LPCSTR szModule, LPCSTR szSetting, DBVARIANT *dbv, int isStatic)
 {																											  
 	if (szSetting == NULL || szModule == NULL)
@@ -68,6 +79,7 @@ int CDb3Mmap::GetContactSettingWorker(MCONTACT contactID, LPCSTR szModule, LPCST
 
 	mir_cslock lck(m_csDbAccess);
 
+LBL_Seek:
 	char *szCachedSettingName = m_cache->GetCachedSetting(szModule, szSetting, moduleNameLen, settingNameLen);
 	log3("get [%08p] %s (%p)", hContact, szCachedSettingName, szCachedSettingName);
 
@@ -105,8 +117,10 @@ int CDb3Mmap::GetContactSettingWorker(MCONTACT contactID, LPCSTR szModule, LPCST
 	if (szCachedSettingName[-1] != 0)
 		return 1;
 
+	DBCachedContact *cc;
+	DWORD ofsContact = GetContactOffset(contactID, &cc);
+
 	DWORD ofsModuleName = GetModuleNameOfs(szModule);
-	DWORD ofsContact = GetContactOffset(contactID);
 
 	DBContact dbc = *(DBContact*)DBRead(ofsContact,sizeof(DBContact),NULL);
 	if (dbc.signature != DBCONTACT_SIGNATURE)
@@ -216,6 +230,16 @@ int CDb3Mmap::GetContactSettingWorker(MCONTACT contactID, LPCSTR szModule, LPCST
 			NeedBytes(3);
 			MoveAlong(1 + GetSettingValueLength(pBlob));
 			NeedBytes(1);
+		}
+	}
+
+	// try to get the missing mc setting from the active sub
+	if (cc && cc->IsMeta() && ValidLookupName(szModule, szSetting)) {
+		if (contactID = db_mc_getDefault(contactID)) {
+			if (szModule = GetContactProto(contactID)) {
+				moduleNameLen = (int)strlen(szModule);
+				goto LBL_Seek;
+			}
 		}
 	}
 

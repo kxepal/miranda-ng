@@ -135,15 +135,14 @@ bool CAimProto::wait_conn(HANDLE& hConn, HANDLE& hEvent, unsigned short service)
 {
 	if (m_iStatus == ID_STATUS_OFFLINE) 
 		return false;
-
-	EnterCriticalSection(&connMutex);
-	if (hConn == NULL && hServerConn) 
 	{
-		debugLogA("Starting Connection.");
-		hConn = (HANDLE)1;    //set so no additional service request attempts are made while aim is still processing the request
-		aim_new_service_request(hServerConn, seqno, service) ;//general service connection!
+		mir_cslock lck(connMutex);
+		if (hConn == NULL && hServerConn) {
+			debugLogA("Starting Connection.");
+			hConn = (HANDLE)1;    //set so no additional service request attempts are made while aim is still processing the request
+			aim_new_service_request(hServerConn, seqno, service);//general service connection!
+		}
 	}
-	LeaveCriticalSection(&connMutex);
 
 	if (WaitForSingleObjectEx(hEvent, 10000, TRUE) != WAIT_OBJECT_0)
 		return false;
@@ -197,7 +196,7 @@ MCONTACT CAimProto::contact_from_sn(const char* sn, bool addIfNeeded, bool tempo
 	if (addIfNeeded) {
 		MCONTACT hContact = (MCONTACT)CallService(MS_DB_CONTACT_ADD, 0, 0);
 		if (hContact) {
-			if (CallService(MS_PROTO_ADDTOCONTACT, (WPARAM) hContact, (LPARAM) m_szModuleName) == 0) {
+			if (CallService(MS_PROTO_ADDTOCONTACT, hContact, (LPARAM)m_szModuleName) == 0) {
 				setString(hContact, AIM_KEY_SN, norm_sn);
 				setString(hContact, AIM_KEY_NK, sn);
 				debugLogA("Adding contact %s to client side list.",norm_sn);
@@ -236,9 +235,7 @@ void CAimProto::update_server_group(const char* group, unsigned short group_id)
 
 void CAimProto::add_contact_to_group(MCONTACT hContact, const char* new_group)
 {
-	if (new_group == NULL) return;
-
-	if (strcmp(new_group, "MetaContacts Hidden Group") == 0)
+	if (new_group == NULL)
 		return;
 
 	unsigned short old_group_id = getGroupId(hContact, 1);	

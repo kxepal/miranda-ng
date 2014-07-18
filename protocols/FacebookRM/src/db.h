@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FACEBOOK_KEY_SECOND_NAME			"SecondName"
 #define FACEBOOK_KEY_LAST_NAME				"LastName"
 #define FACEBOOK_KEY_NICK					"Nick"
+#define FACEBOOK_KEY_USERNAME				"Username"
 #define FACEBOOK_KEY_PASS					"Password"
 #define FACEBOOK_KEY_DEVICE_ID				"DeviceID"
 #define FACEBOOK_KEY_AV_URL					"AvatarURL"
@@ -54,12 +55,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FACEBOOK_KEY_LOAD_PAGES				"LoadPages"
 #define FACEBOOK_KEY_KEEP_UNREAD			"KeepUnread"	// (byte) 1 = don't mark messages as read on server (works globally or per contact)
 #define FACEBOOK_KEY_INBOX_ONLY				"InboxOnly"
+#define FACEBOOK_KEY_FILTER_ADS				"FilterAds"
+#define FACEBOOK_KEY_MESSAGES_ON_OPEN		"MessagesOnOpen"
+#define FACEBOOK_KEY_MESSAGES_ON_OPEN_COUNT	"MessagesOnOpenCount"
+#define FACEBOOK_KEY_HIDE_CHATS				"HideChats"
 
-#define FACEBOOK_KEY_POLL_RATE				"PollRate"		// [HIDDEN]
-#define FACEBOOK_KEY_TIMEOUTS_LIMIT			"TimeoutsLimit"	// [HIDDEN]
-#define FACEBOOK_KEY_DISABLE_LOGOUT			"DisableLogout"	// [HIDDEN]
-#define	FACEBOOK_KEY_LOCALE					"Locale"		// [HIDDEN] - en_US, cs_CZ, etc.
-#define FACEBOOK_KEY_LOCAL_TIMESTAMP_UNREAD	"UseLocalTimestampUnread" // [HIDDEN] - 1 = use local timestamp for offline messages
+#define FACEBOOK_KEY_POLL_RATE				"PollRate"					// [HIDDEN]
+#define FACEBOOK_KEY_TIMEOUTS_LIMIT			"TimeoutsLimit"				// [HIDDEN]
+#define FACEBOOK_KEY_DISABLE_LOGOUT			"DisableLogout"				// [HIDDEN]
+#define	FACEBOOK_KEY_LOCALE					"Locale"					// [HIDDEN] - en_US, cs_CZ, etc.
+#define FACEBOOK_KEY_LOCAL_TIMESTAMP_UNREAD	"UseLocalTimestampUnread"	// [HIDDEN] - 1 = use local timestamp for offline messages
+#define FACEBOOK_KEY_NASEEMS_SPAM_MODE		"NaseemsSpamMode"			// [HIDDEN] - 1 = don't load messages sent from other instances (e.g., browser) - known as "Naseem's spam mode"
+#define FACEBOOK_KEY_NAME_AS_NICK			"NameAsNick"				// [HIDDEN] - 0 = don't use real name as nickname, use nickname if possible
+#define FACEBOOK_KEY_OPEN_URL_BROWSER		"OpenUrlBrowser"			// [HIDDEN] - (unicode) = absolute path to browser to open url links with
 
 #define FACEBOOK_KEY_EVENT_NOTIFICATIONS_ENABLE     "EventNotificationsEnable"
 #define FACEBOOK_KEY_EVENT_FEEDS_ENABLE             "EventFeedsEnable"

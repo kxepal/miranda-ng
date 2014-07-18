@@ -21,14 +21,15 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+
 #include "commonheaders.h"
 
 static char  szMirandaPath[MAX_PATH];
-static char  szMirandaPathLower[MAX_PATH];
 static TCHAR szMirandaPathW[MAX_PATH];
-static TCHAR szMirandaPathWLower[MAX_PATH];
 
-static int pathIsAbsolute(const char *path)
+/////////////////////////////////////////////////////////////////////////////////////////
+
+MIR_CORE_DLL(int) PathIsAbsolute(const char *path)
 {
 	if (strlen(path) <= 2)
 		return 0;
@@ -37,30 +38,30 @@ static int pathIsAbsolute(const char *path)
 	return 0;
 }
 
-MIR_CORE_DLL(int) PathToRelative(const char *pSrc, char *pOut)
+MIR_CORE_DLL(int) PathToRelative(const char *pSrc, char *pOut, const char *pBase)
 {
-	if ( !pSrc || !strlen(pSrc) || strlen(pSrc)>MAX_PATH) return 0;
-	if ( !pathIsAbsolute(pSrc)) {
-		mir_snprintf(pOut, MAX_PATH, "%s", pSrc);
-		return (int)strlen(pOut);
+	if (!pSrc || !strlen(pSrc) || strlen(pSrc) > MAX_PATH) return 0;
+
+	if (!PathIsAbsolute(pSrc))
+		strncpy_s(pOut, MAX_PATH, pSrc, _TRUNCATE);
+	else {
+		if (pBase == NULL)
+			pBase = szMirandaPath;
+		char *szTmp = NEWSTR_ALLOCA(pSrc); strlwr(szTmp);
+		char *szBase = NEWSTR_ALLOCA(pBase); strlwr(szBase);
+
+		if (strstr(szTmp, szBase))
+			strncpy_s(pOut, MAX_PATH, pSrc + lstrlenA(szBase), _TRUNCATE);
+		else
+			strncpy_s(pOut, MAX_PATH, pSrc, _TRUNCATE);
 	}
 
-	char szTmp[MAX_PATH];
-	mir_snprintf(szTmp, SIZEOF(szTmp), "%s", pSrc);
-	_strlwr(szTmp);
-	if (strstr(szTmp, szMirandaPathLower)) {
-		mir_snprintf(pOut, MAX_PATH, "%s", pSrc+strlen(szMirandaPathLower));
-		return (int)strlen(pOut);
-	}
-	else {
-		mir_snprintf(pOut, MAX_PATH, "%s", pSrc);
-		return (int)strlen(pOut);
-	}
+	return (int)strlen(pOut);
 }
 
-MIR_CORE_DLL(int) PathToAbsolute(const char *pSrc, char *pOut, char* base)
+MIR_CORE_DLL(int) PathToAbsolute(const char *pSrc, char *pOut, const char *base)
 {
-	if ( !pSrc || !strlen(pSrc) || strlen(pSrc) > MAX_PATH) {
+	if (!pSrc || !strlen(pSrc) || strlen(pSrc) > MAX_PATH) {
 		*pOut = 0;
 		return 0;
 	}
@@ -69,7 +70,7 @@ MIR_CORE_DLL(int) PathToAbsolute(const char *pSrc, char *pOut, char* base)
 	if (pSrc[0] < ' ')
 		return mir_snprintf(pOut, MAX_PATH, "%s", pSrc);
 
-	if (pathIsAbsolute(pSrc))
+	if (PathIsAbsolute(pSrc))
 		return GetFullPathNameA(pSrc, MAX_PATH, pOut, NULL);
 
 	if (base == NULL)
@@ -78,14 +79,14 @@ MIR_CORE_DLL(int) PathToAbsolute(const char *pSrc, char *pOut, char* base)
 	if (pSrc[0] != '\\')
 		mir_snprintf(buf, MAX_PATH, "%s%s", base, pSrc);
 	else
-		mir_snprintf(buf, MAX_PATH, "%s%s", base, pSrc+1);
+		mir_snprintf(buf, MAX_PATH, "%s%s", base, pSrc + 1);
 
 	return GetFullPathNameA(buf, MAX_PATH, pOut, NULL);
 }
 
-MIR_CORE_DLL(void) CreatePathToFile(char* szFilePath)
+MIR_CORE_DLL(void) CreatePathToFile(char *szFilePath)
 {
-	char* pszLastBackslash = strrchr(szFilePath, '\\');
+	char *pszLastBackslash = strrchr(szFilePath, '\\');
 	if (pszLastBackslash == NULL)
 		return;
 
@@ -97,7 +98,7 @@ MIR_CORE_DLL(void) CreatePathToFile(char* szFilePath)
 MIR_CORE_DLL(int) CreateDirectoryTree(const char *szDir)
 {
 	DWORD dwAttributes;
-	char *pszLastBackslash, szTestDir[ MAX_PATH ];
+	char *pszLastBackslash, szTestDir[MAX_PATH];
 
 	lstrcpynA(szTestDir, szDir, SIZEOF(szTestDir));
 	if ((dwAttributes = GetFileAttributesA(szTestDir)) != INVALID_FILE_ATTRIBUTES && (dwAttributes & FILE_ATTRIBUTE_DIRECTORY))
@@ -113,9 +114,9 @@ MIR_CORE_DLL(int) CreateDirectoryTree(const char *szDir)
 	return (CreateDirectoryA(szTestDir, NULL) == 0) ? GetLastError() : 0;
 }
 
-///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
 
-static int pathIsAbsoluteW(const TCHAR *path)
+MIR_CORE_DLL(int) PathIsAbsoluteW(const TCHAR *path)
 {
 	if (lstrlen(path) <= 2)
 		return 0;
@@ -124,29 +125,31 @@ static int pathIsAbsoluteW(const TCHAR *path)
 	return 0;
 }
 
-MIR_CORE_DLL(int) PathToRelativeW(const WCHAR *pSrc, WCHAR *pOut)
+MIR_CORE_DLL(int) PathToRelativeW(const WCHAR *pSrc, WCHAR *pOut, const WCHAR *pBase)
 {
-	if ( !pSrc || !lstrlen(pSrc) || lstrlen(pSrc) > MAX_PATH)
+	if (!pSrc || !lstrlen(pSrc) || lstrlen(pSrc) > MAX_PATH)
 		return 0;
 
-	if ( !pathIsAbsoluteW(pSrc))
-		mir_sntprintf(pOut, MAX_PATH, _T("%s"), pSrc);
+	if (!PathIsAbsoluteW(pSrc))
+		wcsncpy_s(pOut, MAX_PATH, pSrc, _TRUNCATE);
 	else {
-		TCHAR szTmp[MAX_PATH];
+		if (pBase == NULL)
+			pBase = szMirandaPathW;
 
-		mir_sntprintf(szTmp, SIZEOF(szTmp), _T("%s"), pSrc);
-		_tcslwr(szTmp);
-		if (_tcsstr(szTmp, szMirandaPathWLower))
-			mir_sntprintf(pOut, MAX_PATH, _T("%s"), pSrc+lstrlen(szMirandaPathWLower));
+		WCHAR *wszTmp = NEWWSTR_ALLOCA(pSrc); wcslwr(wszTmp);
+		WCHAR *wszBase = NEWWSTR_ALLOCA(pBase); wcslwr(wszBase);
+
+		if (wcsstr(wszTmp, wszBase))
+			wcsncpy_s(pOut, MAX_PATH, pSrc + lstrlen(wszBase), _TRUNCATE);
 		else
-			mir_sntprintf(pOut, MAX_PATH, _T("%s"), pSrc);
+			wcsncpy_s(pOut, MAX_PATH, pSrc, _TRUNCATE);
 	}
 	return lstrlen(pOut);
 }
 
-MIR_CORE_DLL(int) PathToAbsoluteW(const TCHAR *pSrc, TCHAR *pOut, TCHAR* base)
+MIR_CORE_DLL(int) PathToAbsoluteW(const TCHAR *pSrc, TCHAR *pOut, const TCHAR *base)
 {
-	if ( !pSrc || !wcslen(pSrc) || wcslen(pSrc) > MAX_PATH) {
+	if (!pSrc || !wcslen(pSrc) || wcslen(pSrc) > MAX_PATH) {
 		*pOut = 0;
 		return 0;
 	}
@@ -155,7 +158,7 @@ MIR_CORE_DLL(int) PathToAbsoluteW(const TCHAR *pSrc, TCHAR *pOut, TCHAR* base)
 	if (pSrc[0] < ' ')
 		return mir_sntprintf(pOut, MAX_PATH, _T("%s"), pSrc);
 
-	if (pathIsAbsoluteW(pSrc))
+	if (PathIsAbsoluteW(pSrc))
 		return GetFullPathName(pSrc, MAX_PATH, pOut, NULL);
 
 	if (base == NULL)
@@ -164,13 +167,13 @@ MIR_CORE_DLL(int) PathToAbsoluteW(const TCHAR *pSrc, TCHAR *pOut, TCHAR* base)
 	if (pSrc[0] != '\\')
 		mir_sntprintf(buf, MAX_PATH, _T("%s%s"), base, pSrc);
 	else
-		mir_sntprintf(buf, MAX_PATH, _T("%s%s"), base, pSrc+1);
+		mir_sntprintf(buf, MAX_PATH, _T("%s%s"), base, pSrc + 1);
 	return GetFullPathName(buf, MAX_PATH, pOut, NULL);
 }
 
-MIR_CORE_DLL(void) CreatePathToFileW(WCHAR* wszFilePath)
+MIR_CORE_DLL(void) CreatePathToFileW(WCHAR *wszFilePath)
 {
-	WCHAR* pszLastBackslash = wcsrchr(wszFilePath, '\\');
+	WCHAR *pszLastBackslash = wcsrchr(wszFilePath, '\\');
 	if (pszLastBackslash == NULL)
 		return;
 
@@ -179,10 +182,10 @@ MIR_CORE_DLL(void) CreatePathToFileW(WCHAR* wszFilePath)
 	*pszLastBackslash = '\\';
 }
 
-MIR_CORE_DLL(int) CreateDirectoryTreeW(const WCHAR* szDir)
+MIR_CORE_DLL(int) CreateDirectoryTreeW(const WCHAR *szDir)
 {
 	DWORD  dwAttributes;
-	WCHAR* pszLastBackslash, szTestDir[ MAX_PATH ];
+	WCHAR *pszLastBackslash, szTestDir[MAX_PATH];
 
 	lstrcpynW(szTestDir, szDir, SIZEOF(szTestDir));
 	if ((dwAttributes = GetFileAttributesW(szTestDir)) != INVALID_FILE_ATTRIBUTES && (dwAttributes & FILE_ATTRIBUTE_DIRECTORY))
@@ -205,14 +208,10 @@ int InitPathUtils(void)
 	p = strrchr(szMirandaPath, '\\');
 	if (p)
 		p[1] = 0;
-	mir_snprintf(szMirandaPathLower, MAX_PATH, "%s", szMirandaPath);
-	_strlwr(szMirandaPathLower);
 
-	GetModuleFileName(hInst, szMirandaPathW, SIZEOF(szMirandaPathW));
-	TCHAR *tp = _tcsrchr(szMirandaPathW, '\\');
+	GetModuleFileNameW(hInst, szMirandaPathW, SIZEOF(szMirandaPathW));
+	WCHAR *tp = wcsrchr(szMirandaPathW, '\\');
 	if (tp)
 		tp[1] = 0;
-	mir_sntprintf(szMirandaPathWLower, SIZEOF(szMirandaPathWLower), _T("%s"), szMirandaPathW);
-	_tcslwr(szMirandaPathWLower);
 	return 0;
 }

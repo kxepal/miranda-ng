@@ -33,25 +33,25 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 class CSendHTTPServer : public CSend {
 	public:
 		// Deklaration Standardkonstruktor/Standarddestructor
-		CSendHTTPServer(HWND Owner, MCONTACT hContact, bool bFreeOnExit);
+		CSendHTTPServer(HWND Owner, MCONTACT hContact, bool bAsync);
 		~CSendHTTPServer();
 
-		void					Send();
+		int Send();
 
 	protected:
-		LPSTR					m_pszFileName;
-		LPSTR					m_URL;
-		STFileShareInfo			m_fsi;
-		LPSTR					m_fsi_pszSrvPath;
-		LPSTR					m_fsi_pszRealPath;
-		void					SendThread();
-		static void				SendThreadWrapper(void * Obj);
+		char*  m_pszFileName;
+		TCHAR* m_fsi_pszSrvPath;
+		TCHAR* m_fsi_pszRealPath;
+
+		STFileShareInfo m_fsi;
+
+		void SendThread();
+		static void SendThreadWrapper(void * Obj);
 
 		typedef std::map<HANDLE, CSendHTTPServer *> CContactMapping;
 		static CContactMapping _CContactMapping;
 
 //		static INT_PTR			MyCallService(const char *name, WPARAM wParam, LPARAM lParam);
-
 };
 
 //---------------------------------------------------------------------------

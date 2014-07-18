@@ -60,7 +60,7 @@ int ClcOptInit(WPARAM wParam, LPARAM lParam)
 	odp.flags = ODPF_BOLDGROUPS;
 	Options_AddPage(wParam, &odp);
 
-	if ( !ServiceExists(MS_BACKGROUNDCONFIG_REGISTER)) {
+	if (!ServiceExists(MS_BACKGROUNDCONFIG_REGISTER)) {
 		odp.pszTemplate = MAKEINTRESOURCEA(IDD_OPT_CLCBKG);
 		odp.pszTitle = LPGEN("List background");
 		odp.pfnDlgProc = DlgProcClcBkgOpts;
@@ -69,11 +69,11 @@ int ClcOptInit(WPARAM wParam, LPARAM lParam)
 	}
 
 	odp.pszTemplate = MAKEINTRESOURCEA(IDD_OPT_META_CLC);
-	odp.pszTitle = LPGEN("List MetaContacts");
+	odp.pszTitle = LPGEN("List metacontacts");
 	odp.pfnDlgProc = DlgProcClcMetaOpts;
 	Options_AddPage(wParam, &odp);
 
-	if ( !ServiceExists(MS_BACKGROUNDCONFIG_REGISTER)) {
+	if (!ServiceExists(MS_BACKGROUNDCONFIG_REGISTER)) {
 		odp.pszTemplate = MAKEINTRESOURCEA(IDD_OPT_CLCBKG);
 		odp.pszTitle = LPGEN("Status bar background");
 		odp.pfnDlgProc = DlgProcStatusBarBkgOpts;

@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: SendSS.dll
 ;  Plugin: Send ScreenShot+
-;  Version: 0.8.3.1
+;  Version: 0.8.7.0
 ;  Authors: Merlin
 ;============================================================
 [Take a screenshot and send it to a contact.]
@@ -10,8 +10,6 @@
 ;file \plugins\SendScreenshotPlus\res\resource.rc
 [Dialog]
 Diálogo
-[OK]
-Aceptar
 [All]
 Todo
 [None]
@@ -36,6 +34,8 @@ Cancelar
 
 [Delete &after send]
 
+[Open editor before sending]
+
 [Open again]
 
 [&Capture]
@@ -50,27 +50,62 @@ Créditos >
 &Cerrar
 [Edit]
 Editar
-[C&lient Area]
-
 [Caption:]
 
 [Size (HxW):]
 
+[C&lient Area]
+
+[indirect capture]
+
 [Target Tool]
 
+[File:]
+
+[Description:]
+Detalles:
+[Result]
+
+[Thumbnail]
+
+[&Copy]
+&Copiar
+[Close]
+Cerrar
 ;file \plugins\SendScreenshotPlus\src\CSend.cpp
+[Resulting URL from\n]
+
+[Copy]
+Copiar
+[Copy BBCode]
+
+[Copy BBCode w/ link]
+
+[%s requires a valid contact!]
+
+[Error]
+Error
 [GCHAT error]
 
 [An unknown error has occurred.]
 Se ha producido un error desconocido.
-[Error]
-Error
 ;file \plugins\SendScreenshotPlus\src\CSend.h
 [Unable to initiate %s.]
 
 [MAPI error (%i):\n%s.]
 
+[Unknown response from %s (%i)]
+
+[Got no response from %s (%i)]
+
+;file \plugins\SendScreenshotPlus\src\CSendDropbox.cpp
+[Dropbox transfer]
+
+[%s (%i):\nCould not add a share to the Dropbox plugin.]
+
 ;file \plugins\SendScreenshotPlus\src\CSendEmail.cpp
+[Email transfer]
+
 [A recipient matched more than one of the recipient descriptor structures and MAPI_DIALOG was not set]
 
 [The specified attachment was not found]
@@ -99,18 +134,25 @@ Error
 
 [Unknown Error]
 
+;file \plugins\SendScreenshotPlus\src\CSendFile.cpp
+[File transfer]
+Transferencia de archivos
 ;file \plugins\SendScreenshotPlus\src\CSendFTPFile.cpp
 [FTPFile transfer]
 
 [%s (%i):\nCould not add a share to the FTP File plugin.]
 
+;file \plugins\SendScreenshotPlus\src\CSendHost_ImageShack.cpp
+[Image upload]
+
+;file \plugins\SendScreenshotPlus\src\CSendHost_imgur.cpp
+;file \plugins\SendScreenshotPlus\src\CSendHost_uploadpie.cpp
 ;file \plugins\SendScreenshotPlus\src\CSendHTTPServer.cpp
+[HTTPServer transfer]
+
 [Could not start the HTTP Server plugin.]
 
 [%s (%i):\nCould not add a share to the HTTP Server plugin.]
-
-;file \plugins\SendScreenshotPlus\src\CSendImageShack.cpp
-[Upload server did not respond timely.]
 
 ;file \plugins\SendScreenshotPlus\src\dlg_msgbox.cpp
 [Retry]
@@ -158,12 +200,6 @@ Ignorar
 
 [Target Desktop]
 
-[Default]
-Por defecto
-[Overlay on]
-
-[Overlay off]
-
 [Help]
 Ayuda
 [Open Folder]
@@ -182,8 +218,12 @@ Abrir carpeta
 Siguiente
 [Update]
 Actualizar
-[Apply]
-Aplicar
+[Edit on]
+
+[BBC]
+
+[BBC link]
+
 [Down arrow]
 Flecha abajo
 ;file \plugins\SendScreenshotPlus\src\mir_icolib.h
@@ -213,6 +253,8 @@ Ventana
 
 [ (primary)]
 
+[File]
+Archivo
 [<Only save>]
 
 [File Transfer]
@@ -221,7 +263,11 @@ Transferencia de Archivos
 E-mail
 [FTP File]
 
-[ImageShack]
+[Upload Pie (30m)]
+
+[Upload Pie (1d)]
+
+[Upload Pie (1w)]
 
 [Information]
 Información
@@ -232,6 +278,8 @@ Información
 [Capture]
 
 [Can't create a Screenshot]
+
+[Select a file]
 
 [Select a target window.]
 

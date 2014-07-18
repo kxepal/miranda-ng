@@ -35,15 +35,13 @@ folgenden Kontakt auswählen
 [The token %subject% is translated into a special contact, which depends on the situation in which the string is parsed. Use this dialog to simulate the contact to which %subject% translates. An example for using this token is: !cinfo(%subject%,display).]
 Die Variable %subject% wird - je nach der Situation, in der sie verwendet wird - in einen speziellen Kontakt umgewandelt. In diesem Dialog kann ein beliebiger Kontakt als %subject% verwendet werden. Ein Beispiel für seine Anwendung ist !cinfo(%subject%,display).
 [Description]
-Übersicht
+Beschreibung
 [Setting]
 Einstellung
 [The token %extratext% is translated into a string which depends on the situation in which the string is parsed. Use this dialog to simulate the string to which %extratext% translates.]
 Die Variable %extratext% wird - je nach der Situation, in der sie verwendet wird - in einen speziellen Text umgewandelt. In diesem Dialog kann ein beliebiger Text als %extratext% verwendet werden.
 [Close]
 Schließen
-[OK]
-OK
 [The Variables plugin translates various tokens into a certain value. An example is: I'm running Miranda %mirandaversion%. The substring %mirandaversion% will be translated into the correct version number. The following list shows all available tokens.]
 Das Variablen-Plugin übersetzt verschiedene Tokens in sichere Werte. Ein Beispiel: Sie benutzen Miranda NG %mirandaversion%. Der Substring %mirandaversion% wird übersetzt in die richtige Versionsnummer. Die folgende Liste zeigt alle verfügbare Tokens.
 [Notes]
@@ -160,7 +158,7 @@ Zufallszahl
 [x - y - ...]
 x - y - ...
 ;file \plugins\Variables\src\parse_metacontacts.cpp
-[MetaContacts]
+[Metacontacts]
 Metakontakte
 [get parent metacontact of contact x]
 Hauptkontakt von Kontakt x
@@ -207,7 +205,7 @@ Eigenschaft Information y von Kontakt x
 DB-Profilname
 [database profile path]
 DB-Profilpfad
-[database setting z of module y of contact x and return w if z isn't exist (w is optional)]
+[database setting z of module y of contact x and return w if z doesn't exist (w is optional)]
 DB-Einstellung z von Modul y von Kontakt x und gibt w zurück, wenn z nicht existiert (w ist optional)
 [get event for contact x (optional), according to y,z,w, see documentation]
 Abruf von Ereignis für Kontakt x (optional), gemäß y,z,w; siehe Dokumentation
@@ -326,7 +324,7 @@ Wörter (getrennt durch Leerzeichen) Nummer y bis z von Zeichen x (z ist optiona
 System-Funktionen
 [computer name]
 Computername
-[cpu load of process x (without extension) (x is optional)]
+[CPU load of process x (without extension) (x is optional)]
 CPU-Auslastung von Prozess x (ohne Dateiendung) (x ist optional)
 [current date in format y (y is optional)]
 Aktuelles Datum im Format y (y ist optional)
@@ -344,7 +342,7 @@ WAHR, wenn Verzeichnis x existiert
 WAHR, wenn Datei x existiert
 [window title of first window of class x]
 Fenstertitel des ersten Fensters der Klasse x
-[shows files and directories of directory z, with filter y, separated by z (y and z optional)]
+[shows files and directories of directory x, with filter y, separated by z (y and z optional)]
 Zeigt Dateien und Unterordner des Verzeichnisses x mit Filter y an, getrennt durch z (y und z optional)
 [TRUE if process x is running]
 WAHR, wenn Prozess x läuft

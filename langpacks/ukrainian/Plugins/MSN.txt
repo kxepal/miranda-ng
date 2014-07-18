@@ -1,7 +1,7 @@
 ﻿#muuid {97724af9-f3fb-47d3-a3bf-eaa935c74e6d}
 ;============================================================
 ;  File: MSN.dll
-;  Plugin: MSN Protocol
+;  Plugin: MSN protocol
 ;  Version: 0.11.0.2
 ;  Authors: Boris Krasnovskiy, George Hazan, Richard Hughes
 ;============================================================
@@ -40,7 +40,7 @@
 [Your host (or router):]
 Ваш хост (або роутер):
 [Server List Manager]
-Управління списком на сервері
+Керування списком на сервері
 [Contact is on your local list]
 Контакт у вашому локальному списку
 [Contact is included into your server list]
@@ -48,7 +48,7 @@
 [Allowed (active) contact]
 Дозволений контакт
 [Blocked contact]
-Блокований контакт
+Заблокований контакт
 [Somebody included you in his/her server list]
 Ви в списку контакту на сервері
 [Refresh]
@@ -123,6 +123,8 @@
 Історія користувача
 [Contact tried to open an audio conference (not currently supported)]
 Контакт намагався відкрити аудіоконференцію (не підтримується)
+[%I64u bytes]
+%I64u байт
 [Accept NetMeeting request from %s?]
 Прийняти запит NetMeeting від %s?
 [MSN Protocol]
@@ -152,7 +154,7 @@
 [Contact %s has been removed from the server.\nWould you like to keep it as "Local Only" contact to preserve history?]
 Контакт %s був видалений з сервера.\nХочете залишити його у локальному списку, щоб зберегти історію?
 [%s protocol]
-%s протокол
+Протокол %s
 [Subject: %s]
 Тема: %s
 [Hotmail from %s (%S)]
@@ -172,7 +174,7 @@
 [You must be talking to start Netmeeting]
 Ви повинні розмовляти перед запуском NetMeeting
 [Set &Nickname]
-Псевдонім...
+Нік...
 [Create &Chat]
 Створити &чат
 [Display &Hotmail Inbox]

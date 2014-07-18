@@ -1,7 +1,7 @@
 ﻿#muuid {9b8e1735-970d-4ce0-930c-a561956bdca2}
 ;============================================================
 ;  File: Xfire.dll
-;  Plugin: Xfire Protocol
+;  Plugin: Xfire protocol
 ;  Version: 0.1.9.0
 ;  Authors: dufte
 ;============================================================
@@ -48,7 +48,7 @@ Nick:
 Opciones
 [More options]
 Más opciones
-[Display Error and Infomessage:]
+[Display Error and Info message:]
 
 [Main group for clan groups:]
 
@@ -78,7 +78,7 @@ Archivos
 
 [Enable]
 Habilitar
-[With this feature, following status message will be set on your other protocol plugins, if you are ingame. So your other buddies can also see what you play. It will also change the status to occupied, if this option is enabled.]
+[With this feature, following status message will be set on your other protocol plugins, if you are in game. So your other buddies can also see what you play. It will also change the status to occupied, if this option is enabled.]
 
 [Following Variables are available: %myxfiregame%, %myxfirevoice%, %myxfireserverip%, %myxfirevoiceip%]
 
@@ -116,7 +116,7 @@ Eliminar
 Usuario:
 [Game]
 
-[Voicechat]
+[Voice chat]
 
 [Name:]
 Nombre:
@@ -134,13 +134,11 @@ Copiar
 
 [Set Nickname]
 
-[OK]
-Aceptar
 [Cancel]
 Cancelar
 [New xfire_games.ini]
 
-[There is a new XFire gamelist online, do you want to update now?]
+[There is a new XFire game list online, do you want to update now?]
 
 [New supported games:]
 
@@ -233,7 +231,7 @@ Mmm... comida.
 ;file \protocols\Xfire\src\main.cpp
 [Protocol icon]
 
-[%s (Nickname: %s) has invited you to join the %s clan. Message: %s%sPlease go to the XFireclan-Site to accept the Invitation.]
+[%s (Nickname: %s) has invited you to join the %s clan. Message: %s%sPlease go to the XFire clan site to accept the Invitation.]
 
 [Friends of Friends Playing]
 
@@ -368,11 +366,11 @@ General
 
 [Enable MBot support]
 
-[Gamedetection]
+[Game detection]
 
 [Disable game detection]
 
-[Use TSRemote.dll to get teamspeak server info]
+[Use TSRemote.dll to get TeamSpeak server info]
 
 [Disable popups when ingame]
 
@@ -394,7 +392,7 @@ General
 
 [Hidden]
 Oculto
-[Messagebox]
+[Message box]
 
 [Popup]
 Ventana emergente

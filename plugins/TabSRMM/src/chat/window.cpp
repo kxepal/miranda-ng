@@ -50,10 +50,10 @@ char szIndicators[] = { 0, '+', '%', '@', '!', '*' };
 struct MESSAGESUBDATA
 {
 	time_t lastEnterTime;
-	TCHAR*  szSearchQuery;
-	TCHAR*  szSearchResult;
-	SESSION_INFO *lastSession;
+	TCHAR *szSearchQuery;
+	TCHAR *szSearchResult;
 	BOOL   iSavedSpaces;
+	SESSION_INFO *lastSession;
 };
 
 static const CLSID IID_ITextDocument= { 0x8CC497C0,0xA1DF,0x11CE, { 0x80,0x98, 0x00,0xAA, 0x00,0x47,0xBE,0x5D} };
@@ -200,7 +200,7 @@ static BOOL CheckCustomLink(HWND hwndDlg, POINT* ptClient, UINT uMsg, WPARAM wPa
 		enlink.lParam = lParam;
 		enlink.chrg.cpMin = cpMin;
 		enlink.chrg.cpMax = cpMax;
-		SendMessage(GetParent(hwndDlg), WM_NOTIFY, (WPARAM)IDC_CHAT_LOG, (LPARAM)&enlink);
+		SendMessage(GetParent(hwndDlg), WM_NOTIFY, IDC_CHAT_LOG, (LPARAM)&enlink);
 	}
 	return bIsCustomLink;
 }
@@ -254,12 +254,11 @@ static void Chat_UpdateWindowState(TWindowData *dat, UINT msg)
 		}
 	}
 
-#if defined(__FEAT_EXP_AUTOSPLITTER)
 	if (dat->bIsAutosizingInput && dat->iInputAreaHeight == -1) {
 		dat->iInputAreaHeight = 0;
 		SendDlgItemMessage(hwndDlg, IDC_CHAT_MESSAGE, EM_REQUESTRESIZE, 0, 0);
 	}
-#endif
+
 	dat->Panel->dismissConfig();
 	dat->dwUnread = 0;
 	if (dat->pWnd) {
@@ -278,8 +277,8 @@ static void Chat_UpdateWindowState(TWindowData *dat, UINT msg)
 	if (dat->iTabID >= 0) {
 		if (db_get_w(si->hContact, si->pszModule, "ApparentMode", 0) != 0)
 			db_set_w(si->hContact, si->pszModule, "ApparentMode", 0);
-		if (CallService(MS_CLIST_GETEVENT, (WPARAM)si->hContact, 0))
-			CallService(MS_CLIST_REMOVEEVENT, (WPARAM)si->hContact, (LPARAM)GC_FAKE_EVENT);
+		if (CallService(MS_CLIST_GETEVENT, si->hContact, 0))
+			CallService(MS_CLIST_REMOVEEVENT, si->hContact, (LPARAM)GC_FAKE_EVENT);
 
 		SendMessage(hwndDlg, GC_UPDATETITLE, 0, 1);
 		dat->dwTickLastEvent = 0;
@@ -924,7 +923,7 @@ static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, 
 
 				gtl.flags = GTL_PRECISE;
 				gtl.codepage = CP_ACP;
-				int iLen = SendMessage(hwnd, EM_GETTEXTLENGTHEX, (WPARAM)& gtl, 0);
+				int iLen = SendMessage(hwnd, EM_GETTEXTLENGTHEX, (WPARAM)&gtl, 0);
 				SendMessage(hwnd, EM_SCROLLCARET, 0, 0);
 				SendMessage(hwnd, WM_SETREDRAW, TRUE, 0);
 				RedrawWindow(hwnd, NULL, NULL, RDW_INVALIDATE);
@@ -949,7 +948,7 @@ static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, 
 
 				gtl.flags = GTL_PRECISE;
 				gtl.codepage = CP_ACP;
-				int iLen = SendMessage(hwnd, EM_GETTEXTLENGTHEX, (WPARAM)& gtl, 0);
+				int iLen = SendMessage(hwnd, EM_GETTEXTLENGTHEX, (WPARAM)&gtl, 0);
 				SendMessage(hwnd, EM_SCROLLCARET, 0, 0);
 				SendMessage(hwnd, WM_SETREDRAW, TRUE, 0);
 				RedrawWindow(hwnd, NULL, NULL, RDW_INVALIDATE);
@@ -1062,7 +1061,7 @@ static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, 
 	case WM_ERASEBKGND:
 		return CSkin::m_skinEnabled ? 0 : 1;
 
-	case EM_UNSUBCLASSED:
+	case WM_DESTROY:
 		mir_free(dat);
 		return 0;
 	}
@@ -1190,7 +1189,7 @@ static INT_PTR CALLBACK FilterWndProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LP
 					db_set_dw(si->hContact, CHAT_MODULE, "TrayIconMask", dwMask);
 				}
 				Chat_SetFilters(si);
-				SendMessage(si->hWnd, GC_CHANGEFILTERFLAG, 0, (LPARAM)iFlags);
+				SendMessage(si->hWnd, GC_CHANGEFILTERFLAG, 0, iFlags);
 				if (si->bFilterEnabled)
 					SendMessage(si->hWnd, GC_REDRAWLOG, 0, 0);
 			}
@@ -1223,9 +1222,9 @@ static LRESULT CALLBACK ButtonSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, L
 			if (hFilter == hwnd)
 				SendMessage(hwndParent, GC_SHOWFILTERMENU, 0, 0);
 			if (hColor == hwnd)
-				SendMessage(hwndParent, GC_SHOWCOLORCHOOSER, 0, (LPARAM)IDC_COLOR);
+				SendMessage(hwndParent, GC_SHOWCOLORCHOOSER, 0, IDC_COLOR);
 			if (hBGColor == hwnd)
-				SendMessage(hwndParent, GC_SHOWCOLORCHOOSER, 0, (LPARAM)IDC_BKGCOLOR);
+				SendMessage(hwndParent, GC_SHOWCOLORCHOOSER, 0, IDC_BKGCOLOR);
 		}
 		break;
 	}
@@ -1398,7 +1397,7 @@ static void ProcessNickListHovering(HWND hwnd, int hoveredItem, POINT * pt, SESS
 		if ( ProtoServiceExists(parentdat->pszModule, MS_GC_PROTO_GETTOOLTIPTEXT)) {
 			TCHAR *p = (TCHAR*)ProtoCallService(parentdat->pszModule, MS_GC_PROTO_GETTOOLTIPTEXT, (WPARAM)parentdat->ptszID, (LPARAM)ui1->pszUID);
 			if (p != NULL) {
-				_tcsncpy_s(tszBuf, SIZEOF(tszBuf), p, _TRUNCATE);
+				_tcsncpy_s(tszBuf, p, _TRUNCATE);
 				mir_free(p);
 			}
 		}
@@ -1673,7 +1672,7 @@ static LRESULT CALLBACK NicklistSubclassProc(HWND hwnd, UINT msg, WPARAM wParam,
 						if (iSelectedItems != LB_ERR) {
 							int *pItems = (int *)mir_alloc(sizeof(int) * (iSelectedItems + 1));
 							if (pItems) {
-								if (SendMessage(hwnd, LB_GETSELITEMS, (WPARAM)iSelectedItems, (LPARAM)pItems) != LB_ERR) {
+								if (SendMessage(hwnd, LB_GETSELITEMS, iSelectedItems, (LPARAM)pItems) != LB_ERR) {
 									for (int i=0; i < iSelectedItems; i++) {
 										USERINFO *ui1 = pci->SM_GetUserFromIndex(parentdat->ptszID, parentdat->pszModule, pItems[i]);
 										if (ui1)
@@ -1762,7 +1761,7 @@ static LRESULT CALLBACK NicklistSubclassProc(HWND hwnd, UINT msg, WPARAM wParam,
 				if (ProtoServiceExists(parentdat->pszModule, MS_GC_PROTO_GETTOOLTIPTEXT)) {
 					TCHAR *p = (TCHAR*)ProtoCallService(parentdat->pszModule, MS_GC_PROTO_GETTOOLTIPTEXT, (WPARAM)parentdat->ptszID, (LPARAM)ui1->pszUID);
 					if (p) {
-						_tcsncpy_s(tszBuf, SIZEOF(tszBuf), p, _TRUNCATE);
+						_tcsncpy_s(tszBuf, p, _TRUNCATE);
 						mir_free(p);
 					}
 				}
@@ -1868,14 +1867,21 @@ INT_PTR CALLBACK RoomWndProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPar
 				else
 					si->iSplitterY = g_Settings.iSplitterY;
 			}
-			#if defined(__FEAT_EXP_AUTOSPLITTER)
-				if (dat->bIsAutosizingInput)
-					si->iSplitterY = GetDefaultMinimumInputHeight(dat);
-			#endif
+
+			if (dat->bIsAutosizingInput)
+				si->iSplitterY = GetDefaultMinimumInputHeight(dat);
+
 			dat->pWnd = 0;
+			dat->sbCustom = 0;
 			CProxyWindow::add(dat);
 
 			dat->fInsertMode = FALSE;
+
+			// Typing support for GCW_PRIVMESS sessions
+			if (si->iType == GCW_PRIVMESS) {
+				dat->nTypeMode = PROTOTYPE_SELFTYPING_OFF; 
+				SetTimer(hwndDlg, TIMERID_TYPE, 1000, NULL);
+			}
 
 			dat->codePage = M.GetDword(dat->hContact, "ANSIcodepage", CP_ACP);
 			dat->Panel->getVisibility();
@@ -1906,14 +1912,8 @@ INT_PTR CALLBACK RoomWndProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPar
 
 			int mask = (int)SendDlgItemMessage(hwndDlg, IDC_CHAT_LOG, EM_GETEVENTMASK, 0, 0);
 			SendDlgItemMessage(hwndDlg, IDC_CHAT_LOG, EM_SETEVENTMASK, 0, mask | ENM_LINK | ENM_MOUSEEVENTS | ENM_KEYEVENTS);
-
-			#if defined(__FEAT_EXP_AUTOSPLITTER)
-				SendDlgItemMessage(hwndDlg, IDC_CHAT_MESSAGE, EM_SETEVENTMASK, 0, ENM_REQUESTRESIZE | ENM_MOUSEEVENTS | ENM_SCROLL | ENM_KEYEVENTS | ENM_CHANGE);
-			#else
-				SendDlgItemMessage(hwndDlg, IDC_CHAT_MESSAGE, EM_SETEVENTMASK, 0, ENM_MOUSEEVENTS | ENM_SCROLL | ENM_KEYEVENTS | ENM_CHANGE);
-			#endif
-
-			SendDlgItemMessage(hwndDlg, IDC_CHAT_LOG, EM_LIMITTEXT, (WPARAM)0x7FFFFFFF, 0);
+			SendDlgItemMessage(hwndDlg, IDC_CHAT_MESSAGE, EM_SETEVENTMASK, 0, ENM_REQUESTRESIZE | ENM_MOUSEEVENTS | ENM_SCROLL | ENM_KEYEVENTS | ENM_CHANGE);
+			SendDlgItemMessage(hwndDlg, IDC_CHAT_LOG, EM_LIMITTEXT, 0x7FFFFFFF, 0);
 			SendDlgItemMessage(hwndDlg, IDC_CHAT_MESSAGE, EM_SETMARGINS, EC_LEFTMARGIN | EC_RIGHTMARGIN, MAKELONG(3, 3));
 			SendDlgItemMessage(hwndDlg, IDC_CHAT_LOG, EM_SETMARGINS, EC_LEFTMARGIN | EC_RIGHTMARGIN, MAKELONG(3, 3));
 			dat->Panel->loadHeight();
@@ -2011,19 +2011,20 @@ INT_PTR CALLBACK RoomWndProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPar
 
 			switch (si->iType) {
 			case GCW_CHATROOM:
-				hIcon = (dat->wStatus <= ID_STATUS_OFFLINE) ? LoadSkinnedProtoIcon(si->pszModule, ID_STATUS_OFFLINE) : LoadSkinnedProtoIcon(si->pszModule, dat->wStatus);
+				hIcon = LoadSkinnedProtoIcon(si->pszModule, (dat->wStatus <= ID_STATUS_OFFLINE) ? ID_STATUS_OFFLINE : dat->wStatus);
 				mir_sntprintf(szTemp, SIZEOF(szTemp),
-					(si->nUsersInNicklist == 1) ? TranslateT("%s: Chat Room (%u user%s)") :
-					TranslateT("%s: Chat Room (%u users%s)"),
-					si->ptszName, si->nUsersInNicklist, si->bFilterEnabled ? TranslateT(", event filter active") : _T(""));
+					(si->nUsersInNicklist == 1) ? TranslateT("%s: Chat Room (%u user%s)") : TranslateT("%s: Chat Room (%u users%s)"),
+					szNick, si->nUsersInNicklist, si->bFilterEnabled ? TranslateT(", event filter active") : _T(""));
 				break;
 			case GCW_PRIVMESS:
-				mir_sntprintf(szTemp, SIZEOF(szTemp),
-					(si->nUsersInNicklist == 1) ? TranslateT("%s: Message Session") :
-					TranslateT("%s: Message Session (%u users)"), si->ptszName, si->nUsersInNicklist);
+				hIcon = LoadSkinnedProtoIcon(si->pszModule, (dat->wStatus <= ID_STATUS_OFFLINE) ? ID_STATUS_OFFLINE : dat->wStatus);
+				if(si->nUsersInNicklist == 1)
+					mir_sntprintf(szTemp, SIZEOF(szTemp), TranslateT("%s: Message Session"), szNick);
+				else
+					mir_sntprintf(szTemp, SIZEOF(szTemp), TranslateT("%s: Message Session (%u users)"), szNick, si->nUsersInNicklist);
 				break;
 			case GCW_SERVER:
-				mir_sntprintf(szTemp, SIZEOF(szTemp), _T("%s: Server"), si->ptszName);
+				mir_sntprintf(szTemp, SIZEOF(szTemp), _T("%s: Server"), szNick);
 				hIcon = LoadIconEx(IDI_CHANMGR, "window", 16, 16);
 				break;
 			}
@@ -2038,7 +2039,7 @@ INT_PTR CALLBACK RoomWndProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPar
 				dat->hTabIcon = dat->hTabStatusIcon;
 
 			if (dat->cache->getStatus() != dat->cache->getOldStatus()) {
-				_tcsncpy_s(dat->szStatus, SIZEOF(dat->szStatus), pcli->pfnGetStatusModeDescription(dat->wStatus, 0), _TRUNCATE);
+				_tcsncpy_s(dat->szStatus, pcli->pfnGetStatusModeDescription(dat->wStatus, 0), _TRUNCATE);
 
 				TCITEM item = { 0 };
 				item.mask = TCIF_TEXT;
@@ -2168,7 +2169,7 @@ INT_PTR CALLBACK RoomWndProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPar
 					if (pLog->next == NULL)
 						break;
 					pLog = pLog->next;
-					if (si->iType != GCW_CHATROOM || !si->bFilterEnabled || (si->iLogFilterFlags&pLog->iType) != 0)
+					if ((si->iType != GCW_CHATROOM && si->iType != GCW_PRIVMESS) || !si->bFilterEnabled || (si->iLogFilterFlags&pLog->iType) != 0)
 						index++;
 				}
 				Log_StreamInEvent(hwndDlg, pLog, si, TRUE, FALSE);
@@ -2217,6 +2218,20 @@ INT_PTR CALLBACK RoomWndProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPar
 		SendDlgItemMessage(hwndDlg, IDC_CHAT_MESSAGE, EM_SETREADONLY, FALSE, 0);
 		SendDlgItemMessage(hwndDlg, IDC_CHAT_MESSAGE, WM_SETTEXT, 0, (LPARAM)_T(""));
 		return TRUE;
+		
+	case DM_TYPING: {
+		// Typing support for GCW_PRIVMESS sessions
+		if (si->iType == GCW_PRIVMESS) {
+			int preTyping = dat->nTypeSecs != 0;
+			dat->nTypeSecs = (int) lParam > 0 ? (int) lParam : 0;
+
+			if(dat->nTypeSecs)
+				dat->showTyping = 0;
+
+			SetWindowLongPtr(hwndDlg, DWLP_MSGRESULT, preTyping);
+		}
+		return TRUE;
+	}
 
 	case WM_CTLCOLORLISTBOX:
 		SetBkColor((HDC) wParam, g_Settings.crUserListBGColor);
@@ -2375,8 +2390,8 @@ INT_PTR CALLBACK RoomWndProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPar
 			return TRUE;
 
 		case SESSION_TERMINATE:
-			if (CallService(MS_CLIST_GETEVENT, (WPARAM)si->hContact, 0))
-				CallService(MS_CLIST_REMOVEEVENT, (WPARAM)si->hContact, (LPARAM)GC_FAKE_EVENT);
+			if (CallService(MS_CLIST_GETEVENT, si->hContact, 0))
+				CallService(MS_CLIST_REMOVEEVENT, si->hContact, (LPARAM)GC_FAKE_EVENT);
 
 			si->wState &= ~STATE_TALK;
 			dat->bWasDeleted = 1;
@@ -2523,6 +2538,13 @@ LABEL_SHOWWINDOW:
 		if (wParam == TIMERID_FLASHWND)
 			if (dat->mayFlashTab)
 				FlashTab(dat, hwndTab, dat->iTabID, &dat->bTabFlash, TRUE, dat->hTabIcon);
+
+		// Typing support for GCW_PRIVMESS sessions
+		if (si->iType == GCW_PRIVMESS) {
+			if (wParam == TIMERID_TYPE)
+				DM_Typing(dat);
+		}
+
 		break;
 
 	case WM_ACTIVATE:
@@ -2630,8 +2652,8 @@ LABEL_SHOWWINDOW:
 					if (iCharIndex < 0)
 						break;
 						
-					int iLineIndex = SendMessage(GetDlgItem(hwndDlg, IDC_CHAT_LOG), EM_EXLINEFROMCHAR, 0, (LPARAM)iCharIndex);
-					int iChars = SendMessage(GetDlgItem(hwndDlg, IDC_CHAT_LOG), EM_LINEINDEX, (WPARAM)iLineIndex, 0);
+					int iLineIndex = SendMessage(GetDlgItem(hwndDlg, IDC_CHAT_LOG), EM_EXLINEFROMCHAR, 0, iCharIndex);
+					int iChars = SendMessage(GetDlgItem(hwndDlg, IDC_CHAT_LOG), EM_LINEINDEX, iLineIndex, 0);
 					int start = SendMessage(GetDlgItem(hwndDlg, IDC_CHAT_LOG), EM_FINDWORDBREAK, WB_LEFT, iCharIndex);
 					int end = SendMessage(GetDlgItem(hwndDlg, IDC_CHAT_LOG), EM_FINDWORDBREAK, WB_RIGHT, iCharIndex);
 
@@ -2974,6 +2996,13 @@ LABEL_SHOWWINDOW:
 
 				Utils::enableDlgControl(hwndDlg, IDOK, FALSE);
 
+				// Typing support for GCW_PRIVMESS sessions
+				if (si->iType == GCW_PRIVMESS) {
+					if (dat->nTypeMode == PROTOTYPE_SELFTYPING_ON) {
+						DM_NotifyTyping(dat, PROTOTYPE_SELFTYPING_OFF);
+					}
+				}
+
 				bool fSound = true;
 				if (ptszText[0] == '/' || si->iType == GCW_SERVER)
 					fSound = false;
@@ -3011,6 +3040,21 @@ LABEL_SHOWWINDOW:
 				dat->pContainer->dwLastActivity = dat->dwLastActivity;
 				SendDlgItemMessage(hwndDlg, IDOK, BUTTONSETASNORMAL, GetRichTextLength(GetDlgItem(hwndDlg, IDC_CHAT_MESSAGE)) != 0, 0);
 				Utils::enableDlgControl(hwndDlg, IDOK, GetRichTextLength(GetDlgItem(hwndDlg, IDC_CHAT_MESSAGE)) != 0);
+				
+				// Typing support for GCW_PRIVMESS sessions
+				if (si->iType == GCW_PRIVMESS) {
+					if (!(GetKeyState(VK_CONTROL) & 0x8000)) {
+						dat->nLastTyping = GetTickCount();
+						if (GetWindowTextLength(GetDlgItem(hwndDlg, IDC_CHAT_MESSAGE))) {
+							if (dat->nTypeMode == PROTOTYPE_SELFTYPING_OFF) {
+								if (!(dat->dwFlags & MWF_INITMODE))
+									DM_NotifyTyping(dat, PROTOTYPE_SELFTYPING_ON);
+							}
+						}
+						else if (dat->nTypeMode == PROTOTYPE_SELFTYPING_ON)
+							DM_NotifyTyping(dat, PROTOTYPE_SELFTYPING_OFF);
+					}
+				}
 			}
 			break;
 
@@ -3067,7 +3111,7 @@ LABEL_SHOWWINDOW:
 				break;
 
 			if (si->iLogFilterFlags == 0 && !si->bFilterEnabled) {
-				MessageBox(0, TranslateT("The filter canoot be enabled, because there are no event types selected either global or for this chat room"), TranslateT("Event filter error"), MB_OK);
+				MessageBox(0, TranslateT("The filter cannot be enabled, because there are no event types selected either global or for this chat room"), TranslateT("Event filter error"), MB_OK);
 				si->bFilterEnabled = 0;
 			}
 			else si->bFilterEnabled = !si->bFilterEnabled;
@@ -3093,7 +3137,7 @@ LABEL_SHOWWINDOW:
 
 			if (IsDlgButtonChecked(hwndDlg, IDC_BKGCOLOR)) {
 				if (M.GetByte(CHAT_MODULE, "RightClickFilter", 0) == 0)
-					SendMessage(hwndDlg, GC_SHOWCOLORCHOOSER, 0, (LPARAM)IDC_BKGCOLOR);
+					SendMessage(hwndDlg, GC_SHOWCOLORCHOOSER, 0, IDC_BKGCOLOR);
 				else if (si->bBGSet) {
 					cf.dwMask = CFM_BACKCOLOR;
 					cf.crBackColor = pci->MM_FindModule(si->pszModule)->crColors[si->iBG];
@@ -3116,7 +3160,7 @@ LABEL_SHOWWINDOW:
 
 			if (IsDlgButtonChecked(hwndDlg, IDC_COLOR)) {
 				if (M.GetByte(CHAT_MODULE, "RightClickFilter", 0) == 0)
-					SendMessage(hwndDlg, GC_SHOWCOLORCHOOSER, 0, (LPARAM)IDC_COLOR);
+					SendMessage(hwndDlg, GC_SHOWCOLORCHOOSER, 0, IDC_COLOR);
 				else if (si->bFGSet) {
 					cf.dwMask = CFM_COLOR;
 					cf.crTextColor = pci->MM_FindModule(si->pszModule)->crColors[si->iFG];
@@ -3153,6 +3197,22 @@ LABEL_SHOWWINDOW:
 				cf.dwEffects |= CFE_UNDERLINE;
 
 			SendDlgItemMessage(hwndDlg, IDC_CHAT_MESSAGE, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
+			break;
+
+		case IDC_SELFTYPING:
+			// Typing support for GCW_PRIVMESS sessions
+			if (si->iType == GCW_PRIVMESS) {
+				if (dat->hContact) {
+					int iCurrentTypingMode = db_get_b(dat->hContact, SRMSGMOD, SRMSGSET_TYPING, M.GetByte(SRMSGMOD, SRMSGSET_TYPINGNEW, SRMSGDEFSET_TYPINGNEW));
+
+					if (dat->nTypeMode == PROTOTYPE_SELFTYPING_ON && iCurrentTypingMode) {
+						DM_NotifyTyping(dat, PROTOTYPE_SELFTYPING_OFF);
+						dat->nTypeMode = PROTOTYPE_SELFTYPING_OFF;
+					}
+					db_set_b(dat->hContact, SRMSGMOD, SRMSGSET_TYPING, (BYTE)!iCurrentTypingMode);
+				}
+			}
+			break;
 		}
 		break;
 
@@ -3531,15 +3591,13 @@ LABEL_SHOWWINDOW:
 		break;
 
 	case WM_DESTROY:
-		if (CallService(MS_CLIST_GETEVENT, (WPARAM)si->hContact, 0))
-			CallService(MS_CLIST_REMOVEEVENT, (WPARAM)si->hContact, (LPARAM)GC_FAKE_EVENT);
+		if (CallService(MS_CLIST_GETEVENT, si->hContact, 0))
+			CallService(MS_CLIST_REMOVEEVENT, si->hContact, (LPARAM)GC_FAKE_EVENT);
 		si->wState &= ~STATE_TALK;
 		si->hWnd = NULL;
 		si->dat = NULL;
 		si->pContainer = NULL;
 		dat->si = NULL;
-
-		SendDlgItemMessage(hwndDlg, IDC_CHAT_MESSAGE, EM_UNSUBCLASSED, 0, 0);
 
 		TABSRMM_FireEvent(dat->hContact, hwndDlg, MSG_WINDOW_EVT_CLOSING, 0);
 
@@ -3548,6 +3606,12 @@ LABEL_SHOWWINDOW:
 
 		if (dat->pContainer->settings->fPrivate && !IsAutoSplitEnabled(dat))
 			db_set_w(NULL, CHAT_MODULE, "splitY", (WORD)g_Settings.iSplitterY);
+
+		// Typing support for GCW_PRIVMESS sessions
+		if (si->iType == GCW_PRIVMESS) {
+			if (dat->nTypeMode == PROTOTYPE_SELFTYPING_ON)
+				DM_NotifyTyping(dat, PROTOTYPE_SELFTYPING_OFF);
+		}
 
 		DM_FreeTheme(dat);
 
@@ -3575,6 +3639,11 @@ LABEL_SHOWWINDOW:
 			delete dat->pWnd;
 			dat->pWnd = 0;
 		}
+		if (dat->sbCustom) {
+			delete dat->sbCustom;
+			dat->sbCustom = 0;
+		}
+
 		//MAD
 		M.RemoveWindow(hwndDlg);
 

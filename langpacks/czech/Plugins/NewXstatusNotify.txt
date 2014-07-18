@@ -47,17 +47,21 @@ Použít ikonu stavu
 [Use individual sounds]
 Použít individuální zvuky
 [Log to file]
-Uložit záznam
+Uložit do souboru
 [Enable]
 Aktivovat
-[Go to Sound to select the sounds]
-Nastavení zvuků změníte v sekci Zvuky
 [Extra status]
 Rozšířený stav
 [Open]
 Otevřít
 [Status message]
 Zpráva stavu
+[Log in history]
+Uložit do historie
+[Log status changes in history]
+Ukládat změny stavů do historie
+[Only when message window is open]
+Pouze pokud je otevřeno komunikační okno
 [Change]
 Změnit
 [Preview]
@@ -70,7 +74,7 @@ Povolit zvuky
 Povolit oznámení
 [Status Notify]
 Oznámení stavu
-[Individual sounds are disabled.\n\nTo enable them, go to Options -  Status - Notify, enable \n"Use individual sounds" checkbox, and then reopen this dialog.]
+[Individual sounds are disabled.\n\nTo enable them, go to Options -> Status -> Status Notify, enable\n"Use individual sounds" checkbox, and then reopen this dialog.]
 Individuální zvuky jsou vypnuty.\n\nZapnete je v sekci Stavy -> Oznámení stavu\n, kde povolte "Použít individální zvuky". Poté se vraťte na tento dialog.
 [Sounds]
 Zvuky
@@ -152,8 +156,6 @@ Proměnné
 Reset
 [Disable notifications]
 Vypnout oznámení
-[OK]
-OK
 [Cancel]
 Zrušit
 [Disable globally]
@@ -165,7 +167,7 @@ Vypnout když jsem ve stavu:
 [Extra status log]
 Záznam rozšířených stavů
 [Enable logging extra status to message window]
-Povolit zánnam rozšířených stavů do komunikačního okna
+Povolit záznam rozšířených stavů do komunikačního okna
 [Keep events in history]
 Ponechat události v historii
 [Prevent identical logs]
@@ -313,6 +315,8 @@ Změna zprávy rozšířeného stavu
 Zrušení rozšířeného stavu
 [Toggle status notification]
 Přepnout oznámení stavu
+[Status change]
+Změna stavu
 ;file \plugins\NewXstatusNotify\src\options.cpp
 [All Files]
 Všechny soubory

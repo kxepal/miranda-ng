@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Quotes.dll
 ;  Plugin: Quotes
-;  Version: 0.0.24.0
+;  Version: 0.0.26.0
 ;  Authors: Dioksin
 ;============================================================
 [Shows currency rates and economic quotes.]
@@ -10,8 +10,6 @@
 ;file \plugins\Quotes\res\Forex.rc
 [Variable List]
 
-[OK]
-Aceptar
 [Edit Settings]
 
 [Use contact specific settings]
@@ -104,10 +102,6 @@ Previsualizar
 
 [&Advanced Settings...]
 
-[Static]
-
-[<a>SysLink1</a>]
-
 [Current Rate:]
 
 [Rate Fetch Time:]
@@ -137,7 +131,7 @@ Previsualizar
 
 ;file \plugins\Quotes\src\CommonOptionDlg.cpp
 [Seconds]
-
+Segundos
 [Minutes]
 Minutos
 [Hours]
@@ -154,7 +148,13 @@ Horas
 [Enter positive number.]
 
 ;file \plugins\Quotes\src\Forex.cpp
+[Auto Update Enabled]
+
+[Auto Update Disabled]
+
 [Quotes]
+
+[Enable/Disable Auto Update]
 
 [Refresh All Quotes\\Rates]
 
@@ -171,6 +171,12 @@ Refrescar
 [Chart...]
 
 [Edit Settings...]
+
+[Enable/Disable Quotes Auto Update]
+
+[Quotes Auto Update Enabled]
+
+[Quotes Auto Update Disabled]
 
 [Network]
 Red
@@ -197,7 +203,7 @@ Red
 [Import]
 
 ;file \plugins\Quotes\src\ImportExport.cpp
-[Xml File (*.xml)]
+[XML File (*.xml)]
 
 [All files (*.*)]
 

@@ -35,7 +35,6 @@ static HWND hwndToolTips = NULL;
 static BOOL	bThemed = FALSE;
 
 static HANDLE hButtonWindowList = NULL;
-static HANDLE hBkgChangedHook = NULL;
 
 static int OnIconLibIconChanged(WPARAM wParam, LPARAM lParam)
 {
@@ -240,7 +239,7 @@ static LRESULT CALLBACK ToolbarButtonProc(HWND hwndDlg, UINT  msg, WPARAM wParam
 		break;
 
 	case WM_SETTEXT:
-		_tcsncpy_s(bct->szText, SIZEOF(bct->szText), (TCHAR*)lParam, _TRUNCATE);
+		_tcsncpy_s(bct->szText, (TCHAR*)lParam, _TRUNCATE);
 		break;
 
 	case WM_SETFONT:			
@@ -250,11 +249,11 @@ static LRESULT CALLBACK ToolbarButtonProc(HWND hwndDlg, UINT  msg, WPARAM wParam
 		break;
 	
 	case BUTTONSETMARGINS:
-		if (lParam)	bct->rcMargins = *(RECT*)lParam;
-		else {
-			RECT nillRect = {0};
+		if (!lParam) {
+			RECT nillRect = { 0 };
 			bct->rcMargins = nillRect;
 		}
+		else bct->rcMargins = *(RECT*)lParam;
 		break;
 
 	case BUTTONSETID:
@@ -288,6 +287,15 @@ static LRESULT CALLBACK ToolbarButtonProc(HWND hwndDlg, UINT  msg, WPARAM wParam
 			InvalidateParentRect(bct->hwnd, NULL, TRUE);
 		}
 		break;
+
+	case WM_MOUSELEAVE:
+	case BUTTONSETASPUSHBTN:
+		return 0;
+
+	case WM_ENABLE: // windows tells us to enable/disable
+		bct->stateId = wParam ? PBS_NORMAL : PBS_DISABLED;
+		InvalidateParentRect(bct->hwnd, NULL, TRUE);
+		return 0;
 
 	case WM_LBUTTONDOWN:
 		{
@@ -428,8 +436,8 @@ static LRESULT CALLBACK ToolbarButtonProc(HWND hwndDlg, UINT  msg, WPARAM wParam
 		return 1;
 
 	case MBM_UPDATETRANSPARENTFLAG:
-		LONG flag = GetWindowLongPtr(hwndDlg, GWL_EXSTYLE);
-		LONG oldFlag = flag;
+		LONG_PTR flag = GetWindowLongPtr(hwndDlg, GWL_EXSTYLE);
+		LONG_PTR oldFlag = flag;
 		if (lParam == 2)
 			lParam = (g_CluiData.fDisableSkinEngine) ? 0 : 1;
 		flag &= ~WS_EX_TRANSPARENT;
@@ -486,8 +494,8 @@ int Buttons_OnSkinModeSettingsChanged(WPARAM wParam, LPARAM lParam)
 HRESULT ToolbarButtonLoadModule()
 {
 	hButtonWindowList = WindowList_Create();
-	hIconChangedHook = HookEvent(ME_SKIN2_ICONSCHANGED,OnIconLibIconChanged);
-	hBkgChangedHook = HookEvent(ME_BACKGROUNDCONFIG_CHANGED,Buttons_OnSkinModeSettingsChanged);
+	HookEvent(ME_SKIN2_ICONSCHANGED, OnIconLibIconChanged);
+	HookEvent(ME_BACKGROUNDCONFIG_CHANGED, Buttons_OnSkinModeSettingsChanged);
 	return S_OK;
 }
 

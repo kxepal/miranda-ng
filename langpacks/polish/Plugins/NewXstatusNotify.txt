@@ -6,7 +6,7 @@
 ;  Authors: Luca Santarelli, Vasilich, yaho
 ;============================================================
 [Notifies you when a contact changes his/her (X)status or status message.]
-Powiadamia Cię, kiedy kontakt zmieni swój xStatus lub opis.
+Powiadamia, kiedy kontakt zmieni swój (x)status lub opis.
 ;file \plugins\NewXstatusNotify\res\resource.rc
 [Notify when a contact changes to one of these statuses]
 Powiadamiaj kiedy kontakt zmieni status na:
@@ -50,14 +50,18 @@ Użyj indywidualnych dźwięków
 Zapisuj w pliku
 [Enable]
 Włącz
-[Go to Sound to select the sounds]
-Idź do Dźwięki aby zmienić dźwięki
 [Extra status]
 xStatus
 [Open]
 Otwórz
 [Status message]
 Opis
+[Log in history]
+Zapisuj w historii
+[Log status changes in history]
+Zapisuj zmiany statusu w historii
+[Only when message window is open]
+Tylko gdy okno rozmowy jest otwarte
 [Change]
 Zmień
 [Preview]
@@ -69,9 +73,9 @@ Włącz dźwięki
 [Enable popups]
 Włącz popupy
 [Status Notify]
-Status Notify
+Zmiany statusu
 [Individual sounds are disabled.\n\nTo enable them, go to Options -> Status -> Status Notify, enable\n"Use individual sounds" checkbox, and then reopen this dialog.]
-Indywidualne dźwięki są wyłączone.\n\nAby je włączyć, wejdź do: Opcje - Status - Status Notify.\nZaznacz opcję "Użyj indywidualnych dźwięków", a następnie otwórz to okno ponownie.
+Indywidualne dźwięki są wyłączone.\n\nAby je włączyć przejdź do Opcje -> Status -> Powiadomienia statusu, zaznacz\n"Użyj indywidualnych dźwięków", i otwórz ponownie to okno.
 [Sounds]
 Dźwięki
 [Popups]
@@ -105,7 +109,7 @@ Pokaż poprzedni status
 [Timeout]
 Wyświetlaj
 [Popups when status changes to:]
-Popupy, gdy status zmienia się na:
+Pokaż, gdy status zmienia się na:
 [Click action]
 Akcje przycisku
 [Show contact group name]
@@ -113,9 +117,9 @@ Pokaż nazwę grupy kontaktu
 [Use alternative descriptions]
 Użyj alternatywnych określeń
 [0 = Default]
-0 = Domyślny
+0 - domyślnie
 [-1 = Infinite]
--1 = Nie chowaj
+-1 - nie chowaj
 [Sec]
 s
 [On left click]
@@ -131,7 +135,7 @@ Limit czasu połączenia
 [Notification]
 Powiadomienie
 [Disable for extra status 'Music']
-Wyłącz dla statusu 'Muzyka'
+Wyłącz dla xStatusu "Muzyka"
 [Truncate message length to:]
 Przytnij wiadomość do:
 [characters]
@@ -152,8 +156,6 @@ Zmienne
 Domyślne
 [Disable notifications]
 Wyłącz powiadomienia
-[OK]
-OK
 [Cancel]
 Anuluj
 [Disable globally]
@@ -179,14 +181,14 @@ Pokaż popupy podczas łączenia
 [Accounts]
 Konta
 [Enable/Disable accounts which you don't wish to be notified for:]
-Włącz/wyłącz konta dla których nie chcesz powiadomień:
+Włącz/Wyłącz konta dla których nie chcesz powiadomień:
 ;file \plugins\NewXstatusNotify\src\indsnd.cpp
 [Sound files]
 Pliki dźwiękowe
 [All files]
 Wszystkie pliki
 [Wave files]
-Pliki wave
+Pliki WAV
 [Status]
 Status
 [Sound for the status]
@@ -216,9 +218,9 @@ Odtwarzanie...
 [(M) is back online!]
 jest znowu Dostępny!
 [(F) is back online!]
-jest znowu Dostępna!
+jest znowu dostępna!
 [(U) is back online!]
-jest znowu Dostępny(-a)!
+jest znowu dostępny(-a)!
 [User: Online]
 Status: Dostępny
 [(M) went offline! :(]
@@ -254,13 +256,13 @@ zaraz wróci
 [User: Away]
 Status: Zaraz wracam
 [(M) isn't there anymore!]
-jest niedostępny!
+wróci później!
 [(F) isn't there anymore!]
-jest niedostępna!
+wróci później!
 [(U) isn't there anymore!]
-jest niedostępny(-a)!
+wróci później!
 [User: Not Available]
-Status: Niedostępny
+Status: Wrócę później
 [(M) has something else to do.]
 jest teraz zajęty.
 [(F) has something else to do.]
@@ -306,13 +308,15 @@ Status
 [User: from offline (has priority!)]
 Status: Z rozłączonego (ma priorytet!)
 [Extra status changed]
-Zmiana xStatusu
+xStatus: Zmiana statusu
 [Extra status message changed]
-Zmiana opisu xStatusu
+xStatus: Zmiana opisu
 [Extra status removed]
-Usunięcie xStatusu
+xStatus: Usunięcie
 [Toggle status notification]
 Przełącz powiadomienia o statusie
+[Status change]
+Zmiana statusu
 ;file \plugins\NewXstatusNotify\src\options.cpp
 [All Files]
 Wszystkie pliki
@@ -355,7 +359,7 @@ Nie możesz ustawić wartości niższej niż %d ani wyższej niż %d.
 [Can't open the log file!]
 Nie można otworzyć pliku dziennika!
 [NewXstatusNotify]
-NewXstatusNotify
+Zmiany statusu
 ;file \plugins\NewXstatusNotify\src\xstatus.cpp
 [Mood]
 Nastrój

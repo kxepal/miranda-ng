@@ -20,7 +20,7 @@ HGENMENU hmenuVis,hmenuOff,hmenuHide,hmenuIgnore,hmenuProto,hmenuAdded,hmenuAuth
 HGENMENU hmenuCopyID,hmenuRecvFiles,hmenuStatusMsg,hmenuCopyIP,hmenuCopyMirVer;
 static HGENMENU hIgnoreItem[9], hProtoItem[MAX_PROTOS];
 HICON hIcon[5];
-BOOL bMetaContacts = FALSE, bPopupService = FALSE;
+BOOL bPopupService = FALSE;
 PROTOACCOUNT **accs;
 OPENOPTIONSDIALOG ood;
 int protoCount;
@@ -261,28 +261,11 @@ void CopyToClipboard(HWND hwnd,LPSTR pszMsg, LPTSTR ptszMsg)
 
 BOOL isMetaContact(MCONTACT hContact)
 {
-	char *proto;
-	if (bMetaContacts) {
-		proto = GetContactProto(hContact);
-		if ( lstrcmpA(proto, "MetaContacts") == 0 ) {
-			return TRUE;
-		}
-	}
+	char *proto = GetContactProto(hContact);
+	if (lstrcmpA(proto, META_PROTO) == 0)
+		return TRUE;
+
 	return FALSE;
-}
-
-MCONTACT getDefaultContact(MCONTACT hContact)
-{
-	if (bMetaContacts)
-		return (MCONTACT)CallService(MS_MC_GETDEFAULTCONTACT, hContact, 0);
-	return 0;
-}
-
-MCONTACT getMostOnline(MCONTACT hContact)
-{
-	if (bMetaContacts)
-		return (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, hContact, 0);
-	return 0;
 }
 
 void GetID(MCONTACT hContact, LPSTR szProto, LPSTR szID)
@@ -348,19 +331,12 @@ BOOL IPExists(MCONTACT hContact)
 
 BOOL MirVerExists(MCONTACT hContact)
 {
-	LPSTR szProto, msg;
-	BOOL ret = 0;
+	LPSTR szProto = GetContactProto(hContact);
+	if (!szProto)
+		return 0;
 
-	szProto = GetContactProto(hContact);
-	if (!szProto) return 0;
-
-	msg = db_get_sa(hContact,szProto,"MirVer");
-	if (msg) {
-		if (strlen(msg))	ret = 1;
-		mir_free(msg);
-	}
-
-	return ret;
+	ptrT msg(db_get_tsa(hContact, szProto, "MirVer"));
+	return lstrlen(msg) != 0;
 }
 
 void getIP(MCONTACT hContact,LPSTR szProto,LPSTR szIP)
@@ -518,8 +494,8 @@ void ModifyCopyID(MCONTACT hContact, BOOL bShowID, BOOL bTrimID)
 	mi.flags = CMIM_ICON | CMIM_NAME | CMIF_UNICODE;
 
 	if (isMetaContact(hContact)) {
-		MCONTACT hC = getMostOnline(hContact);
-		if (!hContact) hC = getDefaultContact(hContact);
+		MCONTACT hC = db_mc_getMostOnline(hContact);
+		if (!hContact) hC = db_mc_getDefault(hContact);
 		hContact = hC;
 	}
 
@@ -617,9 +593,9 @@ INT_PTR onCopyID(WPARAM wparam, LPARAM lparam)
 
 	MCONTACT hContact = (MCONTACT)wparam;
 	if (isMetaContact(hContact)) {
-		MCONTACT hC = getMostOnline(hContact);
+		MCONTACT hC = db_mc_getMostOnline(hContact);
 		if (!hContact)
-			hC = getDefaultContact(hContact);
+			hC = db_mc_getDefault(hContact);
 		hContact = hC;
 	}
 
@@ -745,7 +721,7 @@ INT_PTR onChangeProto(WPARAM wparam, LPARAM lparam)
 			return 0;
 	}
 	if (MessageBox(NULL, (LPCTSTR)TranslateT("Do you want to send authorization request\nto new contact?"),
-		TranslateT("Miranda NG"), MB_OKCANCEL | MB_SETFOREGROUND | MB_TOPMOST) == IDOK)
+		_T("Miranda NG"), MB_OKCANCEL | MB_SETFOREGROUND | MB_TOPMOST) == IDOK)
 
 		onSendAuthRequest((WPARAM)hContactNew, 0);
 
@@ -979,8 +955,7 @@ static int ContactWindowOpen(WPARAM wparam, LPARAM lParam)
 
 static int ModuleLoad(WPARAM wParam, LPARAM lParam)
 {
-	bPopupService = ServiceExists(MS_POPUP_ADDPOPUP);
-	bMetaContacts = ServiceExists(MS_MC_GETMETACONTACT);
+	bPopupService = ServiceExists(MS_POPUP_ADDPOPUPT);
 	return 0;
 }
 

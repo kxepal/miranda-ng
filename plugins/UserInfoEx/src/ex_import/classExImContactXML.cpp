@@ -217,9 +217,9 @@ int CExImContactXML::Export(FILE *xmlfile, DB::CEnumList* pModules)
 	if (isMeta()) {
 		CExImContactXML vContact(_pXmlFile);
 
-		const int cnt = DB::MetaContact::SubCount(_hContact);
-		const int def = DB::MetaContact::SubDefNum(_hContact);
-		MCONTACT hSubContact = DB::MetaContact::Sub(_hContact, def);
+		const int cnt = db_mc_getSubCount(_hContact);
+		const int def = db_mc_getDefaultNum(_hContact);
+		MCONTACT hSubContact = db_mc_getSub(_hContact, def);
 
 		// export default subcontact
 		if (hSubContact && vContact.fromDB(hSubContact))
@@ -227,7 +227,7 @@ int CExImContactXML::Export(FILE *xmlfile, DB::CEnumList* pModules)
 
 		for (int i = 0; i < cnt; i++) {
 			if (i != def) {
-				hSubContact = DB::MetaContact::Sub(_hContact, i);
+				hSubContact = db_mc_getSub(_hContact, i);
 				if (hSubContact && vContact.fromDB(hSubContact))
 					vContact.ExportSubContact(this, pModules);
 			}
@@ -401,7 +401,7 @@ BYTE CExImContactXML::ExportEvents()
 	DWORD cbEventBuf = 0, dwNumEventsAdded = 0;
 
 	// read out all events for the current contact
-	for (HANDLE hDbEvent = db_event_first(_hContact); hDbEvent != NULL; hDbEvent = db_event_next(hDbEvent)) {
+	for (HANDLE hDbEvent = db_event_first(_hContact); hDbEvent != NULL; hDbEvent = db_event_next(_hContact, hDbEvent)) {
 		DBEVENTINFO	dbei = { sizeof(DBEVENTINFO) };
 		if (DB::Event::GetInfoWithData(hDbEvent, &dbei))
 			continue;
@@ -484,8 +484,6 @@ int CExImContactXML::LoadXmlElemnt(TiXmlElement *xContact)
 	if (xContact == NULL)
 		return ERROR_INVALID_PARAMS;
 
-	LPSTR pszMetaProto = myGlobals.szMetaProto ? myGlobals.szMetaProto : "MetaContacts";
-
 	// delete last contact
 	db_free(&_dbvUID);
 	_hContact = INVALID_CONTACT_ID;
@@ -500,9 +498,9 @@ int CExImContactXML::LoadXmlElemnt(TiXmlElement *xContact)
 	MIR_FREE(_pszUIDKey);
 
 	// is contact a metacontact
-	if (_pszAMPro && !strcmp(_pszAMPro, pszMetaProto) /*_xmlNode->FirstChildElement(XKEY_CONTACT)*/) {
+	if (_pszAMPro && !strcmp(_pszAMPro, META_PROTO)) {
 		TiXmlElement *xSub;
-		proto(pszMetaProto);
+		proto(META_PROTO);
 
 		// meta contact must be uniquelly identified by its subcontacts
 		// the metaID may change during an export or import call
@@ -511,7 +509,7 @@ int CExImContactXML::LoadXmlElemnt(TiXmlElement *xContact)
 			if (vSub = xSub) {
 				// identify metacontact by the first valid subcontact in xmlfile
 				if (_hContact == INVALID_CONTACT_ID && vSub.handle() != INVALID_CONTACT_ID) {
-					MCONTACT hMeta = (MCONTACT)CallService(MS_MC_GETMETACONTACT, (WPARAM)vSub.handle(), NULL);
+					MCONTACT hMeta = db_mc_getMeta(vSub.handle());
 					if (hMeta != NULL) {
 						_hContact = hMeta;
 						break;
@@ -636,7 +634,7 @@ int CExImContactXML::ImportNormalContact()
 	int err = ImportContact();
 
 	// remove contact from a metacontact
-	if (err == ERROR_OK && CallService(MS_MC_GETMETACONTACT, (WPARAM)_hContact, NULL))
+	if (err == ERROR_OK && db_mc_getMeta(_hContact))
 		CallService(MS_MC_REMOVEFROMMETA, NULL, (LPARAM)_hContact);
 
 	return err;
@@ -736,9 +734,9 @@ int CExImContactXML::ImportMetaSubContact(CExImContactXML * pMetaContact)
 		return err;
 
 	// check if contact is subcontact of the desired meta contact
-	if ((MCONTACT)CallService(MS_MC_GETMETACONTACT, (WPARAM)_hContact, NULL) != pMetaContact->handle()) {
+	if (db_mc_getMeta(_hContact) != pMetaContact->handle()) {
 		// add contact to the metacontact (this service returns TRUE if successful)	
-		err = CallService(MS_MC_ADDTOMETA, (WPARAM)_hContact, (LPARAM)pMetaContact->handle());
+		err = CallService(MS_MC_ADDTOMETA, _hContact, (LPARAM)pMetaContact->handle());
 		if (err == FALSE) {
 			// ask to delete new contact
 			if (_isNewContact && _hContact != NULL) {
@@ -747,7 +745,7 @@ int CExImContactXML::ImportMetaSubContact(CExImContactXML * pMetaContact)
 				int result = MsgBox(NULL, MB_YESNO|MB_ICONWARNING, 
 					LPGENT("Question"), 
 					LPGENT("Importing a new meta subcontact failed!"), 
-					LPGENT("The newly created MetaSubContact '%s'\ncould not be added to MetaContact '%s'!\n\nDo you want to delete this contact?"),
+					LPGENT("The newly created meta subcontact '%s'\ncould not be added to metacontact '%s'!\n\nDo you want to delete this contact?"),
 					ptszNick, ptszMetaNick);
 				MIR_FREE(ptszNick);
 				MIR_FREE(ptszMetaNick);

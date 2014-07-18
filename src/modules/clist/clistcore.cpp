@@ -127,6 +127,7 @@ static INT_PTR srvRetrieveInterface(WPARAM, LPARAM)
 		cli.pfnLoadClcOptions                  = fnLoadClcOptions;
 		cli.pfnRecalculateGroupCheckboxes	   = fnRecalculateGroupCheckboxes;
 		cli.pfnSetGroupChildCheckboxes		   = fnSetGroupChildCheckboxes;
+		cli.pfnSetContactCheckboxes            = fnSetContactCheckboxes;
 		cli.pfnInvalidateItem                  = fnInvalidateItem;
 		cli.pfnGetRowBottomY                   = fnGetRowBottomY;
 		cli.pfnGetRowHeight                    = fnGetRowHeight;
@@ -215,6 +216,7 @@ static INT_PTR srvRetrieveInterface(WPARAM, LPARAM)
 
 		cli.pfnGetContactIcon                  = fnGetContactIcon;
 		cli.pfnGetAverageMode                  = fnGetAverageMode;
+		cli.pfnInitAutoRebuild                 = fnInitAutoRebuild;
 
 		rc = LoadContactListModule2();
 		if (rc == 0)

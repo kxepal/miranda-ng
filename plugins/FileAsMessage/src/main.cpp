@@ -50,15 +50,12 @@ int OnSkinIconsChanged(WPARAM wParam,LPARAM lParam)
 	return 0;
 }
 
-int OnSettingChanged(WPARAM wParam,LPARAM lParam)
+int OnSettingChanged(WPARAM hContact, LPARAM lParam)
 {
 	DBCONTACTWRITESETTING *cws=(DBCONTACTWRITESETTING*)lParam;
 
-	HWND hwnd = WindowList_Find(hFileList,wParam);
+	HWND hwnd = WindowList_Find(hFileList, hContact);
 	PostMessage(hwnd, WM_FE_STATUSCHANGE, 0,0);
-	//OnSkinIconsChanged(0,0);
-	//PostMessage(hwnd, WM_FE_SKINCHANGE, 0,0);
-
 	return 0;
 }
 
@@ -150,7 +147,7 @@ int OnOptInitialise(WPARAM wParam, LPARAM lParam)
 	odp.hInstance = hInst;
 	odp.pszTemplate = MAKEINTRESOURCEA(IDD_OPTIONS);
 	odp.ptszTitle = _T(SERVICE_TITLE);
-	odp.ptszGroup = LPGENT("Plugins");
+	odp.ptszGroup = LPGENT("Events");
 	odp.flags = ODPF_BOLDGROUPS|ODPF_TCHAR;
 	odp.pfnDlgProc = OptionsDlgProc;
 	Options_AddPage(wParam, &odp);

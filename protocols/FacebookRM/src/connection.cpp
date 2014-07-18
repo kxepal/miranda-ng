@@ -3,7 +3,7 @@
 Facebook plugin for Miranda Instant Messenger
 _____________________________________________
 
-Copyright © 2009-11 Michal Zelinka, 2011-13 Robert Pösel
+Copyright ï¿½ 2009-11 Michal Zelinka, 2011-13 Robert Pï¿½sel
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -51,9 +51,13 @@ void FacebookProto::ChangeStatus(void*)
 		facy.logout();
 
 		facy.clear_cookies();
+		facy.clear_notifications();
+		facy.clear_chatrooms();
 		facy.buddies.clear();
 		facy.messages_ignore.clear();
 		facy.pages.clear();
+		facy.typers.clear();
+		facy.readers.clear();
 
 		if (facy.hMsgCon)
 			Netlib_CloseHandle(facy.hMsgCon);
@@ -76,13 +80,12 @@ void FacebookProto::ChangeStatus(void*)
 
 		ResetEvent(update_loop_lock_);
 
-		if (NegotiateConnection() && facy.home())
+		if (NegotiateConnection() && facy.home() && facy.reconnect())
 		{		
-			facy.reconnect();
-			facy.load_friends();
-			facy.load_pages();
+			// Load all friends
+			ProcessFriendList(NULL);
 
-			// Process Friends requests
+			// Process friendship requests
 			ForkThread(&FacebookProto::ProcessFriendRequests, NULL);
 
 			// Get unread messages
@@ -90,6 +93,9 @@ void FacebookProto::ChangeStatus(void*)
 
 			// Get notifications
 			ForkThread(&FacebookProto::ProcessNotifications, NULL);
+
+			// Load pages for post status dialog
+			ForkThread(&FacebookProto::ProcessPages, NULL);
 
 			setDword("LogonTS", (DWORD)time(NULL));
 			ForkThread(&FacebookProto::UpdateLoop,  NULL);
@@ -119,16 +125,14 @@ void FacebookProto::ChangeStatus(void*)
 		ToggleStatusMenuItems(true);
 		debugLogA("***** SignOn complete");
 	}
-	else if (new_status == ID_STATUS_INVISIBLE)
-	{
-		facy.buddies.clear();
-		this->SetAllContactStatuses(ID_STATUS_OFFLINE);
-	}
 
-	facy.chat_state(m_iDesiredStatus != ID_STATUS_INVISIBLE);	
-	facy.buddy_list();
+	m_invisible = (new_status == ID_STATUS_INVISIBLE);
 
-	m_iStatus = facy.self_.status_id = m_iDesiredStatus;
+	facy.chat_state(!m_invisible);
+
+	ForkThread(&FacebookProto::ProcessBuddyList, NULL);
+
+	m_iStatus = facy.self_.status_id = new_status;
 	ProtoBroadcastAck(0, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)old_status, m_iStatus);
 
 	debugLogA("***** ChangeStatus complete");
@@ -161,6 +165,9 @@ bool FacebookProto::NegotiateConnection()
 	// Get info about secured connection
 	facy.https_ = getByte(FACEBOOK_KEY_FORCE_HTTPS, DEFAULT_FORCE_HTTPS) != 0;
 
+	// Generate random clientid for this connection
+	facy.chat_clientid_ = utils::text::rand_string(8, "0123456789abcdef");
+
 	// Create default group for new contacts
 	ptrT groupName( getTStringA(FACEBOOK_KEY_DEF_GROUP));
 	if (groupName != NULL)
@@ -177,16 +184,14 @@ void FacebookProto::UpdateLoop(void *)
 	for (int i = -1; !isOffline(); i = ++i % 50)
 	{
 		if (i != -1) {
-			if (!facy.invisible_)
-				if (!facy.buddy_list())
-    				break;
+			ProcessBuddyList(NULL);
+
+			if (getByte(FACEBOOK_KEY_EVENT_FEEDS_ENABLE, DEFAULT_EVENT_FEEDS_ENABLE))
+				ProcessFeeds(NULL);
 		}
-		if (i == 2 && getByte(FACEBOOK_KEY_EVENT_FEEDS_ENABLE, DEFAULT_EVENT_FEEDS_ENABLE))
-			if (!facy.feeds())
-				break;
 
 		if (i == 49)
-			ForkThread(&FacebookProto::ProcessFriendRequests, NULL);
+			ProcessFriendRequests(NULL);
 
 		debugLogA("***** FacebookProto::UpdateLoop[%d] going to sleep...", tim);
 		if (WaitForSingleObjectEx(update_loop_lock_, GetPollRate() * 1000, true) != WAIT_TIMEOUT)

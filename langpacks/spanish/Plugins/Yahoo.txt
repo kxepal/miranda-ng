@@ -1,11 +1,11 @@
 ﻿#muuid {0aa7bfea-1fc7-45f0-906e-2a46b6e119cf}
 ;============================================================
 ;  File: Yahoo.dll
-;  Plugin: Yahoo Protocol
+;  Plugin: Yahoo protocol
 ;  Version: 0.11.0.1
 ;  Authors: Gennady Feldman
 ;============================================================
-[Yahoo Protocol support for Miranda NG.]
+[Yahoo protocol support for Miranda NG.]
 
 ;file \protocols\Yahoo\res\Yahoo.rc
 [Yahoo]
@@ -24,7 +24,7 @@ Experto
 
 [Show Avatars]
 Mostrar Avatares
-[AutoLogin to Yahoo Website(s)]
+[Auto login to Yahoo Website(s)]
 
 [Display Yahoo notifications]
 
@@ -56,8 +56,6 @@ Reiniciar
 
 [Show as busy]
 
-[OK]
-Aceptar
 [Cancel]
 Cancelar
 [Protocol:]
@@ -212,9 +210,9 @@ Cuenta
 
 [New Mail]
 
-[You have %i unread msgs]
+[You have %i unread messages]
 
-[New Mail (%i msgs)]
+[New Mail (%i messages)]
 
 [From: %s\nSubject: %s]
 

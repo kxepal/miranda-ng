@@ -1,7 +1,7 @@
 ﻿#muuid {f3ff65f3-250e-416a-bee9-58c93f85ab33}
 ;============================================================
 ;  File: GG.dll
-;  Plugin: Gadu-Gadu Protocol
+;  Plugin: Gadu-Gadu protocol
 ;  Version: 0.11.0.3
 ;  Authors: Bartosz Bialek, Adam Strzelecki
 ;============================================================
@@ -95,13 +95,11 @@ Herkunftsstadt:
 [Birth year:]
 Geburtsjahr:
 [Description:]
-Übersicht:
+Beschreibung:
 [&Save changes]
 Änderungen &speichern
 [Enter token to continue]
 Geben Sie das Token ein, um fortzufahren
-[OK]
-OK
 [Cancel]
 Abbrechen
 [Create Gadu-Gadu account]
@@ -280,7 +278,7 @@ Bilder
 Gadu-Gadu-Nummer
 ;file \protocols\Gadu-Gadu\src\groupchat.cpp
 [Open &conference...]
-Konferenz öffnen...
+&Konferenz öffnen...
 [&Clear ignored conferences]
 Ignorierte Konferenzen löschen
 [%s has initiated conference with %d participants (%d unknowns).\nDo you want to participate?]

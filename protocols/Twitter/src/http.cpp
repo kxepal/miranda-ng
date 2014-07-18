@@ -15,11 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "stdafx.h"
 #include "http.h"
-
-#include <windows.h>
-#include <newpluginapi.h>
-#include <m_netlib.h>
 
 std::string http::url_encode(const std::string &s)
 {

@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: PluginUpdater.dll
 ;  Plugin: Plugin updater
-;  Version: 0.1.1.7
+;  Version: 0.1.2.1
 ;  Authors: Mataes, George Hazan
 ;============================================================
 [Plugin updater for Miranda NG.]
@@ -34,6 +34,8 @@
 (но по веднъж на ден)
 [Every]
 Всеки
+[Silent mode]
+
 [Files source]
 Кая версия да се сваля
 [Stable version]
@@ -44,6 +46,8 @@
 Развойна версия с debug символи
 [Custom version]
 Персонализирана версия
+[Some component(s) was updated.\nYou need to restart your Miranda to apply installed updates.]
+
 [Notifications]
 Уведомявания
 [Message boxes (*)]
@@ -119,6 +123,8 @@ Plugin Updater
 Приставки
 [Icons]
 Икони
+[Languages]
+Езици
 [Other]
 Друго
 [List is empty.]
@@ -134,10 +140,17 @@ Plugin Updater
 <<Подробности
 [Update failed! One of the components wasn't downloaded correctly. Try it again later.]
 
+[You need to restart your Miranda to apply installed updates.]
+
+[Would you like to restart it now?]
+
+[%d component(s) was updated]
+
 [No updates found.]
 Няма налични актуализации.
 [Update checking already started!]
 Вече е стартирана проверка за актуализации!
+;file \plugins\PluginUpdater\src\Events.cpp
 ;file \plugins\PluginUpdater\src\Options.cpp
 [hours]
 часове
@@ -152,6 +165,10 @@ Plugin Updater
 Проверка за актуализации
 [Available components list]
 Пълният списък с приставки
+[Update completed]
+
+[Update failed]
+
 ;file \plugins\PluginUpdater\src\Utils.cpp
 ['Yes' Button]
 Бутон "Да"

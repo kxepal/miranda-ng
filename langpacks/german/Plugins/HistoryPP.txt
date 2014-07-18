@@ -1,9 +1,9 @@
 ﻿#muuid {b92282ac-686b-4541-a12d-6e9971a253b7}
 ;============================================================
 ;  File: HistoryPP.dll
-;  Module: History++
+;  Plugin: History++
 ;  Version: 1.5.1.5
-;  Authors: theMIROn
+;  Authors: theMIROn, Art Fedorov
 ;============================================================
 [Easy, fast and feature complete history viewer.]
 Einfacher, schneller und funktionsreicher Verlaufsbetrachter.
@@ -157,7 +157,7 @@ Suche löschen
 Im Zusammenhang anzeigen
 [Set &Bookmark]
 Lesezeichen setzen
-[Rename &Bookmark]
+[&Rename Bookmark]
 Lesezeichen um&benennen
 [Copy &Text]
 &Text kopieren
@@ -250,17 +250,17 @@ Ordner öffnen
 [Disable &Processing]
 Verarbeitung dea&ktivieren
 [Export as &HTML...]
-Als &HTML exportieren
+Als &HTML exportieren...
 [Export as &XML...]
-Als &XML exportieren
+Als &XML exportieren...
 [Export as &RTF...]
-Als &RTF exporteren
+Als &RTF exporteren...
 [Export as &mContacts...]
-Als &mContacts exportieren
+Als &mContacts exportieren...
 [Export as &Text...]
-Als &Text exportieren
+Als &Text exportieren...
 [Empty history...]
-Verlauf leeren
+Verlauf leeren...
 [Text direction]
 Textausrichtung
 [ANSI Encoding]
@@ -480,7 +480,7 @@ Suche nur Ereignisse der Art
 [Limit Event Types]
 Ereignisse eingrenzen
 [Hide Menu]
-Menu verbergen
+Menü verbergen
 [&File Actions]
 Dateiaktionen
 [Unknown codepage %u]
@@ -501,8 +501,6 @@ Keine "%s"-Einträge
 Kann Iconpack (%s) nicht laden von:\\r\\n%s\\r\\nDies kann zu fehlenden Icons führen.
 [You are using old icon pack from:\\r\\n%s\\r\\nThis can cause missing icons, so update the icon pack.]
 Sie verwenden ein altes Iconpack von:\\r\\n%s\\r\\nDies kann zu fehlenden Icons führen, also aktualisieren Sie das Iconpack.
-[Speak Message]
-Nachricht vorlesen
 [Next message]
 Nächste Nachricht
 [History++ module could not be loaded, richedit 2.0+ module is missing.\\nPress OK to continue loading Miranda.]
@@ -515,8 +513,6 @@ V&erlauf leeren
 Wollen Sie wirklich ALLE Einträge für diesen Kontakt löschen?
 [Note: It can take several minutes for large histories]
 Dies kann bei einem großen Verlauf mehrere Minuten lang dauern.
-[Empty history of subcontacts also]
-Auch Verlauf aller Unterkontakte löschen
 [Previous message]
 Vorherige Nachricht
 [Running version of AniSmiley is not supported]
@@ -644,7 +640,7 @@ Rahmen deaktivieren
 [Disable scroll bar]
 Scrollleiste deaktivieren
 [History view options]
-VerlaufsEinstellungen
+Verlaufseinstellungen
 [Visit Wiki page for more options]
 Wiki-Seite für weitere Einstellungen besuchen
 [&Code Editor...]
@@ -719,3 +715,5 @@ Verlauf anzeigen
 Verlauf anzeigen
 [View &History]
 Verlauf anzeigen
+[User Menu]
+Kontaktmenü

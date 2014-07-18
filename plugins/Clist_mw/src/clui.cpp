@@ -334,12 +334,12 @@ int CreateTimerForConnectingIcon(WPARAM wParam, LPARAM lParam)
 // Restore protocols to the last global status.
 // Used to reconnect on restore after standby.
 
-int OnSettingChanging(WPARAM wParam, LPARAM lParam)
+int OnSettingChanging(WPARAM hContact, LPARAM lParam)
 {
 	DBCONTACTWRITESETTING *dbcws = (DBCONTACTWRITESETTING *)lParam;
-	if (wParam == 0) {
-		if ((dbcws->value.type == DBVT_BYTE)&&!strcmp(dbcws->szModule,"CLUI")) {
-			if ( !strcmp(dbcws->szSetting,"SBarShow")) {
+	if (hContact == 0) {
+		if ((dbcws->value.type == DBVT_BYTE) && !strcmp(dbcws->szModule,"CLUI")) {
+			if (!strcmp(dbcws->szSetting,"SBarShow")) {
 				showOpts = dbcws->value.bVal;
 				return 0;
 			}
@@ -377,8 +377,8 @@ int CreateCLC(HWND parent)
 		Frame.hIcon = LoadSkinnedIcon(SKINICON_OTHER_FRAME);
 			//LoadIcon(hInst,MAKEINTRESOURCE(IDI_MIRANDA));
 		Frame.Flags = F_VISIBLE|F_SHOWTB|F_SHOWTBTIP|F_TCHAR;
-		Frame.tname = _T("My Contacts");
-		Frame.TBtname = TranslateT("My Contacts");
+		Frame.tname = _T("My contacts");
+		Frame.TBtname = TranslateT("My contacts");
 		hFrameContactTree = (HWND)CallService(MS_CLIST_FRAMES_ADDFRAME,(WPARAM)&Frame,0);
 		//free(Frame.name);
 		CallService(MS_CLIST_FRAMES_SETFRAMEOPTIONS,MAKEWPARAM(FO_TBTIPNAME,hFrameContactTree),(LPARAM)TranslateT("My Contacts"));
@@ -555,20 +555,21 @@ LRESULT CALLBACK ContactListWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 		break;
 
 	case WM_DRAWITEM:
-	{
-		LPDRAWITEMSTRUCT dis = (LPDRAWITEMSTRUCT)lParam;
-		if ( dis->hwndItem == pcli->hwndStatus ) {
-			DrawDataForStatusBar(dis);
-			return 0;
+		{
+			LPDRAWITEMSTRUCT dis = (LPDRAWITEMSTRUCT)lParam;
+			if (dis->hwndItem == pcli->hwndStatus) {
+				DrawDataForStatusBar(dis);
+				return 0;
+			}
+			if (dis->CtlType != ODT_MENU)
+				return 0;
 		}
-		if ( dis->CtlType != ODT_MENU )
-			return 0;
 		break;
-	}
+
 	case WM_KEYDOWN:
-		CallService(MS_CLIST_MENUPROCESSHOTKEY,wParam,MPCF_MAINMENU|MPCF_CONTACTMENU);
+		CallService(MS_CLIST_MENUPROCESSHOTKEY, wParam, MPCF_MAINMENU | MPCF_CONTACTMENU);
 		if (wParam == VK_F5)
-			SendMessage(pcli->hwndContactTree,CLM_AUTOREBUILD,0,0);
+			pcli->pfnInitAutoRebuild(pcli->hwndContactTree);
 		return TRUE;
 
 	case WM_GETMINMAXINFO:

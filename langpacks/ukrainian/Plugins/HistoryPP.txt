@@ -1,9 +1,9 @@
 ﻿#muuid {b92282ac-686b-4541-a12d-6e9971a253b7}
 ;============================================================
 ;  File: HistoryPP.dll
-;  Module: History++
+;  Plugin: History++
 ;  Version: 1.5.1.5
-;  Authors: theMIROn
+;  Authors: theMIROn, Art Fedorov
 ;============================================================
 [Easy, fast and feature complete history viewer.]
 Простий, швидкий і багатофункціональний перегляд історії.
@@ -153,7 +153,7 @@ WATrack: запит заборонений
 Показати в &контексті
 [Set &Bookmark]
 Поставити &закладку
-[Rename &Bookmark]
+[&Rename Bookmark]
 Перейменувати закладку
 [Copy &Text]
 Копіювати &текст
@@ -288,7 +288,7 @@ WATrack: запит заборонений
 [Do you really want to delete ALL items (%.0f) for this contact?]
 Видалити ВСІ записи (%.0f) для цього контакту?
 [Note: It can take several minutes for large history.]
-Увага: це може зайняти декілька хвилин для великої історії
+Примітка. Це може зайняти декілька хвилин для великої історії
 [Empty History]
 Очистити історію
 [Search Up (Ctrl+Up)]
@@ -495,8 +495,6 @@ Enter для подробиць події
 Не можу завантажити набір значків (%s)\\r\\n%s\\r\\nЗначки не будуть відображатися.
 [You are using old icon pack from:\\r\\n%s\\r\\nThis can cause missing icons, so update the icon pack.]
 У вас старий набір значків:\\r\\n%s\\r\\nМожливі проблеми зі значками, поновіть набір.
-[Speak Message]
-Вимовити повідомлення голосом
 [Next message]
 Наступне
 [History++ module could not be loaded, richedit 2.0+ module is missing.\\nPress OK to continue loading Miranda.]
@@ -508,9 +506,7 @@ Enter для подробиць події
 [Do you really want to delete ALL items for this contact?]
 Ви дійсно хочете видалити всі записи для цього контакту?
 [Note: It can take several minutes for large histories]
-Примітка: це може зайняти декілька хвилин для великої історії
-[Empty history of subcontacts also]
-Також видалити історію субконтактів
+Примітка. Це може зайняти декілька хвилин для великої історії
 [Previous message]
 Попереднє повідомлення
 [Running version of AniSmiley is not supported]

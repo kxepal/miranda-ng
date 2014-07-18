@@ -39,13 +39,11 @@
 Швидкі контакти
 [Open dialog]
 Відкрити діалог
-[Make a voice call]
-Голосовий дзвінок
 [Send file]
 Передати файл
 [Send URL]
 Надіслати URL
-[Open userinfo]
+[Open user info]
 Інформація користувача
 [Open history]
 Історія

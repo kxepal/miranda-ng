@@ -1,11 +1,11 @@
 #define __MAJOR_VERSION            1
 #define __MINOR_VERSION            1
 #define __RELEASE_NUM              0
-#define __BUILD_NUM                1
+#define __BUILD_NUM                3
 
 #include <stdver.h>
 
-#define __PLUGIN_NAME              "Twitter"
+#define __PLUGIN_NAME              "Twitter protocol"
 #define __INTERNAL_NAME            "Twitter"
 #define __FILENAME                 "Twitter.dll"
 #define __DESCRIPTION              "Twitter protocol support for Miranda NG."

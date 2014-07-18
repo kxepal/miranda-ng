@@ -66,7 +66,7 @@ int UnloadPlugin(TCHAR* buf, int bufLen);
 typedef struct
 {
 	int action;
-	PROTOACCOUNT* pa;
+	PROTOACCOUNT *pa;
 }
 	AccFormDlgParam;
 
@@ -118,7 +118,7 @@ static INT_PTR CALLBACK AccFormDlgProc(HWND hwndDlg, UINT message, WPARAM wParam
 		case IDOK:
 			{
 				AccFormDlgParam* param = (AccFormDlgParam*)GetWindowLongPtr(hwndDlg, GWLP_USERDATA);
-				PROTOACCOUNT* pa = param->pa;
+				PROTOACCOUNT *pa = param->pa;
 
 				if (param->action == PRAC_ADDED) {
 					char buf[200];
@@ -127,7 +127,7 @@ static INT_PTR CALLBACK AccFormDlgProc(HWND hwndDlg, UINT message, WPARAM wParam
 					if (buf[0]) {
 						for (int i=0; i < accounts.getCount(); i++)
 							if (_stricmp(buf, accounts[i]->szModuleName) == 0) {
-								MessageBox(NULL, TranslateT("Account name has to be unique. Please enter unique name."), TranslateT("Account error"), MB_ICONERROR | MB_OK);
+								MessageBox(hwndDlg, TranslateT("Account name has to be unique. Please enter unique name."), TranslateT("Account error"), MB_ICONERROR | MB_OK);
 								return FALSE;
 							}
 					}
@@ -136,11 +136,10 @@ static INT_PTR CALLBACK AccFormDlgProc(HWND hwndDlg, UINT message, WPARAM wParam
 				switch(param->action) {
 				case PRAC_UPGRADED:
 					{
-						int idx;
 						BOOL oldProto = pa->bOldProto;
 						TCHAR szPlugin[MAX_PATH];
 						mir_sntprintf(szPlugin, SIZEOF(szPlugin), _T("%s.dll"), StrConvT(pa->szProtoName));
-						idx = accounts.getIndex(pa);
+						int idx = accounts.getIndex(pa);
 						UnloadAccount(pa, false, false);
 						accounts.remove(idx);
 						if (oldProto && UnloadPlugin(szPlugin, SIZEOF(szPlugin))) {
@@ -709,7 +708,7 @@ INT_PTR CALLBACK AccMgrDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM
 			}
 
 			if (iItem != LB_ERR) {
-				PROTOACCOUNT* pa = (PROTOACCOUNT*)ListBox_GetItemData(hwndList, iItem);
+				PROTOACCOUNT *pa = (PROTOACCOUNT*)ListBox_GetItemData(hwndList, iItem);
 				HMENU hMenu = CreatePopupMenu();
 				if (!pa->bOldProto && !pa->bDynDisabled)
 					AppendMenu(hMenu, MF_STRING, 1, TranslateT("Rename"));
@@ -851,15 +850,15 @@ INT_PTR CALLBACK AccMgrDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM
 				HWND hList = GetDlgItem(hwndDlg, IDC_ACCLIST);
 				int idx = ListBox_GetCurSel(hList);
 				if (idx != -1) {
-					PROTOACCOUNT* pa = (PROTOACCOUNT*)ListBox_GetItemData(hList, idx);
+					PROTOACCOUNT *pa = (PROTOACCOUNT*)ListBox_GetItemData(hList, idx);
 					TCHAR buf[ 200 ];
 					mir_sntprintf(buf, SIZEOF(buf), TranslateT("Account %s is being deleted"), pa->tszAccountName);
 					if (pa->bOldProto) {
-						MessageBox(NULL, TranslateT("You need to disable plugin to delete this account"), buf,
+						MessageBox(hwndDlg, TranslateT("You need to disable plugin to delete this account"), buf,
 							MB_ICONERROR | MB_OK);
 						break;
 					}
-					if (IDYES == MessageBox(NULL, errMsg, buf, MB_ICONWARNING | MB_DEFBUTTON2 | MB_YESNO)) {
+					if (IDYES == MessageBox(hwndDlg, errMsg, buf, MB_ICONWARNING | MB_DEFBUTTON2 | MB_YESNO)) {
 						// lock controls to avoid changes during remove process
 						ListBox_SetCurSel(hList, -1);
 						sttUpdateAccountInfo(hwndDlg, dat);
@@ -890,7 +889,7 @@ INT_PTR CALLBACK AccMgrDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM
 				HWND hList = GetDlgItem(hwndDlg, IDC_ACCLIST);
 				int idx = ListBox_GetCurSel(hList);
 				if (idx != -1) {
-					PROTOACCOUNT* pa = (PROTOACCOUNT*)ListBox_GetItemData(hList, idx);
+					PROTOACCOUNT *pa = (PROTOACCOUNT*)ListBox_GetItemData(hList, idx);
 					if (pa->bOldProto) {
 						OPENOPTIONSDIALOG ood;
 						ood.cbSize = sizeof(ood);
@@ -973,10 +972,9 @@ INT_PTR CALLBACK AccMgrDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM
 			switch (((LPNMHDR)lParam)->code) {
 				case PSN_APPLY:
 				{
-					int i;
 					PSHNOTIFY pshn = {0};
 					pshn.hdr.code = PSN_APPLY;
-					for (i=0; i < accounts.getCount(); i++) {
+					for (int i=0; i < accounts.getCount(); i++) {
 						if (accounts[i]->hwndAccMgrUI && accounts[i]->bAccMgrUIChanged) {
 							pshn.hdr.hwndFrom = accounts[i]->hwndAccMgrUI;
 							SendMessage(accounts[i]->hwndAccMgrUI, WM_NOTIFY, 0, (LPARAM)&pshn);
@@ -987,10 +985,9 @@ INT_PTR CALLBACK AccMgrDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM
 				}
 				case PSN_RESET:
 				{
-					int i;
 					PSHNOTIFY pshn = {0};
 					pshn.hdr.code = PSN_RESET;
-					for (i=0; i < accounts.getCount(); i++) {
+					for (int i=0; i < accounts.getCount(); i++) {
 						if (accounts[i]->hwndAccMgrUI && accounts[i]->bAccMgrUIChanged) {
 							pshn.hdr.hwndFrom = accounts[i]->hwndAccMgrUI;
 							SendMessage(accounts[i]->hwndAccMgrUI, WM_NOTIFY, 0, (LPARAM)&pshn);
@@ -1056,7 +1053,7 @@ int OptProtosLoaded(WPARAM, LPARAM)
 
 static int OnAccListChanged(WPARAM eventCode, LPARAM lParam)
 {
-	PROTOACCOUNT* pa = (PROTOACCOUNT*)lParam;
+	PROTOACCOUNT *pa = (PROTOACCOUNT*)lParam;
 
 	switch(eventCode) {
 	case PRAC_CHANGED:

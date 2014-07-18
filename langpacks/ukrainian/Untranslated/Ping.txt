@@ -1,4 +1,0 @@
-﻿[OK]
-[Ping Graph]
-[Ping Reply]
-[Ping Timeout]

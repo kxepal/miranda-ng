@@ -17,11 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include "common.h"
 #include "utility.h"
-#include "stdafx.h"
-
-#include <m_protoint.h>
 
 class TwitterProto : public PROTO<TwitterProto>
 {
@@ -126,7 +122,7 @@ private:
 	int ShowPinDialog();
 	void ShowPopup(const wchar_t *, int Error = 0);
 	void ShowPopup(const char *, int Error = 0);
-	void ShowContactPopup(MCONTACT, const std::string &);
+	void ShowContactPopup(MCONTACT, const std::string &, const std::string *);
 
 	bool IsMyContact(MCONTACT, bool include_chat = false);
 	MCONTACT UsernameToHContact(const char *);

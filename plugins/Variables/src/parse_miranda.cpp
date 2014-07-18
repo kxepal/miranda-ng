@@ -436,6 +436,20 @@ static TCHAR* parseProtoInfo(ARGUMENTSINFO *ai)
 		if (szText != NULL)
 			szRes = _strdup(szText);
 	}
+	else if (!_tcscmp(ai->targv[2], _T(STR_PINICK)))
+	{
+		CONTACTINFO ci;
+
+		ci.cbSize = sizeof(CONTACTINFO);
+		ci.dwFlag = CNF_DISPLAY | CNF_UNICODE;
+		ci.hContact = NULL;
+		ci.szProto = szProto;
+		CallService(MS_CONTACT_GETCONTACTINFO, 0, (LPARAM)&ci);
+
+		tszRes = mir_tstrdup(ci.pszVal);
+
+		mir_free(ci.pszVal);
+	}
 	mir_free(szProto);
 	if (szRes == NULL && tszRes == NULL)
 		return NULL;
@@ -519,9 +533,9 @@ static HANDLE findDbEvent(MCONTACT hContact, HANDLE hDbEvent, int flags)
 			else if (flags & DBE_LAST)
 				hDbEvent = db_event_last(hContact);
 			else if (flags & DBE_NEXT)
-				hDbEvent = db_event_next(hDbEvent);
+				hDbEvent = db_event_next(hContact, hDbEvent);
 			else if (flags & DBE_PREV)
-				hDbEvent = db_event_prev(hDbEvent);
+				hDbEvent = db_event_prev(hContact, hDbEvent);
 		}
 		else {
 			HANDLE hMatchEvent, hSearchEvent;
@@ -774,7 +788,7 @@ void registerMirandaTokens()
 	registerIntToken(MIR_CONTACTINFO, parseContactInfo, TRF_FUNCTION, LPGEN("Miranda Related")"\t(x,y)\t"LPGEN("info property y of contact x"));
 	registerIntToken(DBPROFILENAME, parseDBProfileName, TRF_FIELD, LPGEN("Miranda Related")"\t"LPGEN("database profile name"));
 	registerIntToken(DBPROFILEPATH, parseDBProfilePath, TRF_FIELD, LPGEN("Miranda Related")"\t"LPGEN("database profile path"));
-	registerIntToken(DBSETTING, parseDBSetting, TRF_FUNCTION, LPGEN("Miranda Related")"\t(x,y,z,w)\t"LPGEN("database setting z of module y of contact x and return w if z isn't exist (w is optional)"));
+	registerIntToken(DBSETTING, parseDBSetting, TRF_FUNCTION, LPGEN("Miranda Related")"\t(x,y,z,w)\t"LPGEN("database setting z of module y of contact x and return w if z doesn't exist (w is optional)"));
 	registerIntToken(DBEVENT, parseDbEvent, TRF_FUNCTION, LPGEN("Miranda Related")"\t(x,y,z,w)\t"LPGEN("get event for contact x (optional), according to y,z,w, see documentation"));
 	registerIntToken(LSTIME, parseLastSeenTime, TRF_FUNCTION, LPGEN("Miranda Related")"\t(x,y)\t"LPGEN("get last seen time of contact x in format y (y is optional)"));
 	registerIntToken(LSDATE, parseLastSeenDate, TRF_FUNCTION, LPGEN("Miranda Related")"\t(x,y)\t"LPGEN("get last seen date of contact x in format y (y is optional)"));

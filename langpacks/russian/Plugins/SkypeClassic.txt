@@ -1,7 +1,7 @@
 ﻿#muuid {a71f8335-7b87-4432-b8a3-81479431c6f5}
 ;============================================================
 ;  File: SkypeClassic.dll
-;  Plugin: Skype Protocol (Classic)
+;  Plugin: Skype protocol (Classic)
 ;  Version: 0.0.0.54
 ;  Authors: leecher, tweety, jls17
 ;============================================================
@@ -169,14 +169,20 @@ SkypeOut контакты в статусе:
 &Информация
 [User &history]
 &История пользователя
+[&Kick user]
+Выгнать пользователя
 [Do a SkypeOut-call]
 Позвонить по SkypeOut
+[invited]
+пригласил
 [Phone call]
 Звонок
 [Incoming Skype Call]
 Входящий Skype звонок
 [Incoming call from %s]
 Входящий Skype звонок от %s
+[Connection to Skype lost]
+Потеряно cоединение со Skype
 [This seems to be the first time that you're running the Skype protocol plugin. Do you want to enable the protocol for this Miranda profile? If you chose NO, you can always enable it in the plugin options later.]
 Вы впервые запустили протокол Skype. Хотите включить его для этого профиля Miranda? Если вы откажетесь, всегда можно включить его в настройках.
 [Preview Error Message]

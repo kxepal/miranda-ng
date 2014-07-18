@@ -1,5 +1,1 @@
-﻿[OK]
-[&Kick user]
-[invited ]
-[Connection to Skype lost]
-[Skype ID]
+﻿[Skype ID]

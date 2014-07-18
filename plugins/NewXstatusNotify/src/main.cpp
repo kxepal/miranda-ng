@@ -28,10 +28,13 @@ LIST<DBEVENT> eventList( 10 );
 HANDLE hStatusModeChange, hServiceMenu, hHookContactStatusChanged, hToolbarButton;
 HGENMENU hEnableDisableMenu;
 
-char szMetaModuleName[256] = {0};
 STATUS StatusList[STATUS_COUNT];
 HWND SecretWnd;
 int hLangpack;
+
+
+int ContactStatusChanged(MCONTACT hContact, WORD oldStatus,WORD newStatus);
+
 
 PLUGININFOEX pluginInfoEx = {
 	sizeof(PLUGININFOEX),
@@ -438,6 +441,7 @@ int ProcessStatus(DBCONTACTWRITESETTING *cws, MCONTACT hContact)
 			return 0;
 
 		//If we get here, we have to notify the Hooks.
+		ContactStatusChanged(hContact,oldStatus, newStatus);
 		NotifyEventHooks(hHookContactStatusChanged, hContact, (LPARAM)MAKELPARAM(oldStatus, newStatus));
 		return 1;
 	}
@@ -493,7 +497,7 @@ int ProcessStatus(DBCONTACTWRITESETTING *cws, MCONTACT hContact)
 			mir_snprintf(status, SIZEOF(status), "%d", IDC_CHK_STATUS_MESSAGE);
 			if ( db_get_b(hContact, MODULE, "EnablePopups", 1) && db_get_b(0, MODULE, status, 1) && retem && rettime) {
 				char* protoname = (char*)CallService(MS_PROTO_GETCONTACTBASEACCOUNT, (WPARAM)smi.hContact, 0);
-				PROTOACCOUNT* pdescr = ProtoGetAccount(protoname);
+				PROTOACCOUNT *pdescr = ProtoGetAccount(protoname);
 				protoname = mir_t2a(pdescr->tszAccountName);
 				protoname = (char*)mir_realloc(protoname, lstrlenA(protoname) + lstrlenA("_TSMChange") + 1);
 				lstrcatA(protoname, "_TSMChange");
@@ -611,9 +615,32 @@ int StatusModeChanged(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
+void GetStatusText(MCONTACT hContact, WORD newStatus, WORD oldStatus, TCHAR *stzStatusText) {
+	if (opt.UseAlternativeText) {
+		switch (GetGender(hContact)) {
+		case GENDER_MALE:
+			_tcsncpy(stzStatusText, StatusList[Index(newStatus)].lpzMStatusText, MAX_STATUSTEXT);
+			break;
+		case GENDER_FEMALE:
+			_tcsncpy(stzStatusText, StatusList[Index(newStatus)].lpzFStatusText, MAX_STATUSTEXT);
+			break;
+		case GENDER_UNSPECIFIED:
+			_tcsncpy(stzStatusText, StatusList[Index(newStatus)].lpzUStatusText, MAX_STATUSTEXT);
+			break;
+		}
+	}
+	else _tcsncpy(stzStatusText, StatusList[Index(newStatus)].lpzStandardText, MAX_STATUSTEXT);
+
+	if (opt.ShowPreviousStatus) {
+		TCHAR buff[MAX_STATUSTEXT];
+		mir_sntprintf(buff, SIZEOF(buff), TranslateTS(STRING_SHOWPREVIOUSSTATUS), StatusList[Index(oldStatus)].lpzStandardText);
+		_tcscat(_tcscat(stzStatusText, _T(" ")), buff);
+	}
+}
+
+
 void ShowStatusChangePopup(MCONTACT hContact, char *szProto, WORD oldStatus, WORD newStatus)
 {
-	TCHAR stzStatusText[MAX_SECONDLINE] = {0};
 	WORD myStatus = (WORD)CallProtoService(szProto, PS_GETSTATUS, 0, 0);
 
 	POPUPDATAT ppd = {0};
@@ -624,40 +651,22 @@ void ShowStatusChangePopup(MCONTACT hContact, char *szProto, WORD oldStatus, WOR
 	if (opt.ShowGroup) { //add group name to popup title
 		DBVARIANT dbv;
 		if (!db_get_ts(hContact, "CList", "Group", &dbv)) {
-			_tcscat(ppd.lptzContactName, _T(" ("));
-			_tcscat(ppd.lptzContactName, dbv.ptszVal);
-			_tcscat(ppd.lptzContactName, _T(")"));
+			_tcsncat(ppd.lptzContactName, _T(" ("), MAX_CONTACTNAME);
+			_tcsncat(ppd.lptzContactName, dbv.ptszVal, MAX_CONTACTNAME);
+			_tcsncat(ppd.lptzContactName, _T(")"), MAX_CONTACTNAME);
 			db_free(&dbv);
 		}
 	}
 
+	TCHAR stzStatusText[MAX_SECONDLINE] = {0};
 	if (opt.ShowStatus) {
-		if (opt.UseAlternativeText) {
-			switch (GetGender(hContact)) {
-			case GENDER_MALE:
-				_tcsncpy(stzStatusText, StatusList[Index(newStatus)].lpzMStatusText, MAX_STATUSTEXT);
-				break;
-			case GENDER_FEMALE:
-				_tcsncpy(stzStatusText, StatusList[Index(newStatus)].lpzFStatusText, MAX_STATUSTEXT);
-				break;
-			case GENDER_UNSPECIFIED:
-				_tcsncpy(stzStatusText, StatusList[Index(newStatus)].lpzUStatusText, MAX_STATUSTEXT);
-				break;
-			}
-		}
-		else _tcsncpy(stzStatusText, StatusList[Index(newStatus)].lpzStandardText, MAX_STATUSTEXT);
-
-		if (opt.ShowPreviousStatus) {
-			TCHAR buff[MAX_STATUSTEXT];
-			mir_sntprintf(buff, SIZEOF(buff), TranslateTS(STRING_SHOWPREVIOUSSTATUS), StatusList[Index(oldStatus)].lpzStandardText);
-			_tcscat(_tcscat(stzStatusText, _T(" ")), buff);
-		}
+		GetStatusText(hContact,newStatus,oldStatus,stzStatusText);
 	}
 
 	if (opt.ReadAwayMsg && myStatus != ID_STATUS_INVISIBLE && StatusHasAwayMessage(szProto, newStatus))
 		db_set_ws(hContact, MODULE, "LastPopupText", stzStatusText);
 
-	_tcscpy(ppd.lptzText, stzStatusText);
+	_tcsncpy(ppd.lptzText, stzStatusText, MAX_SECONDLINE);
 
 	switch (opt.Colors) {
 	case POPUP_COLOR_OWN:
@@ -698,8 +707,8 @@ void BlinkIcon(MCONTACT hContact, char* szProto, WORD status)
 	cle.pszService = "UserOnline/Description";
 	cle.ptszTooltip = stzTooltip;
 
-	TCHAR *hlpName = (TCHAR *)CallService(MS_CLIST_GETCONTACTDISPLAYNAME, hContact, GCDNF_TCHAR);
-	mir_sntprintf(stzTooltip, SIZEOF(stzTooltip), TranslateT("%s is now %s"), hlpName, StatusList[Index(status)].lpzStandardText);
+	mir_sntprintf(stzTooltip, SIZEOF(stzTooltip), TranslateT("%s is now %s"),
+		CallService(MS_CLIST_GETCONTACTDISPLAYNAME, hContact, GCDNF_TCHAR), StatusList[Index(status)].lpzStandardText);
 	CallService(MS_CLIST_ADDEVENT, 0, (LPARAM)&cle);
 }
 
@@ -726,39 +735,38 @@ void PlayChangeSound(MCONTACT hContact, WORD oldStatus, WORD newStatus)
 		}
 	}
 
-	char szSoundFile[MAX_PATH] = {0};
-
-	if (!db_get_b(0, "SkinSoundsOff", "UserFromOffline", 0) &&
-		!db_get_s(0,"SkinSounds", "UserFromOffline", &dbv) &&
-		oldStatus == ID_STATUS_OFFLINE)
-	{
-		strcpy(szSoundFile, "UserFromOffline");
-		db_free(&dbv);
-	}
-	else if (!db_get_b(0, "SkinSoundsOff", StatusList[Index(newStatus)].lpzSkinSoundName, 0) &&
-		!db_get(0, "SkinSounds", StatusList[Index(newStatus)].lpzSkinSoundName, &dbv))
-	{
-		strcpy(szSoundFile, StatusList[Index(newStatus)].lpzSkinSoundName);
-		db_free(&dbv);
-	}
-
-	if (szSoundFile[0])
-		SkinPlaySound(szSoundFile);
+	if (!db_get_b(0, "SkinSoundsOff", "UserFromOffline", 0) && oldStatus == ID_STATUS_OFFLINE)
+		SkinPlaySound("UserFromOffline");
+	else if (!db_get_b(0, "SkinSoundsOff", StatusList[Index(newStatus)].lpzSkinSoundName, 0))
+		SkinPlaySound(StatusList[Index(newStatus)].lpzSkinSoundName);
 }
 
-int ContactStatusChanged(WPARAM hContact, LPARAM lParam)
+int ContactStatusChanged(MCONTACT hContact, WORD oldStatus,WORD newStatus)
 {
-	WORD oldStatus = LOWORD(lParam);
-	WORD newStatus = HIWORD(lParam);
+	if(opt.LogToDB && (!opt.CheckMessageWindow || CheckMsgWnd(hContact))) {
+		TCHAR stzStatusText[MAX_SECONDLINE] = {0};
+		GetStatusText(hContact,newStatus,oldStatus,stzStatusText);
+		char *blob = mir_utf8encodeT(stzStatusText);
+
+		DBEVENTINFO dbei = {0};
+		dbei.cbSize = sizeof(dbei);
+		dbei.cbBlob = (DWORD)strlen(blob) + 1;
+		dbei.pBlob = (PBYTE) blob;
+		dbei.eventType = EVENTTYPE_STATUSCHANGE;
+		dbei.flags = DBEF_READ | DBEF_UTF;
+
+		dbei.timestamp = (DWORD)time(NULL);
+		dbei.szModule = MODULE;
+		HANDLE hDBEvent = db_event_add(hContact, &dbei);
+		mir_free(blob);
+	}	
 
 	bool bEnablePopup = true, bEnableSound = true;
 
-	char *hlpProto = GetContactProto(hContact);
-	if (hlpProto == NULL || opt.TempDisabled)
+	char *szProto = GetContactProto(hContact);
+	if (szProto == NULL || opt.TempDisabled)
 		return 0;
 
-	char szProto[64];
-	strcpy(szProto, hlpProto);
 	WORD myStatus = (WORD)CallProtoService(szProto, PS_GETSTATUS, 0, 0);
 
 	if (opt.EnableLastSeen && newStatus == ID_STATUS_OFFLINE && oldStatus > ID_STATUS_OFFLINE) {
@@ -775,21 +783,18 @@ int ContactStatusChanged(WPARAM hContact, LPARAM lParam)
 		db_set_w(hContact, "SeenModule", "Status", oldStatus);
 	}
 
-	if (strcmp(szProto, szMetaModuleName) == 0) { //this contact is Meta
-		MCONTACT hSubContact = (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, hContact, 0);
-		hlpProto = GetContactProto(hSubContact);
-		if (hlpProto == NULL)
+	if (!strcmp(szProto, META_PROTO)) { //this contact is Meta
+		MCONTACT hSubContact = db_mc_getMostOnline(hContact);
+		char *szSubProto = GetContactProto(hSubContact);
+		if (szSubProto == NULL)
 			return 0;
-
-		char szSubProto[64];
-		strcpy(szSubProto, hlpProto);
 
 		if (newStatus == ID_STATUS_OFFLINE) {
 			// read last online proto for metaconatct if exists,
 			// to avoid notifying when meta went offline but default contact's proto still online
 			DBVARIANT dbv;
 			if (!db_get_s(hContact, szProto, "LastOnline", &dbv)) {
-				strcpy(szSubProto, dbv.pszVal);
+				szSubProto = NEWSTR_ALLOCA(dbv.pszVal);
 				db_free(&dbv);
 			}
 		}
@@ -798,7 +803,7 @@ int ContactStatusChanged(WPARAM hContact, LPARAM lParam)
 		if (!db_get_b(0, MODULE, szSubProto, 1))
 			return 0;
 
-		strcpy(szProto, szSubProto);
+		szProto = szSubProto;
 	}
 	else {
 		if (myStatus == ID_STATUS_OFFLINE || !db_get_b(0, MODULE, szProto, 1)) 
@@ -838,16 +843,13 @@ int ContactStatusChanged(WPARAM hContact, LPARAM lParam)
 		PlayChangeSound(hContact, oldStatus, newStatus);
 
 	if (opt.Log) {
-		TCHAR stzName[64], stzStatus[MAX_STATUSTEXT], stzOldStatus[MAX_STATUSTEXT];
-		TCHAR stzDate[MAX_STATUSTEXT], stzTime[MAX_STATUSTEXT];
-		TCHAR stzText[1024];
+		TCHAR stzDate[MAX_STATUSTEXT], stzTime[MAX_STATUSTEXT], stzText[1024];
 
-		_tcscpy(stzName, (TCHAR *)CallService(MS_CLIST_GETCONTACTDISPLAYNAME, hContact, GCDNF_TCHAR));
-		_tcsncpy(stzStatus, StatusList[Index(newStatus)].lpzStandardText, MAX_STATUSTEXT);
-		_tcsncpy(stzOldStatus, StatusList[Index(oldStatus)].lpzStandardText, MAX_STATUSTEXT);
 		GetTimeFormat(LOCALE_USER_DEFAULT, 0, NULL,_T("HH':'mm"), stzTime, SIZEOF(stzTime));
 		GetDateFormat(LOCALE_USER_DEFAULT, 0, NULL,_T("dd/MM/yyyy"), stzDate, SIZEOF(stzDate));
-		mir_sntprintf(stzText, SIZEOF(stzText), TranslateT("%s, %s. %s changed to: %s (was: %s).\r\n"), stzDate, stzTime, stzName, stzStatus, stzOldStatus);
+		mir_sntprintf(stzText, SIZEOF(stzText), TranslateT("%s, %s. %s changed to: %s (was: %s).\r\n"),
+			stzDate, stzTime, CallService(MS_CLIST_GETCONTACTDISPLAYNAME, hContact, GCDNF_TCHAR), StatusList[Index(newStatus)].lpzStandardText,
+			StatusList[Index(oldStatus)].lpzStandardText);
 		LogToFile(stzText);
 	}
 
@@ -1071,14 +1073,12 @@ void InitMainMenuItem()
 {
 	CLISTMENUITEM mi = { sizeof(mi) };
 	mi.flags = CMIF_TCHAR;
-	mi.ptszPopupName = ServiceExists(MS_POPUP_ADDPOPUP) ? _T("Popups") : NULL;
+	mi.ptszPopupName = ServiceExists(MS_POPUP_ADDPOPUPT) ? _T("Popups") : NULL;
 	mi.pszService = MS_STATUSCHANGE_MENUCOMMAND;
 	hEnableDisableMenu = Menu_AddMainMenuItem(&mi);
 
 	opt.TempDisabled = !opt.TempDisabled;
 	EnableDisableMenuCommand(0, 0);
-
-	hServiceMenu = (HANDLE)CreateServiceFunction(MS_STATUSCHANGE_MENUCOMMAND, EnableDisableMenuCommand);
 }
 
 static IconItem iconList[] =
@@ -1109,8 +1109,8 @@ int InitTopToolbar(WPARAM, LPARAM)
 	tbb.pszService = MS_STATUSCHANGE_MENUCOMMAND;
 	tbb.dwFlags = (opt.TempDisabled ? 0 : TTBBF_PUSHED) | TTBBF_ASPUSHBUTTON;
 	tbb.name = LPGEN("Toggle status notification");
-	tbb.hIconHandleUp = GetIconHandle(ICO_NOTIFICATION_OFF);
-	tbb.hIconHandleDn = GetIconHandle(ICO_NOTIFICATION_ON);
+	tbb.hIconHandleUp = iconList[0].hIcolib;
+	tbb.hIconHandleDn = iconList[1].hIcolib;
 	tbb.pszTooltipUp = LPGEN("Enable status notification");
 	tbb.pszTooltipDn = LPGEN("Disable status notification");
 	hToolbarButton = TopToolbar_AddButton(&tbb);
@@ -1123,7 +1123,6 @@ int ModulesLoaded(WPARAM wParam, LPARAM lParam)
 	InitMainMenuItem();
 
 	HookEvent(ME_USERINFO_INITIALISE, UserInfoInitialise);
-	HookEvent(ME_STATUSCHANGE_CONTACTSTATUSCHANGED, ContactStatusChanged);
 	HookEvent(ME_MSG_WINDOWEVENT, OnWindowEvent);
 	HookEvent(ME_TTB_MODULELOADED, InitTopToolbar);
 
@@ -1133,13 +1132,10 @@ int ModulesLoaded(WPARAM wParam, LPARAM lParam)
 
 	int count = 0;
 	PROTOACCOUNT **accounts = NULL;
-	CallService(MS_PROTO_ENUMACCOUNTS, (WPARAM)&count, (LPARAM)&accounts);
+	ProtoEnumAccounts(&count, &accounts);
 	for (int i = 0; i < count; i++)
 		if (IsAccountEnabled(accounts[i]))
 			db_set_b(NULL, MODULE, accounts[i]->szModuleName, 0);
-
-	if (ServiceExists(MS_MC_GETPROTOCOLNAME))
-		strcpy(szMetaModuleName, (char *)CallService(MS_MC_GETPROTOCOLNAME, 0, 0));
 
 	return 0;
 }
@@ -1173,6 +1169,20 @@ extern "C" int __declspec(dllexport) Load(void)
 
 	db_set_resident("MetaContacts", "LastOnline");
 	db_set_resident("NewStatusNotify", "LastPopupText");
+	
+	// register special type of event
+	// there's no need to declare the special service for getting text
+	// because a blob contains only text
+	DBEVENTTYPEDESCR evtype = { sizeof(evtype) };
+	evtype.module = MODULE;
+	evtype.eventType = EVENTTYPE_STATUSCHANGE;
+	evtype.descr = LPGEN("Status change");
+	evtype.eventIcon = iconList[0].hIcolib;
+	evtype.flags = DETF_HISTORY | DETF_MSGWINDOW;
+	CallService(MS_DB_EVENT_REGISTERTYPE, 0, (LPARAM)&evtype);
+
+	hServiceMenu = CreateServiceFunction(MS_STATUSCHANGE_MENUCOMMAND, EnableDisableMenuCommand);
+
 	return 0;
 }
 

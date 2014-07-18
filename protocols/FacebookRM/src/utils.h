@@ -48,7 +48,7 @@ namespace utils
 
 	namespace number
 	{
-		int random();
+		int random(int min, int max);
 	};
 
 	namespace text
@@ -64,6 +64,7 @@ namespace utils
 		std::string source_get_value(std::string* data, unsigned int argument_count, ...);
 		std::string source_get_value2(std::string* data, const char *term, const char *endings, bool wholeString = false);
 		std::string source_get_form_data(std::string* data);
+		std::string rand_string(int len, const char *chars = "0123456789" "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "abcdefghijklmnopqrstuvwxyz");
 		void explode(std::string str, std::string separator, std::vector<std::string>* results);
 		void append_ordinal(unsigned long value, std::string* data);
 	};
@@ -71,7 +72,6 @@ namespace utils
 	namespace conversion
 	{
 		DWORD to_timestamp(std::string data);
-		struct tm *fbtime_to_timeinfo(unsigned __int64 timestamp);
 		std::string to_string(void*, WORD type);
 
 		template <class T>

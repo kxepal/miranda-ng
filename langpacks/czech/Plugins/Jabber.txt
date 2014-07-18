@@ -1,19 +1,17 @@
 ﻿#muuid {144e80a2-d198-428b-acbe-9d55dacc7fde}
 ;============================================================
 ;  File: Jabber.dll
-;  Plugin: Jabber Protocol
+;  Plugin: Jabber protocol
 ;  Version: 0.11.0.4
 ;  Authors: George Hazan, Maxim Mluhov, Victor Pavlychko, Artem Shpynov, Michael Stepura
 ;============================================================
-[Jabber protocol support for Miranda NG.]
-Jabber protokol pro Mirandu NG.
+[Jabber (XMPP) protocol support for Miranda NG.]
+Jabber (XMPP) protokol pro Mirandu NG.
 ;file \protocols\JabberG\res\jabber.rc
 [Edit Note]
 Upravit poznámku
 [Tags:]
 Štítky:
-[OK]
-OK
 [Cancel]
 Zrušit
 [Type:]
@@ -50,8 +48,6 @@ Nahrát na server
 Importovat...
 [Export to file]
 Exportovat...
-[Jabber]
-Jabber
 [Username:]
 Uživatel:
 [Change password]
@@ -473,7 +469,7 @@ Podporuje vyhledání služeb
 Podporuje výpis vyhledaných služeb
 [Can inform about its Jabber capabilities]
 Poskytuje informace o možnostech klienta
-[Supports stream initiation (for filetransfers for ex.)]
+[Supports stream initiation (e.g., for filetransfers)]
 Podporuje zahájení relace (např. pro přenos souborů)
 [Supports stream initiation for file transfers]
 Podporuje zahájení relace pro přenos souborů
@@ -535,7 +531,7 @@ Podporuje potvrzenky o doručení
 Poskytuje informace o poslouchané hudbě
 [Receives information about the music to which a user is listening]
 Přijímá informace o poslouchané hudbě
-[Supports private XML Storage (for bookmakrs and other)]
+[Supports private XML Storage (for bookmarks and other)]
 Podporuje ukládání soukromých dat (pro záložky aj.)
 [Supports attention requests ('nudge')]
 Podporuje zpracování žádosti o pozornost (tzv. drcnutí)
@@ -873,39 +869,39 @@ Vaše URL
 E-mailová adresa
 [FAQ Entry]
 
-[Whether to Allow Occupants to Invite Others]
+[Whether to allow occupants to invite others]
 
-[Whether to Allow Occupants to Change Subject]
+[Whether to allow occupants to change subject]
 
-[Whether to Enable Logging of Room Conversations]
+[Whether to enable logging of room conversations]
 
-[Natural Language for Room Discussions]
+[Natural language for room discussions]
 
-[Maximum Number of Room Occupants]
+[Maximum number of room occupants]
 
-[Whether an Make Room Members-Only]
+[Whether to make room members-only]
 
-[Whether to Make Room Moderated]
+[Whether to make room moderated]
 
-[Whether a Password is Required to Enter]
+[Whether a password is required to enter]
 
-[Whether to Make Room Persistent]
+[Whether to make room persistent]
 
-[Roles for which Presence is Broadcast]
+[Roles for which presence is broadcast]
 
-[Whether to Allow Public Searching for Room]
+[Whether to allow public searching for room]
 
-[Full List of Room Admins]
+[Full list of room admins]
 
-[Short Description of Room]
+[Short description of room]
 
-[Natural-Language Room Name]
+[Natural-language room name]
 
-[Full List of Room Owners]
+[Full list of room owners]
 
-[The Room Password]
+[The room password]
 
-[Affiliations that May Discover Real JIDs of Occupants]
+[Affiliations that may discover real JIDs of occupants]
 
 [Precondition: node configuration with the specified access model]
 
@@ -923,7 +919,7 @@ E-mailová adresa
 
 [The minimum number of milliseconds between sending any two notification digests]
 
-[The DateTime at which a leased subscription will end or has ended]
+[The date and time at which a leased subscription will end or has ended]
 
 [Whether an entity wants to receive an XMPP message body in addition to the payload format]
 
@@ -983,7 +979,7 @@ E-mailová adresa
 
 [The JIDs of those to contact with questions]
 
-[The datetime when the node was created]
+[The date and time when the node was created]
 
 [The JID of the node creator]
 
@@ -1863,13 +1859,13 @@ Přidat seznam
 Odebrat
 [** Default **]
 ** výchozí **
-[** Subsription: both **]
+[** Subscription: both **]
 ** autorizace: <-> **
-[** Subsription: to **]
+[** Subscription: to **]
 ** autorizace: -> **
-[** Subsription: from **]
+[** Subscription: from **]
 ** autorizace: <- **
-[** Subsription: none **]
+[** Subscription: none **]
 ** autorizace: žádná **
 [<none>]
 <žádný>
@@ -1938,7 +1934,7 @@ Bohužel
 [List Editor...]
 Editor...
 ;file \protocols\JabberG\src\jabber_proto.cpp
-[No compatible file transfer machanism exist]
+[No compatible file transfer mechanism exists]
 
 [Protocol is offline or no JID]
 
@@ -2197,8 +2193,6 @@ Poznámka
 [%s connection]
 %s - spojení se serverem
 ;file \protocols\JabberG\src\jabber_xstatus.cpp
-[OK (%d)]
-OK (%d)
 [Afraid]
 obavy
 [Amazed]

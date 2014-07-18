@@ -244,7 +244,7 @@ int CreateAvatarInCache(MCONTACT hContact, avatarCacheEntry *ace, char *szProto)
 	if ( lstrlen(tszFilename) < 4)
 		return -1;
 
-	_tcsncpy_s(tszFilename, SIZEOF(tszFilename), VARST(tszFilename), _TRUNCATE);
+	_tcsncpy_s(tszFilename, VARST(tszFilename), _TRUNCATE);
 	if ((hFile = CreateFile(tszFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE)
 		return -2;
 
@@ -508,13 +508,13 @@ protoPicCacheEntry *GetProtoDefaultAvatar(MCONTACT hContact)
 
 MCONTACT GetContactThatHaveTheAvatar(MCONTACT hContact, int locked)
 {
-	if (g_MetaAvail && db_get_b(NULL, g_szMetaName, "Enabled", 0)) {
-		if (db_get_dw(hContact, g_szMetaName, "NumContacts", 0) >= 1) {
+	if (db_get_b(NULL, META_PROTO, "Enabled", 0)) {
+		if (db_get_dw(hContact, META_PROTO, "NumContacts", 0) >= 1) {
 			if (locked == -1)
 				locked = db_get_b(hContact, "ContactPhoto", "Locked", 0);
 
 			if (!locked)
-				hContact = (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, hContact, 0);
+				hContact = db_mc_getMostOnline(hContact);
 		}
 	}
 	return hContact;

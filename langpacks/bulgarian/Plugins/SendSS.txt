@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: SendSS.dll
 ;  Plugin: Send ScreenShot+
-;  Version: 0.8.3.1
+;  Version: 0.8.7.0
 ;  Authors: Merlin
 ;============================================================
 [Take a screenshot and send it to a contact.]
@@ -10,8 +10,6 @@
 ;file \plugins\SendScreenshotPlus\res\resource.rc
 [Dialog]
 
-[OK]
-ОК
 [All]
 Всички
 [None]
@@ -36,6 +34,8 @@
 
 [Delete &after send]
 
+[Open editor before sending]
+
 [Open again]
 
 [&Capture]
@@ -50,27 +50,62 @@
 Затваряне
 [Edit]
 Редактиране
-[C&lient Area]
-
 [Caption:]
 
 [Size (HxW):]
 
+[C&lient Area]
+
+[indirect capture]
+
 [Target Tool]
 
+[File:]
+
+[Description:]
+Описание:
+[Result]
+
+[Thumbnail]
+
+[&Copy]
+Копиране
+[Close]
+Затваряне
 ;file \plugins\SendScreenshotPlus\src\CSend.cpp
+[Resulting URL from\n]
+
+[Copy]
+Копиране
+[Copy BBCode]
+
+[Copy BBCode w/ link]
+
+[%s requires a valid contact!]
+
+[Error]
+Грешка
 [GCHAT error]
 
 [An unknown error has occurred.]
 Възникна непозната грешка.
-[Error]
-Грешка
 ;file \plugins\SendScreenshotPlus\src\CSend.h
 [Unable to initiate %s.]
 
 [MAPI error (%i):\n%s.]
 
+[Unknown response from %s (%i)]
+
+[Got no response from %s (%i)]
+
+;file \plugins\SendScreenshotPlus\src\CSendDropbox.cpp
+[Dropbox transfer]
+
+[%s (%i):\nCould not add a share to the Dropbox plugin.]
+
 ;file \plugins\SendScreenshotPlus\src\CSendEmail.cpp
+[Email transfer]
+
 [A recipient matched more than one of the recipient descriptor structures and MAPI_DIALOG was not set]
 
 [The specified attachment was not found]
@@ -99,18 +134,25 @@
 
 [Unknown Error]
 
+;file \plugins\SendScreenshotPlus\src\CSendFile.cpp
+[File transfer]
+Обмен на файл
 ;file \plugins\SendScreenshotPlus\src\CSendFTPFile.cpp
 [FTPFile transfer]
 
 [%s (%i):\nCould not add a share to the FTP File plugin.]
 
+;file \plugins\SendScreenshotPlus\src\CSendHost_ImageShack.cpp
+[Image upload]
+
+;file \plugins\SendScreenshotPlus\src\CSendHost_imgur.cpp
+;file \plugins\SendScreenshotPlus\src\CSendHost_uploadpie.cpp
 ;file \plugins\SendScreenshotPlus\src\CSendHTTPServer.cpp
+[HTTPServer transfer]
+
 [Could not start the HTTP Server plugin.]
 
 [%s (%i):\nCould not add a share to the HTTP Server plugin.]
-
-;file \plugins\SendScreenshotPlus\src\CSendImageShack.cpp
-[Upload server did not respond timely.]
 
 ;file \plugins\SendScreenshotPlus\src\dlg_msgbox.cpp
 [Retry]
@@ -128,6 +170,8 @@
 
 ;file \plugins\SendScreenshotPlus\src\Main.cpp
 [Fatal error, image services not found. Send Screenshot will be disabled.]
+
+[Open SendSS+]
 
 [SendSS]
 
@@ -156,12 +200,6 @@
 
 [Target Desktop]
 
-[Default]
-Стандарт
-[Overlay on]
-
-[Overlay off]
-
 [Help]
 Помощ
 [Open Folder]
@@ -180,8 +218,12 @@
 Следващо
 [Update]
 Обнови
-[Apply]
-Прилагане
+[Edit on]
+
+[BBC]
+
+[BBC link]
+
 [Down arrow]
 Стрелка надолу
 ;file \plugins\SendScreenshotPlus\src\mir_icolib.h
@@ -211,6 +253,8 @@
 
 [ (primary)]
 
+[File]
+Файл
 [<Only save>]
 
 [File Transfer]
@@ -219,7 +263,11 @@
 Имейл
 [FTP File]
 FTP File
-[ImageShack]
+[Upload Pie (30m)]
+
+[Upload Pie (1d)]
+
+[Upload Pie (1w)]
 
 [Information]
 Информация
@@ -230,6 +278,8 @@ FTP File
 [Capture]
 
 [Can't create a Screenshot]
+
+[Select a file]
 
 [Select a target window.]
 

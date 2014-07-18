@@ -105,9 +105,6 @@
     <ClCompile Include="src\modern_newrowopts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\modern_popup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\modern_row.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -118,9 +115,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modern_skinbutton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modern_skineditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modern_skinengine.cpp">
@@ -218,9 +212,6 @@
     <ClInclude Include="src\hdr\modern_log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\hdr\modern_popup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\hdr\modern_row.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -265,5 +256,15 @@
     <ResourceCompile Include="res\resource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\Back.tga">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\skin.msf">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

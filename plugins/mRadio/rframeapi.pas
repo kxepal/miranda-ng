@@ -8,6 +8,7 @@ uses
 
 const
   hVolFrmCtrl:HWND=0;
+  hVolFrmMute:HWND=0;
 
 procedure CreateFrame(parent:HWND);
 procedure DestroyFrame;
@@ -35,6 +36,7 @@ var
 function QSDlgResizer(Dialog:HWND;lParam:LPARAM;urc:PUTILRESIZECONTROL):int; cdecl;
 begin
   case urc^.wId of
+    IDC_RADIO_OPEN: result:=RD_ANCHORX_LEFT  or RD_ANCHORY_CENTRE;
     IDC_RADIO_MUTE: result:=RD_ANCHORX_RIGHT or RD_ANCHORY_CENTRE;
     IDC_RADIO_VOL : result:=RD_ANCHORX_WIDTH or RD_ANCHORY_CENTRE;
   else
@@ -42,7 +44,7 @@ begin
   end;
 end;
 
-function SliderWndProc(Dialog:HWnd;hMessage:UINT;wParam:WPARAM;lParam:LPARAM):lresult; stdcall;
+function SliderWndProc(Dialog:HWND;hMessage:uint;wParam:WPARAM;lParam:LPARAM):LRESULT; stdcall;
 begin
   if hMessage=WM_ERASEBKGND then
     result:=1
@@ -70,7 +72,7 @@ begin
   SendMessageW(hwndTooltip,TTM_ADDTOOLW,0,tlparam(@ti));
 end;
 
-function RadioFrameProc(Dialog:HWnd;hMessage:UINT;wParam:WPARAM;lParam:LPARAM):lresult; stdcall;
+function RadioFrameProc(Dialog:HWND;hMessage:uint;wParam:WPARAM;lParam:LPARAM):LRESULT; stdcall;
 var
   urd:TUTILRESIZEDIALOG;
   rc:TRECT;
@@ -79,7 +81,8 @@ begin
   result:=0;
   case hMessage of
     WM_DESTROY: begin
-      hVolFrmCtrl :=0;
+      hVolFrmCtrl:=0;
+      hVolFrmMute:=0;
       DeleteObject(hbr);
     end;
 
@@ -90,6 +93,7 @@ begin
       MakeTooltip(Dialog);
 
       hVolFrmCtrl:=GetDlgItem(Dialog,IDC_RADIO_VOL);
+      hVolFrmMute:=GetDlgItem(Dialog,IDC_RADIO_MUTE);
       SendMessage(hVolFrmCtrl,TBM_SETRANGE,0,MAKELONG(0,100));
       SendMessage(hVolFrmCtrl,TBM_SETPAGESIZE,0,20);
       SendMessage(hVolFrmCtrl,TBM_SETPOS,1,gVolume);
@@ -115,21 +119,30 @@ begin
     end;
 
     WM_DRAWITEM: begin
-      if wParam=IDC_RADIO_MUTE then
-      begin
-        result:=1;
-        if gVolume<0 then
-          tmp:=IcoBtnOff
-        else
-          tmp:=IcoBtnOn;
-        DrawIconEx(PDRAWITEMSTRUCT(lParam)^.hDC,0,0,
-            CallService(MS_SKIN2_GETICON,0,TLPARAM(tmp)),
-            16,16,0,hbr,DI_NORMAL);
+      case wParam of
+        IDC_RADIO_OPEN: begin
+          result:=1;
+          DrawIconEx(PDRAWITEMSTRUCT(lParam)^.hDC,0,0,
+              CallService(MS_SKIN2_GETICON,0,TLPARAM(IcoBtnOpen)),
+              16,16,0,hbr,DI_NORMAL);
+        end;
+
+        IDC_RADIO_MUTE: begin
+          result:=1;
+          if gVolume<0 then
+            tmp:=IcoBtnOff
+          else
+            tmp:=IcoBtnOn;
+          DrawIconEx(PDRAWITEMSTRUCT(lParam)^.hDC,0,0,
+              CallService(MS_SKIN2_GETICON,0,TLPARAM(tmp)),
+              16,16,0,hbr,DI_NORMAL);
+        end;
       end;
     end;
 
     WM_CTLCOLORBTN: begin
-      if THANDLE(lParam)=GetDlgItem(Dialog,IDC_RADIO_MUTE) then
+      if (THANDLE(lParam)=GetDlgItem(Dialog,IDC_RADIO_MUTE)) or
+         (THANDLE(lParam)=GetDlgItem(Dialog,IDC_RADIO_OPEN)) then
       begin
         SetBkColor(wParam, frm_bkg);
         result:=hbr;
@@ -153,6 +166,9 @@ begin
 
         BN_CLICKED: begin
           case loword(wParam) of
+            IDC_RADIO_OPEN: begin
+              CallService(MS_RADIO_QUICKOPEN,0,0);
+            end;
             IDC_RADIO_MUTE: begin
               CallService(MS_RADIO_MUTE,0,1);
             end;
@@ -239,7 +255,7 @@ begin
 
       StrCopy(cid.name   ,frm_back);
       StrCopy(cid.setting,'frame_back');
-      cid.defcolour:=COLOR_3DFACE;
+      cid.defcolour:=GetSysColor(COLOR_3DFACE);
       cid.order    :=0;
       ColourRegister(@cid);
 

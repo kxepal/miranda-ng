@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: KeepStatus.dll
 ;  Plugin: Keep status
-;  Version: 0.9.0.1
+;  Version: 0.9.0.2
 ;  Authors: P Boon
 ;============================================================
 [KeepStatus, A connection checker, for use with (or without) StartupStatus and/or AdvancedAutoAway.]
@@ -39,7 +39,7 @@ Anuluj
 [Profile]
 Profil
 [Message]
-Wiadomość
+Opis
 [Account]
 Konto
 [Set]
@@ -68,8 +68,6 @@ Potwierdź resetowanie statusu
 Ustaw tylko, gdy obecny status to:
 [Command line]
 Linia poleceń
-[OK]
-OK
 [Copy to clipboard]
 Kopiuj do schowka
 [Command line:]
@@ -123,9 +121,9 @@ Automatycznie rozłącz przy wyjściu
 [Dial-up (experimental)]
 Połączenie (eksperymentalne)
 [Background color]
-Kolor tła
+Tło
 [Text color]
-Kolor tekstu
+Tekst
 [Use Windows colors]
 Użyj kolorów Windows
 [Use default colors]
@@ -169,7 +167,7 @@ Użyj ustawień opisu Mirandy
 [Use this message:]
 Użyj tego opisu:
 [Use %time% for the current time, %date% for the current date]
-Użyj %time% dla czasu obecnego, %date% dla aktualnej daty 
+Użyj %time% dla czasu obecnego, %date% dla aktualnej daty
 [Variables...]
 Zmienne...
 [Specify settings for each account]
@@ -276,15 +274,15 @@ Protokół
 [%s login error (next retry (%d) in %d s)]
 %s błąd logowania (następna próba (%d) za %d s)
 [%s status error (next retry (%d) in %d s)]
-%s błąd połączenia (następna próba (%d) za %d s) 
+%s błąd połączenia (następna próba (%d) za %d s)
 [Status error (next retry (%d) in %d s)]
-Błąd połączenia (następna próba (%d) za %d s) 
+Błąd połączenia (następna próba (%d) za %d s)
 [%s\t(will be set to %s)\r\n]
 %s\t (przywracany na %s)\r\n
 [Resetting status... (last try (%d))%s]
 Zerowanie statusu...(ostatnia próba (%d)) %s
 [Resetting status... (next retry (%d) in %d s)%s]
-Zerowanie statusu... (następna próba (%d) za %d s) %s 
+Zerowanie statusu... (następna próba (%d) za %d s) %s
 [No internet connection seems available... (last try (%d))]
 Brak połączenia z internetem... (ostatnia próba (%d))
 [No internet connection seems available... (next retry (%d) in %d s)]
@@ -335,6 +333,6 @@ Ustaw opis %s dla %s.
 [<current>]
 <aktualny>
 [<n/a>]
-<niedostępny>
+<niedostępna>
 [Closing in %d]
 Zamykanie w %d

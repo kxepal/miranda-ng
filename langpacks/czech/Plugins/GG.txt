@@ -1,7 +1,7 @@
 ﻿#muuid {f3ff65f3-250e-416a-bee9-58c93f85ab33}
 ;============================================================
 ;  File: GG.dll
-;  Plugin: Gadu-Gadu Protocol
+;  Plugin: Gadu-Gadu protocol
 ;  Version: 0.11.0.3
 ;  Authors: Bartosz Bialek, Adam Strzelecki
 ;============================================================
@@ -100,8 +100,6 @@ Popis:
 &Uložit změny
 [Enter token to continue]
 Pokračovat po zadání tokenu
-[OK]
-OK
 [Cancel]
 Zrušit
 [Create Gadu-Gadu account]

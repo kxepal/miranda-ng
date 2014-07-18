@@ -29,24 +29,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 struct
 {
-	int m_cache_nStatus,order;
-} statusModeOrder[] = {
-	{ID_STATUS_OFFLINE,500},
-	{ID_STATUS_ONLINE,10},
-	{ID_STATUS_AWAY,200},
-	{ID_STATUS_DND,110},
-	{ID_STATUS_NA,450},
-	{ID_STATUS_OCCUPIED,100},
-	{ID_STATUS_FREECHAT,0},
-	{ID_STATUS_INVISIBLE,20},
-	{ID_STATUS_ONTHEPHONE,150},
-	{ID_STATUS_OUTTOLUNCH,425}};
+	int status, order;
+}
+static statusModeOrder[] =
+{
+	{ ID_STATUS_OFFLINE, 500 },
+	{ ID_STATUS_ONLINE, 10 },
+	{ ID_STATUS_AWAY, 200 },
+	{ ID_STATUS_DND, 110 },
+	{ ID_STATUS_NA, 450 },
+	{ ID_STATUS_OCCUPIED, 100 },
+	{ ID_STATUS_FREECHAT, 0 },
+	{ ID_STATUS_INVISIBLE, 20 },
+	{ ID_STATUS_ONTHEPHONE, 150 },
+	{ ID_STATUS_OUTTOLUNCH, 425 }
+};
 
 static int GetContactStatus(MCONTACT hContact)
 {
 	return (GetContactCachedStatus(hContact));
 }
-
 
 void cli_ChangeContactIcon(MCONTACT hContact, int iIcon, int add)
 {
@@ -55,12 +57,11 @@ void cli_ChangeContactIcon(MCONTACT hContact, int iIcon, int add)
 
 static int GetStatusModeOrdering(int statusMode)
 {
-	int i;
-	for (i=0; i < SIZEOF(statusModeOrder); i++)
-		if (statusModeOrder[i].m_cache_nStatus == statusMode) return statusModeOrder[i].order;
+	for (int i=0; i < SIZEOF(statusModeOrder); i++)
+		if (statusModeOrder[i].status == statusMode)
+			return statusModeOrder[i].order;
 	return 1000;
 }
-
 
 DWORD CompareContacts2_getLMTime(MCONTACT hContact)
 {
@@ -70,7 +71,7 @@ DWORD CompareContacts2_getLMTime(MCONTACT hContact)
 		db_event_get(hDbEvent, &dbei);
 		if (dbei.eventType == EVENTTYPE_MESSAGE && !(dbei.flags & DBEF_SENT))
 			return dbei.timestamp;
-		hDbEvent = db_event_prev(hDbEvent);
+		hDbEvent = db_event_prev(hContact, hDbEvent);
 	}
 	return 0;
 }

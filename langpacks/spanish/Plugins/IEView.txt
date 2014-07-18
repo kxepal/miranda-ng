@@ -32,8 +32,6 @@ Opciones
 
 [Enable workaround for PNG transparency]
 
-[Enable MathModule support]
-
 [Replace smileys in user names]
 
 [Hide window border]
@@ -100,7 +98,7 @@ Transferencia de archivos entrantes
 [OleInitialize failed.]
 
 [ERROR]
-
+ERROR
 ;file \plugins\IEView\src\MUCCHTMLBuilder.cpp
 [%s has joined.]
 

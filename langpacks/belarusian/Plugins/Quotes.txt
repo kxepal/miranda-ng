@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Quotes.dll
 ;  Plugin: Quotes
-;  Version: 0.0.24.0
+;  Version: 0.0.26.0
 ;  Authors: Dioksin
 ;============================================================
 [Shows currency rates and economic quotes.]
@@ -102,8 +102,6 @@
 &Тэндэнцыя:
 [&Advanced Settings...]
 Дадатковыя налады...
-[Static]
-Статычны
 [Current Rate:]
 Бягучае значэнне:
 [Rate Fetch Time:]
@@ -185,8 +183,8 @@ HTTP далучэнне Quotes
 [Import]
 Імпарт
 ;file \plugins\Quotes\src\ImportExport.cpp
-[Xml File (*.xml)]
-Файл Xml(*.xml)
+[XML File (*.xml)]
+Файл XML(*.xml)
 [All files (*.*)]
 Усе файлы (*.*)
 ;file \plugins\Quotes\src\ModuleInfo.cpp

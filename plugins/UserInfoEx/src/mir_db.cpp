@@ -23,47 +23,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 namespace DB {
 
-namespace MetaContact {
-
-INT_PTR SubCount(MCONTACT hMetaContact)
-{
-	INT_PTR result = CallService(MS_MC_GETNUMCONTACTS, (WPARAM) hMetaContact, 0);
-	return (result == CALLSERVICE_NOTFOUND) ? -1 : result;
-}
-
-INT_PTR SubDefNum(MCONTACT hMetaContact)
-{
-	INT_PTR result = CallService(MS_MC_GETDEFAULTCONTACTNUM, (WPARAM) hMetaContact, 0);
-	return (result == CALLSERVICE_NOTFOUND) ? -1 : result;
-}
-
-MCONTACT Sub(MCONTACT hMetaContact, int idx)
-{
-	if (idx != -1) {
-		INT_PTR result = CallService(MS_MC_GETSUBCONTACT, (WPARAM) hMetaContact, (LPARAM) idx);
-		return (result == CALLSERVICE_NOTFOUND) ? NULL : (MCONTACT)result;
-	}
-	return NULL;
-}
-
-bool IsSub(MCONTACT hContact)
-{
-	return myGlobals.szMetaProto &&
-			db_get_b(NULL, myGlobals.szMetaProto, "Enabled", TRUE) &&
-			db_get_b(hContact, myGlobals.szMetaProto, "IsSubcontact", FALSE);
-}
-
-MCONTACT GetMeta(MCONTACT hContact)
-{
-	if (!myGlobals.szMetaProto)
-		return NULL;
-
-	MCONTACT result = (MCONTACT)CallService(MS_MC_GETMETACONTACT, hContact, 0);
-	return (result == (MCONTACT)CALLSERVICE_NOTFOUND) ? NULL : result;
-}
-
-} /* namespace MetaContact */
-
 /**
 * This namespace contains all functions used to access or modify contacts in the database.
 **/
@@ -91,7 +50,7 @@ LPSTR	Proto(MCONTACT hContact)
 {
 	if (hContact) {
 		INT_PTR result;
-		result = CallService(MS_PROTO_GETCONTACTBASEACCOUNT, (WPARAM) hContact, NULL);
+		result = CallService(MS_PROTO_GETCONTACTBASEACCOUNT, hContact, NULL);
 		return (LPSTR) ((result == CALLSERVICE_NOTFOUND) ? NULL : result);
 	}
 	return NULL;
@@ -123,7 +82,7 @@ MCONTACT Add()
  **/
 BYTE Delete(MCONTACT hContact)
 {
-	return CallService(MS_DB_CONTACT_DELETE, (WPARAM) hContact, 0) != 0;
+	return CallService(MS_DB_CONTACT_DELETE, hContact, 0) != 0;
 }
 
 /**
@@ -132,7 +91,7 @@ BYTE Delete(MCONTACT hContact)
 DWORD	WhenAdded(DWORD dwUIN, LPCSTR pszProto)
 {
 	DBEVENTINFO	dbei = { sizeof(dbei) };
-	for (HANDLE edbe = db_event_first(NULL); edbe != NULL; edbe = db_event_next(edbe)) {
+	for (HANDLE edbe = db_event_first(NULL); edbe != NULL; edbe = db_event_next(NULL, edbe)) {
 		// get eventtype and compare
 		if (!DB::Event::GetInfo(edbe, &dbei) && dbei.eventType == EVENTTYPE_ADDED) {
 			if (!DB::Event::GetInfoWithData(edbe, &dbei)) {
@@ -204,9 +163,7 @@ bool IsEmpty(MCONTACT hContact, LPCSTR pszModule)
 
 bool IsMeta(LPCSTR pszModule)
 {
-	if (myGlobals.szMetaProto)
-		return !mir_strcmp(pszModule, myGlobals.szMetaProto);
-	return !mir_strcmp(pszModule, "MetaContacts");
+	return !mir_strcmp(pszModule, META_PROTO);
 }
 
 /**
@@ -310,22 +267,22 @@ BYTE GetEx(MCONTACT hContact, LPCSTR pszModule, LPCSTR pszProto, LPCSTR pszSetti
 		result = Get(hContact, pszProto, pszSetting, dbv, destType) != 0;
 		// try to get setting from a metasubcontact
 		if (result && DB::Module::IsMetaAndScan(pszProto)) {
-			const INT_PTR def = DB::MetaContact::SubDefNum(hContact);
+			const INT_PTR def = db_mc_getDefaultNum(hContact);
 			MCONTACT hSubContact;
 			// try to get setting from the default subcontact first
 			if (def > -1 && def < INT_MAX) {
-				hSubContact = DB::MetaContact::Sub(hContact, def);
+				hSubContact = db_mc_getSub(hContact, def);
 				if (hSubContact != NULL)
 					result = DB::Setting::GetEx(hSubContact, pszModule, DB::Contact::Proto(hSubContact), pszSetting, dbv, destType) != 0;
 			}
 			// scan all subcontacts for the setting
 			if (result) {
-				const INT_PTR cnt = DB::MetaContact::SubCount(hContact);
+				const INT_PTR cnt = db_mc_getSubCount(hContact);
 				if (cnt < INT_MAX) {
 					INT_PTR i;
 					for (i = 0; result && i < cnt; i++) {
 						if (i != def) {
-							hSubContact = DB::MetaContact::Sub(hContact, i);
+							hSubContact = db_mc_getSub(hContact, i);
 							if (hSubContact != NULL)
 								result = DB::Setting::GetEx(hSubContact, pszModule, DB::Contact::Proto(hSubContact), pszSetting, dbv, destType) != 0;
 	}	}	}	}	}	}
@@ -365,11 +322,11 @@ WORD GetCtrl(MCONTACT hContact, LPCSTR pszModule, LPCSTR pszSubModule, LPCSTR ps
 
 		// try to read the setting from the sub contacts' modules
 		else if (DB::Module::IsMetaAndScan(pszProto)) {
-			const INT_PTR def = DB::MetaContact::SubDefNum(hContact);
+			const INT_PTR def = db_mc_getDefaultNum(hContact);
 			MCONTACT hSubContact;
 			// try to get setting from the default subcontact first
 			if (def > -1 && def < INT_MAX) {
-				hSubContact = DB::MetaContact::Sub(hContact, def);
+				hSubContact = db_mc_getSub(hContact, def);
 				if (hSubContact != NULL) {
 					wFlags = GetCtrl(hSubContact, pszSubModule, NULL, DB::Contact::Proto(hSubContact), pszSetting, dbv, destType);
 					if (wFlags != 0) {
@@ -381,10 +338,10 @@ WORD GetCtrl(MCONTACT hContact, LPCSTR pszModule, LPCSTR pszSubModule, LPCSTR ps
 			// copy the missing settings from the other subcontacts
 			if (wFlags == 0) {
 				INT_PTR i;
-				const INT_PTR cnt = DB::MetaContact::SubCount(hContact);
+				const INT_PTR cnt = db_mc_getSubCount(hContact);
 				for (i = 0; i < cnt; i++) {
 					if (i != def) {
-						hSubContact = DB::MetaContact::Sub(hContact, i);
+						hSubContact = db_mc_getSub(hContact, i);
 						if (hSubContact != NULL) {
 							wFlags = GetCtrl(hSubContact, pszSubModule, NULL, DB::Contact::Proto(hSubContact), pszSetting, dbv, destType);
 							if (wFlags != 0) {
@@ -733,7 +690,7 @@ bool Exists(MCONTACT hContact, HANDLE& hDbExistingEvent, DBEVENTINFO *dbei)
 	}
 	if (hDbExistingEvent) {
 		HANDLE sdbe = hDbExistingEvent;
-		for (HANDLE	edbe = sdbe; edbe && !GetInfo(edbe, &edbei) && (dbei->timestamp <= edbei.timestamp); edbe = db_event_prev(edbe)) {
+		for (HANDLE edbe = sdbe; edbe && !GetInfo(edbe, &edbei) && (dbei->timestamp <= edbei.timestamp); edbe = db_event_prev(hContact, edbe)) {
 			hDbExistingEvent = edbe;
 			//compare without data (faster)
 			if ( result = IsEqual(dbei, &edbei, false)) {
@@ -749,7 +706,7 @@ bool Exists(MCONTACT hContact, HANDLE& hDbExistingEvent, DBEVENTINFO *dbei)
 		} /*end for*/
 
 		if (!result) {
-			for (HANDLE	edbe = db_event_next(sdbe); edbe && !GetInfo(edbe, &edbei) && (dbei->timestamp >= edbei.timestamp); edbe = db_event_next(edbe)) {
+			for (HANDLE edbe = db_event_next(hContact, sdbe); edbe && !GetInfo(edbe, &edbei) && (dbei->timestamp >= edbei.timestamp); edbe = db_event_next(hContact, edbe)) {
 				hDbExistingEvent = edbe;
 				//compare without data (faster)
 				if (result = IsEqual(dbei, &edbei, false)) {

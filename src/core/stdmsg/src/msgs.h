@@ -33,8 +33,12 @@ struct NewMessageWindowLParam
 	int noActivate;
 };
 
-struct SrmmWindowData
+struct SrmmWindowData : public MZeroedObject
 {
+	SrmmWindowData() :
+		cmdList(20)
+		{}
+
 	MCONTACT hContact;
 	HANDLE hDbEventFirst, hDbEventLast;
 	HBRUSH hBkgBrush;
@@ -60,9 +64,13 @@ struct SrmmWindowData
 	WORD wStatus;
 	WORD wOldStatus;
 	int cmdListInd;
-	SortedList *cmdList;
-	int bIsAutoRTL;
+	LIST<TCHAR> cmdList;
+	bool bIsAutoRTL, bIsMeta;
 	WORD wMinute;
+
+	__forceinline MCONTACT getActiveContact() const
+	{	return (bIsMeta) ? db_mc_getSrmmSub(hContact) : hContact;
+	}
 };
 
 #define DM_REMAKELOG         (WM_USER+11)

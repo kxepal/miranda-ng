@@ -1,8 +1,8 @@
 ﻿#muuid {9584da04-fb4f-40c1-9325-e4f9caafcb5d}
 ;============================================================
-;  File: actman.dll
-;  Plugin: Action Manager
-;  Version: 0.2.0.1
+;  File: Actman.dll, Actman30.dll
+;  Plugin: Action manager
+;  Version: 0.2.0.1 - 0.3.0.1
 ;  Authors: Awkward
 ;============================================================
 [Plugin for manage hotkeys to open contact window, insert text, run program and call services]
@@ -271,6 +271,8 @@ Zobrazit záhlaví rámečků
 
 [Removes all settings for the specified module]
 
+[Show window for new/changed profile password]
+
 [int 0]
 
 [Import settings/contacts from file]
@@ -383,7 +385,11 @@ Zobrazit text
 
 [result of protocol service call]
 
-[send a general request through the protocol chain for a contact]
+[Send a general request through the protocol chain for a contact]
+
+[str, account name]
+
+[Return account name associated to contact (no need to free it)]
 
 [displays the Account Manager]
 
@@ -728,8 +734,6 @@ odloučený/á
 [Registered actions]
 
 ; Actman30
-[No Description]
-Bez popisu
 [INI]
 
 [INI file name]
@@ -752,10 +756,10 @@ Bez popisu
 
 [Number of arguments]
 
+[Argument]
+
 [Result]
 VÝSLEDEK
-[Wide String]
-
 [DLL Handle Cache]
 
 [Keep to end]
@@ -764,8 +768,6 @@ VÝSLEDEK
 
 [Close for macro]
 
-[Choose Contact]
-Zvolit kontakt
 [Refresh]
 Aktualizovat
 [Get from active window]
@@ -777,8 +779,6 @@ Aktualizovat
 [Same thread]
 
 [Do not wait until the end of execution]
-
-[Result type]
 
 [In/Out]
 Příchozí/odchozí
@@ -868,16 +868,24 @@ Jméno
 
 [Miranda event help]
 
-[Double click on the CList]
-
 [contact list]
 Seznam kontaktů
 [database driver]
 
+[Main settings]
+
+[Custom settings]
+
+[Do not translate]
+
 ; these lines are not present in the sources, but they are present in compiled plugin
+[Param type]
+
 [Text Editor]
 Úprava textu
 [Script]
 Skript
 [Wrap Text]
 Zalamovat text
+[Structure size]
+

@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: YAPP.dll
 ;  Plugin: YAPP
-;  Version: 0.5.0.11
+;  Version: 0.5.0.12
 ;  Authors: Scott Ellis
 ;============================================================
 [Yet Another Popup Plugin - Provides popup notification window services to other plugins.]
@@ -35,7 +35,7 @@ Zaokrąglone rogi (okna)
 [Preview]
 Podgląd
 [Transparent background]
-Przeźroczyste tło
+Przezroczyste tło
 [Layout]
 Układ
 [Avatar size:]
@@ -59,7 +59,7 @@ Kolor tła:
 [Set timeout]
 Ustaw czas oczekiwania
 [Timeout value (0 = default):]
-Wartość czasu oczekiwania (0 = domyślna):
+Wartość czasu oczekiwania (0 - domyślna):
 ;file \plugins\YAPP\src\icons.cpp
 [Popups are enabled]
 Popupy są włączone

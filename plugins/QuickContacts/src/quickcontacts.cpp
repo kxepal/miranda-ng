@@ -21,8 +21,7 @@ Boston, MA 02111-1307, USA.
 #include "commons.h"
 
 // Prototypes ///////////////////////////////////////////////////////////////////////////
-
-
+					 
 PLUGININFOEX pluginInfo={
 	sizeof(PLUGININFOEX),
 	__PLUGIN_NAME,
@@ -36,7 +35,6 @@ PLUGININFOEX pluginInfo={
 	// {F93BA59C-4F48-4F2E-8A91-77A2801527A3}
 	{0xf93ba59c, 0x4f48, 0x4f2e, {0x8a, 0x91, 0x77, 0xa2, 0x80, 0x15, 0x27, 0xa3}}
 };
-
 
 HINSTANCE hInst;
 HIMAGELIST hIml;
@@ -61,13 +59,9 @@ int hksAction = 0;
 
 BOOL hasNewHotkeyModule = FALSE;
 
-char *metacontacts_proto = NULL;
-
 #define IDC_ICO 12344
 
-
 // Functions ////////////////////////////////////////////////////////////////////////////
-
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) 
 {
@@ -138,12 +132,6 @@ int ModulesLoaded(WPARAM wParam, LPARAM lParam)
 
 	hkd.pszService = NULL;
 
-	hkd.lParam = HOTKEY_VOICE;
-	hkd.DefHotKey = HOTKEYCODE(HOTKEYF_CONTROL, 'V');
-	hkd.pszName = "Quick Contacts/Voice";
-	hkd.ptszDescription = LPGENT("Make a voice call");
-	Hotkey_Register(&hkd);
-
 	hkd.lParam = HOTKEY_FILE;
 	hkd.DefHotKey = HOTKEYCODE(HOTKEYF_CONTROL, 'F');
 	hkd.pszName = "Quick Contacts/File";
@@ -159,7 +147,7 @@ int ModulesLoaded(WPARAM wParam, LPARAM lParam)
 	hkd.lParam = HOTKEY_INFO;
 	hkd.DefHotKey = HOTKEYCODE(HOTKEYF_CONTROL, 'I');
 	hkd.pszName = "Quick Contacts/Info";
-	hkd.ptszDescription = LPGENT("Open userinfo");
+	hkd.ptszDescription = LPGENT("Open user info");
 	Hotkey_Register(&hkd);
 		
 	hkd.lParam = HOTKEY_HISTORY;
@@ -202,10 +190,6 @@ int ModulesLoaded(WPARAM wParam, LPARAM lParam)
 	mi.ptszName = LPGENT("Quick Contacts...");
 	mi.pszService = MS_QC_SHOW_DIALOG;
 	Menu_AddMainMenuItem(&mi);
-
-	if (ServiceExists(MS_MC_GETPROTOCOLNAME) && ServiceExists(MS_MC_GETMETACONTACT))
-		metacontacts_proto = (char *) CallService(MS_MC_GETPROTOCOLNAME, 0, 0);
-
 	return 0;
 }
 
@@ -345,12 +329,11 @@ void FreeContacts()
 
 void LoadContacts(HWND hwndDlg, BOOL show_all)
 {
-	BOOL metacontactsEnabled = (metacontacts_proto != NULL
-				 && db_get_b(0, metacontacts_proto, "Enabled", 1));
+	BOOL metacontactsEnabled = db_get_b(0, META_PROTO, "Enabled", 1);
 
 	// Read last-sent-to contact from db and set handle as window-userdata
 	HANDLE hlastsent = (HANDLE)db_get_dw(NULL, MODULE_NAME, "LastSentTo", -1);
-	SetWindowLongPtr(hwndMain, GWLP_USERDATA, (LONG)hlastsent);
+	SetWindowLongPtr(hwndMain, GWLP_USERDATA, (LONG_PTR)hlastsent);
 
 	// enumerate all contacts and write them to the array
 	// item data of listbox-strings is the array position
@@ -366,14 +349,10 @@ void LoadContacts(HWND hwndDlg, BOOL show_all)
 		if (metacontactsEnabled)
 		{
 			if ((!show_all && opts.hide_subcontacts) || opts.group_append)
-				hMeta = (MCONTACT)CallService(MS_MC_GETMETACONTACT, hContact, 0);
+				hMeta = db_mc_getMeta(hContact);
 		}
-		else
-		{
-			if (metacontacts_proto != NULL && strcmp(metacontacts_proto, pszProto) == 0)
-				continue;
-		}
-
+		else if (!strcmp(META_PROTO, pszProto))
+			continue;
 
 		if (!show_all)
 		{
@@ -400,17 +379,13 @@ void LoadContacts(HWND hwndDlg, BOOL show_all)
 				if (!opts.keep_subcontacts_from_offline)
 					continue;
 
-				if (GetStatus(hMeta, metacontacts_proto) > ID_STATUS_OFFLINE)
-				{
+				if (GetStatus(hMeta, META_PROTO) > ID_STATUS_OFFLINE)
 					continue;
-				}
-				else 
-				{
-					char setting[128];
-					mir_snprintf(setting, sizeof(setting), "ShowOffline%s", metacontacts_proto);
-					if (db_get_b(NULL, MODULE_NAME, setting, FALSE))
-						continue;
-				}
+
+				char setting[128];
+				mir_snprintf(setting, sizeof(setting), "ShowOffline%s", META_PROTO);
+				if (db_get_b(NULL, MODULE_NAME, setting, FALSE))
+					continue;
 			}
 		}
 
@@ -432,7 +407,7 @@ void LoadContacts(HWND hwndDlg, BOOL show_all)
 		}
 
 		// Make contact name
-		TCHAR *tmp = (TCHAR *) CallService(MS_CLIST_GETCONTACTDISPLAYNAME, (WPARAM) hContact, GCDNF_TCHAR);
+		TCHAR *tmp = (TCHAR *) CallService(MS_CLIST_GETCONTACTDISPLAYNAME, hContact, GCDNF_TCHAR);
 		lstrcpyn(contact->szname, tmp, SIZEOF(contact->szname));
 
 		PROTOACCOUNT *acc = ProtoGetAccount(pszProto);
@@ -462,7 +437,6 @@ void EnableButtons(HWND hwndDlg, MCONTACT hContact)
 	if (hContact == NULL)
 	{
 		EnableWindow(GetDlgItem(hwndDlg, IDC_MESSAGE), FALSE);
-		EnableWindow(GetDlgItem(hwndDlg, IDC_VOICE), FALSE);
 		EnableWindow(GetDlgItem(hwndDlg, IDC_FILE), FALSE);
 		EnableWindow(GetDlgItem(hwndDlg, IDC_URL), FALSE);
 		EnableWindow(GetDlgItem(hwndDlg, IDC_USERINFO), FALSE);
@@ -474,12 +448,9 @@ void EnableButtons(HWND hwndDlg, MCONTACT hContact)
 	else
 	{
 		// Is a meta?
-		if (ServiceExists(MS_MC_GETMOSTONLINECONTACT)) 
-		{
-			MCONTACT hSub = (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, (WPARAM) hContact, 0);
-			if (hSub != NULL)
-				hContact = hSub;
-		}
+		MCONTACT hSub = db_mc_getMostOnline(hContact);
+		if (hSub != NULL)
+			hContact = hSub;
 
 		// Get caps
 		INT_PTR caps = 0;
@@ -488,18 +459,14 @@ void EnableButtons(HWND hwndDlg, MCONTACT hContact)
 		if (pszProto != NULL)
 			caps = CallProtoService(pszProto, PS_GETCAPS, PFLAGNUM_1, 0);
 
-		BOOL voice = (ServiceExists(MS_VOICESERVICE_CAN_CALL) 
-			&& CallService(MS_VOICESERVICE_CAN_CALL, hContact, 0) > 0);
-
 		EnableWindow(GetDlgItem(hwndDlg, IDC_MESSAGE), caps & PF1_IMSEND ? TRUE : FALSE);
-		EnableWindow(GetDlgItem(hwndDlg, IDC_VOICE), voice);
 		EnableWindow(GetDlgItem(hwndDlg, IDC_FILE), caps & PF1_FILESEND ? TRUE : FALSE);
 		EnableWindow(GetDlgItem(hwndDlg, IDC_URL), caps & PF1_URLSEND ? TRUE : FALSE);
 		EnableWindow(GetDlgItem(hwndDlg, IDC_USERINFO), TRUE);
 		EnableWindow(GetDlgItem(hwndDlg, IDC_HISTORY), TRUE);
 		EnableWindow(GetDlgItem(hwndDlg, IDC_MENU), TRUE);
 
-		HICON ico = ImageList_GetIcon(hIml, CallService(MS_CLIST_GETCONTACTICON, (WPARAM) hContact, 0), ILD_IMAGE);
+		HICON ico = ImageList_GetIcon(hIml, CallService(MS_CLIST_GETCONTACTICON, hContact, 0), ILD_IMAGE);
 		SendMessage(GetDlgItem(hwndDlg, IDC_ICO), STM_SETICON, (WPARAM) ico, 0);
 	}
 }
@@ -638,7 +605,7 @@ LRESULT CALLBACK EditProc(HWND hdlg,UINT msg,WPARAM wparam,LPARAM lparam)
 					break;
 
 				case TRUE:
-					SendMessage(GetParent(hdlg),CB_SHOWDROPDOWN,(WPARAM)FALSE,0);
+					SendMessage(GetParent(hdlg),CB_SHOWDROPDOWN,FALSE,0);
 					break;
 				}
 			}
@@ -695,7 +662,7 @@ LRESULT CALLBACK HookProc(int code, WPARAM wparam, LPARAM lparam)
 			break;
 
 		case TRUE:
-			SendMessage(GetDlgItem(hwndMain, IDC_USERNAME), CB_SHOWDROPDOWN, (WPARAM)FALSE, 0);
+			SendMessage(GetDlgItem(hwndMain, IDC_USERNAME), CB_SHOWDROPDOWN, FALSE, 0);
 			break;
 		}
 	}
@@ -792,24 +759,13 @@ static INT_PTR CALLBACK MainDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 			// Buttons
 			FillCheckbox(hwndDlg, IDC_SHOW_ALL_CONTACTS, LPGENT("Show all contacts"), hasNewHotkeyModule ? NULL : _T("Ctrl+A"));
 			FillButton(hwndDlg, IDC_MESSAGE, LPGENT("Send message"), NULL, LoadSkinnedIcon(SKINICON_EVENT_MESSAGE));
-
-			if (ServiceExists(MS_VOICESERVICE_CAN_CALL))
-				FillButton(hwndDlg, IDC_VOICE, LPGENT("Make a voice call"), hasNewHotkeyModule ? NULL : _T("Ctrl+V"), Skin_GetIcon("vca_call"));
-			else
-			{
-				GetWindowRect(GetDlgItem(hwndDlg, IDC_VOICE), &rc);
-				ScreenToClient(hwndDlg, &rc);
-				MoveWindow(GetDlgItem(hwndDlg, IDC_MESSAGE), rc, FALSE);
-				ShowWindow(GetDlgItem(hwndDlg, IDC_VOICE), SW_HIDE);
-			}
-
 			FillButton(hwndDlg, IDC_FILE, LPGENT("Send file"), hasNewHotkeyModule ? NULL : _T("Ctrl+F"), LoadSkinnedIcon(SKINICON_EVENT_FILE));
 			FillButton(hwndDlg, IDC_URL, LPGENT("Send URL"), hasNewHotkeyModule ? NULL : _T("Ctrl+U"), LoadSkinnedIcon(SKINICON_EVENT_URL));
-			FillButton(hwndDlg, IDC_USERINFO, LPGENT("Open userinfo"), hasNewHotkeyModule ? NULL : _T("Ctrl+I"), LoadSkinnedIcon(SKINICON_OTHER_USERDETAILS));
+			FillButton(hwndDlg, IDC_USERINFO, LPGENT("Open user info"), hasNewHotkeyModule ? NULL : _T("Ctrl+I"), LoadSkinnedIcon(SKINICON_OTHER_USERDETAILS));
 			FillButton(hwndDlg, IDC_HISTORY, LPGENT("Open history"), hasNewHotkeyModule ? NULL : _T("Ctrl+H"), LoadSkinnedIcon(SKINICON_OTHER_HISTORY));
 			FillButton(hwndDlg, IDC_MENU, LPGENT("Open contact menu"), hasNewHotkeyModule ? NULL : _T("Ctrl+M"), LoadSkinnedIcon(SKINICON_OTHER_DOWNARROW));
 
-			SendDlgItemMessage(hwndDlg, IDC_USERNAME, CB_SETEXTENDEDUI, (WPARAM)TRUE, 0);
+			SendDlgItemMessage(hwndDlg, IDC_USERNAME, CB_SETEXTENDEDUI, TRUE, 0);
 
 			Utils_RestoreWindowPositionNoSize(hwndDlg, NULL, MODULE_NAME, "window");
 
@@ -844,9 +800,9 @@ static INT_PTR CALLBACK MainDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 				if (hContact == NULL)
 					break;
 
-				CallService(MS_CLIST_CONTACTDOUBLECLICKED, (WPARAM) hContact, 0);
+				CallService(MS_CLIST_CONTACTDOUBLECLICKED, hContact, 0);
 
-				db_set_dw(NULL, MODULE_NAME, "LastSentTo", (DWORD) hContact);
+				db_set_dw(NULL, MODULE_NAME, "LastSentTo", hContact);
 				SendMessage(hwndDlg, WM_CLOSE, 0, 0);
 			}
 			break;
@@ -864,36 +820,13 @@ static INT_PTR CALLBACK MainDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 				if (!IsWindowEnabled(GetDlgItem(hwndDlg, IDC_MESSAGE)))
 					break;
 
-				CallService(MS_MSG_SENDMESSAGET, (WPARAM) hContact, 0);
+				CallService(MS_MSG_SENDMESSAGET, hContact, 0);
 
-				db_set_dw(NULL, MODULE_NAME, "LastSentTo", (DWORD) hContact);
+				db_set_dw(NULL, MODULE_NAME, "LastSentTo", hContact);
 				SendMessage(hwndDlg, WM_CLOSE, 0, 0);
 				break;
 			}
-		case HOTKEY_VOICE:
-		case IDC_VOICE:
-			{
-				MCONTACT hContact = GetSelectedContact(hwndDlg);
-				if (hContact == NULL)
-				{
-					SetDlgItemText(hwndDlg, IDC_USERNAME, _T(""));
-					SetFocus(GetDlgItem(hwndDlg, IDC_USERNAME));
-					break;
-				}
 
-				// Is button enabled?
-				if (!IsWindowEnabled(GetDlgItem(hwndDlg, IDC_VOICE)))
-					break;
-
-				if (!ServiceExists(MS_VOICESERVICE_CALL))
-					break;
-
-				CallService(MS_VOICESERVICE_CALL, (WPARAM) hContact, 0);
-
-				db_set_dw(NULL, MODULE_NAME, "LastSentTo", (DWORD) hContact);
-				SendMessage(hwndDlg, WM_CLOSE, 0, 0);
-				break;
-			}
 		case HOTKEY_FILE:
 		case IDC_FILE:
 			{
@@ -909,12 +842,13 @@ static INT_PTR CALLBACK MainDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 				if (!IsWindowEnabled(GetDlgItem(hwndDlg, IDC_FILE)))
 					break;
 
-				CallService(MS_FILE_SENDFILE, (WPARAM) hContact, 0);
+				CallService(MS_FILE_SENDFILE, hContact, 0);
 
-				db_set_dw(NULL, MODULE_NAME, "LastSentTo", (DWORD) hContact);
+				db_set_dw(NULL, MODULE_NAME, "LastSentTo", hContact);
 				SendMessage(hwndDlg, WM_CLOSE, 0, 0);
-				break;
 			}
+			break;
+
 		case HOTKEY_URL:
 		case IDC_URL:
 			{
@@ -930,12 +864,13 @@ static INT_PTR CALLBACK MainDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 				if (!IsWindowEnabled(GetDlgItem(hwndDlg, IDC_URL)))
 					break;
 
-				CallService(MS_URL_SENDURL, (WPARAM) hContact, 0);
+				CallService(MS_URL_SENDURL, hContact, 0);
 
-				db_set_dw(NULL, MODULE_NAME, "LastSentTo", (DWORD) hContact);
+				db_set_dw(NULL, MODULE_NAME, "LastSentTo", hContact);
 				SendMessage(hwndDlg, WM_CLOSE, 0, 0);
-				break;
 			}
+			break;
+
 		case HOTKEY_INFO:
 		case IDC_USERINFO:
 			{
@@ -951,12 +886,13 @@ static INT_PTR CALLBACK MainDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 				if (!IsWindowEnabled(GetDlgItem(hwndDlg, IDC_USERINFO)))
 					break;
 
-				CallService(MS_USERINFO_SHOWDIALOG, (WPARAM) hContact, 0);
+				CallService(MS_USERINFO_SHOWDIALOG, hContact, 0);
 
-				db_set_dw(NULL, MODULE_NAME, "LastSentTo", (DWORD) hContact);
+				db_set_dw(NULL, MODULE_NAME, "LastSentTo", hContact);
 				SendMessage(hwndDlg, WM_CLOSE, 0, 0);
-				break;
 			}
+			break;
+
 		case HOTKEY_HISTORY:
 		case IDC_HISTORY:
 			{
@@ -972,12 +908,13 @@ static INT_PTR CALLBACK MainDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 				if (!IsWindowEnabled(GetDlgItem(hwndDlg, IDC_HISTORY)))
 					break;
 
-				CallService(MS_HISTORY_SHOWCONTACTHISTORY, (WPARAM) hContact, 0);
+				CallService(MS_HISTORY_SHOWCONTACTHISTORY, hContact, 0);
 
-				db_set_dw(NULL, MODULE_NAME, "LastSentTo", (DWORD) hContact);
+				db_set_dw(NULL, MODULE_NAME, "LastSentTo", hContact);
 				SendMessage(hwndDlg, WM_CLOSE, 0, 0);
-				break;
 			}
+			break;
+
 		case HOTKEY_MENU:
 		case IDC_MENU:
 			{
@@ -995,7 +932,7 @@ static INT_PTR CALLBACK MainDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 
 				RECT rc;
 				GetWindowRect(GetDlgItem(hwndDlg, IDC_MENU), &rc);
-				HMENU hMenu = (HMENU) CallService(MS_CLIST_MENUBUILDCONTACT, (WPARAM) hContact, 0);
+				HMENU hMenu = (HMENU) CallService(MS_CLIST_MENUBUILDCONTACT, hContact, 0);
 				int ret = TrackPopupMenu(hMenu, TPM_TOPALIGN|TPM_RIGHTBUTTON|TPM_RETURNCMD, rc.left, rc.bottom, 0, hwndDlg, NULL);
 				DestroyMenu(hMenu);
 
@@ -1006,8 +943,9 @@ static INT_PTR CALLBACK MainDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 				}
 
 				db_set_dw(NULL, MODULE_NAME, "LastSentTo", (DWORD) hContact);
-				break;
 			}
+			break;
+
 		case HOTKEY_ALL_CONTACTS:
 		case IDC_SHOW_ALL_CONTACTS:
 			{
@@ -1034,8 +972,6 @@ static INT_PTR CALLBACK MainDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 
 				// Return selection
 				CheckText(hEdit, sztext);
-
-				break;
 			}
 		}
 		break;

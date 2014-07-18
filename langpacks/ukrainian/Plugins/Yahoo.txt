@@ -1,11 +1,11 @@
 ﻿#muuid {0aa7bfea-1fc7-45f0-906e-2a46b6e119cf}
 ;============================================================
 ;  File: Yahoo.dll
-;  Plugin: Yahoo Protocol
+;  Plugin: Yahoo protocol
 ;  Version: 0.11.0.1
 ;  Authors: Gennady Feldman
 ;============================================================
-[Yahoo Protocol support for Miranda NG.]
+[Yahoo protocol support for Miranda NG.]
 Підтримка протоколу Yahoo в Miranda NG.
 [Password:]
 Пароль:
@@ -19,7 +19,7 @@
 Використовувати адресну книгу Yahoo (YAB)
 [Show Avatars]
 Показувати аватари
-[AutoLogin to Yahoo Website(s)]
+[Auto login to Yahoo Website(s)]
 Автоматично підключатися до сайтів Yahoo
 [Display Yahoo notifications]
 Показувати повідомлення Yahoo
@@ -118,7 +118,7 @@ Yahoo Японія
 [Yahoo Error]
 Помилка Yahoo
 [The message send timed out.]
-Таймаут відправлення повідомлення
+Час надсилання повідомлення вичерпано.
 [Message is too long: Yahoo messages are limited by 800 UTF8 chars]
 Повідомлення занадто довге: в Yahoo обмежено до 800 символів UTF8
 [YAHOO Link Protocol]
@@ -193,9 +193,9 @@ HTTP-з'єднання Yahoo
 Невідома помилка.
 [New Mail]
 Нова пошта
-[You have %i unread msgs]
+[You have %i unread messages]
 У вас %i непрочитаних повідомлень
-[New Mail (%i msgs)]
+[New Mail (%i messages)]
 Нова пошта (%i листів)
 [From: %s\nSubject: %s]
 Від: %s\nТема: %s

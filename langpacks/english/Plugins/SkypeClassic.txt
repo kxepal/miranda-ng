@@ -1,7 +1,7 @@
 ﻿#muuid {a71f8335-7b87-4432-b8a3-81479431c6f5}
 ;============================================================
 ;  File: SkypeClassic.dll
-;  Plugin: Skype Protocol (Classic)
+;  Plugin: Skype protocol (Classic)
 ;  Version: 0.0.0.54
 ;  Authors: leecher, tweety, jls17
 ;============================================================
@@ -31,7 +31,6 @@
 [Join conference with %s]
 [Answer call; set call to %s on hold]
 [Hang up]
-[OK]
 [Dialog]
 [Use Skype proxy connection over network instead of local Skype API]
 [Host:]
@@ -94,7 +93,7 @@
 [&Kick user]
 ;file \protocols\SkypeClassic\src\skype.cpp
 [Do a SkypeOut-call]
-[invited ]
+[invited]
 [Phone call]
 [Incoming Skype Call]
 [Incoming call from %s]

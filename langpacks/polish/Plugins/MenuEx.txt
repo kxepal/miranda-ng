@@ -11,21 +11,21 @@ Dodaje przydatne opcje do menu kontaktu.
 [Enter an authorization request]
 Wprowadź tekst prośby o autoryzację
 [&Send]
-Wyślij
+&Wyślij
 [&Cancel]
-Anuluj
+&Anuluj
 [Shown menu items]
 Pokaż wpisy w menu
 [Visibility]
-Widoczność 
+Widoczność
 [Show alpha icons]
-Przeźroczyste ikony
+Przezroczyste ikony
 [Hide from list]
 Ukryj na liście
 [Ignore]
 Ignorowanie
 [Copy to Account (Ctrl+click for move to Account)]
-Kopiuj do Konta (Ctrl+click alby przejsc do Konta)
+Kopiuj do Konta (Ctrl+click alby przejść do Konta)
 [Send 'You were added']
 Wyślij "Zostałeś dodany"
 [Request Authorization]
@@ -51,7 +51,7 @@ Skracaj długie ID
 [* Use Ctrl+click to see popup with the copied text]
 * Użyj Ctrl+klick aby zobaczyć dodatkowe opcje
 [Hide contact on 'Ignore all']
-Ukryj gdy 'Zablokowany'
+Ukryj gdy "Zablokowany"
 ;file \plugins\MenuItemEx\src\main.cpp
 [Status message]
 Opis
@@ -80,7 +80,7 @@ Wszystko
 [Messages]
 Wiadomości
 [URL]
-URL
+Link
 [Files]
 Pliki
 [User Online]
@@ -92,11 +92,9 @@ Zostałeś dodany
 [Typing Notify]
 Pisanie
 [Please authorize me to add you to my contact list.]
-Proszę autoryzuj mnie, bym mógł dodać Cię do swoich kontaktów.
+Proszę autoryzuj mnie, bym mógł dodać cię do swoich kontaktów.
 [Do you want to send authorization request\nto new contact?]
 Czy chcesz wysłać prośbę o autoryzacje?\ndo nowego kontaktu?
-[Miranda NG]
-Miranda NG
 [MenuItemEx]
 Rozszerzone menu
 [Open ignore settings]

@@ -1,7 +1,7 @@
 ﻿#muuid {97724af9-f3fb-47d3-a3bf-eaa935c74e6d}
 ;============================================================
 ;  File: MSN.dll
-;  Plugin: MSN Protocol
+;  Plugin: MSN protocol
 ;  Version: 0.11.0.2
 ;  Authors: Boris Krasnovskiy, George Hazan, Richard Hughes
 ;============================================================
@@ -78,8 +78,6 @@ Zapnout oznámení typu 'Odchod z kanálu'
 Vypnout upozornění ze seznamu kontatků
 [Set Nickname]
 Nastavit přezdívku
-[OK]
-OK
 [Cancel]
 Zrušit
 [Mobile Device (used for SMS)]
@@ -263,7 +261,7 @@ Upozornění
 ;file \protocols\MSN\src\msn_p2p.cpp
 [Contact tried to send its webcam data (not currently supported)]
 Kontakt se pokusil odeslat data ze své webkamery (aktuálně není podporováno)
-[Contact tried to view our webcam data (not currently supported)]
+[Contact tried to view your webcam data (not currently supported)]
 Kontakt se pokusil zobrazit data z vaší webkamery (aktuálně není podporováno)
 ;file \protocols\MSN\src\msn_proto.cpp
 [Live Mail]

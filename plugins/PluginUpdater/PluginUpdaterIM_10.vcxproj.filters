@@ -59,15 +59,12 @@
     <ClInclude Include="src\Minizip\zlib.h">
       <Filter>Source Files\Minizip</Filter>
     </ClInclude>
-    <ClInclude Include="src\compat.h">
+    <ClInclude Include="src\Compat\compat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Notifications.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Options.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PluginUpdater.cpp">

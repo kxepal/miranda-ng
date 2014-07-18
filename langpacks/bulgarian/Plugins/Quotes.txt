@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Quotes.dll
 ;  Plugin: Quotes
-;  Version: 0.0.24.0
+;  Version: 0.0.26.0
 ;  Authors: Dioksin
 ;============================================================
 [Shows currency rates and economic quotes.]
@@ -10,8 +10,6 @@
 ;file \plugins\Quotes\res\Forex.rc
 [Variable List]
 Списък с променливи
-[OK]
-ОК
 [Edit Settings]
 Редактиране на настройките
 [Use contact specific settings]
@@ -104,10 +102,6 @@ Popup настройки...
 Тенденция:
 [&Advanced Settings...]
 Допълнителни настройки...
-[Static]
-Статичен
-[<a>SysLink1</a>]
-
 [Current Rate:]
 Текущ курс:
 [Rate Fetch Time:]
@@ -150,11 +144,17 @@ Quote\\Инф. за курса
 Въведете текст за изобразяване в списъка с контакти.
 ;file \plugins\Quotes\src\CurrencyConverter.cpp
 [Info provided by]
-Източник 
+Източник
 [Enter positive number.]
 Въведете положително число.
 ;file \plugins\Quotes\src\Forex.cpp
+[Auto Update Enabled]
+
+[Auto Update Disabled]
+
 [Quotes]
+
+[Enable/Disable Auto Update]
 
 [Refresh All Quotes\\Rates]
 Обновяване на всички Акции\\Курсове
@@ -172,6 +172,12 @@ Quote\\Инф. за курса
 Диаграма...
 [Edit Settings...]
 Редактиране на настройките...
+[Enable/Disable Quotes Auto Update]
+
+[Quotes Auto Update Enabled]
+
+[Quotes Auto Update Disabled]
+
 [Network]
 Мрежа
 ;file \plugins\Quotes\src\HTTPSession.cpp
@@ -197,8 +203,8 @@ HTTP връзки на Quotes
 [Import]
 Внос
 ;file \plugins\Quotes\src\ImportExport.cpp
-[Xml File (*.xml)]
-Xml файлове (*.xml)
+[XML File (*.xml)]
+XML файлове (*.xml)
 [All files (*.*)]
 Всички файлове (*.*)
 ;file \plugins\Quotes\src\ModuleInfo.cpp
@@ -224,7 +230,6 @@ Xml файлове (*.xml)
 [User-Defined]
 
 ;file \plugins\Quotes\src\QuoteInfoDlg.cpp
-;file \plugins\Quotes\src\QuotesProviderDukasCopy.cpp
 ;file \plugins\Quotes\src\QuotesProviderGoogle.cpp
 [Error occurred during html parsing.]
 

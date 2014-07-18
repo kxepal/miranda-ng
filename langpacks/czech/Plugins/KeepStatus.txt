@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: KeepStatus.dll
 ;  Plugin: Keep status
-;  Version: 0.9.0.1
+;  Version: 0.9.0.2
 ;  Authors: P Boon
 ;============================================================
 [KeepStatus, A connection checker, for use with (or without) StartupStatus and/or AdvancedAutoAway.]
@@ -68,8 +68,6 @@ Potvrdit návrat do původního stavu
 Nastavit pouze tehdy, je-li stav
 [Command line]
 Příkazový řádek
-[OK]
-OK
 [Copy to clipboard]
 Zkopírovat do schránky
 [Command line:]

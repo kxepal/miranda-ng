@@ -72,11 +72,6 @@ DWORD utils::conversion::to_timestamp(std::string data)
 	return timestamp;
 }
 
-struct tm *utils::conversion::fbtime_to_timeinfo(unsigned __int64 timestamp) {
-	time_t time = utils::time::fix_timestamp(timestamp);
-	return localtime(&time);
-}
-
 std::string utils::conversion::to_string(void* data, WORD type)
 {
 	std::stringstream out;
@@ -249,11 +244,11 @@ std::string utils::text::edit_html(std::string data)
 	new_string = "";
 	while (end != std::string::npos)
 	{
-		end = data.find("translate_story_link\\\">", start);
+		end = data.find("role=\\\"button\\\">", start);
 		if (end != std::string::npos)
 		{
 			new_string += data.substr(start, end - start);
-			start = data.find("<\\/div", end);
+			start = data.find("<\\/a", end);
 		} else {
 			new_string += data.substr(start, data.length() - start);
 		}
@@ -302,7 +297,7 @@ std::string utils::text::remove_html(std::string data)
 
 	for (std::string::size_type i = 0; i < data.length(); i++)
 	{
-		if (data.at(i) == '<' && data.at(i+1) != ' ')
+		if (data.at(i) == '<' && (i+1) < data.length() && data.at(i+1) != ' ')
 		{
 			i = data.find(">", i);
 			if (i == std::string::npos)
@@ -339,11 +334,11 @@ std::string utils::text::slashu_to_utf8(std::string data)
 
 std::string utils::text::trim(std::string data, bool rtrim)
 {
-	std::string spaces = " \t\r\n"; // TODO: include "nbsp"?
+	std::string spaces = "  \t\r\n";
 	std::string::size_type begin = rtrim ? 0 : data.find_first_not_of(spaces);
-	std::string::size_type end = data.find_last_not_of(spaces) + 1;
+	std::string::size_type end = data.find_last_not_of(spaces);
 
-	return (end != std::string::npos) ? data.substr(begin, end - begin) : "";
+	return (end != std::string::npos) ? data.substr(begin, end + 1 - begin) : "";
 }
 
 void utils::text::explode(std::string str, std::string separator, std::vector<std::string>* results)
@@ -450,8 +445,18 @@ std::string utils::text::source_get_form_data(std::string* data)
 	return values;
 }
 
-int utils::number::random()
+std::string utils::text::rand_string(int len, const char *chars)
 {
-	srand(::time(NULL));
-	return rand();
+	std::stringstream out;
+
+	for (int i = 0; i < len; ++i) {
+		out << chars[utils::number::random(0, (int)strlen(chars))];
+	}
+
+	return out.str();
+}
+
+int utils::number::random(int min, int max)
+{	
+	return (rand() % (max - min)) + min;
 }

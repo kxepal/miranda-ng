@@ -38,12 +38,10 @@ Wyślij
 Anuluj
 [Invite user to chat]
 Zaproś użytkownika do czatu
-[OK]
-OK
 [Choose one of your contacts to be invited:]
 Wybierz jeden z kontaktów, który chcesz zaprosić:
 [Create group chat]
-Utwórz  czat grupowy
+Utwórz czat grupowy
 [Mark users you want to invite to a new chat]
 Zaznacz użytkowników, których chcesz zaprosić do nowego czatu
 [New chat's title:]
@@ -72,15 +70,15 @@ Ten czat zostanie zniszczony wraz z zawartością. Ta operacja nie będzie mogł
 [Warning]
 Ostrzeżenie
 [&Invite a user]
-Zaproś użytkownika
+&Zaproś użytkownika
 [View/change &title]
-Zobacz/zmień nazwę
+Pokaż/Zmień &nazwę
 [&Destroy room]
-Zniszcz pokój
+&Zniszcz pokój
 [&User details]
-Dane użytkownika
+Dane &kontaktu
 [&Kick]
-Wykop
+&Wyrzuć
 ;file \protocols\VKontakte\src\vk_options.cpp
 [Network]
 Protokoły
@@ -102,5 +100,7 @@ Audio
 Wideo
 [Document]
 Dokument
+[Wall post]
+Post na tablicy
 [Unsupported or unknown attachment type: %s]
 Niewspierany albo nieznany typ załącznika: %s

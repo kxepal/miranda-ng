@@ -1,9 +1,9 @@
 ﻿#muuid {e7c48bab-8ace-4cb3-8446-d4b73481f497}
 ;============================================================
 ;  File: MRA.dll
-;  Plugin: MRA
+;  Plugin: MRA protocol
 ;  Version: 2.1.0.8
-;  Authors: Ivan Rozhuk
+;  Authors: Rozhuk Ivan
 ;============================================================
 [Miranda Mail.ru Agent protocol plugin.]
 Підтримка протоколу Mail.ru Агент (MRA) в Miranda NG.
@@ -29,10 +29,12 @@
 Автоматично авторизувати користувачів зі списку
 [Automatically grant authorization to new users]
 Автоматично авторизувати нових користувачів
+[Automatic authorization on Mail.ru web services]
+Автоматична авторизація на веб-сервісах Mail.ru
 [Notify me when a message delivery has failed]
 Сповіщати про невдалу доставку повідомлень
 [Notify about new mail if increment]
-Сповіщати тільки про нову пошту
+Сповіщати про пошту тільки якщо лічильник збільшився
 [Notify about new mail tray icon]
 Показувати значок в треї при приході пошти
 [Click to Inbox]
@@ -63,7 +65,7 @@
 до:
 [Birthday:]
 День народження:
-[Zodiak:]
+[Zodiac:]
 Зодіак:
 [Location]
 Місце
@@ -229,8 +231,6 @@
 Редагувати анкету
 [My Album]
 Мій альбом
-[My Blog]
-Мій блог
 [My Blog Status]
 Статус у блозі
 [My Video]
@@ -248,15 +248,15 @@
 [Request authorization for all]
 Запитати авторизацію у всіх
 [Request authorization]
-Запросити авторизацію
+Запитати авторизацію
 [Grant authorization]
 Авторизувати
+[&Send E-Mail]
+Надіслати E-mail
 [&Send postcard]
-Відправити листівку
+Надіслати листівку
 [&View Album]
 Переглянути альбом
-[&Read Blog]
-Блог
 [Reply Blog Status]
 Відповідь на статус у блозі
 [View Video]
@@ -357,10 +357,12 @@ Mail.ru додатково
 Будь ласка, введіть E-mail в налаштуваннях
 [Please, setup password in options]
 Будь ласка, введіть пароль в налаштуваннях
+[Thread creation failure]
+Помилка створення потоку
 [Logon error: invalid login/password]
 Помилка при перевірці імені користувача та пароля
 [MRIM_CS_MESSAGE_STATUS: not found in queue]
-MRIM_CS_MESSAGE_STATUS: не знайдений в черзі
+MRIM_CS_MESSAGE_STATUS: не знайдений у черзі
 [Server error: can't get MPOP key for web authorize]
 Помилка сервера: неможливо отримати MPOP-ключ для веб-авторизації
 [MRIM_CS_FILE_TRANSFER_ACK: unknown error, code: %lu]
@@ -370,15 +372,15 @@ MRIM_CS_FILE_TRANSFER_ACK: невідома помилка, код: %lu
 [MRIM_CS_*_CONTACT_ACK: unknown server error, code: %lu]
 MRIM_CS_*_CONTACT_ACK: невідома помилка сервера, код: %lu
 [MRIM_CS_*_CONTACT_ACK: not found in queue]
-MRIM_CS_*_CONTACT_ACK: не знайдений в черзі
+MRIM_CS_*_CONTACT_ACK: не знайдений у черзі
 [MRIM_ANKETA_INFO: not found in queue]
-MRIM_ANKETA_INFO: не знайдено в черзі
+MRIM_ANKETA_INFO: не знайдений у черзі
 [MRIM_CS_GAME: unknown internal game message code: %lu]
 MRIM_CS_GAME: невідомий внутрішній код ігрового повідомлення: %lu
 [MRIM_CS_CONTACT_LIST2: unknown server error, code: %lu]
 MRIM_CS_CONTACT_LIST2: невідома помилка сервера, код: %lu
 [MRIM_CS_SMS_ACK: not found in queue]
-MRIM_CS_SMS_ACK: не знайдений в черзі
+MRIM_CS_SMS_ACK: не знайдений у черзі
 [Mail.ru System notify]
 Системне повідомлення від адміністрації Mail.ru
 [Sick]
@@ -477,3 +479,5 @@ MRIM_CS_SMS_ACK: не знайдений в черзі
 Зірка
 [Music]
 Музика
+[Dating]
+Побачення

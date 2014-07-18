@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: SeenPlugin.dll
 ;  Plugin: Last seen
-;  Version: 5.0.4.8
+;  Version: 5.0.4.9
 ;  Authors: Heiko Schillinger, YB
 ;============================================================
 [Logs when a user was last seen online and which users were online while you were away.]
@@ -10,11 +10,11 @@
 ;file \plugins\SeenPlugin\res\resource.rc
 [Last seen options]
 
-[Last seen menuitem]
+[Last seen menu item]
 
 [Show icon]
 Afficher l'icône
-[Userinfo tab]
+[User info tab]
 
 [Log to file]
 
@@ -66,11 +66,7 @@ Hors ligne
 
 [Last seen plugin]
 
-[OK]
-OK
 [You missed following contacts:]
-
-[Test\nTest]
 
 [Alert when user status changes]
 

@@ -20,9 +20,9 @@
 
 #define szConfigFile        "HTTPServer.xml"
 
-const char szXmlHeader[] =	"<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\r\n"
-    "<?xml-stylesheet type=\"text/xsl\" href=\"HTTPServer.xsl\"?>\r\n"
-    "<config>\r\n";
+const TCHAR szXmlHeader[] =	_T("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\r\n")
+    _T("<?xml-stylesheet type=\"text/xsl\" href=\"HTTPServer.xsl\"?>\r\n")
+    _T("<config>\r\n");
 
 const char szXmlData[] =	"\t<share>\r\n"
     "\t\t<name>%s</name>\r\n"
@@ -32,7 +32,7 @@ const char szXmlData[] =	"\t<share>\r\n"
     "\t\t<ip_mask>%d.%d.%d.%d</ip_mask>\r\n"
     "\t</share>\r\n";
 
-const char szXmlTail[] =	"</config>";
+const TCHAR szXmlTail[] =	_T("</config>");
 
 const char* pszDefaultShares[] = {
 	"htdocs\\@settings\\favicon.ico",     "/favicon.ico",
@@ -243,7 +243,7 @@ bool bReadConfigurationFile() {
 		// move rest of buffer to front
 		if (pszCurPos && pszCurPos != szBuf) {
 			dwBytesInBuffer = DWORD(sizeof(szBuf) - (pszCurPos - szBuf));
-			memmove(szBuf, pszCurPos, dwBytesInBuffer);
+			memmove(szBuf, pszCurPos, dwBytesInBuffer * sizeof(TCHAR));
 		}
 		
 		// append data to buffer
@@ -653,13 +653,13 @@ INT_PTR nToggelAcceptConnections(WPARAM wparam, LPARAM /*lparam*/) {
 
 		mi.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_DISABLE_SERVER));
 		mi.ptszName = LPGENT("Disable HTTP server");
-		Netlib_Logf(hNetlibUser, mi.pszName);
+		Netlib_LogfT(hNetlibUser, mi.ptszName);
 	} else if (hDirectBoundPort && wparam == 0) {
 		Netlib_CloseHandle(hDirectBoundPort);
 		hDirectBoundPort = 0;
 		mi.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SHARE_NEW_FILE));
 		mi.ptszName = LPGENT("Enable HTTP server");
-		Netlib_Logf(hNetlibUser, mi.pszName);
+		Netlib_LogfT(hNetlibUser, mi.ptszName);
 	} else {
 		return 0; // no changes;
 	}

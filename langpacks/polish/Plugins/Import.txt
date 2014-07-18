@@ -31,19 +31,19 @@ Jeśli w przyszłości będziesz chciał użyć kreatora ponownie, możesz go w�
 [Miranda has found Miranda profiles with the following names. Please select the one you wish to import, or click "Other Profile" if your profile is not listed, or if the list is empty.]
 Miranda znalazła swoje profile z następującymi nazwami. Wybierz te, które chcesz zaimportować lub kliknij "Inny profil" jeśli twój profil nie jest na liście albo lista jest pusta.
 [&Other Profile...]
-Inny profil
+&Inny profil
 [&Filename:]
-Nazwa pliku
+&Nazwa pliku
 [Now importing...]
 Teraz importuje...
 [Import Information Wizard]
 Kreator importowania informacji
 [&Next >]
-Dalej >
+&Dalej >
 [Cancel]
 Anuluj
 [< &Back]
-< Wstecz
+< &Wstecz
 [Import all contacts and all messages]
 Importuj wszystkie kontakty i wiadomości
 [Only import contacts]
@@ -96,7 +96,7 @@ Pomijanie kontaktów nie-IM (%S)
 [Skipping %S contact, ID not found]
 Pomijanie kontaktu %S, nie znaleziono ID
 [Skipping duplicate %S contact %s]
-Pomijanie zduplikowanego %S contaktu %s
+Pomijanie zduplikowanego %S kontaktu %s
 [Unknown error while adding %S contact %s]
 Wystąpił nieznany błąd w czasie dodawania %S kontaktu %s
 [Failed to add message]
@@ -130,7 +130,7 @@ Zakończono import po %d sekundach.
 [Added %d contacts and %d groups.]
 Dodano %d kontaktów i %d grup.
 [Added %d contacts, %d groups and %d events.]
-Dodano %d kontaktów, %d grup i %d zdarzenia. 
+Dodano %d kontaktów, %d grup i %d zdarzenia.
 [Skipped %d contacts.]
 Pominięto %d kontaktów.
 [Skipped %d duplicates and %d filtered events.]
@@ -141,7 +141,7 @@ Pominięto %d duplikatów.
 [Import...]
 Importuj...
 [&Import...]
-Importuj...
+&Importuj...
 ;file \plugins\Import\src\miranda.cpp
 [The given file does not exist. Please check that you have entered the name correctly.]
 Dany plik nie istnieje. Sprawdź czy wpisałeś poprawnie jego nazwę.

@@ -1,9 +1,9 @@
 ﻿#muuid {b92282ac-686b-4541-a12d-6e9971a253b7}
 ;============================================================
 ;  File: HistoryPP.dll
-;  Module: History++
+;  Plugin: History++
 ;  Version: 1.5.1.5
-;  Authors: theMIROn
+;  Authors: theMIROn, Art Fedorov
 ;============================================================
 [Easy, fast and feature complete history viewer.]
 Простой, быстрый и многофункциональный просмотр истории.
@@ -43,8 +43,6 @@ WATrack уведомление
 WATrack: запрос информации
 [Artist: %s\\nTitle: %s\\nAlbum: %s]
 Артист: %s\\nTitle: %s\\nAlbum: %s
-[WATrack: %s]
-WATrack: %s
 [WATrack: request denied]
 WATrack: запрос запрещён
 [Imitate IEView API]
@@ -115,10 +113,6 @@ WATrack: запрос запрещён
 &Выделить все
 [SMS Message]
 Сообщение SMS
-[WebPager]
-WebPager
-[EMail Express]
-EMail Express
 [Other event]
 Другое событие
 [Global History Search]
@@ -157,8 +151,8 @@ EMail Express
 Показать в &контексте
 [Set &Bookmark]
 Поставить &закладку
-[Rename &Bookmark]
-Переименовать &закладку
+[&Rename Bookmark]
+&Переименовать закладку
 [Copy &Text]
 Копировать &текст
 [&Save Selected...]
@@ -501,8 +495,6 @@ HTML файл
 Не могу загрузить набор значков (%s) из\\r\\n%s\\r\\nЗначки не будут отображаться.
 [You are using old icon pack from:\\r\\n%s\\r\\nThis can cause missing icons, so update the icon pack.]
 У вас старый набор значков:\\r\\n%s\\r\\nВозможны проблемы со значками, обновите набор.
-[Speak Message]
-Произнести сообщение голосом
 [Next message]
 Следующее
 [History++ module could not be loaded, richedit 2.0+ module is missing.\\nPress OK to continue loading Miranda.]
@@ -515,8 +507,6 @@ HTML файл
 Вы действительно хотите удалить все записи для этого контакта?
 [Note: It can take several minutes for large histories]
 Примечание: это может занять несколько минут для большой истории
-[Empty history of subcontacts also]
-Также удалить историю субконтактов
 [Previous message]
 Предыдущее сообщение
 [Running version of AniSmiley is not supported]
@@ -614,7 +604,7 @@ HTML файл
 [Save All as &XML...]
 Сохранить всё как &XML...
 [Select search mode:]
-Выберете режим поиска:
+Выберите режим поиска:
 [Selected file and contact file folder not found]
 Выбранный файл и папка контакта не найдены
 [SMS Sample]

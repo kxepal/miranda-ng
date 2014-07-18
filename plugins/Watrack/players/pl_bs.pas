@@ -36,7 +36,7 @@ const
 const
   bspwnd:HWND = 0;
 
-function HiddenWindProc(wnd:HWnd; msg:UINT;wParam:WPARAM;lParam:LPARAM):integer; stdcall;
+function HiddenWindProc(wnd:HWND; msg:uint;wParam:WPARAM;lParam:LPARAM):LRESULT; stdcall;
 begin
   result:=DefWindowProc(wnd,msg,wParam,lParam);
 end;
@@ -194,7 +194,7 @@ begin
     if (flags and WAT_OPT_CHANGES)<>0 then
     begin
       volume:=GetVolume(plwnd);
-      if status<>WAT_MES_STOPPED then
+      if status<>WAT_PLS_STOPPED then
         time:=GetElapsedTime(plwnd);
     end
     else

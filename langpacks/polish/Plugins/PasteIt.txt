@@ -40,8 +40,6 @@ Klucz użytkownika
 Pobierz klucz
 [Configure formatting]
 Konfiguruj formatowanie
-[OK]
-OK
 [Cancel]
 Anuluj
 [Up]
@@ -131,18 +129,18 @@ Połączenie HTTP Paste It
 Możesz wkleić tylko 1 plik
 [Cannot get data from clipboard]
 Nie można pobrać danych ze schowka
-[File size is %d KB, do you realy want to paste such a large file?]
+[File size is %d KB, do you really want to paste such a large file?]
 Rozmiar pliku wynosi %d KB, na pewno chcesz wkleić tak duży plik?
 [Are You sure?]
 Czy na pewno?
 [Cannot read file '%s']
-Nie można wczytać pliku '%s'
+Nie można wczytać pliku "%s"
 [File size is larger then 10 MB, cannot be sent]
 Rozmiar pliku jest większy niż 10 MB, nie może zostać wysłany
 [Cannot open file '%s']
-Nie można otworzyć pliku '%s'
+Nie można otworzyć pliku "%s"
 [File '%s' is empty]
-Plik '%s' jest pusty
+Plik "%s" jest pusty
 ;file \plugins\PasteIt\src\PasteToWeb1.cpp
 [Error during sending text to web page: %s]
 Błąd podczas wysyłania tekstu do strony www: %s
@@ -155,7 +153,7 @@ Data ważności wklejki
 [Never]
 Nigdy
 [10 minutes]
-10 munut
+10 minut
 [1 hour]
 1 godzina
 [1 day]

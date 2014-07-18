@@ -543,12 +543,12 @@ static void waitThread(void *param)
 	mir_free(infoParam);
 }
 
-int UpdateValues(WPARAM wparam,LPARAM lparam)
+int UpdateValues(WPARAM hContact,LPARAM lparam)
 {
 	// to make this code faster
-	if (!wparam) return 0;
+	if (!hContact)
+		return 0;
 
-	MCONTACT hContact = (MCONTACT)wparam;
 	DBCONTACTWRITESETTING *cws=(DBCONTACTWRITESETTING *)lparam;
 	//if (CallService(MS_IGNORE_ISIGNORED,hContact,IGNOREEVENT_USERONLINE)) return 0;
 	BOOL isIdleEvent = includeIdle?(strcmp(cws->szSetting,"IdleTS")==0):0;
@@ -617,7 +617,7 @@ int UpdateValues(WPARAM wparam,LPARAM lparam)
 			db_set_b(hContact, S_MOD, "Offline", 0);
 		}
 	}
-	else if (hContact && IsWatchedProtocol(cws->szModule)) {
+	else if (hContact && IsWatchedProtocol(cws->szModule) && !db_get_b(hContact, cws->szModule, "ChatRoom", false)) {
 		//here we will come when <User>/<module>/Status is changed or it is idle event and if <module> is watched
 		if ( CallProtoService(cws->szModule,PS_GETSTATUS,0,0) > ID_STATUS_OFFLINE){
 			mir_cslock lck(csContacts);

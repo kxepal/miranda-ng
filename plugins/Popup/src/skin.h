@@ -78,12 +78,7 @@ public:
 			HICON hic;
 			HBITMAP hbm;
 			MyBitmap *myBmp;
-			struct
-			{
-				COLORREF textColor;
-				HFONT hfn;
-//				int textw;
-			};
+			HFONT hfn;
 		};
 		unsigned long flags;
 		unsigned long flag_mask;
@@ -91,6 +86,7 @@ public:
 		int clocksize[CLOCK_ITEMS];
 		int clockstart[CLOCK_ITEMS];
 		int proportional;
+		COLORREF textColor;
 		SKINELEMENT *next;
 	};	
 
@@ -114,9 +110,9 @@ private:
 	char					*m_flag_names[32];
 	mutable unsigned long	m_flags;
 
-	void	loadOptions(std::istream &f);
-	SKINELEMENT	*loadObject(std::istream &f);
-	void	loadSkin(std::istream &f);
+	void	loadOptions(std::wistream &f);
+	SKINELEMENT	*loadObject(std::wistream &f);
+	void	loadSkin(std::wistream &f);
 	void	loadSkin(LPCTSTR fn);
 	void	loadSkin(LPCTSTR lpName, LPCTSTR lpType);
 

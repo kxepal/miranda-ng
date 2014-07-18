@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: AdvancedAutoAway.dll
 ;  Plugin: Advanced Auto Away
-;  Version: 0.8.1.0
+;  Version: 0.8.1.1
 ;  Authors: P Boon
 ;============================================================
 [An Auto Away module with some more options than the original.]
@@ -39,7 +39,7 @@ Anuluj
 [Profile]
 Profil
 [Message]
-Wiadomość
+Opis
 [Account]
 Konto
 [Set]
@@ -68,8 +68,6 @@ Potwierdź resetowanie statusu
 Ustaw tylko, gdy obecny status to:
 [Command line]
 Linia poleceń
-[OK]
-OK
 [Copy to clipboard]
 Kopiuj do schowka
 [Command line:]
@@ -169,7 +167,7 @@ Użyj ustawień opisu Mirandy
 [Use this message:]
 Użyj tego opisu:
 [Use %time% for the current time, %date% for the current date]
-Użyj %time% dla czasu obecnego, %date% dla aktualnej daty 
+Użyj %time% dla czasu obecnego, %date% dla aktualnej daty
 [Variables...]
 Zmienne...
 [Specify settings for each account]
@@ -306,7 +304,7 @@ Ustaw opis %s dla %s.
 [<current>]
 <aktualny>
 [<n/a>]
-<niedostępny>
+<niedostępna>
 [Protocol]
 Protokół
 [Closing in %d]

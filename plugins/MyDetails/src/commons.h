@@ -46,7 +46,8 @@ Boston, MA 02111-1307, USA.
 #include <m_proto_listeningto.h>
 #include <m_listeningto.h>
 #include <m_statusplugins.h>
-#include <m_simpleaway.h>
+#include <m_awaymsg.h>
+#include <m_simplestatusmsg.h>
 #include <m_smileyadd.h>
 #include <m_mydetails.h>
 #include <m_skin_eng.h>
@@ -78,8 +79,8 @@ static __inline int DRAW_TEXT(HDC hDC, LPCTSTR lpString, int nCount, LPRECT lpRe
 	if (!opts.replace_smileys)
 		return DrawText(hDC, lpString, nCount, lpRect, uFormat);
 		
-	return Smileys_DrawText(hDC, lpString, nCount, lpRect, uFormat | (opts.resize_smileys ? DT_RESIZE_SMILEYS : 0), 
-			opts.use_contact_list_smileys ? "clist" : protocol, NULL);
+	return Smileys_DrawText(hDC, lpString, nCount, lpRect, uFormat | (opts.resize_smileys ? DT_RESIZE_SMILEYS : 0),
+		opts.use_contact_list_smileys ? "clist" : protocol, NULL);
 }
 
 #endif // __COMMONS_H__

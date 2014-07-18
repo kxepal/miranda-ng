@@ -62,7 +62,7 @@
 [&Import]
 &Импорт
 [Set &keyrings...]
-Установить &keyring
+Установить &keyring...
 [Disable keyrings use]
 Отключить keyrings
 [Load &Private key]
@@ -73,6 +73,8 @@
 Исполняемые:
 [Home Directory:]
 Домашний каталог:
+[Temp Dir:]
+Временный каталог:
 [Key Assignment]
 Назначение ключей
 [Debug]
@@ -102,7 +104,7 @@
 [Time in Seconds]
 Время (с)
 [0 = Default Popup Timeout Value]
-0 = По умолчанию 
+0 = По умолчанию
 [Show a popup on established connection]
 Установление соединения
 [Show a popup on disabled connection]
@@ -124,7 +126,7 @@
 [Cancel]
 Отмена
 [SecureIM plugin Passphrase of private key]
-Плагин SecureIM. Фраза-пароль для приватного ключа 
+Плагин SecureIM. Фраза-пароль для приватного ключа
 [Enter passphrase for the secret key:]
 Введите фразу-пароль для секретного ключа:
 [Mode]
@@ -146,11 +148,15 @@ Secure IM Включён
 [Secure IM Disabled]
 Secure IM Выключен
 [Pre-shared key]
-Настроить ключ
+Общий ключ
 [Set key]
 Установить ключ
 [Delete key]
 Удалить ключ
+[Set pre-shared key]
+Установить общий ключ
+[Delete pre-shared key]
+Удалить общий ключ
 [Public key]
 Открытый ключ
 [Export key]
@@ -166,9 +172,9 @@ Secure IM Выключен
 [SecureIM established...]
 Безопасное соединение установлено...
 [Key exchange failed...]
-Обмен ключами не состоялся
+Обмен ключами не состоялся...
 [Key from disabled...]
-Ключ был отвергнут
+Ключ был отвергнут...
 [Sent back message received...]
 Обратное сообщение принято...
 [Sending back secure message...]

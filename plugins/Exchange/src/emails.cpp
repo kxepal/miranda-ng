@@ -61,7 +61,7 @@ int CExchangeServer::Connect(int bForceConnect)
 
 		GetStringFromDatabase("Username", _T(""), user, _countof(user));
 		if (ServiceExists(MS_UTILS_REPLACEVARS))
-			_tcsncpy_s(user, _countof(user), VARST(user), _TRUNCATE);
+			_tcsncpy_s(user, VARST(user), _TRUNCATE);
 
 		GetStringFromDatabase("Password", _T(""), password, _countof(password));
 		GetStringFromDatabase("Server", _T(""), server, _countof(server));
@@ -293,7 +293,7 @@ int CExchangeServer::Check(int bNoEmailsNotify)
 
 int ShowMessage(TCHAR *message, int cUnreadEmails)
 {
-	int usePopups = ServiceExists(MS_POPUP_ADDPOPUP) ? db_get_b(NULL, ModuleName, "UsePopups", 0) : 0;
+	int usePopups = ServiceExists(MS_POPUP_ADDPOPUPT) ? db_get_b(NULL, ModuleName, "UsePopups", 0) : 0;
 	if (usePopups)
 		return ShowPopupMessage(TranslateT("Exchange email"), message, cUnreadEmails);
 
@@ -327,7 +327,7 @@ int ShowEmailsWindow(int cUnreadEmails)
 		if (!hEmailsDlg)
 			hEmailsDlg = CreateDialog(hInstance, MAKEINTRESOURCE(IDD_EMAILS), NULL, DlgProcEmails);
 		
-		SetWindowLong(hEmailsDlg, GWLP_USERDATA, cUnreadEmails);
+		SetWindowLongPtr(hEmailsDlg, GWLP_USERDATA, cUnreadEmails);
 		if (IsWindowVisible(hEmailsDlg))
 			SendMessage(hEmailsDlg, EXM_UPDATE_EMAILS, 0, 0);
 		else

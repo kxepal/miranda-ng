@@ -8,7 +8,7 @@
 [ToptoolBar adds buttons in top frame for fast access.]
 Dodaje przyciski szybkiego dostępu do pasku narzędzi listy kontaktów.
 ;file \plugins\TopToolBar\res\main.rc
-[Buttons Order && Visibility]
+[Buttons order and visibility]
 Kolejność i widoczność przycisków
 [Button height]
 Wysokość przycisku
@@ -24,29 +24,68 @@ Automatyczne dopasowanie
 Pojedyncza linia
 [Buttons order:]
 Kolejność przycisków:
-[Add Separator]
+[Add separator]
 Dodaj separator
-[Add Launch]
-Dodaj przycisk
-[Del Sep/Launch Button]
-Usuń przycisk
+[Add launch]
+Dodaj uruchomienie
+[Delete separator/launch button]
+Usuń separator/uruchom przycisk
 [Name:]
 Nazwa:
 [Path:]
 Folder:
 [Set]
 Ustaw
+;file \plugins\TopToolBar\src\InternalButtons.cpp
+[Show main menu]
+Pokaż menu główne
+[Show options page]
+Pokaż opcje
+[Show accounts manager]
+Pokaż menedżer kont
+[Find/add contacts]
+Szukaj/dodaj kontakty
+[Show status menu]
+Pokaż menu statusu
+[Show/hide offline contacts]
+Pokaż/ukryj rozłączone kontakty
+[Hide offline contacts]
+Ukryj rozłączone kontakty
+[Show offline contacts]
+Pokaż rozłączone kontakty
+[Enable/disable metacontacts]
+Włącz/wyłącz metakontakty
+[Disable metacontacts]
+Wyłącz metakontakty
+[Enable metacontacts]
+Włącz metakontakty
+[Enable/disable groups]
+Włącz/wyłącz grupy
+[Enable groups]
+Włącz grupy
+[Disable groups]
+Wyłącz grupy
+[Enable/disable sounds]
+Włącz/wyłącz dźwięki
+[Disable sounds]
+Wyłącz dźwięki
+[Enable sounds]
+Włącz dźwięki
+[Minimize contact list]
+Minimalizuj listę kontaktów
+[Exit]
+Wyjdź
 ;file \plugins\TopToolBar\src\toolbar.cpp
 [Default]
 Domyślny
-[TopToolBar Background]
+[TopToolBar background]
 Tło TopToolBar
 [Frames service has not been found, so plugin will be disabled.\nTo run it you need to install and / or enable contact list plugin that supports it:\n- Modern contact list\n- MultiWindow (MW)\n- Nicer+\nYou can get them at http://miranda-ng.org/]
 Obsługa ramek nie została znaleziona, wtyczka zostanie wyłączona.\nAby ją uruchomić należy zainstalować i/lub włączyć wpieraną wtyczkę listy kontaktów:\n- Modern contact list\n- MultiWindow (MW)\n- Nicer+\nMożesz je pobrać z http://Miranda-ng.org/
 [TopToolBar]
 Pasek narzędzi
 ;file \plugins\TopToolBar\src\ttbopt.cpp
-[Contact List]
+[Contact list]
 Lista kontaktów
 [Toolbar]
 Pasek narzędzi

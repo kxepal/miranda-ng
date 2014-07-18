@@ -2,11 +2,11 @@
 ;============================================================
 ;  File: AdvancedAutoAway.dll
 ;  Plugin: Advanced Auto Away
-;  Version: 0.8.1.0
+;  Version: 0.8.1.1
 ;  Authors: P Boon
 ;============================================================
 [An Auto Away module with some more options than the original.]
-Плагін управління режимом очікування з розширеним набором функцій.
+Розширений набір функцій для керування режимом очікування.
 [Check connection]
 Перевіряти
 [Max. retries]
@@ -238,7 +238,7 @@
 [Reconnecting]
 Перепідключення
 [Ignore locked status of accounts]
-Ігнорувати блоковані облікові записи
+Ігнорувати заблоковані облікові записи
 [Consider connection lost after]
 Зв'язок втрачено після
 [failed pings]

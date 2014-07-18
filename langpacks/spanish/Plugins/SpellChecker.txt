@@ -30,8 +30,6 @@ Eliminar
 
 [Use variables in correction]
 
-[OK]
-Aceptar
 [Cancel]
 Cancelar
 [Spell Checker]
@@ -116,10 +114,10 @@ Sesiones de mensaje
 
 [Disabled]
 Desabilitado
+[Unknown]
+Desconocido
 ;file \plugins\SpellChecker\src\utils.cpp
 [There are %d spelling errors. Are you sure you want to send this message?]
-
-[Your message window does not support SpellChecker Plugin.\nIf you use SRMM, TabSRMM or Scriver, please update them to the latest version,\notherwise ask the author of your message window plugin to add support for Spell Checker.]
 
 [Other...]
 

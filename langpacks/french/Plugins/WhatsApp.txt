@@ -6,7 +6,7 @@
 ;  Authors: Uli Hecht
 ;============================================================
 [WhatsApp protocol support for Miranda NG.]
-
+Support du protocole WhatsApp pour Miranda NG.
 ;file \protocols\WhatsApp\res\whatsapp.rc
 [Phone-Number]
 
@@ -30,12 +30,8 @@ Mot de passe
 
 [Use SSL connection (443 port)]
 
-[WhatsApp]
-
 [Cancel]
 Annuler
-[OK]
-OK
 ;file \protocols\WhatsApp\src\connection.cpp
 [Please enter a country-code.]
 
@@ -44,7 +40,7 @@ OK
 [Please enter a nickname.]
 
 [Please enter a password.]
-
+S'il vous plaît entrer un mot de passe.
 ;file \protocols\WhatsApp\src\dialogs.cpp
 [An SMS with registration-code will be sent to your mobile phone.\nNotice that you are not able to use the real WhatsApp and this plugin simultaneously!\nContinue?]
 
@@ -53,7 +49,7 @@ OK
 [Your password has been set automatically.\nIf you change your password manually you may lose it and need to request a new code!]
 
 ;file \protocols\WhatsApp\src\main.cpp
-[Did not unpack registration utility WART-1.5.4.0.exe.]
+[Did not unpack WART (registration utility).]
 
 ;file \protocols\WhatsApp\src\proto.cpp
 [%s server connection]

@@ -201,16 +201,7 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd,LPARAM)
 
 TCHAR* GetDefStatusMsg(unsigned uStatus, const char* szProto)
 {
-	INT_PTR res = CallService (MS_AWAYMSG_GETSTATUSMSGT, (WPARAM)uStatus, (LPARAM)szProto );
-	if (res == CALLSERVICE_NOTFOUND )
-	{
-		char* tmp = ( char* )CallService(MS_AWAYMSG_GETSTATUSMSG, (WPARAM)uStatus, (LPARAM)szProto );
-		TCHAR *ret = mir_a2t( tmp );
-		mir_free( tmp );
-		return ret;
-	}
-	else
-		return (TCHAR *) res;
+	return (TCHAR*)CallService (MS_AWAYMSG_GETSTATUSMSGT, uStatus, (LPARAM)szProto);
 }
 
 void SetStatus(const char* szProto, unsigned status, TCHAR *tszAwayMsg)
@@ -220,7 +211,7 @@ void SetStatus(const char* szProto, unsigned status, TCHAR *tszAwayMsg)
 		if ( CallProtoService( szProto, PS_SETAWAYMSGT, status, (LPARAM) tszAwayMsg ) == CALLSERVICE_NOTFOUND )
 		{
 			char *szAwayMsg = mir_t2a(tszAwayMsg);
-			CallProtoService( szProto, PS_SETAWAYMSG, status, (LPARAM) szAwayMsg );
+			CallProtoService( szProto, PS_SETAWAYMSG, status, (LPARAM)szAwayMsg );
 			mir_free(szAwayMsg);
 		}
 	}
@@ -727,8 +718,6 @@ extern "C" int __declspec(dllexport) Load(void)
 	{
 		if (db_get_b(NULL, "Popup", "ModuleIsEnabled", 1) == 0)
 			db_set_b(NULL, "Popup", "ModuleIsEnabled", 1);
-		if (db_get_b(NULL, "YAPP", "Enabled", 1) == 0)
-			db_set_b(NULL, "YAPP", "Enabled", 1);
 	}
 	if (g_wMaskAdv & OPT_HIDEONSTART && db_get_b(NULL, "Popup", "ModuleIsEnabled", 0)) // hack for disabling popup on startup if "Hide Miranda on startup" is enabled
 	{

@@ -1,7 +1,7 @@
 ﻿#muuid {97724af9-f3fb-47d3-a3bf-eaa935c74e6d}
 ;============================================================
 ;  File: MSN.dll
-;  Plugin: MSN Protocol
+;  Plugin: MSN protocol
 ;  Version: 0.11.0.2
 ;  Authors: Boris Krasnovskiy, George Hazan, Richard Hughes
 ;============================================================
@@ -78,8 +78,6 @@ Popup 'Benutzer hat Channel verlassen' aktivieren
 Kontaktlisten-Benachrichtigungen deaktivieren
 [Set Nickname]
 Nickname setzen
-[OK]
-OK
 [Cancel]
 Abbrechen
 [Mobile Device (used for SMS)]
@@ -124,7 +122,7 @@ Ich
 [Others]
 Sonstiges
 [&Invite user...]
-Kontakt e&inladen
+Kontakt e&inladen...
 [&Leave chat session]
 Chat ver&lassen
 [User &details]

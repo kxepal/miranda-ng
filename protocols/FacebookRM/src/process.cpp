@@ -22,24 +22,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "common.h"
 
-void FacebookProto::ProcessBuddyList(void* data)
-{
-	if (data == NULL)
-		return;
+#define MAX_NEWSFEED_LEN 500
 
+void FacebookProto::ProcessBuddyList(void*)
+{
 	ScopedLock s(facy.buddies_lock_);
 
-	std::string* resp = (std::string*)data;
-
 	if (isOffline())
-		goto exit;
+		return;
+
+	facy.handle_entry("ProcessBuddyList");
+
+	// Prepare update data
+	std::string post_data = "user=" + facy.self_.user_id + "&fetch_mobile=true&phstamp=0&fb_dtsg=" + facy.dtsg_ + "&__user=" + facy.self_.user_id + "&cached_user_info_ids=";
+	
+	int counter = 0;
+	for (List::Item< facebook_user >* i = facy.buddies.begin(); i != NULL; i = i->next, counter++)
+	{
+		post_data += i->data->user_id + "%2C";
+	}
+
+	// Get buddy list
+	http::response resp = facy.flap(REQUEST_BUDDY_LIST, &post_data);
+
+	if (resp.code != HTTP_CODE_OK) {
+		facy.handle_error("buddy_list");
+		return;
+	}
 
 	debugLogA("***** Starting processing buddy list");
 
 	CODE_BLOCK_TRY
 
 	facebook_json_parser* p = new facebook_json_parser(this);
-	p->parse_buddy_list(data, &facy.buddies);
+	p->parse_buddy_list(&resp.data, &facy.buddies);
 	delete p;
 
 	for (List::Item< facebook_user >* i = facy.buddies.begin(); i != NULL;)
@@ -63,13 +79,12 @@ void FacebookProto::ProcessBuddyList(void* data)
 
 		if (!fbu->deleted)
 		{
-			MCONTACT hContact = fbu->handle;
-			if (!hContact)
-				hContact = AddToContactList(fbu, CONTACT_FRIEND);
+			if (!fbu->handle) // just been added
+				fbu->handle = AddToContactList(fbu, CONTACT_FRIEND);
 			
-			ptrT client( getTStringA(hContact, "MirVer"));
+			ptrT client( getTStringA(fbu->handle, "MirVer"));
 			if (!client || _tcscmp(client, fbu->getMirVer()))
-				setTString(hContact, "MirVer", fbu->getMirVer());
+				setTString(fbu->handle, "MirVer", fbu->getMirVer());
 
 			if (getDword(fbu->handle, "IdleTS", 0) != fbu->last_active) {
 				if ((fbu->idle || fbu->status_id == ID_STATUS_OFFLINE) && fbu->last_active > 0)
@@ -112,7 +127,7 @@ void FacebookProto::ProcessBuddyList(void* data)
 			if (getDword(fbu->handle, FACEBOOK_KEY_DELETED, 0)) {
 				delSetting(fbu->handle, FACEBOOK_KEY_DELETED);
 
-				std::string url = FACEBOOK_URL_PROFILE + fbu->user_id;					
+				std::string url = FACEBOOK_URL_PROFILE + fbu->user_id;
 
 				ptrT szTitle( mir_utf8decodeT(fbu->real_name.c_str()));
 				NotifyEvent(szTitle, TranslateT("Contact is back on server-list."), fbu->handle, FACEBOOK_EVENT_OTHER, &url);
@@ -130,17 +145,24 @@ void FacebookProto::ProcessBuddyList(void* data)
 	debugLogA("***** Error processing buddy list: %s", e.what());
 
 	CODE_BLOCK_END
-
-exit:
-	delete resp;
 }
 
-void FacebookProto::ProcessFriendList(void* data)
+void FacebookProto::ProcessFriendList(void*)
 {
-	if (data == NULL)
+	ScopedLock s(facy.buddies_lock_);
+
+	if (isOffline())
 		return;
 
-	std::string* resp = (std::string*)data;
+	facy.handle_entry("load_friends");
+
+	// Get buddy list
+	http::response resp = facy.flap(REQUEST_LOAD_FRIENDS);
+
+	if (resp.code != HTTP_CODE_OK) {
+		facy.handle_error("load_friends");
+		return;
+	}	
 
 	debugLogA("***** Starting processing friend list");
 
@@ -149,7 +171,7 @@ void FacebookProto::ProcessFriendList(void* data)
 	std::map<std::string, facebook_user*> friends;
 
 	facebook_json_parser* p = new facebook_json_parser(this);
-	p->parse_friends(data, &friends);
+	p->parse_friends(&resp.data, &friends);
 	delete p;
 
 
@@ -175,26 +197,29 @@ void FacebookProto::ProcessFriendList(void* data)
 				// Update gender
 				if (getByte(hContact, "Gender", 0) != fbu->gender)
 					setByte(hContact, "Gender", fbu->gender);
-
-				// Update name
-				DBVARIANT dbv;
-				bool update_required = true;
-
-				// TODO: remove in some future version?
+				
+				// TODO: remove this in some future version?
+				// Remove old useless "RealName" field
 				ptrA realname(getStringA(hContact, "RealName"));
 				if (realname != NULL) {
 					delSetting(hContact, "RealName");
 				}
-				else if (!getStringUtf(hContact, FACEBOOK_KEY_NICK, &dbv))
-				{
-					update_required = strcmp(dbv.pszVal, fbu->real_name.c_str()) != 0;
-					db_free(&dbv);
-				}
-				if (update_required)
-				{
+
+				// Update real name and nick
+				if (!fbu->real_name.empty()) {
 					SaveName(hContact, fbu);
 				}
 
+				// Update username
+				ptrA username(getStringA(hContact, FACEBOOK_KEY_USERNAME));
+				if (!username || strcmp(username, fbu->username.c_str())) {
+					if (!fbu->username.empty())
+						setString(hContact, FACEBOOK_KEY_USERNAME, fbu->username.c_str());
+					else
+						delSetting(hContact, FACEBOOK_KEY_USERNAME);
+				}
+
+				// Update contact type
 				if (getByte(hContact, FACEBOOK_KEY_CONTACT_TYPE, 0) != CONTACT_FRIEND) {
 					setByte(hContact, FACEBOOK_KEY_CONTACT_TYPE, CONTACT_FRIEND);
 					// TODO: remove that popup and use "Contact added you" event?
@@ -239,15 +264,13 @@ void FacebookProto::ProcessFriendList(void* data)
 	}
 
 	// Check remaining contacts in map and add them to contact list
-	for (std::map< std::string, facebook_user* >::iterator iter = friends.begin(); iter != friends.end(); ++iter) {
-		facebook_user *fbu = iter->second;
+	for (std::map< std::string, facebook_user* >::iterator it = friends.begin(); it != friends.end(); ) {
+		if (!it->second->deleted)
+			AddToContactList(it->second, CONTACT_FRIEND, true); // we know this contact doesn't exists, so we force add it
 
-		if (!fbu->deleted)
-			MCONTACT hContact = AddToContactList(fbu, CONTACT_FRIEND/*, true*/); // This contact is surely new ...am I sure? ...I'm not, so "true" is commented now
-
-		delete fbu;
+		delete it->second;
+		it = friends.erase(it);
 	}
-	
 	friends.clear();
 
 	debugLogA("***** Friend list processed");
@@ -257,8 +280,6 @@ void FacebookProto::ProcessFriendList(void* data)
 	debugLogA("***** Error processing friend list: %s", e.what());
 
 	CODE_BLOCK_END
-
-	delete resp;
 }
 
 void FacebookProto::ProcessUnreadMessages(void*)
@@ -273,35 +294,35 @@ void FacebookProto::ProcessUnreadMessages(void*)
 		data += "&folders[1]=other";
 	data += "&client=mercury";
 	data += "__user=" + facy.self_.user_id;
-	data += "&fb_dtsg=" + (facy.dtsg_.length() ? facy.dtsg_ : "0");
+	data += "&fb_dtsg=" + (!facy.dtsg_.empty() ? facy.dtsg_ : "0");
 	data += "&__a=1&__dyn=&__req=&ttstamp=0";
 
 	http::response resp = facy.flap(REQUEST_UNREAD_THREADS, &data);
 
-	if (resp.code == HTTP_CODE_OK) {
-		
-		CODE_BLOCK_TRY
-		
-		std::vector<std::string> threads;
-
-		facebook_json_parser* p = new facebook_json_parser(this);
-		p->parse_unread_threads(&resp.data, &threads, inboxOnly);
-		delete p;
-
-		ForkThread(&FacebookProto::ProcessUnreadMessage, new std::vector<std::string>(threads));
-
-		debugLogA("***** Unread threads list processed");
-
-		CODE_BLOCK_CATCH
-
-		debugLogA("***** Error processing unread threads list: %s", e.what());
-
-		CODE_BLOCK_END
-	
-		facy.handle_success("ProcessUnreadMessages");
-	} else {
+	if (resp.code != HTTP_CODE_OK) {
 		facy.handle_error("ProcessUnreadMessages");
-	}	
+		return;
+	}
+	
+	CODE_BLOCK_TRY
+		
+	std::vector<std::string> threads;
+
+	facebook_json_parser* p = new facebook_json_parser(this);
+	p->parse_unread_threads(&resp.data, &threads, inboxOnly);
+	delete p;
+
+	ForkThread(&FacebookProto::ProcessUnreadMessage, new std::vector<std::string>(threads));
+
+	debugLogA("***** Unread threads list processed");
+
+	CODE_BLOCK_CATCH
+
+	debugLogA("***** Error processing unread threads list: %s", e.what());
+
+	CODE_BLOCK_END
+	
+	facy.handle_success("ProcessUnreadMessages");
 }
 
 void FacebookProto::ProcessUnreadMessage(void *p)
@@ -317,7 +338,6 @@ void FacebookProto::ProcessUnreadMessage(void *p)
 	int offset = 0;
 	int limit = 21;
 
-	// don't use local_timestamp for unread messages by default, use hidden setting to enable it
 	bool local_timestamp = getBool(FACEBOOK_KEY_LOCAL_TIMESTAMP_UNREAD, 0);
 
 	// receive messages from all folders by default, use hidden setting to receive only inbox messages
@@ -328,7 +348,7 @@ void FacebookProto::ProcessUnreadMessage(void *p)
 	while (!threads.empty()) {
 		std::string data = "client=mercury";
 		data += "&__user=" + facy.self_.user_id;
-		data += "&fb_dtsg=" + (facy.dtsg_.length() ? facy.dtsg_ : "0");
+		data += "&fb_dtsg=" + (!facy.dtsg_.empty() ? facy.dtsg_ : "0");
 		data += "&__a=1&__dyn=&__req=&ttstamp=0";
 	
 		for (std::vector<std::string>::size_type i = 0; i < threads.size(); i++) {
@@ -355,14 +375,17 @@ void FacebookProto::ProcessUnreadMessage(void *p)
 			std::map<std::string, facebook_chatroom*> chatrooms;
 
 			facebook_json_parser* p = new facebook_json_parser(this);
-			p->parse_thread_messages(&resp.data, &messages, &chatrooms, true, inboxOnly, limit);
+			p->parse_thread_messages(&resp.data, &messages, &chatrooms, false, inboxOnly, limit);
 			delete p;	
 
 			for (std::map<std::string, facebook_chatroom*>::iterator it = chatrooms.begin(); it != chatrooms.end(); ) {
 
-				facebook_chatroom *room = it->second;
+				// TODO: refactor this too!
+				// TODO: have all chatrooms in facy, in memory, and then handle them as needed... somehow think about it...
+				/*	facebook_chatroom *room = it->second;
 				MCONTACT hChatContact = NULL;
-				if (GetChatUsers(room->thread_id.c_str()) == NULL) {
+				ptrA users(GetChatUsers(room->thread_id.c_str()));
+				if (users == NULL) {
 					AddChat(room->thread_id.c_str(), room->chat_name.c_str());
 					hChatContact = ChatIDToHContact(room->thread_id);
 					// Set thread id (TID) for later
@@ -377,60 +400,14 @@ void FacebookProto::ProcessUnreadMessage(void *p)
 				if (!hChatContact)
 					hChatContact = ChatIDToHContact(room->thread_id);
 
-				setTString(hChatContact, FACEBOOK_KEY_MESSAGE_ID, room->thread_id.c_str());
-				ForkThread(&FacebookProto::ReadMessageWorker, (void*)hChatContact);
+				ForkThread(&FacebookProto::ReadMessageWorker, (void*)hChatContact);*/
 
 				delete it->second;
 				it = chatrooms.erase(it);
 			}
 			chatrooms.clear();
 
-
-			for (std::vector<facebook_message*>::size_type i = 0; i < messages.size(); i++) {				
-				if (messages[i]->isChat) {
-					debugLogA("      Got chat message: %s", messages[i]->message_text.c_str());
-					UpdateChat(_A2T(messages[i]->thread_id.c_str()), messages[i]->user_id.c_str(), messages[i]->sender_name.c_str(), messages[i]->message_text.c_str(), local_timestamp || !messages[i]->time ? ::time(NULL) : messages[i]->time);
-				} else if (messages[i]->user_id != facy.self_.user_id) {
-					debugLogA("      Got message: %s", messages[i]->message_text.c_str());
-					facebook_user fbu;
-					fbu.user_id = messages[i]->user_id;
-					fbu.real_name = messages[i]->sender_name;
-
-					// TODO: optimize this?
-					MCONTACT hContact = AddToContactList(&fbu, CONTACT_NONE);
-					setString(hContact, FACEBOOK_KEY_MESSAGE_ID, messages[i]->message_id.c_str());
-					
-					// Save TID if not exists already
-					ptrA tid( getStringA(hContact, FACEBOOK_KEY_TID));
-					if (!tid || strcmp(tid, messages[i]->thread_id.c_str()))
-						setString(hContact, FACEBOOK_KEY_TID, messages[i]->thread_id.c_str());
-
-					// TODO: if contact is newly added, get his user info
-					// TODO: maybe create new "receiveMsg" function and use it for offline and channel messages?
-
-					ParseSmileys(messages[i]->message_text, hContact);
-
-					if (messages[i]->isIncoming) {
-						PROTORECVEVENT recv = {0};
-						recv.flags = PREF_UTF;
-						recv.szMessage = const_cast<char*>(messages[i]->message_text.c_str());
-						recv.timestamp = local_timestamp || !messages[i]->time ? ::time(NULL) : messages[i]->time;
-						ProtoChainRecvMsg(hContact, &recv);
-					} else {
-						DBEVENTINFO dbei = {0};
-						dbei.cbSize = sizeof(dbei);
-						dbei.eventType = EVENTTYPE_MESSAGE;
-						dbei.flags = DBEF_SENT | DBEF_UTF;
-						dbei.szModule = m_szModuleName;
-						dbei.timestamp = local_timestamp || !messages[i]->time ? ::time(NULL) : messages[i]->time;
-						dbei.cbBlob = (DWORD)messages[i]->message_text.length() + 1;
-						dbei.pBlob = (PBYTE)messages[i]->message_text.c_str();
-						db_event_add(hContact, &dbei);
-					}
-				}
-				delete messages[i];
-			}
-			messages.clear();			
+			ReceiveMessages(messages, local_timestamp, true);
 
 			debugLogA("***** Unread messages processed");
 
@@ -452,7 +429,297 @@ void FacebookProto::ProcessUnreadMessage(void *p)
 	}
 }
 
-// TODO: combine processmessages and processunreadmessages? (behavior of showing messages to user should be the same)
+void FacebookProto::LoadLastMessages(void *p)
+{
+	if (p == NULL)
+		return;
+
+	facy.handle_entry("LoadLastMessages");
+
+	MCONTACT hContact = *(MCONTACT*)p;
+	delete (MCONTACT*)p;
+
+	if (!isOnline())
+		return;
+
+	std::string data = "client=mercury";
+	data += "&__user=" + facy.self_.user_id;
+	data += "&fb_dtsg=" + (!facy.dtsg_.empty() ? facy.dtsg_ : "0");
+	data += "&__a=1&__dyn=&__req=&ttstamp=0";
+
+	bool isChat = isChatRoom(hContact);
+
+	ptrA item_id(getStringA(hContact, isChat ? FACEBOOK_KEY_TID : FACEBOOK_KEY_ID));
+	if (item_id == NULL) {
+		debugLogA("!!!!! LoadLastMessages: Contact has no TID/ID");
+		return;
+	}
+
+	std::string id = utils::url::encode(std::string(item_id));
+	std::string type = isChat ? "thread_ids" : "user_ids";
+	int count = getByte(FACEBOOK_KEY_MESSAGES_ON_OPEN_COUNT, DEFAULT_MESSAGES_ON_OPEN_COUNT);
+	count = min(count, FACEBOOK_MESSAGES_ON_OPEN_LIMIT);
+
+	// request messages from thread
+	data += "&messages[" + type + "][" + id;
+	data += "][offset]=0";
+	data += "&messages[" + type + "][" + id;
+	data += "][limit]=" + utils::conversion::to_string(&count, UTILS_CONV_UNSIGNED_NUMBER);
+
+	// request info about thread
+	data += "&threads[" + type + "][0]=" + id;
+
+	http::response resp = facy.flap(REQUEST_THREAD_INFO, &data);
+
+	if (resp.code != HTTP_CODE_OK || resp.data.empty()) {
+		facy.handle_error("LoadLastMessages");
+		return;
+	}
+
+	// Temporarily disable marking messages as read for this contact
+	facy.ignore_read.insert(std::make_pair(hContact, true));
+
+CODE_BLOCK_TRY
+
+	std::vector<facebook_message*> messages;
+	std::map<std::string, facebook_chatroom*> chatrooms;
+
+	facebook_json_parser* p = new facebook_json_parser(this);
+	p->parse_thread_messages(&resp.data, &messages, &chatrooms, false, false, 20);
+	delete p;
+
+	// TODO: do something with this, chat is loading somewhere else... (in receiveMessages method right now)
+	/*for (std::map<std::string, facebook_chatroom*>::iterator it = chatrooms.begin(); it != chatrooms.end();) {
+
+		facebook_chatroom *room = it->second;
+		MCONTACT hChatContact = NULL;
+		ptrA users(GetChatUsers(room->thread_id.c_str()));
+		if (users == NULL) {
+			AddChat(room->thread_id.c_str(), room->chat_name.c_str());
+			hChatContact = ChatIDToHContact(room->thread_id);
+			// Set thread id (TID) for later
+			setTString(hChatContact, FACEBOOK_KEY_TID, room->thread_id.c_str());
+
+			for (std::map<std::string, std::string>::iterator jt = room->participants.begin(); jt != room->participants.end();) {
+				AddChatContact(room->thread_id.c_str(), jt->first.c_str(), jt->second.c_str());
+				++jt;
+			}
+		}
+
+		if (!hChatContact)
+			hChatContact = ChatIDToHContact(room->thread_id);
+
+		ForkThread(&FacebookProto::ReadMessageWorker, (void*)hChatContact);
+
+		delete it->second;
+		it = chatrooms.erase(it);
+	}
+	chatrooms.clear();*/
+
+	bool local_timestamp = getBool(FACEBOOK_KEY_LOCAL_TIMESTAMP_UNREAD, 0);
+	ReceiveMessages(messages, local_timestamp, true);
+
+	debugLogA("***** Thread messages processed");
+
+CODE_BLOCK_CATCH
+
+	debugLogA("***** Error processing thread messages: %s", e.what());
+
+CODE_BLOCK_END
+
+	facy.handle_success("LoadLastMessages");
+
+	// Enable marking messages as read for this contact
+	std::map<MCONTACT, bool>::iterator it = facy.ignore_read.find(hContact);
+	if (it != facy.ignore_read.end()) {
+		it->second = false;
+	}
+	
+	// And force mark read
+	OnDbEventRead(hContact, NULL);
+}
+
+
+void FacebookProto::ReceiveMessages(std::vector<facebook_message*> messages, bool local_timestamp, bool check_duplicates)
+{
+	bool naseemsSpamMode = getBool(FACEBOOK_KEY_NASEEMS_SPAM_MODE, false);
+
+	// TODO: make this checking more lightweight as now it is not effective at all...
+	if (check_duplicates) {
+		// 1. check if there are some message that we already have (compare FACEBOOK_KEY_MESSAGE_ID = last received message ID)
+		for (std::vector<facebook_message*>::size_type i = 0; i < messages.size(); i++) {
+
+			MCONTACT hContact = messages[i]->isChat
+				? ChatIDToHContact(std::tstring(_A2T(messages[i]->thread_id.c_str())))
+				: ContactIDToHContact(messages[i]->user_id);
+
+			if (hContact == NULL)
+				continue;
+
+			ptrA lastId(getStringA(hContact, FACEBOOK_KEY_MESSAGE_ID));
+			if (lastId == NULL)
+				continue;
+
+			if (!messages[i]->message_id.compare(lastId)) {
+				// Equal, ignore all older messages (including this) from same contact
+				for (std::vector<facebook_message*>::size_type j = 0; j < messages.size(); j++) {
+					bool equalsId = messages[i]->isChat
+						? (messages[j]->thread_id == messages[i]->thread_id)
+						: (messages[j]->user_id == messages[i]->user_id);
+
+					if (equalsId && messages[j]->time <= messages[i]->time)
+						messages[j]->flag_ = 1;
+				}
+			}
+		}
+
+		// 2. remove all marked messages from list
+		for (std::vector<facebook_message*>::iterator it = messages.begin(); it != messages.end();) {
+			if ((*it)->flag_ == 1)
+				it = messages.erase(it);
+			else
+				++it;
+		}
+	}
+
+	for(std::vector<facebook_message*>::size_type i = 0; i < messages.size(); i++) {
+		DWORD timestamp = local_timestamp || !messages[i]->time ? ::time(NULL) : messages[i]->time;
+
+		if (messages[i]->isChat) {
+			// Multi-user message
+			debugLogA("      Got chat message: %s", messages[i]->message_text.c_str());
+
+			facebook_chatroom *fbc;
+			std::tstring tthread_id = _A2T(messages[i]->thread_id.c_str());
+
+			std::map<std::tstring, facebook_chatroom*>::iterator it = facy.chat_rooms.find(tthread_id);
+			if (it != facy.chat_rooms.end()) {
+				fbc = it->second;
+			} else {
+				// In Naseem's spam mode we ignore outgoing messages sent from other instances
+				if (naseemsSpamMode && !messages[i]->isIncoming) {
+					delete messages[i];
+					continue;
+				}
+
+				// We don't have this chat loaded in memory yet, lets load some info (name, list of users)
+				fbc = new facebook_chatroom(tthread_id);
+				LoadChatInfo(fbc);
+				facy.chat_rooms.insert(std::make_pair(tthread_id, fbc));
+			}
+
+			MCONTACT hChatContact;
+			// RM TODO: better use check if chatroom exists/is in db/is online... no?
+			// like: if (ChatIDToHContact(tthread_id) == NULL) {
+			ptrA users(GetChatUsers(tthread_id.c_str()));
+			if (users == NULL) {
+				AddChat(fbc->thread_id.c_str(), fbc->chat_name.c_str());
+				hChatContact = ChatIDToHContact(fbc->thread_id);
+				// Set thread id (TID) for later
+				setTString(hChatContact, FACEBOOK_KEY_TID, fbc->thread_id.c_str());
+
+				for (std::map<std::string, std::string>::iterator jt = fbc->participants.begin(); jt != fbc->participants.end(); ++jt) {
+					// If this contact isn't already in chat, add it
+					if (!IsChatContact(fbc->thread_id.c_str(), jt->first.c_str())) // TODO: is this needed?
+						AddChatContact(fbc->thread_id.c_str(), jt->first.c_str(), jt->second.c_str());
+				}
+			}
+
+			if (!hChatContact)
+				hChatContact = ChatIDToHContact(fbc->thread_id);
+
+			if (!hChatContact) {
+				// hopefully shouldn't happen, but who knows?
+				debugLog(_T("! ! ! No hChatContact for %s"), fbc->thread_id.c_str());
+				delete messages[i];
+				continue;
+			}
+
+			// Save last (this) message ID
+			setString(hChatContact, FACEBOOK_KEY_MESSAGE_ID, messages[i]->message_id.c_str());
+
+			// Save TID if not exists already
+			ptrA tid(getStringA(hChatContact, FACEBOOK_KEY_TID));
+			if (!tid || strcmp(tid, messages[i]->thread_id.c_str()))
+				setString(hChatContact, FACEBOOK_KEY_TID, messages[i]->thread_id.c_str());
+
+			ParseSmileys(messages[i]->message_text, hChatContact);
+
+			// TODO: support also system messages (rename chat, user quit, etc.)! (here? or it is somewhere else?
+			// ... we must add some new "type" field into facebook_message structure and use it also for Pokes and similar)
+			UpdateChat(tthread_id.c_str(), messages[i]->user_id.c_str(), messages[i]->sender_name.c_str(), messages[i]->message_text.c_str(), timestamp);
+
+			// Automatically mark message as read because chatroom doesn't support onRead event (yet)
+			ForkThread(&FacebookProto::ReadMessageWorker, (void*)hChatContact);
+		} else {
+			// Single-user message
+			debugLogA("      Got message: %s", messages[i]->message_text.c_str());
+
+			facebook_user fbu;
+			fbu.user_id = messages[i]->user_id;
+			fbu.real_name = messages[i]->sender_name;
+
+			MCONTACT hContact = ContactIDToHContact(fbu.user_id);
+			if (hContact == NULL) {
+				// In Naseem's spam mode we ignore outgoing messages sent from other instances
+				if (naseemsSpamMode && !messages[i]->isIncoming) {
+					delete messages[i];
+					continue;
+				}
+
+				// We don't have this contact, lets load info about him
+				LoadContactInfo(&fbu);
+
+				hContact = AddToContactList(&fbu, CONTACT_NONE);
+			}
+
+			if (!hContact) {
+				// hopefully shouldn't happen, but who knows?
+				debugLogA("! ! ! No hContact for %s", messages[i]->user_id);
+				delete messages[i];
+				continue;
+			}
+
+			// Save last (this) message ID
+			setString(hContact, FACEBOOK_KEY_MESSAGE_ID, messages[i]->message_id.c_str());
+
+			// Save TID if not exists already
+			ptrA tid(getStringA(hContact, FACEBOOK_KEY_TID));
+			if (!tid || strcmp(tid, messages[i]->thread_id.c_str()))
+				setString(hContact, FACEBOOK_KEY_TID, messages[i]->thread_id.c_str());
+
+			ParseSmileys(messages[i]->message_text, hContact);
+
+			if (messages[i]->isIncoming && messages[i]->isUnread) {
+				PROTORECVEVENT recv = { 0 };
+				recv.flags = PREF_UTF;
+				recv.szMessage = const_cast<char*>(messages[i]->message_text.c_str());
+				recv.timestamp = timestamp;
+				ProtoChainRecvMsg(hContact, &recv);
+			} else {
+				DBEVENTINFO dbei = { 0 };
+				dbei.cbSize = sizeof(dbei);
+				dbei.eventType = EVENTTYPE_MESSAGE;
+				dbei.flags = DBEF_UTF;
+
+				if (!messages[i]->isIncoming)
+					dbei.flags |= DBEF_SENT;
+
+				if (!messages[i]->isUnread)
+					dbei.flags |= DBEF_READ;
+
+				dbei.szModule = m_szModuleName;
+				dbei.timestamp = timestamp;
+				dbei.cbBlob = (DWORD)messages[i]->message_text.length() + 1;
+				dbei.pBlob = (PBYTE)messages[i]->message_text.c_str();
+				db_event_add(hContact, &dbei);
+			}
+		}
+		delete messages[i];
+	}
+	messages.clear();
+}
+
 void FacebookProto::ProcessMessages(void* data)
 {
 	if (data == NULL)
@@ -471,63 +738,16 @@ void FacebookProto::ProcessMessages(void* data)
 	CODE_BLOCK_TRY
 
 	std::vector< facebook_message* > messages;
-	std::vector< facebook_notification* > notifications;
 
 	facebook_json_parser* p = new facebook_json_parser(this);
-	p->parse_messages(data, &messages, &notifications, inboxOnly);
+	p->parse_messages(data, &messages, &facy.notifications, inboxOnly);
 	delete p;
 
 	bool local_timestamp = getBool(FACEBOOK_KEY_LOCAL_TIMESTAMP, 0);
 
-	for(std::vector<facebook_message*>::size_type i=0; i<messages.size(); i++)
-	{
-		debugLogA("      Got message: %s", messages[i]->message_text.c_str());
-		facebook_user fbu;
-		fbu.user_id = messages[i]->user_id;
-		fbu.real_name = messages[i]->sender_name;
+	ReceiveMessages(messages, local_timestamp);
 
-		MCONTACT hContact = AddToContactList(&fbu, CONTACT_NONE);
-		setString(hContact, FACEBOOK_KEY_MESSAGE_ID, messages[i]->message_id.c_str());
-
-		// Save TID if not exists already
-		ptrA tid(getStringA(hContact, FACEBOOK_KEY_TID));
-		if (!tid || strcmp(tid, messages[i]->thread_id.c_str()))
-			setString(hContact, FACEBOOK_KEY_TID, messages[i]->thread_id.c_str());
-
-		// TODO: if contact is newly added, get his user info
-		// TODO: maybe create new "receiveMsg" function and use it for offline and channel messages?
-
-		ParseSmileys(messages[i]->message_text, hContact);
-
-		if (messages[i]->isIncoming) {
-			PROTORECVEVENT recv = {0};
-			recv.flags = PREF_UTF;
-			recv.szMessage = const_cast<char*>(messages[i]->message_text.c_str());
-			recv.timestamp = local_timestamp || !messages[i]->time ? ::time(NULL) : messages[i]->time;
-			ProtoChainRecvMsg(hContact, &recv);
-		} else {
-			DBEVENTINFO dbei = {0};
-			dbei.cbSize = sizeof(dbei);
-			dbei.eventType = EVENTTYPE_MESSAGE;
-			dbei.flags = DBEF_SENT | DBEF_UTF;
-			dbei.szModule = m_szModuleName;
-			dbei.timestamp = local_timestamp || !messages[i]->time ? ::time(NULL) : messages[i]->time;
-			dbei.cbBlob = (DWORD)messages[i]->message_text.length() + 1;
-			dbei.pBlob = (PBYTE)messages[i]->message_text.c_str();
-			db_event_add(hContact, &dbei);
-		}
-		delete messages[i];
-	}
-	messages.clear();
-
-	for(std::vector<facebook_notification*>::size_type i=0; i<notifications.size(); i++)
-	{
-		debugLogA("      Got notification: %s", notifications[i]->text.c_str());
-		ptrT szText( mir_utf8decodeT(notifications[i]->text.c_str()));
-		NotifyEvent(m_tszUserName, szText, ContactIDToHContact(notifications[i]->user_id), FACEBOOK_EVENT_NOTIFICATION, &notifications[i]->link, &notifications[i]->id);
-		delete notifications[i];
-	}
-	notifications.clear();
+	ShowNotifications();
 
 	debugLogA("***** Messages processed");
 
@@ -541,12 +761,23 @@ exit:
 	delete resp;
 }
 
+void FacebookProto::ShowNotifications() {
+	if (!getByte(FACEBOOK_KEY_EVENT_NOTIFICATIONS_ENABLE, DEFAULT_EVENT_NOTIFICATIONS_ENABLE))
+		return;
+	
+	for (std::map<std::string, facebook_notification*>::iterator it = facy.notifications.begin(); it != facy.notifications.end(); ++it) {
+		if (it->second != NULL && !it->second->seen) {
+			debugLogA("      Got notification: %s", it->second->text.c_str());
+			ptrT szText(mir_utf8decodeT(it->second->text.c_str()));
+			it->second->hWndPopup = NotifyEvent(m_tszUserName, szText, ContactIDToHContact(it->second->user_id), FACEBOOK_EVENT_NOTIFICATION, &it->second->link, &it->second->id);
+			it->second->seen = true;
+		}
+	}
+}
+
 void FacebookProto::ProcessNotifications(void*)
 {
 	if (isOffline())
-		return;
-
-	if (!getByte(FACEBOOK_KEY_EVENT_NOTIFICATIONS_ENABLE, DEFAULT_EVENT_NOTIFICATIONS_ENABLE))
 		return;
 
 	facy.handle_entry("notifications");
@@ -565,20 +796,11 @@ void FacebookProto::ProcessNotifications(void*)
 
 	CODE_BLOCK_TRY
 
-	std::vector< facebook_notification* > notifications;
-
 	facebook_json_parser* p = new facebook_json_parser(this);
-	p->parse_notifications(&(resp.data), &notifications);
+	p->parse_notifications(&(resp.data), &facy.notifications);
 	delete p;
 
-	for(std::vector<facebook_notification*>::size_type i=0; i<notifications.size(); i++)
-	{
-		debugLogA("      Got notification: %s", notifications[i]->text.c_str());
-		ptrT szText( mir_utf8decodeT(notifications[i]->text.c_str()));
-		NotifyEvent(m_tszUserName, szText, ContactIDToHContact(notifications[i]->user_id), FACEBOOK_EVENT_NOTIFICATION, &notifications[i]->link, &notifications[i]->id);
-		delete notifications[i];
-	}
-	notifications.clear();
+	ShowNotifications();
 
 	debugLogA("***** Notifications processed");
 
@@ -625,7 +847,7 @@ void FacebookProto::ProcessFriendRequests(void*)
 		fbu->real_name = utils::text::source_get_value(&req, 2, "class=\"actor\">", "</");
 		fbu->user_id = utils::text::source_get_value(&get, 2, "id=", "&");
 
-		if (fbu->user_id.length() && fbu->real_name.length())
+		if (!fbu->user_id.empty() && !fbu->real_name.empty())
 		{
 			MCONTACT hContact = AddToContactList(fbu, CONTACT_APPROVE);
 			setByte(hContact, FACEBOOK_KEY_CONTACT_TYPE, CONTACT_APPROVE);
@@ -669,7 +891,7 @@ void FacebookProto::ProcessFriendRequests(void*)
 			}
 		} else {
 			debugLogA(" !!!  Wrong friendship request");
-			debugLogA(req.c_str());
+			debugLogA("%s", req.c_str());
 		}
 	}
 
@@ -678,13 +900,18 @@ void FacebookProto::ProcessFriendRequests(void*)
 
 void FacebookProto::ProcessFeeds(void* data)
 {
-	if (data == NULL)
+	if (!isOnline())
 		return;
 
-	std::string* resp = (std::string*)data;
+	facy.handle_entry("feeds");
 
-	if (!isOnline())
-		goto exit;
+	// Get feeds
+	http::response resp = facy.flap(REQUEST_FEEDS);
+
+	if (resp.code != HTTP_CODE_OK || resp.data.empty()) {
+		facy.handle_error("feeds");
+		return;
+	}
 
 	CODE_BLOCK_TRY
 
@@ -695,33 +922,91 @@ void FacebookProto::ProcessFeeds(void* data)
 	std::string::size_type pos = 0;
 	UINT limit = 0;
 
-	*resp = utils::text::slashu_to_utf8(*resp);	
-	*resp = utils::text::source_get_value(resp, 2, "\"html\":\"", ">\"");
+	DWORD new_time = facy.last_feeds_update_;
+	bool filterAds = getBool(FACEBOOK_KEY_FILTER_ADS, DEFAULT_FILTER_ADS);
 
-	while ((pos = resp->find("<div class=\\\"mainWrapper\\\"", pos)) != std::string::npos && limit <= 25)
+	debugLogA("      Last feeds update (old): %d", facy.last_feeds_update_);
+
+	while ((pos = resp.data.find("<div class=\"userContentWrapper", pos)) != std::string::npos && limit <= 25)
 	{		
-		std::string::size_type pos2 = resp->find("<div class=\\\"mainWrapper\\\"", pos+5);
+		/*std::string::size_type pos2 = resp.data.find("<div class=\"userContentWrapper", pos+5);
 		if (pos2 == std::string::npos)
-			pos2 = resp->length();
+			pos2 = resp.data.length();
 		
-		std::string post = resp->substr(pos, pos2 - pos);
+		std::string post = resp.data.substr(pos, pos2 - pos);*/
+		std::string post = resp.data.substr(pos, resp.data.find("</form>", pos) - pos);
 		pos += 5;
 
-		std::string post_header = utils::text::source_get_value(&post, 4, "<h5 class=", "uiStreamHeadline", ">", "<\\/h5>");
-		std::string post_message = utils::text::source_get_value(&post, 3, "<h5 class=\\\"uiStreamMessage userContentWrapper", ">", "<\\/h5>");
-		std::string post_link = utils::text::source_get_value(&post, 3, "<span class=\\\"uiStreamSource\\\"", ">", "<\\/span>");
-		std::string post_attach = utils::text::source_get_value(&post, 4, "<div class=", "uiStreamAttachments", ">", "<form");
+		std::string post_header = utils::text::source_get_value(&post, 3, "<h5", ">", "</h5>");
+		std::string post_message = utils::text::source_get_value(&post, 3, " userContent\"", ">", "<form");
+		std::string post_link = utils::text::source_get_value(&post, 4, "</h5>", "<a", "href=\"", "\"");
+		//std::string post_attach = utils::text::source_get_value(&post, 4, "<div class=", "uiStreamAttachments", ">", "<form");
 
-		//std::string post_time = utils::text::source_get_value(&post_link, 2, "data-utime=\\\"", "\\\"");
-		//std::string post_time_text = utils::text::source_get_value(&post_link, 3, "class=\\\"timestamp livetimestamp", ">", "<");
+		std::string post_time = utils::text::source_get_value(&post, 3, "</h5>", "<abbr", "</a>");
+
+		std::string time = utils::text::source_get_value(&post_time, 2, "data-utime=\"", "\"");
+		std::string time_text = utils::text::source_get_value(&post_time, 2, ">", "</abbr>");
+
+		if (time.empty()) {
+			// alternative parsing (probably page like or advertisement)
+			time = utils::text::source_get_value(&post, 2, "content_timestamp&quot;:&quot;", "&quot;");
+		}
+
+		DWORD ttime;
+		if (!utils::conversion::from_string<DWORD>(ttime, time, std::dec)) {
+			debugLogA("! ! ! - Newsfeed with wrong/empty time (probably wrong parsing)\n%s", post.c_str());
+			continue;
+		}
+
+		if (ttime > new_time) {
+			new_time = ttime; // remember newest time from all these posts
+			debugLogA("      - Newsfeed time: %d (new)", ttime);
+		} 
+		else if (ttime <= facy.last_feeds_update_) {
+			debugLogA("      - Newsfeed time: %d (ignored)", ttime);
+			continue; // ignore posts older than newest post of previous check
+		}
+		else {
+			debugLogA("      - Newsfeed time: %d (normal)", ttime);
+		}
+
+		std::string post_place = utils::text::source_get_value(&post, 4, "</abbr>", "<a", ">", "</a>");
+
+		std::string premsg = "\n" + time_text;
+
+		post_place = utils::text::trim(
+			utils::text::remove_html(post_place));
+		if (!post_place.empty()) {
+			premsg += " - " + post_place;
+		}
+		premsg += "\n";
 
 		// in title keep only name, end of events like "X shared link" put into message
-		pos2 = post_header.find("<\\/a>") + 5;
-		post_message = post_header.substr(pos2, post_header.length() - pos2) + post_message;
-		post_header = post_header.substr(0, pos2);
+		std::string::size_type pos2 = post_header.find("‎");
+
+		if (pos2 != std::string::npos) {
+			utils::text::replace_first(&post_header, "‎", " → ");
+		} else {
+			pos2 = post_header.find("</a></");
+			if (pos2 != std::string::npos) {
+				pos2 += 4;
+				std::string a = utils::text::trim(utils::text::remove_html(post_header.substr(pos2, post_header.length() - pos2)));
+				if (a.length() > 2)
+					premsg += a;
+				post_header = post_header.substr(0, pos2);
+			}
+		}
+
+		// Strip "Translate" link
+		pos2 = post_message.find("role=\"button\">");
+		if (pos2 != std::string::npos) {
+			post_message = post_message.substr(0, pos2 + 14);
+		}
+
+		post_message = premsg + post_message;
 
 		// append attachement to message (if any)
-		post_message += utils::text::trim(post_attach);
+		//post_message += utils::text::trim(post_attach);
 
 		facebook_newsfeed* nf = new facebook_newsfeed;
 
@@ -729,28 +1014,27 @@ void FacebookProto::ProcessFeeds(void* data)
 			utils::text::special_expressions_decode(
 				utils::text::remove_html(post_header)));
 
-		nf->user_id = utils::text::source_get_value(&post_header, 2, "user.php?id=", "\\\"");
+		nf->user_id = utils::text::source_get_value(&post_header, 2, "user.php?id=", "&amp;");
 		
-		nf->link = utils::text::special_expressions_decode(
-				utils::text::source_get_value(&post_link, 2, "href=\\\"", "\\\">"));
+		nf->link = utils::text::special_expressions_decode(post_link);
+		
+		// Check if we don't want to show ads posts
+		bool filtered = filterAds && (nf->link.find("/about/ads") != std::string::npos
+			|| post.find("class=\"uiStreamSponsoredLink\"") != std::string::npos
+			|| post.find("href=\"/about/ads\"") != std::string::npos);
 
 		nf->text = utils::text::trim(
 			utils::text::special_expressions_decode(
 				utils::text::remove_html(
-					utils::text::edit_html(post_message))));
+					utils::text::edit_html(post_message))));		
 
-		//nf->text += "\n" + post_time_text;
-
-		if (!nf->title.length() || !nf->text.length())
-		{
+		if (filtered || nf->title.empty() || nf->text.empty()) {
+			debugLogA("      \\ Newsfeed (time: %d) is filtered: %s", ttime, filtered ? "advertisement" : (nf->title.empty() ? "title empty" : "text empty"));
 			delete nf;
 			continue;
 		}
-
-		if (nf->text.length() > 500)
-		{
-			nf->text = nf->text.substr(0, 500);
-			nf->text += "...";
+		else {
+			debugLogA("      Got newsfeed (time: %d): %s %s", ttime, nf->title.c_str(), nf->text.c_str());
 		}
 
 		news.push_back(nf);
@@ -758,17 +1042,28 @@ void FacebookProto::ProcessFeeds(void* data)
 		limit++;
 	}
 
+	debugLogA("      Last feeds update (new): %d", new_time);
+
 	for(std::vector<facebook_newsfeed*>::size_type i=0; i<news.size(); i++)
 	{
-		debugLogA("      Got newsfeed: %s %s", news[i]->title.c_str(), news[i]->text.c_str());
-		ptrT szTitle( mir_utf8decodeT(news[i]->title.c_str()));
-		ptrT szText( mir_utf8decodeT(news[i]->text.c_str()));
-		NotifyEvent(szTitle,szText,this->ContactIDToHContact(news[i]->user_id),FACEBOOK_EVENT_NEWSFEED, &news[i]->link);
+		ptrT tszTitle( mir_utf8decodeT(news[i]->title.c_str()));
+		ptrT tszText( mir_utf8decodeT(news[i]->text.c_str()));
+
+		// Truncate text of newsfeed when it's too long
+		if (_tcslen(tszText) > MAX_NEWSFEED_LEN) {
+			TCHAR buf[MAX_NEWSFEED_LEN + 3 + 1] = { 0 };
+			_tcsncpy(buf, tszText, MAX_NEWSFEED_LEN);
+			_tcsncpy(&buf[MAX_NEWSFEED_LEN], _T("..."), 3);
+			tszText = buf;
+		}
+
+		NotifyEvent(tszTitle, tszText, this->ContactIDToHContact(news[i]->user_id), FACEBOOK_EVENT_NEWSFEED, &news[i]->link);
 		delete news[i];
 	}
 	news.clear();
 
-	this->facy.last_feeds_update_ = ::time(NULL);
+	// Set time of last update to time of newest post
+	this->facy.last_feeds_update_ = new_time;
 
 	debugLogA("***** Feeds processed");
 
@@ -778,8 +1073,54 @@ void FacebookProto::ProcessFeeds(void* data)
 
 	CODE_BLOCK_END
 
-exit:
-	delete resp;
+	facy.handle_success("feeds");
+}
+
+void FacebookProto::ProcessPages(void *data)
+{
+	if (!getByte(FACEBOOK_KEY_LOAD_PAGES, DEFAULT_LOAD_PAGES))
+		return;
+
+	facy.handle_entry("load_pages");
+
+	// Get feeds
+	http::response resp = facy.flap(REQUEST_PAGES);
+
+	if (resp.code != HTTP_CODE_OK) {
+		facy.handle_error("load_pages");
+		return;
+	}
+
+	std::string content = utils::text::source_get_value(&resp.data, 2, "id=\"bookmarksSeeAllSection\"", "</code>");
+
+	std::string::size_type start, end;
+	start = content.find("<li", 0);
+	while (start != std::string::npos) {
+		end = content.find("<li", start + 1);
+		if (end == std::string::npos)
+			end = content.length();
+
+		std::string item = content.substr(start, end - start);
+		//item = utils::text::source_get_value(&item, 2, "data-gt=", ">");
+
+		start = content.find("<li", start + 1);
+
+		std::string id = utils::text::source_get_value(&item, 3, "data-gt=", "bmid&quot;:&quot;", "&quot;");
+		std::string title = utils::text::special_expressions_decode(utils::text::slashu_to_utf8(utils::text::source_get_value(&item, 3, "data-gt=", "title=\"", "\"")));
+		std::string href = utils::text::source_get_value(&item, 3, "data-gt=", "href=\"", "\"");
+
+		// Ignore pages channel
+		if (href.find("/pages/feed") != std::string::npos)
+			continue;
+
+		if (id.empty() || title.empty())
+			continue;
+
+		debugLogA("      Got page: %s (%s)", title.c_str(), id.c_str());
+		facy.pages[id] = title;
+	}
+
+	facy.handle_success("load_pages");
 }
 
 void FacebookProto::SearchAckThread(void *targ)
@@ -802,12 +1143,12 @@ void FacebookProto::SearchAckThread(void *targ)
 
 		if (resp.code == HTTP_CODE_OK)
 		{
-			std::string items = utils::text::source_get_value(&resp.data, 2, "<body", "</body>");
+			std::string items = utils::text::source_get_value(&resp.data, 4, "<body", "name=\"charset_test\"", "<table", "</body>");
 
 			std::string::size_type pos = 0;
 			std::string::size_type pos2 = 0;
 
-			while ((pos = items.find("<td class=\"pic\">", pos)) != std::string::npos) {
+			while ((pos = items.find("<tr", pos)) != std::string::npos) {
 				std::string item = items.substr(pos, items.find("</tr>", pos) - pos);
 				pos++; count++;
 
@@ -815,10 +1156,10 @@ void FacebookProto::SearchAckThread(void *targ)
 				if (id.empty())
 					id = utils::text::source_get_value2(&item, "?ids=", "&\"");
 
-				std::string name = utils::text::source_get_value(&item, 4, "<td class=\"name\">", "<a", ">", "</");
+				std::string name = utils::text::source_get_value(&item, 3, "<a", ">", "</");
 				std::string surname;
 				std::string nick;
-				std::string common = utils::text::source_get_value(&item, 2, "<span class=\"mfss fcg\">", "</span>");
+				std::string common = utils::text::source_get_value(&item, 4, "</a>", "<span", ">", "</span>");
 
 				if ((pos2 = name.find("<span class=\"alternate_name\">")) != std::string::npos) {
 					nick = name.substr(pos2 + 30, name.length() - pos2 - 31); // also remove brackets around nickname
@@ -884,7 +1225,7 @@ void FacebookProto::SearchIdAckThread(void *targ)
 
 		if (resp.code == HTTP_CODE_OK)
 		{
-			std::string about = utils::text::source_get_value(&resp.data, 2, "<div class=\"timeline", "id=\"footer");
+			std::string about = utils::text::source_get_value(&resp.data, 2, "<div id=\"root\"", "id=\"footer\"");
 		
 			std::string id = utils::text::source_get_value2(&about, ";id=", "&\"");
 			if (id.empty())

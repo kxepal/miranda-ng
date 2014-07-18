@@ -1,9 +1,9 @@
 ﻿#muuid {b92282ac-686b-4541-a12d-6e9971a253b7}
 ;============================================================
 ;  File: HistoryPP.dll
-;  Module: History++
+;  Plugin: History++
 ;  Version: 1.5.1.5
-;  Authors: theMIROn
+;  Authors: theMIROn, Art Fedorov
 ;============================================================
 [Easy, fast and feature complete history viewer.]
 
@@ -34,7 +34,7 @@
 [Outgoing WATrack notify]
 
 [&Copy Link]
-
+&Copiar enlace
 [WATrack notify]
 
 [Open Link]
@@ -157,7 +157,7 @@
 
 [Set &Bookmark]
 
-[Rename &Bookmark]
+[&Rename Bookmark]
 
 [Copy &Text]
 
@@ -426,7 +426,7 @@
 [Divider]
 
 [Incoming url]
-
+URL entrante
 [Outgoing contacts]
 
 [Outgoing file]
@@ -434,7 +434,7 @@ Archivo saliente
 [Outgoing SMS Message]
 
 [Outgoing url]
-
+URL saliente
 [Selected background]
 
 [SMTP Simple]
@@ -501,8 +501,6 @@ Archivo saliente
 
 [You are using old icon pack from:\\r\\n%s\\r\\nThis can cause missing icons, so update the icon pack.]
 
-[Speak Message]
-
 [Next message]
 
 [History++ module could not be loaded, richedit 2.0+ module is missing.\\nPress OK to continue loading Miranda.]
@@ -514,8 +512,6 @@ Archivo saliente
 [Do you really want to delete ALL items for this contact?]
 
 [Note: It can take several minutes for large histories]
-
-[Empty history of subcontacts also]
 
 [Previous message]
 
@@ -578,7 +574,7 @@ Archivo saliente
 [Incoming URL Sample]
 
 [Incoming Url]
-
+URL entrante
 [Make shure you have CAPS LOCK turned off.]
 
 [Make sure you have CAPS LOCK turned off.]
@@ -602,7 +598,7 @@ Archivo saliente
 [Outgoing URL Sample]
 
 [Outgoing Url]
-
+URL saliente
 [Recent at bottom]
 
 [Recent on top]
@@ -674,7 +670,7 @@ Solicitud de autorización
 [%d min]
 
 [&Reset to Default]
-
+&Restablecer valores predeterminados
 [Contact history]
 
 [Incoming nick]
@@ -690,7 +686,7 @@ Solicitud de autorización
 [Outgoing timestamp]
 
 [Open in &new window]
-
+Abrir en &nueva ventana
 [Open in existing &window]
 
 [Copy &Link]
@@ -698,11 +694,11 @@ Solicitud de autorización
 [Co&py]
 
 [Select &All]
-
+Elegir &todo
 [Send &Message]
-
+Enviar &mensaje
 [User Details]
-
+Información del usuario
 [Enable SmileyAdd support]
 
 [Always RTL]
@@ -714,8 +710,10 @@ Solicitud de autorización
 [Show event icons]
 
 [View user's history]
-
+Ver historial del usuario
 [View User's History]
-
+Ver historial del usuario
 [View &History]
-
+Ver &historial
+[User Menu]
+Menú del usuario

@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: SeenPlugin.dll
 ;  Plugin: Last seen
-;  Version: 5.0.4.8
+;  Version: 5.0.4.9
 ;  Authors: Heiko Schillinger, YB
 ;============================================================
 [Logs when a user was last seen online and which users were online while you were away.]
@@ -10,11 +10,11 @@
 ;file \plugins\SeenPlugin\res\resource.rc
 [Last seen options]
 Настройки
-[Last seen menuitem]
+[Last seen menu item]
 Елемент в менюто
 [Show icon]
 Показване на икона
-[Userinfo tab]
+[User info tab]
 Таб в Userinfo
 [Log to file]
 Запис във файл
@@ -66,12 +66,8 @@ Popup цветове
 Анулиране
 [Last seen plugin]
 
-[OK]
-ОК
 [You missed following contacts:]
 Изпуснахте следните контакти:
-[Test\nTest]
-Проба\nПроба
 [Alert when user status changes]
 Уведомяване, ако контакта смени състоянието си
 ;file \plugins\SeenPlugin\src\history.cpp
@@ -96,8 +92,6 @@ Popup цветове
 Отписване на потребител
 [User Logged In]
 Вписване на потребител
-[Last seen]
-Последно видян
 ;file \plugins\SeenPlugin\src\menu.cpp
 [<unknown>]
 <неизвестно>
@@ -108,6 +102,8 @@ Popup цветове
 
 [Contacts]
 Контакти
+[Last seen]
+Последно видян
 [Popups]
 Popups
 ;file \plugins\SeenPlugin\src\seen.h

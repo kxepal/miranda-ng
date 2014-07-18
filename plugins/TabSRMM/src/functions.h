@@ -92,7 +92,6 @@ void  TSAPI CloseOtherTabs(HWND hwndTab, TWindowData &dat);
 int   TSAPI ActivateTabFromHWND(HWND hwndTab, HWND hwnd);
 void  TSAPI AdjustTabClientRect(TContainerData *pContainer, RECT *rc);
 void  TSAPI ReflashContainer(TContainerData *pContainer);
-HMENU TSAPI BuildMCProtocolMenu(HWND hwndDlg);
 
 TContainerData* TSAPI AppendToContainerList(TContainerData *pContainer);
 TContainerData* TSAPI RemoveContainerFromList(TContainerData *pContainer);
@@ -189,7 +188,5 @@ void TSAPI DrawMenuItem(DRAWITEMSTRUCT *dis, HICON hIcon, DWORD dwIdle);
 
 INT_PTR CALLBACK SelectContainerDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK DlgProcContainerOptions(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
-INT_PTR CALLBACK DlgProcAbout(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
-
 
 #endif /* _TABSRMM_FUNCTIONS_H */

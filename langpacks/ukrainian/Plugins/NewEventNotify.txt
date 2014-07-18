@@ -87,6 +87,10 @@
 Веб-пейджер ICQ
 [ICQ Email express]
 Експрес-пошта ICQ
+[SMS Message]
+Повідомлення SMS
+[SMS Confirmation]
+Підтвердження SMS
 [Unknown Event]
 Невідома подія
 [Notify of new events]
@@ -114,4 +118,4 @@
 [Plugin Test]
 Тест плагіна
 [[b]Number of new message(s): %d[/b]\n]
-[b]Кількість нових повідомлень: %d[/b]\n
+\[b]Кількість нових повідомлень: %d[/b]\n

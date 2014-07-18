@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 extern int hLangpack;
 
 //brings up the send message dialog for a contact
-//wParam = (WPARAM)(HANDLE)hContact
+//wParam = (MCONTACT)hContact
 //lParam = (LPARAM)(char*)szText
 //returns 0 on success or nonzero on failure
 //returns immediately, just after the dialog is shown
@@ -72,9 +72,15 @@ typedef struct {
 	HWND hwndLog; // log area window for the contact (or NULL if there is none)
 } MessageWindowEventData;
 
-//wparam = (HANDLE)hContact
-//lparam = (TCHAR*)ptszMessageText
-//Sets a status line text for the appropriate contact
+typedef struct {
+	int cbSize;
+	HICON hIcon; 
+	TCHAR tszText[100];
+} StatusTextData;
+
+//wparam = (MCONTACT)hContact
+//lparam = (StatusTextData*) or NULL to clear statusbar
+//Sets a statusbar line text for the appropriate contact
 #define MS_MSG_SETSTATUSTEXT "MessageAPI/SetStatusText"
 
 //wparam = 0

@@ -1,4 +1,4 @@
-﻿#muuid  {e4058506-6494-4d60-9cf4-40bf545f78bd}
+﻿#muuid {e4058506-6494-4d60-9cf4-40bf545f78bd}
 ;============================================================
 ;  File: QuickSearch.dll
 ;  Module: Quick Search
@@ -130,7 +130,7 @@ ostatni wynik
 [parameter]
 parametry
 [Result]
-WYNIK
+Wynik
 [Result type]
 Typ wyniku
 [Free memory]
@@ -199,20 +199,20 @@ Ukryj tło pierwszoplanowe kontaktu
 Tło metakontaktów
 [Metacontact foreground]
 Tło pierwszoplanowe metakontaktów
-[SubMetacontact background]
-Tło submetakontaktów
-[SubMetacontact foreground]
-Tło pierwszoplanowe submetakontaktów
+[Subcontact background]
+Tło subkontaktów
+[Subcontact foreground]
+Tło pierwszoplanowe subkontaktów
 [&Delete]
-Usuń
+&Usuń
 [&Copy]
-Kopiuj
+&Kopiuj
 [C&onvert to Meta]
-Konwertuj do Meta
+K&onwertuj do Meta
 [Attach to &Tab container]
-Dołącz do kontenera zakładki
+Dołącz do kontenera &zakładki
 [&Move to Group]
-Przenieś do grupy
+&Przenieś do grupy
 [Some of selected contacts in different metacontacts already]
 Niektóre z wybranych kontaktów są już w różnych metakontaktach
 [Do you really want to delete selected contacts?]

@@ -6,12 +6,10 @@
 ;  Authors: Nikolay Redko
 ;============================================================
 [Scans for network users of your shared files and notify you with popups.]
-Skanuje w poszukiwaniu użytkowników twoich udostępnionych plików i folderów w sieci, i powiadamia Cię za pomocą popupa.
+Skanuje w poszukiwaniu użytkowników twoich udostępnionych plików i folderów w sieci, i powiadamia cię za pomocą popupa.
 ;file \plugins\WhoUsesMyFiles\res\resource.rc
 [WUMF: Current connections]
 WUMF: Aktualne połączenia
-[OK]
-OK
 [Popup delay settings]
 Ustawienia opóźnienia Popupa
 [Popup Delay (seconds)]
@@ -21,7 +19,7 @@ Kolor tła
 [Text color]
 Kolor tekstu
 [Previe&w]
-Podgląd
+Podglą&d
 [Show infinitely]
 Pokazuj w nieskończoność
 [Default Popup delay]
@@ -37,7 +35,7 @@ Użyj domyślnych kolorów popup
 [Choose colors]
 Wybierz kolor
 [File access filter && logging settings]
-Filtr dostępu do plików && ustawienia logowania
+Filtr dostępu do plików i ustawienia logowania
 [Log into text file]
 Zapisuj do pliku tekstowego
 [Log folders access]
@@ -57,8 +55,6 @@ Wyłączone opcje będą dostępne w następnej wersji
 [Show current connections]
 Pokaż aktualne połączenia
 ;file \plugins\WhoUsesMyFiles\src\wumf.cpp
-[ID]
-ID
 [User]
 Użytkownika
 [File]
@@ -88,8 +84,8 @@ Powszechny błąd dialogu 0x%lx
 Jeszcze nie zaimplementowano...
 [Show connections list]
 Pokaż listę połączeń
-[Wumf]
-Wumf
+[Who uses my files]
+Who uses my files
 [Services]
 Usługi
 [Popups]

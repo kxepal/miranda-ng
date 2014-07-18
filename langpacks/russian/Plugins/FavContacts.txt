@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: FavContacts.dll
 ;  Plugin: Favorite contacts
-;  Version: 0.0.0.7
+;  Version: 0.1.0.2
 ;  Authors: Victor Pavlychko
 ;============================================================
 [Favorite contacts menu.]
@@ -24,7 +24,7 @@
 [Use system colors and fonts]
 Системные цвета и шрифты
 [Hotkey shows menu centered on screen]
-Меню по горячей кл. в центре экрана 
+Меню по горячей кл. в центре экрана
 [Menu item preview:]
 Предпросмотр меню:
 [Favorite Contacts]
@@ -43,10 +43,16 @@
 Показать
 [recent contacts]
 недавних контактов
+[<no group>]
+<без группы>
 [Favorite Contact]
 Избранный контакт
 [Regular Contact]
 Обычный контакт
+[Favorites]
+Избранные
+[Contacts]
+Контакты
 [Contact name]
 Имя контакта
 [Second line]
@@ -61,7 +67,3 @@
 Фон выделения
 [Show favorite contacts]
 Показать избранные контакты
-[Contacts]
-Контакты
-[Favorites]
-Избранные

@@ -60,7 +60,7 @@ XStatus - Titre
 [XStatus message]
 
 [Listening to]
-
+Écoute
 [Activity title]
 
 [Activity text]
@@ -95,8 +95,6 @@ Notification de frappe
 
 [Do you want to send authorization request\nto new contact?]
 
-[Miranda NG]
-Miranda NG
 [MenuItemEx]
 
 [Open ignore settings]

@@ -224,12 +224,12 @@ INT_PTR CALLBACK OptDlgProc(HWND hDlg,UINT msg,WPARAM wparam,LPARAM lparam)
 			ps=(plgsettings*)malloc(sizeof(plgsettings)*2);
 			loadDBSettings(&ps[0]);
 			ps[1]=ps[0];
-			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG)ps);
+			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)ps);
 			SetWindowLongPtr(hwnd, GWL_STYLE, WS_POPUP | WS_SIZEBOX);
 			SetWindowPos(hwnd, 0, 0, 0, 0, 0, SWP_NOZORDER|SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE|SWP_FRAMECHANGED);
 
-			SetWindowLongPtr(GetDlgItem(hDlg,IDC_TREE1),GWL_STYLE,GetWindowLong(GetDlgItem(hDlg,IDC_TREE1),GWL_STYLE)|TVS_NOHSCROLL|TVS_CHECKBOXES);
-			SetWindowLongPtr(GetDlgItem(hDlg,IDC_TREE2),GWL_STYLE,GetWindowLong(GetDlgItem(hDlg,IDC_TREE1),GWL_STYLE)|TVS_NOHSCROLL|TVS_CHECKBOXES);
+			SetWindowLongPtr(GetDlgItem(hDlg,IDC_TREE1),GWL_STYLE,GetWindowLongPtr(GetDlgItem(hDlg,IDC_TREE1),GWL_STYLE)|TVS_NOHSCROLL|TVS_CHECKBOXES);
+			SetWindowLongPtr(GetDlgItem(hDlg,IDC_TREE2),GWL_STYLE,GetWindowLongPtr(GetDlgItem(hDlg,IDC_TREE1),GWL_STYLE)|TVS_NOHSCROLL|TVS_CHECKBOXES);
 
 			CheckDlgButton(hDlg, IDC_RADIO1+ps->align-1, BST_CHECKED);
 			CheckDlgButton(hDlg, IDC_RADIO10+9-ps->salign, BST_CHECKED);
@@ -245,8 +245,8 @@ INT_PTR CALLBACK OptDlgProc(HWND hDlg,UINT msg,WPARAM wparam,LPARAM lparam)
 			CheckDlgButton(hDlg, IDC_CHECK7, ps->showmystatus);
 			SetDlgItemInt(hDlg, IDC_EDIT1, ps->distance, 0);
 
-			SendDlgItemMessage(hDlg, IDC_SLIDER1, TBM_SETRANGE, (WPARAM)0, MAKELONG(0, 255));
-			SendDlgItemMessage(hDlg, IDC_SLIDER1, TBM_SETPOS, (WPARAM)TRUE, (LPARAM)ps->alpha);
+			SendDlgItemMessage(hDlg, IDC_SLIDER1, TBM_SETRANGE, 0, MAKELONG(0, 255));
+			SendDlgItemMessage(hDlg, IDC_SLIDER1, TBM_SETPOS, TRUE, (LPARAM)ps->alpha);
 
 			{
 				TCHAR buf[20];

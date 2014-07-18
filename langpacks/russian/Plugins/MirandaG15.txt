@@ -49,6 +49,8 @@
 Если активна заставка:
 [Lock the screen]
 Заблокировать экран
+[Skip driver missing notification]
+Пропустить уведомление об отсутствии драйвера
 [Notifications]
 Уведомления
 [Notification screen title]
@@ -94,7 +96,7 @@
 [When a chat session is active, skip the following notifications for that contact:]
 Пропускать следующие уведомления для контакта, с которым активен разговор:
 [Chat session specific]
-Только для сессии 
+Только для сессии
 [Show timestamps]
 Показывать время
 [Messages]
@@ -117,8 +119,12 @@
 символов
 [Show protocol labels]
 Показывать протоколы
+[Don't skip when replying]
+Не пропускать при повторе
 [Exceptions:]
 Исключения:
+[Cut off channel names after]
+Обрезать имена каналов после
 [Contact list]
 Список контактов
 [Show the contacts protocols]
@@ -160,7 +166,7 @@
 [Show typing notifications]
 Отображать
 [Send typing notifications]
-Отсылать
+Отправлять
 [Maximizing]
 Полный экран
 [When maximized:]
@@ -189,7 +195,7 @@
 Ответ
 [Show line break indicators]
 Показывать символы переноса строки
-[Send messages with return, insert line breaks with ctrl+return]
+[Send messages with Enter, insert line breaks with Ctrl+Enter]
 Отправка сообщений по Enter, перевод строки по CTRL+Enter
 [Maximized replying]
 Ответ в режиме полного экрана

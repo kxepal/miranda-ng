@@ -24,8 +24,6 @@ HINSTANCE g_hInst;
 HANDLE    hEvent1;
 HGENMENU  hContactMenuItem;
 
-char* metaProtoName;
-
 int hLangpack;
 
 static const PLUGININFOEX pluginInfoEx =
@@ -53,9 +51,6 @@ static IconItem icon = { LPGEN("Button smiley"), "SmileyAdd_ButtonSmiley", IDI_S
 static int ModulesLoaded(WPARAM, LPARAM)
 {
 	Icon_Register(g_hInst, "SmileyAdd", &icon, 1);
-
-	INT_PTR temp = CallService(MS_MC_GETPROTOCOLNAME, 0, 0);
-	metaProtoName = mir_strdup(temp == CALLSERVICE_NOTFOUND ? NULL : (char*)temp);
 
 	CLISTMENUITEM mi = { sizeof(mi) };
 	mi.flags = CMIF_ROOTPOPUP;
@@ -112,18 +107,14 @@ extern "C" __declspec(dllexport) int Load(void)
 
 	//create the smiley services
 	CreateServiceFunction(MS_SMILEYADD_REPLACESMILEYS, ReplaceSmileysCommand);
-	CreateServiceFunction(MS_SMILEYADD_GETSMILEYICON, GetSmileyIconCommand);
 	CreateServiceFunction(MS_SMILEYADD_SHOWSELECTION, ShowSmileySelectionCommand);
-	CreateServiceFunction(MS_SMILEYADD_GETINFO, GetInfoCommand);
 	CreateServiceFunction(MS_SMILEYADD_GETINFO2, GetInfoCommand2);
-	CreateServiceFunction(MS_SMILEYADD_PARSE, ParseText);
 	CreateServiceFunction(MS_SMILEYADD_REGISTERCATEGORY, RegisterPack);
 	CreateServiceFunction(MS_SMILEYADD_BATCHPARSE, ParseTextBatch);
 	CreateServiceFunction(MS_SMILEYADD_BATCHFREE, FreeTextBatch);
 	CreateServiceFunction(MS_SMILEYADD_CUSTOMCATMENU, CustomCatMenu);
 	CreateServiceFunction(MS_SMILEYADD_RELOAD, ReloadPack);
 	CreateServiceFunction(MS_SMILEYADD_LOADCONTACTSMILEYS, LoadContactSmileys);
-	CreateServiceFunction(MS_SMILEYADD_PARSEW, ParseTextW);
 	return 0;
 }
 
@@ -143,8 +134,6 @@ extern "C" __declspec(dllexport) int Unload(void)
 	DestroyGdiPlus();
 
 	DownloadClose();
-
-	mir_free(metaProtoName);
 	return 0;
 }
 

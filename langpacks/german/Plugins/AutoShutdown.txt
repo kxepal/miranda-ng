@@ -28,8 +28,6 @@ Kritische Ereignisse
 Automatisch bei einem der folgenden Ereignisse herunterfahren und ausschalten:
 [&Thunderstorm warning is issued (Weather)]
 &Gewitterwarnung ist aktiv (Wetterplugin)
-[&Harddrive overheats (HDD Info)]
-Festplatte überhitzt (HDD-Info)
 [Automatic Shutdown]
 Automatisch beenden
 [Select the automatic shutdown event]
@@ -46,7 +44,7 @@ Beenden, wenn eine &Nachricht eingeht, die den folgenden Text enthält:
 Beenden, wenn Miranda NG untätig w&ird
 [Configure]
 Einstellungen
-[Shutdown when &prozessor usage drops below:]
+[Shutdown when &processor usage drops below:]
 Herunterfahren bei &Prozessorauslastung unter:
 [(current: 0%)]
 (aktuell: 0%)
@@ -56,8 +54,6 @@ Beenden, wenn alle Kontakte &offline sind
 Beenden, wenn alle &Dateiübertragungen abgeschlossen sind
 [&Action:]
 &Vorgang:
-[OK]
-OK
 [Cancel]
 Abbrechen
 [Unsaved data in open applications except Miranda NG might get lost.]
@@ -121,7 +117,7 @@ Automatisches Beenden deaktivieren
 [Stop automatic &shutdown]
 Automatisches &Beenden abbrechen
 [Automatic &shutdown...]
-Automatisches &Beenden
+Automatisches &Beenden...
 ;file \plugins\AutoShutdown\src\shutdownsvc.cpp
 [Miranda NG is going to be automatically closed in %u second(s).]
 Miranda NG wird in %u Sekunde(n) automatisch geschlossen.
@@ -179,7 +175,7 @@ Beendet die Windowssitzung und Windows und startet dann Windows erneut.
 Beendet die Windowssitzung und fährt den Computer herunter. Der Computer wird ausgeschaltet.
 [Saves the current Windows session in memory and sets the system to suspend mode.]
 Behält die Windowssitzung bei, speichert die Daten im Arbeitsspeicher und schaltet den Computer in den Energiesparmodus.
-[Saves the current Windows session on harddisc, so that the power can be turned off.]
+[Saves the current Windows session on hard drive, so that the power can be turned off.]
 Speichert die Windowssitzung auf der Festplatte, so dass der Computer ausgeschaltet werden kann.
 [Locks the computer. To unlock the computer, you must log in.]
 Sperrt den Computer. Um den Computer wieder zu entsperren müssen Sie sich erneut anmelden.

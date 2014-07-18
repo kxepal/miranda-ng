@@ -87,7 +87,7 @@ void DrawDataForStatusBar(LPDRAWITEMSTRUCT dis)
 	else x += 2;
 
 	if (showOpts & 2) {
-		PROTOACCOUNT* pa = ProtoGetAccount(szProto);
+		PROTOACCOUNT *pa = ProtoGetAccount(szProto);
 		TCHAR szName[64];
 		mir_sntprintf(szName, SIZEOF(szName), _T("%s%s"), pa->tszAccountName, showOpts&4 ? _T(" ") : _T(""));
 		GetTextExtentPoint32(dis->hDC, szName, (int)_tcslen(szName), &textSize);
@@ -453,7 +453,7 @@ HANDLE CreateStatusBarFrame()
 	Frame.Flags = ( db_get_b(NULL,"CLUI","ShowSBar",1)?F_VISIBLE:0)|F_LOCKED|F_NOBORDER|F_TCHAR;
 	Frame.height = (h == 0) ? 20 : h;
 	Frame.tname = _T("Status");
-	Frame.TBtname = TranslateT("Status Bar");
+	Frame.TBtname = TranslateT("Status bar");
 	hFrameHelperStatusBar = (HANDLE)CallService(MS_CLIST_FRAMES_ADDFRAME,(WPARAM)&Frame,0);
 
 	return hFrameHelperStatusBar;

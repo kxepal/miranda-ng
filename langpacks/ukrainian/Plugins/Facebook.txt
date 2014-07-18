@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Facebook.dll
 ;  Plugin: Facebook RM
-;  Version: 0.2.2.1
+;  Version: 0.2.7.0
 ;  Authors: Michal Zelinka, Robert Pösel
 ;============================================================
 [Facebook protocol support for Miranda NG.]
@@ -25,32 +25,34 @@
 Посилання:
 [Place:]
 Місце:
-[Share]
-Відправити
-[Cancel]
-Скасувати
 [Contacts >>]
 Контакти >>
 [Attach contacts:]
 Приєднати контакти:
+[Share]
+Відправити
+[Cancel]
+Скасувати
 [User details]
 Про користувача
+[Contacts Settings]
+Налаштування контактів
 [Default group:]
 Група:
 [Automatically set 'Ignore status change' flag]
 Автоматично вмикати ігнорування зміни статусів
-[Contacts Settings]
-Налаштування контактів
 [Use bigger avatars]
 Великі аватари
 [Event notifications]
-Сповіщення
+Сповіщення про події
 [Notifications]
 Сповіщення
 [News feeds]
 Новини
-[News Feed types to notify:]
+[News feed types to notify:]
 Сповіщати про типи новин:
+[Don't show advertising posts]
+Не показувати рекламні публікації
 [Other events]
 Інші події
 [Client notifications]
@@ -76,7 +78,7 @@
 [Use this server for opening links:]
 Тип сайту для відкриття посилань:
 [Enable support for Custom smileys (EXPERIMENTAL + BUGGY!)]
-Підтримка користувальницьких смайлів (Експериментально!)
+Підтримка користувальницьких смайлів (експериментально!)
 [Use local time for received messages]
 Локальний час для прийнятих повідомлень
 [Message sessions]
@@ -85,14 +87,24 @@
 Не позначати повідомлення на сервері як прочитані
 [Receive messages from "inbox" folder only]
 Приймати повідомлення тільки з папки "Вхідні"
+[Load last messages on opening message window (EXPERIMENTAL)]
+Показувати історію при відкритті вікна (експериментально)
+[Number of messages to load:]
+Кількість останніх повідомлень:
+[Do not open chat windows on creation]
+Не відкривати вікно чату при створенні
+[Myself]
+Я
+[User]
+Користувач
 [&Invite user...]
 &Запросити користувача...
 [&Leave chat session]
-&Вийти
+&Вийти з чату
 [User &details]
-Дані контакту
+&Дані контакту
 [User &history]
-Історія користувача
+&Історія користувача
 [Login error: %s]
 Помилка входу: %s
 [Unknown error]
@@ -119,18 +131,12 @@
 Будь ласка, введіть ім'я користувача.
 [Please enter a password.]
 Будь ласка, введіть пароль.
-[Most Recent]
-Останні оновлення
-[Wall Posts]
-Повідомлення зі стіни
 [Top News]
 Популярні новини
-[Photos]
-Фотографії
-[Links]
-Посилання
-[Apps and Games]
-Програми та ігри
+[Most Recent]
+Останні оновлення
+[Pages]
+Сторінки
 [Classic website]
 Класичний сайт
 [Mobile website]
@@ -147,6 +153,8 @@
 Друзям, крім знайомих
 [Only me]
 Тільки мені
+[%s and more (%d)]
+%s і більше (%d)
 [Contact was removed from your server list.]
 Контакт видалено зі списку на сервері.
 [Error occurred when removing contact from server.]
@@ -185,16 +193,16 @@
 фотографії
 [a photo]
 фотографію
-[User sent you %s:]
-Контакт надіслав вам %s:
+[User sent %s:]
+Контакт надіслав %s:
+[User sent an unsupported attachment. Open your browser to see it.]
+Контакт надіслав вкладення, що не підримується. Для перегляду перейдіть на сайт.
 [Message read: %s by %s]
 Повідомлення прочитане о: %s користувачем %s
-[Message read: %s]
-Повідомлення прочитане о: %s
 [This message is no longer available, because it was marked as abusive or spam.]
 Повідомлення недоступне, оскільки було відзначене як образа або спам.
-[%s and more (%d)]
-%s і більше (%d)
+[%s is typing a message...]
+%s друкує вам повідомлення...
 [You cannot send messages when you are offline.]
 Для надсилання повідомлень необхідно підключитися до мережі.
 [Contact is back on server-list.]
@@ -227,6 +235,10 @@
 Оновлення списку друзів...
 [Do you want to cancel your friendship with '%s'?]
 Ви впевнені, що хочете видалити "%s" з друзів?
+[Visit profile]
+Профіль
+[Visit notifications]
+Сповіщення
 [Show 'Share status' window]
 Повідомлення статусу Facebook
 [Notification]
@@ -235,6 +247,8 @@
 Новини
 [Other Event]
 Інша подія
+[Message read: %s]
+Повідомлення прочитане о: %s
 [Facebook icon]
 Значок Facebook
 [Mind]
@@ -245,10 +259,14 @@
 Стрічка
 [Friendship details]
 Інформація про дружбу
-[Visit profile]
-Профіль
+[Conversation]
+Бесіда
+[Message read]
+Прочитане повідомлення
 [Visit friendship details]
 Інформація про дружбу
+[Visit conversation]
+Бесіда на сайті
 [Cancel friendship]
 Видалити із друзів
 [Cancel friendship request]

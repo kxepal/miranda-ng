@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Dbx_mmap.dll
 ;  Plugin: Miranda NG mmap database driver
-;  Version: 0.95.0.1
+;  Version: 0.95.1.1
 ;  Authors: Miranda-NG project
 ;============================================================
 [Provides Miranda database support: global settings, contacts, history, settings per contact.]
@@ -34,7 +34,7 @@
 Агульна
 [Only critical data are encrypted (passwords, security tokens, etc). All another settings and history remains unencrypted. Fast and effective, suitable for the most cases]
 Толькі крытычныя дадзеныя шыфруюцца (паролі, маркеры бяспекі і г.д.). Ўсё налады і гісторыя застаецца ў незашыфраваным выглядзе. Хуткі і эфектыўны, падыходзіць для большасці выпадкаў
-[All string settings and all events in histories are encrypted. It also makes Miranda much slower and creates a risk of losing everything you've stored in a profile in case of losing password. Recommended only for paranoidal users]
+[All string settings and all events in histories are encrypted. It also makes Miranda much slower and creates a risk of losing everything you've stored in a profile in case of losing password. Recommended only for paranoid users]
 Усе налады і ўсе падзеі ў гісторыі шыфруюцца. Гэта робіць Міранда вельмі марудней і стварае рызыку страты ўсё, што вы захоўваецца ў профілі ў выпадку згубы пароль. Рэкамендуем толькі для паранаідальных карыстальнікаў
 [Set password]
 Усталяваць пароль
@@ -49,6 +49,12 @@
 Міранда знайшла пашкоджанні ў базе дадзеных. Яны могуць быць выпраўленыя плагінам DbChecker. Калі ласка, загрузіце яго з http://miranda-ng.org/p/DbChecker/. Міранда будзе зачынена.
 [Database Panic]
 Праблема з базай
+;file \plugins\Db3x_mmap\src\dbheaders.cpp
+;file \plugins\Db3x_mmap\src\dbintf.cpp
+[Your database must be converted into the new format. This is potentially dangerous operation, so please make a backup before.\n\nClick Yes to proceed with conversion or No to exit Miranda]
+Ваша база дадзеных павінна быць ператворана ў новы фармат. Гэта патэнцыйна небяспечная аперацыя, таму, калі ласка, зрабіце рэзервовую копію. \n\nНацісьніце Так, каб працягнуць змены або Не, каб выйсці з праграмы
+[Database conversion required]
+Канвертаванне базы
 ;file \plugins\Db3x_mmap\src\dbintf.h
 [Change/remove password]
 Змяніць/выдаліць пароль
@@ -82,7 +88,7 @@
 [Processing contact chain]
 Апрацоўка ланцужка кантактаў
 [Contact count marked wrongly: correcting]
-Лік кантактаў паказана няслушна: выпраўленне
+Лік кантактаў пазначаны няслушна: выпраўленне
 [Contact chain corrupted, further entries ignored]
 Ланцужок кантактаў пашкоджана, наступныя дадзеныя праігнараваны
 ;file \plugins\Db3x_mmap\src\dbtool\disk.cpp
@@ -98,15 +104,13 @@
 Немагчыма запісаць файл - дыск перапоўнены? (%u)
 ;file \plugins\Db3x_mmap\src\dbtool\eventchain.cpp
 [Event count marked wrongly: correcting]
-Лік падзей паказана няслушна: выпраўленне
+Лік падзей пазначаны няслушна: выпраўленне
 [Event chain corrupted, trying to recover...]
 Ланцужок падзей пашкоджана, спрабую выправіць...
 [Event chain corrupted, further entries ignored]
 Ланцужок падзей пашкоджана, наступныя дадзеныя ігнараваны
 [First event not marked as such: correcting]
 Першая падзея не пазначана: выпраўленне
-[Event marked as first which is not: correcting]
-Падзея пазначана першым, але ім не з'яўляецца: выпраўленне
 [Extra flags found in event: removing]
 Дадатковыя сцягі знойдзены ў падзеі: выдаленне
 [First unread event marked wrong: fixing]
@@ -129,6 +133,8 @@
 ;file \plugins\Db3x_mmap\src\dbtool\initialchecks.cpp
 [Database signature is corrupted, automatic repair is impossible]
 Загаловак базы дадзеных пашкоджаны, аўтаматычнае выпраўленне немагчыма
+[Database version doesn't match this driver's one. Convert a database first]
+Версія базы несумяшчальна з новай версіяй рухавіка. Канвертуйце базу ў новы фармат
 [Database is newly created and has no data to process]
 База дадзеных новая, і ў ёй няма дадзеных для апрацоўкі
 [Processing completed successfully]

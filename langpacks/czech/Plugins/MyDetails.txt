@@ -2,50 +2,52 @@
 ;============================================================
 ;  File: MyDetails.dll
 ;  Plugin: My details
-;  Version: 0.0.1.11
+;  Version: 0.0.1.12
 ;  Authors: Ricardo Pescuma Domenecci, Drugwash
 ;============================================================
 [Shows and allows you to edit your details for all protocols.]
 Zobrazuje a umožňuje upravit vaše detaily pro všechny účty.
 ;file \plugins\MyDetails\res\resource.rc
-[Set My Nickname]
+[Set my nickname]
 Nastavit přezdívku
 [Nickname:]
 Přezdívka:
-[OK]
-OK
 [Cancel]
 Zrušit
 [General]
 Obecné
-[...avatar]
-...avatar
 [RTL]
 Psát zprava doleva
 [Align text to right]
 Zarovnat text doprava
-[...nickname]
-...přezdívka
 [Auto-resize frame]
 Měnit velikost okna
 [Use contact list smileys]
 Použít smajlíky pro kontakty
+[Replace smileys]
+Vykreslovat smajlíky
+[Resize smileys]
+Měnit velikost smajlíků
+[Global on...]
+Globální pro...
+[...avatar]
+...avatar
+[...nickname]
+...přezdívku
 [...status]
 ...stav
-[Replace Smileys]
-Vykreslovat smajlíky
-[Resize Smileys]
-Měnit velikost smajlíků
 [...status message]
 ...zpráva stavu
-[Top:]
-Nahoře:
-[Bottom:]
-Dole:
-[Left:]
-Vlevo:
-[Right:]
-Vpravo:
+[Account]
+Účet
+[Show account name]
+Zobrazit název účtu
+[Show account cycle button]
+Zobrazit tlačítka pro přepínání účtů
+[Cycle through accounts every:]
+Přepínat mezi účty každých:
+[seconds]
+sekund
 [Avatar]
 Avatar
 [Custom size:]
@@ -62,23 +64,19 @@ Zaoblit rohy
 Velikost zakulacení:
 [Use free space (under avatar) to other texts]
 Využít místo pod avatarem pro další texty
-[Global On...]
-Globální pro...
-[Frame Options]
+[Frame options]
 Možnosti rámečku
-[Cycle through accounts every:]
-Přepínat mezi účty každých:
-[seconds]
-sekund
-[Account]
-Účet
-[Show account name]
-Zobrazit název účtu
-[Show account cycle button]
-Zobrazit tlačítka pro přepínání účtů
-[Set My Status Message for All Status]
+[Top:]
+Nahoře:
+[Bottom:]
+Dole:
+[Left:]
+Vlevo:
+[Right:]
+Vpravo:
+[Set my status message for all status]
 Nastavit zprávu pro všechny stavy
-[Status Message:]
+[Status message:]
 Zpráva stavu:
 [&Offline]
 &Offline
@@ -96,17 +94,17 @@ Ne&rušit!
 &Mám volno
 [&Invisible]
 Nev&iditelný
-[On the &Phone]
+[On the &phone]
 Na &telefonu
-[Out to &Lunch]
+[Out to &lunch]
 Na &obědě
-[Set My Avatar...]
+[Set my avatar...]
 Nastavit avatar...
-[Set My Nickname...]
+[Set my nickname...]
 Nastavit přezdívku...
-[Set My Status Message...]
+[Set my status message...]
 Změnit stavovou zprávu...
-[Enable Listening To]
+[Enable listening to]
 Povolit doplněk Listening To
 [Show next account]
 Zobrazit další účet
@@ -124,39 +122,37 @@ Nepřepínat mezi účty
 Přezdívka
 [Status]
 Stavy
-[Status Message]
+[Status message]
 Zpráva stavu
-[Listening To]
+[Listening to]
 Poslech hudby
-[My Details]
+[My details]
 Informace o sobě
 [Background]
 Pozadí
-[Avatar Border]
-Rámeček avataru
-[Show My Details]
+[Avatar border]
+Orámovat avatary
+[Show my details]
 Zobrazit informace o sobě
-[Enable Listening To for %s]
+[Enable listening to for %s]
 Povolit doplněk Listening To pro %s
-[Set My Avatar for %s...]
+[Set my avatar for %s...]
 Nastavit avatar pro %s...
-[Set My Nickname for %s...]
+[Set my nickname for %s...]
 Nastavit přezdívku pro %s...
-[Set My Status Message for %s...]
+[Set my status message for %s...]
 Zadat stavovou zprávu pro %s...
-[Hide My Details]
+[Hide my details]
 Skrýt informace o sobě
 ;file \plugins\MyDetails\src\mydetails.cpp
-[Listening to]
-Poslech hudby
-[Previous protocol]
-Předchozí protokol
-[Next protocol]
-Další protokol
-[Set My Nickname for %s]
+[Previous account]
+Předchozí účet
+[Next account]
+Další účet
+[Set my nickname for %s]
 Nastavit přezdívku pro %s
-[Set My Status Message for %s]
+[Set my status message for %s]
 Zadat stavovou zprávu pro %s
-[Contact List]
+[Contact list]
 Seznam kontaktů
 ;file \plugins\MyDetails\src\options.cpp

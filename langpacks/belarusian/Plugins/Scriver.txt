@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Scriver.dll
 ;  Plugin: Scriver
-;  Version: 2.11.0.0
+;  Version: 2.11.0.1
 ;  Authors: Miranda NG Development Team
 ;============================================================
 [Scriver - send and receive instant messages.]
@@ -11,7 +11,7 @@
 [Behavior]
 Паводзіны
 [Automatically pop up the window when]
-Аўтаматычна паказваць вакно калі 
+Аўтаматычна паказваць вакно калі
 [and stay minimized]
 і заставацца згорнутым
 [Cascade new windows]
@@ -102,7 +102,7 @@
 Паказваць імёны
 [Enable message grouping]
 Гуртаваць паведамленні
-[Mark follow-up msgs with timestamp]
+[Mark follow-up messages with timestamp]
 Адзначаць датай
 [Start message text on a new line]
 Тэкст паведамлення з новага радка
@@ -741,7 +741,7 @@ Miranda не змагла загрузіць убудаваную сістэму
 [Show popup for users leaving]
 Выйсці ўдзельнікаў
 [Show popup for users kicking other user]
-Выспятак 
+Выспятак
 [Show popup for notices]
 Паказаць вокны для абвестак
 [Show popup for name changes]
@@ -756,9 +756,9 @@ Miranda не змагла загрузіць убудаваную сістэму
 Абразкі ў сістэмным латку
 [nick of current contact (if defined)]
 мянушка бягучага кантакту (калі пазначана)
-[protocol name of current contact (if defined). Account name is used when protocol supports multiaccounts]
+[protocol name of current contact (if defined). Account name is used when protocol supports multiple accounts]
 назва пратаколу бягучага кантакту (калі вызначана). Назва ўліковага запісу выкарыстоўваецца калі пратакол падтрымлівае шматконтнасць
-[User ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
+[user ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
 ID бягучага кантакту (калі вызначаны). Напрыклад, UIN для ICQ, JID для Jabber і г.д.
 [path to Miranda root folder]
 шлях да тэчкі праграмы

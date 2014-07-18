@@ -103,6 +103,9 @@
     <ClCompile Include="winver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="commonheaders.h">
@@ -151,6 +154,9 @@
       <Filter>Source Files\json</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\m_system_cpp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\m_metacontacts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

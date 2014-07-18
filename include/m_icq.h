@@ -162,14 +162,6 @@ typedef struct {
 //wParam = operationType
 #define PS_CHANGEINFOEX "/ChangeInfoEx"
 
-//Change nickname in White pages
-//lParam = (LPARAM)(const char*)szNewNickName
-#define PS_SET_NICKNAME "/SetNickname"
-
-//Set password for current session
-//lParam = (LPARAM)(const char*)szPassword
-#define PS_ICQ_SETPASSWORD "/SetPassword"
-
 //miranda/icqoscar/statusmsgreq event
 //called when our status message is requested
 //wParam = (BYTE)msgType
@@ -185,5 +177,25 @@ typedef struct {
                              // 0 failed to request (e.g. auto-request enabled)
                              // -1 delayed (rate control) - sequence unknown
 #define PS_ICQ_REQUESTCUSTOMSTATUS "/RequestXStatusDetails"
+
+#define MAX_CAPNAME 64
+typedef struct
+{
+	int cbSize;
+	char caps[0x10];
+	HANDLE hIcon;
+	char name[MAX_CAPNAME];
+} ICQ_CUSTOMCAP;
+
+// Add a custom icq capability.
+// wParam = 0;
+// lParam = (LPARAM)(ICQ_CUSTOMCAP *)&icqCustomCap;
+#define PS_ICQ_ADDCAPABILITY "/IcqAddCapability"
+
+// Check if capability is supportes. Only icqCustomCap.caps does matter.
+// wParam = (WPARAM)(HANDLE)hContact;
+// lParam = (LPARAM)(ICQ_CUSTOMCAP *)&icqCustomCap;
+// returns non-zero if capability is supported
+#define PS_ICQ_CHECKCAPABILITY "/IcqCheckCapability"
 
 #endif // M_ICQ_H__

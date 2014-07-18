@@ -110,10 +110,10 @@ int SetDlgState(HWND hwndDlg)
 		CheckDlgButton(hwndDlg, IDC_RAD_PERIODIC, new_options.backup_types & BT_PERIODIC ? BST_CHECKED : BST_UNCHECKED);
 	}
 
-	SendDlgItemMessage(hwndDlg, SPIN_PERIOD, UDM_SETRANGE32, (WPARAM)1, (LPARAM)60);
+	SendDlgItemMessage(hwndDlg, SPIN_PERIOD, UDM_SETRANGE32, 1, (LPARAM)60);
 	SetDlgItemText(hwndDlg, IDC_ED_PERIOD, _itot(new_options.period, buff, 10));
 
-	SendDlgItemMessage(hwndDlg, SPIN_NUMBACKUPS, UDM_SETRANGE32, (WPARAM)1, (LPARAM)100);
+	SendDlgItemMessage(hwndDlg, SPIN_NUMBACKUPS, UDM_SETRANGE32, 1, (LPARAM)100);
 	SetDlgItemText(hwndDlg, IDC_ED_NUMBACKUPS, _itot(new_options.num_backups, buff, 10));
 
 	SetDlgItemText(hwndDlg, IDC_ED_FOLDER, new_options.folder);
@@ -121,7 +121,7 @@ int SetDlgState(HWND hwndDlg)
 	CheckDlgButton(hwndDlg, IDC_CHK_NOPROG, new_options.disable_progress ? BST_CHECKED : BST_UNCHECKED);
 	CheckDlgButton(hwndDlg, IDC_CHK_NOPOPUP, new_options.disable_popups ? BST_CHECKED : BST_UNCHECKED);
 	CheckDlgButton(hwndDlg, IDC_CHK_USEZIP, new_options.use_zip ? BST_CHECKED : BST_UNCHECKED);
-	if ( !ServiceExists(MS_POPUP_ADDPOPUP))
+	if ( !ServiceExists(MS_POPUP_ADDPOPUPT))
 		ShowWindow(GetDlgItem(hwndDlg, IDC_CHK_NOPOPUP), SW_HIDE);
 
 	return 0;

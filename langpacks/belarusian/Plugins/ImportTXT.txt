@@ -1,14 +1,14 @@
 ﻿#muuid {6f376b33-d3f4-4c4f-a96b-77da08043b06}
 ;============================================================
 ;  File: ImportTXT.dll
-;  Module: Imports history saved in TXT files from other clients
-;  Version: 0.0.1.10
+;  Plugin: ImportTXT
+;  Version: 0.0.1.11
 ;  Authors: Abyss
 ;============================================================
 [Imports history saved in TXT files from other clients.]
 Імпартуе гісторыю з тэкставых файлаў.
 [Import history to ]
-Імпартаваць гісторыю ў
+Імпартаваць гісторыю ў\s
 [Import history]
 Імпарт гісторыі
 [Choose a file...]
@@ -22,7 +22,7 @@
 [All files (*.*)]
 Усе файлы (*.*)
 [Error in cfg file: ]
-Памылка ў cfg файле:
+Памылка ў cfg файле:\s
 [No Files Patterns Found]
 Не знойдзены файлы шаблонаў
 [No messages in this file]

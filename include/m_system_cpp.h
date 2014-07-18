@@ -60,6 +60,20 @@ typedef mir_ptr<TCHAR> ptrT;
 typedef mir_ptr<WCHAR> ptrW;
 
 ///////////////////////////////////////////////////////////////////////////////
+// mir_cs - simple wrapper for the critical sections
+
+class mir_cs
+{
+	CRITICAL_SECTION m_cs;
+
+public:
+	__inline mir_cs() { ::InitializeCriticalSection(&m_cs); }
+	__inline ~mir_cs() { ::DeleteCriticalSection(&m_cs); }
+
+	__inline operator CRITICAL_SECTION&() { return m_cs; }
+};
+
+///////////////////////////////////////////////////////////////////////////////
 // mir_cslock - simple locker for the critical sections
 
 class mir_cslock
@@ -67,8 +81,8 @@ class mir_cslock
 	CRITICAL_SECTION& cs;
 
 public:
-	__inline mir_cslock(CRITICAL_SECTION& _cs) : cs(_cs) { EnterCriticalSection(&cs); }
-	__inline ~mir_cslock() { LeaveCriticalSection(&cs); }
+	__inline mir_cslock(CRITICAL_SECTION& _cs) : cs(_cs) { ::EnterCriticalSection(&cs); }
+	__inline ~mir_cslock() { ::LeaveCriticalSection(&cs); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -182,7 +196,7 @@ template<class T> struct OBJLIST : public LIST<T>
 
 	__inline OBJLIST(const OBJLIST& x) :
 		LIST<T>(x.increment, x.sortFunc)
-		{	items = NULL;
+		{	this->items = NULL;
 			List_ObjCopy((SortedList*)&x, (SortedList*)this, sizeof(T));
 		}
 

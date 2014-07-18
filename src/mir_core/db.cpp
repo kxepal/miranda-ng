@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "commonheaders.h"
 
-static MIDatabase* currDb = NULL;
+MIDatabase *currDb = NULL;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // getting data
@@ -310,14 +310,14 @@ MIR_CORE_DLL(int) db_event_markRead(MCONTACT hContact, HANDLE hDbEvent)
 	return (currDb == NULL) ? 0 : currDb->MarkEventRead(hContact, hDbEvent);
 }
 
-MIR_CORE_DLL(HANDLE) db_event_next(HANDLE hDbEvent)
+MIR_CORE_DLL(HANDLE) db_event_next(MCONTACT hContact, HANDLE hDbEvent)
 {
-	return (currDb == NULL) ? 0 : currDb->FindNextEvent(hDbEvent);
+	return (currDb == NULL) ? 0 : currDb->FindNextEvent(hContact, hDbEvent);
 }
 
-MIR_CORE_DLL(HANDLE) db_event_prev(HANDLE hDbEvent)
+MIR_CORE_DLL(HANDLE) db_event_prev(MCONTACT hContact, HANDLE hDbEvent)
 {
-	return (currDb == NULL) ? 0 : currDb->FindPrevEvent(hDbEvent);
+	return (currDb == NULL) ? 0 : currDb->FindPrevEvent(hContact, hDbEvent);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -336,6 +336,11 @@ MIR_CORE_DLL(INT_PTR) db_unset(MCONTACT hContact, const char *szModule, const ch
 	return currDb->DeleteContactSetting(hContact, szModule, szSetting);
 }
 
+MIR_CORE_DLL(DBCachedContact*) db_get_contact(MCONTACT hContact)
+{
+	return (currDb == NULL) ? NULL : currDb->m_cache->GetCachedContact(hContact);
+}
+
 MIR_CORE_DLL(MCONTACT) db_find_first(const char *szProto)
 {
 	return (currDb == NULL) ? NULL : currDb->FindFirstContact(szProto);
@@ -349,6 +354,11 @@ MIR_CORE_DLL(MCONTACT) db_find_next(MCONTACT hContact, const char *szProto)
 extern "C" MIR_CORE_DLL(void) db_setCurrent(MIDatabase *_db)
 {
 	currDb = _db;
+
+	// try to get the langpack's name from a profile
+	ptrT langpack(db_get_tsa(NULL, "Langpack", "Current"));
+	if (langpack && langpack[0] != '\0')
+		LoadLangPack(langpack);
 }
 
 MIR_CORE_DLL(BOOL) db_set_resident(const char *szModule, const char *szService, BOOL bEnable)

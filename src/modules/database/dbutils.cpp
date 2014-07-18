@@ -42,10 +42,10 @@ static INT_PTR DbEventTypeRegister(WPARAM, LPARAM lParam)
 {
 	DBEVENTTYPEDESCR *et = (DBEVENTTYPEDESCR*)lParam;
 	if (et == NULL || et->cbSize != sizeof(DBEVENTTYPEDESCR))
-		return 0;
+		return -1;
 
 	if (eventTypes.getIndex(et) != -1)
-		return 0;
+		return -1;
 
 	DBEVENTTYPEDESCR *p = (DBEVENTTYPEDESCR*)mir_calloc(sizeof(DBEVENTTYPEDESCR));
 	p->cbSize = sizeof(DBEVENTTYPEDESCR);
@@ -78,12 +78,7 @@ static INT_PTR DbEventTypeGet(WPARAM wParam, LPARAM lParam)
 	DBEVENTTYPEDESCR tmp;
 	tmp.module = (char*)wParam;
 	tmp.eventType = lParam;
-
-	int idx;
-	if (!List_GetIndex((SortedList*)&eventTypes, &tmp, &idx))
-		return 0;
-
-	return (INT_PTR)eventTypes[idx];
+	return (INT_PTR)eventTypes.find(&tmp);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -102,6 +97,8 @@ static INT_PTR DbEventGetText(WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	DBEVENTINFO *dbei = egt->dbei;
+	if (dbei == NULL || dbei->szModule == NULL || dbei->cbSize != sizeof(DBEVENTINFO))
+		return 0;
 
 	DBEVENTTYPEDESCR *et = (DBEVENTTYPEDESCR*)DbEventTypeGet((WPARAM)dbei->szModule, (LPARAM)dbei->eventType);
 	if (et && ServiceExists(et->textService))
@@ -262,7 +259,7 @@ static int sttEnumVars(const char *szVarName, LPARAM lParam)
 	return 0;
 }
 
-static INT_PTR DbDeleteModule(WPARAM, LPARAM lParam)
+static INT_PTR DbDeleteModule(WPARAM hContact, LPARAM lParam)
 {
 	LIST<char> vars(20);
 
@@ -270,10 +267,10 @@ static INT_PTR DbDeleteModule(WPARAM, LPARAM lParam)
 	dbces.pfnEnumProc = sttEnumVars;
 	dbces.lParam = (LPARAM)&vars;
 	dbces.szModule = (char*)lParam;
-	CallService(MS_DB_CONTACT_ENUMSETTINGS, NULL, (LPARAM)&dbces);
+	CallService(MS_DB_CONTACT_ENUMSETTINGS, hContact, (LPARAM)&dbces);
 
 	for (int i = vars.getCount()-1; i >= 0; i--) {
-		db_unset(NULL, (char*)lParam, vars[i]);
+		db_unset(hContact, (char*)lParam, vars[i]);
 		mir_free(vars[i]);
 	}
 	return 0;

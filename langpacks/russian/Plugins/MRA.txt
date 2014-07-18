@@ -1,14 +1,14 @@
 ﻿#muuid {e7c48bab-8ace-4cb3-8446-d4b73481f497}
 ;============================================================
 ;  File: MRA.dll
-;  Plugin: MRA
+;  Plugin: MRA protocol
 ;  Version: 2.1.0.8
-;  Authors: Ivan Rozhuk
+;  Authors: Rozhuk Ivan
 ;============================================================
 [Miranda Mail.ru Agent protocol plugin.]
 Поддержка протокола Mail.ru Агент (MRA) в Miranda NG.
 [E-mail:]
-E-mail:
+Почта:
 [Password:]
 Пароль:
 [Create a new Mail.ru account]
@@ -29,10 +29,12 @@ E-mail:
 Автоматически авторизовывать пользователей из списка
 [Automatically grant authorization to new users]
 Автоматически авторизовывать новых пользователей
+[Automatic authorization on Mail.ru web services]
+Автоматическая авторизация на веб сервисах Mail.ru
 [Notify me when a message delivery has failed]
 Уведомить меня, если сообщение не доставлено
 [Notify about new mail if increment]
-Уведомлять только о новой почте
+Уведомлять о почте, только если счётчик увеличился
 [Notify about new mail tray icon]
 Показывать значок в трее при приходе почты
 [Click to Inbox]
@@ -63,7 +65,7 @@ E-mail:
 до:
 [Birthday:]
 День рождения:
-[Zodiak:]
+[Zodiac:]
 Зодиак:
 [Location]
 Место
@@ -72,7 +74,7 @@ E-mail:
 [State:]
 Штат:
 [Search online users only]
-Только подключённых пользователей
+Искать только подключённых
 [City:]
 Город:
 [Remember]
@@ -229,8 +231,6 @@ xСтатус "%s"
 Редактировать &анкету
 [My Album]
 Мой альбом
-[My Blog]
-Мой блог
 [My Blog Status]
 Статус в блоге
 [My Video]
@@ -251,12 +251,12 @@ xСтатус "%s"
 Запросить авторизацию
 [Grant authorization]
 Авторизовать
+[&Send E-Mail]
+&Отправить E-Mail
 [&Send postcard]
 &Отправить открытку
 [&View Album]
 &Посмотреть альбом
-[&Read Blog]
-&Блог
 [Reply Blog Status]
 Ответ на статус в блоге
 [View Video]
@@ -282,7 +282,7 @@ xСтатус "%s"
 [Please authorize me]
 Пожалуйста, авторизуй
 [Receive files: can't allocate disk space for file, size %lu bytes, error]
-Передача файлов: невозможно выделить место на диске  размер %lu байт, ошибка
+Передача файлов: невозможно выделить место на диске, размер %lu байт, ошибка
 [Receive files: can't open file %s, error]
 Передача файлов: невозможно открыть файл %s, ошибка
 [Receive files: request for file %s not sent, error]
@@ -320,9 +320,9 @@ xСтатус "%s"
 [Popups]
 Всплывающие окна
 [%s connection]
-%s подключение 
+%s подключение
 [Mail.ru Xstatus]
-Mail.ru Xstatus
+Mail.ru хСтатус
 [Mail.ru extra info]
 Mail.ru дополнительно
 [E-mail address]
@@ -359,6 +359,8 @@ Mail.ru дополнительно
 Пожалуйста, введите e-mail в настройках
 [Please, setup password in options]
 Пожалуйста, введите пароль в настройках
+[Thread creation failure]
+Ошибка создания потока
 [Logon error: invalid login/password]
 Ошибка при проверки имени пользователя/пароля
 [MRIM_CS_MESSAGE_STATUS: not found in queue]
@@ -479,3 +481,5 @@ MRIM_CS_SMS_ACK: не найден в очереди
 Звезда
 [Music]
 Музыка
+[Dating]
+Знакомства

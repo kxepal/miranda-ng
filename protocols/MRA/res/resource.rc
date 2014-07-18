@@ -36,11 +36,11 @@ IDI_AUTHRUGUEST         ICON                    "AuthReguest.ico"
 IDI_AUTHGRANT           ICON                    "AuthGrant.ico"
 IDI_MAIL_NOTIFY         ICON                    "MailNotify.ico"
 IDI_MRA_WEB_SEARCH      ICON                    "WebSearch.ico"
-IDI_MRA_BLOGS           ICON                    "Blogs.ico"
 IDI_MRA_POSTCARD        ICON                    "PostCards.ico"
 IDI_MRA_PHOTO           ICON                    "Photo.ico"
 IDI_MRA_CHAT            ICON                    "Chat.ico"
 IDI_MRA_PHONE           ICON                    "Phone.ico"
+IDI_BLOGSTATUS          ICON                    "BlogStatus.ico"
 IDI_MRA_ALARM           ICON                    "Alarm.ico"
 IDI_MRA_VIDEO           ICON                    "video.ico"
 IDI_MRA_ANSWERS         ICON                    "answers.ico"
@@ -83,6 +83,8 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,72,263,8
     CONTROL         "Automatically grant authorization to new users",IDC_AUTO_AUTH_GRAND_NEW_USERS,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,83,263,8
+    CONTROL         "Automatic authorization on Mail.ru web services",IDC_AUTO_AUTH_ON_WEB_SVCS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,94,263,8
     CONTROL         "Notify me when a message delivery has failed",IDC_SLOWSEND,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,107,263,8
     CONTROL         "Notify about new mail if increment",IDC_INCREMENTAL_NEW_MAIL_NOTIFY,
@@ -127,7 +129,7 @@ BEGIN
     COMBOBOX        IDC_BIRTHDAY_DAY,65,117,29,204,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     COMBOBOX        IDC_BIRTHDAY_MONTH,102,117,59,90,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
     COMBOBOX        IDC_BIRTHDAY_YEAR,167,117,37,188,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Zodiak:",IDC_STATIC,15,134,50,8
+    LTEXT           "Zodiac:",IDC_STATIC,15,134,50,8
     COMBOBOX        IDC_ZODIAK,65,133,139,47,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     GROUPBOX        "Location",IDC_LOCATIONGROUP,7,157,207,60
     LTEXT           "Country:",IDC_STATIC,14,170,50,8

@@ -247,7 +247,7 @@ struct TWindowData
    char    *szProto;
    TCHAR    szMyNickname[130];
    TCHAR    szStatusBar[100];
-   TCHAR    szStatusBarCustom[100];
+   StatusTextData *sbCustom;
    TCHAR    newtitle[130];        // tab title...
    TCHAR    szStatus[50];
    WORD     wStatus;
@@ -500,8 +500,7 @@ struct TNewWindowData
 #define EM_SEARCHSCROLLER        (TM_USER+0x103)
 #define EM_VALIDATEBOTTOM        (TM_USER+0x104)
 #define EM_THEMECHANGED          (TM_USER+0x105)
-#define EM_UNSUBCLASSED          (TM_USER+0x106)
-#define EM_REFRESHWITHOUTCLIP    (TM_USER+0x107)
+#define EM_REFRESHWITHOUTCLIP    (TM_USER+0x106)
 
 #define HM_EVENTSENT             (TM_USER+10)
 #define DM_REMAKELOG             (TM_USER+11)
@@ -528,6 +527,7 @@ struct TNewWindowData
 #define DM_QUERYCONTAINER        (TM_USER+31)
 #define DM_MUCFLASHWORKER        (TM_USER+32)
 #define DM_INVALIDATEPANEL       (TM_USER+33)
+#define DM_APPENDMCEVENT         (TM_USER+34)
 #define DM_CHECKINFOTIP		      (TM_USER+35) 
 #define DM_SAVESIZE              (TM_USER+36)
 #define DM_CHECKSIZE             (TM_USER+37)

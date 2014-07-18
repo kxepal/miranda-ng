@@ -23,7 +23,7 @@
 [minutes]
 минути
 [Row height:]
-
+Ред (височина):
 [Indent:]
 Отстъп:
 [Reminder frame]
@@ -50,8 +50,6 @@
 Преглед
 [Alarm]
 Аларма
-[OK]
-ОК
 [Cancel]
 Отказ
 [Title:]
@@ -146,6 +144,10 @@
 [Window]
 Прозорец
 ;file \plugins\Alarms\src\frame.cpp
+[%dh %dm]
+
+[%dm]
+
 [Hide reminders]
 
 [Show reminders]

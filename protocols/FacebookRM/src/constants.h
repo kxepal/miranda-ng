@@ -27,10 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FACEBOOK_URL_HOMEPAGE					"http://www.facebook.com"
 #define FACEBOOK_URL_REQUESTS					"http://www.facebook.com/n/?reqs.php"
 #define FACEBOOK_URL_MESSAGES					"http://www.facebook.com/n/?inbox"
-#define FACEBOOK_URL_NOTIFICATIONS				"http://www.facebook.com/n/?notifications.php"
+#define FACEBOOK_URL_NOTIFICATIONS				"http://www.facebook.com/n/?notifications"
 #define FACEBOOK_URL_PROFILE					"http://www.facebook.com/profile.php?id="
 #define FACEBOOK_URL_GROUP						"http://www.facebook.com/n/?home.php&sk=group_"
 #define FACEBOOK_URL_PICTURE					"http://graph.facebook.com/%s/picture"
+#define FACEBOOK_URL_CONVERSATION				"http://www.facebook.com/messages/"
 
 // Connection
 #define FACEBOOK_SERVER_REGULAR					"www.facebook.com"
@@ -54,6 +55,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FACEBOOK_MIND_LIMIT_TEXT				"63206"
 #define FACEBOOK_TIMEOUTS_LIMIT					3
 #define FACEBOOK_GROUP_NAME_LIMIT				100
+#define FACEBOOK_MESSAGES_ON_OPEN_LIMIT			99
+#define FACEBOOK_TYPING_TIME					60
+#define FACEBOOK_IGNORE_COUNTER_LIMIT			5 // how many consequent requests it should keep info about duplicit message ids
 
 // Defaults
 #define FACEBOOK_MINIMAL_POLL_RATE				10
@@ -74,6 +78,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_LOAD_PAGES						0
 #define DEFAULT_KEEP_UNREAD						0
 #define DEFAULT_INBOX_ONLY						0
+#define DEFAULT_FILTER_ADS						0
+#define DEFAULT_MESSAGES_ON_OPEN				0
+#define DEFAULT_MESSAGES_ON_OPEN_COUNT			10
+#define DEFAULT_HIDE_CHATS						0
 
 #define DEFAULT_EVENT_NOTIFICATIONS_ENABLE		1
 #define DEFAULT_EVENT_FEEDS_ENABLE				1
@@ -110,8 +118,9 @@ enum RequestType {
 	REQUEST_NOTIFICATIONS_READ, // marking notifications read
 
 	REQUEST_BUDDY_LIST,			// getting regular updates (friends online, ...)
-	REQUEST_LOAD_FRIENDS,		// getting list of all friends
-	REQUEST_USER_INFO,			// getting info about particular user
+	REQUEST_LOAD_FRIEND,		// getting info about particular friend
+	REQUEST_LOAD_FRIENDS,		// getting info about all friends
+	REQUEST_USER_INFO,			// getting info about particular user (from mobile website)
 	REQUEST_REQUEST_FRIEND,		// requesting friendships
 	REQUEST_APPROVE_FRIEND,		// approving friendships
 	REQUEST_DELETE_FRIEND,		// deleting friendships
@@ -157,12 +166,14 @@ typedef struct {
 
 // News Feed types
 static const ttype feed_types[] = {
-	{ LPGEN("Most Recent"), "lf_" }, //h_chr?
-	{ LPGEN("Wall Posts"), "app_2915120374" },
-	{ LPGEN("Top News"), "h_nor" }, //h
-	{ LPGEN("Photos"), "app_2305272732_2392950137" },
-	{ LPGEN("Links"), "app_2309869772" },
-	{ LPGEN("Apps and Games"), "appsandgames" },
+	{ LPGEN("Top News"), "h_nor" },
+	{ LPGEN("Most Recent"), "h_chr" },
+	{ LPGEN("Pages"), "pages" },
+	//{ LPGEN("Apps and Games"), "FEED_FILTER_KEY_APPS_AND_GAMES" },
+
+	//{ LPGEN("Wall Posts"), "app_2915120374" },	
+	//{ LPGEN("Photos"), "app_2305272732_2392950137" },
+	//{ LPGEN("Links"), "app_2309869772" },
 };
 
 // Server types

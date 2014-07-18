@@ -105,7 +105,7 @@
 Повільно
 [&Preview]
 &Тест
-[Emulate keypresses (Use this option if you are using a USB keyboard)]
+[Emulate key presses (Use this option if you are using a USB keyboard)]
 Емулювати натискання клавіш (Тільки для USB-клавіатур)
 [Create/Edit Themes]
 Створити/Редагувати тему
@@ -122,7 +122,7 @@
 [Import/Export]
 Імпорт/Експорт
 [Export...]
-Експорт
+Експорт...
 [Import...]
 Імпорт...
 [Override existing]

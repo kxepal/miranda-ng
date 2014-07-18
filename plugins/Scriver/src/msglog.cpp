@@ -133,7 +133,7 @@ int DbEventIsMessageOrCustom(DBEVENTINFO* dbei)
 	return dbei->eventType == EVENTTYPE_MESSAGE || DbEventIsCustomForMsgWindow(dbei);
 }
 
-int DbEventIsShown(DBEVENTINFO * dbei, struct SrmmWindowData *dat)
+int DbEventIsShown(DBEVENTINFO * dbei, SrmmWindowData *dat)
 {
 	switch (dbei->eventType) {
 	case EVENTTYPE_MESSAGE:
@@ -151,7 +151,7 @@ int DbEventIsShown(DBEVENTINFO * dbei, struct SrmmWindowData *dat)
 	return DbEventIsCustomForMsgWindow(dbei);
 }
 
-EventData* getEventFromDB(struct SrmmWindowData *dat, MCONTACT hContact, HANDLE hDbEvent)
+EventData* getEventFromDB(SrmmWindowData *dat, MCONTACT hContact, HANDLE hDbEvent)
 {
 	DBEVENTINFO dbei = { sizeof(dbei) };
 	dbei.cbBlob = db_event_getBlobSize(hDbEvent);
@@ -173,7 +173,7 @@ EventData* getEventFromDB(struct SrmmWindowData *dat, MCONTACT hContact, HANDLE 
 	else if (dbei.eventType == EVENTTYPE_JABBER_CHATSTATES || dbei.eventType == EVENTTYPE_JABBER_PRESENCE)
 		db_event_markRead(hContact, hDbEvent);
 
-	evt->eventType = evt->custom ? EVENTTYPE_MESSAGE : dbei.eventType;
+	evt->eventType = dbei.eventType;
 	evt->dwFlags = (dbei.flags & DBEF_READ ? IEEDF_READ : 0) | (dbei.flags & DBEF_SENT ? IEEDF_SENT : 0) | (dbei.flags & DBEF_RTL ? IEEDF_RTL : 0);
 	evt->dwFlags |= IEEDF_UNICODE_TEXT | IEEDF_UNICODE_NICK | IEEDF_UNICODE_TEXT2;
 
@@ -343,7 +343,7 @@ static int AppendTToBuffer(char **buffer, int *cbBufferEnd, int *cbBufferAlloced
 }
 
 //mir_free() the return value
-static char *CreateRTFHeader(struct SrmmWindowData *dat, struct GlobalMessageData *gdat)
+static char *CreateRTFHeader(SrmmWindowData *dat, struct GlobalMessageData *gdat)
 {
 	char *buffer;
 	int bufferAlloced, bufferEnd;
@@ -383,7 +383,7 @@ static char *CreateRTFHeader(struct SrmmWindowData *dat, struct GlobalMessageDat
 	AppendToBuffer(&buffer, &bufferEnd, &bufferAlloced, "\\red%u\\green%u\\blue%u;", GetRValue(colour), GetGValue(colour), GetBValue(colour));
 	colour = db_get_dw(NULL, SRMMMOD, SRMSGSET_OUTGOINGBKGCOLOUR, SRMSGDEFSET_OUTGOINGBKGCOLOUR);
 	AppendToBuffer(&buffer, &bufferEnd, &bufferAlloced, "\\red%u\\green%u\\blue%u;", GetRValue(colour), GetGValue(colour), GetBValue(colour));
-	colour = gdat->logLineColour;
+	colour = db_get_dw(NULL, SRMMMOD, SRMSGSET_LINECOLOUR, SRMSGDEFSET_LINECOLOUR);
 	AppendToBuffer(&buffer, &bufferEnd, &bufferAlloced, "\\red%u\\green%u\\blue%u;", GetRValue(colour), GetGValue(colour), GetBValue(colour));
 	AppendToBuffer(&buffer, &bufferEnd, &bufferAlloced, "}");
 	return buffer;
@@ -563,7 +563,7 @@ static void AppendWithCustomLinks(EventData *evt, int style, char **buffer, int 
 }
 
 //mir_free() the return value
-static char* CreateRTFFromEvent(struct SrmmWindowData *dat, EventData *evt, struct GlobalMessageData *gdat, struct LogStreamData *streamData)
+static char* CreateRTFFromEvent(SrmmWindowData *dat, EventData *evt, struct GlobalMessageData *gdat, struct LogStreamData *streamData)
 {
 	char *buffer;
 	int bufferAlloced, bufferEnd;
@@ -637,10 +637,7 @@ static char* CreateRTFFromEvent(struct SrmmWindowData *dat, EventData *evt, stru
 				i = LOGICON_MSG_IN;
 			break;
 
-		case EVENTTYPE_JABBER_CHATSTATES:
-		case EVENTTYPE_JABBER_PRESENCE:
-		case EVENTTYPE_URL:
-		case EVENTTYPE_FILE:
+		default:
 			i = LOGICON_MSG_NOTICE;
 			break;
 		}
@@ -713,14 +710,6 @@ static char* CreateRTFFromEvent(struct SrmmWindowData *dat, EventData *evt, stru
 			AppendToBuffer(&buffer, &bufferEnd, &bufferAlloced, "%s: ", SetToStyle(evt->dwFlags & IEEDF_SENT ? MSGFONTID_MYCOLON : MSGFONTID_YOURCOLON));
 	}
 	switch (evt->eventType) {
-	case EVENTTYPE_MESSAGE:
-		if (gdat->flags & SMF_MSGONNEWLINE && showColon)
-			AppendToBuffer(&buffer, &bufferEnd, &bufferAlloced, "\\line");
-
-		style = evt->dwFlags & IEEDF_SENT ? MSGFONTID_MYMSG : MSGFONTID_YOURMSG;
-		AppendWithCustomLinks(evt, style, &buffer, &bufferEnd, &bufferAlloced);
-		break;
-
 	case EVENTTYPE_JABBER_CHATSTATES:
 	case EVENTTYPE_JABBER_PRESENCE:
 	case EVENTTYPE_URL:
@@ -759,6 +748,13 @@ static char* CreateRTFFromEvent(struct SrmmWindowData *dat, EventData *evt, stru
 			AppendTToBuffer(&buffer, &bufferEnd, &bufferAlloced, _T(")"));
 		}
 		break;
+	default:
+		if (gdat->flags & SMF_MSGONNEWLINE && showColon)
+			AppendToBuffer(&buffer, &bufferEnd, &bufferAlloced, "\\line");
+
+		style = evt->dwFlags & IEEDF_SENT ? MSGFONTID_MYMSG : MSGFONTID_YOURMSG;
+		AppendWithCustomLinks(evt, style, &buffer, &bufferEnd, &bufferAlloced);
+		break;
 	}
 	if (dat->isMixed)
 		AppendToBuffer(&buffer, &bufferEnd, &bufferAlloced, "\\par");
@@ -768,9 +764,9 @@ static char* CreateRTFFromEvent(struct SrmmWindowData *dat, EventData *evt, stru
 	return buffer;
 }
 
-static DWORD CALLBACK LogStreamInEvents(DWORD_PTR dwCookie, LPBYTE pbBuff, LONG cb, LONG * pcb)
+static DWORD CALLBACK LogStreamInEvents(DWORD_PTR dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)
 {
-	struct LogStreamData *dat = (struct LogStreamData *) dwCookie;
+	struct LogStreamData *dat = (struct LogStreamData *)dwCookie;
 
 	if (dat->buffer == NULL) {
 		dat->bufferOffset = 0;
@@ -797,7 +793,7 @@ static DWORD CALLBACK LogStreamInEvents(DWORD_PTR dwCookie, LPBYTE pbBuff, LONG 
 					}
 					if (dat->buffer)
 						dat->hDbEventLast = dat->hDbEvent;
-					dat->hDbEvent = db_event_next(dat->hDbEvent);
+					dat->hDbEvent = db_event_next(dat->hContact, dat->hDbEvent);
 					if (--dat->eventsToInsert == 0)
 						break;
 				}
@@ -830,7 +826,7 @@ static DWORD CALLBACK LogStreamInEvents(DWORD_PTR dwCookie, LPBYTE pbBuff, LONG 
 
 void StreamInTestEvents(HWND hEditWnd, struct GlobalMessageData *gdat)
 {
-	struct SrmmWindowData dat = { 0 };
+	SrmmWindowData dat = { 0 };
 	struct LogStreamData streamData = { 0 };
 	streamData.isFirst = TRUE;
 	streamData.events = GetTestEvents();
@@ -839,7 +835,7 @@ void StreamInTestEvents(HWND hEditWnd, struct GlobalMessageData *gdat)
 
 	EDITSTREAM stream = { 0 };
 	stream.pfnCallback = LogStreamInEvents;
-	stream.dwCookie = (DWORD_PTR) & streamData;
+	stream.dwCookie = (DWORD_PTR)&streamData;
 	SendMessage(hEditWnd, EM_STREAMIN, SF_RTF, (LPARAM)&stream);
 	SendMessage(hEditWnd, EM_HIDESELECTION, FALSE, 0);
 }
@@ -849,7 +845,7 @@ void StreamInEvents(HWND hwndDlg, HANDLE hDbEventFirst, int count, int fAppend)
 	FINDTEXTEXA fi;
 	EDITSTREAM stream = { 0 };
 	struct LogStreamData streamData = { 0 };
-	struct SrmmWindowData *dat = (struct SrmmWindowData *) GetWindowLongPtr(hwndDlg, GWLP_USERDATA);
+	SrmmWindowData *dat = (SrmmWindowData *) GetWindowLongPtr(hwndDlg, GWLP_USERDATA);
 	CHARRANGE oldSel, sel;
 
 	// IEVIew MOD Begin
@@ -921,8 +917,8 @@ void StreamInEvents(HWND hwndDlg, HANDLE hDbEventFirst, int count, int fAppend)
 		smre.cbSize = sizeof(SMADD_RICHEDIT3);
 		smre.hwndRichEditControl = GetDlgItem(hwndDlg, IDC_LOG);
 		smre.Protocolname = dat->szProto;
-		if (dat->szProto != NULL && strcmp(dat->szProto, "MetaContacts") == 0) {
-			MCONTACT hContact = (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, (WPARAM)dat->windowData.hContact, 0);
+		if (dat->szProto != NULL && strcmp(dat->szProto, META_PROTO) == 0) {
+			MCONTACT hContact = db_mc_getMostOnline(dat->windowData.hContact);
 			if (hContact != NULL)
 				smre.Protocolname = GetContactProto(hContact);
 		}

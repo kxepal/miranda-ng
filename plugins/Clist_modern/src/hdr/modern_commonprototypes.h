@@ -23,7 +23,6 @@ extern CLIST_INTERFACE corecli;
 
 //Global variables
 extern int ON_SETALLEXTRAICON_CYCLE;
-extern BOOL CLM_AUTOREBUILD_WAS_POSTED;
 extern FRAMEWND *g_pfwFrames;
 extern int g_nFramesCount;
 extern RECT g_rcEdgeSizingRect;
@@ -34,18 +33,15 @@ extern HIMAGELIST hAvatarOverlays;
 extern int  g_nTitleBarHeight;
 extern BOOL g_bTransparentFlag;
 extern HIMAGELIST g_himlCListClc;
-extern HIMAGELIST hCListImages;
 extern BOOL g_mutex_bSizing;
 extern BOOL LOCK_RECALC_SCROLLBAR;
 extern HIMAGELIST g_himlCListClc;
 extern BYTE nameOrder[];
 extern SortedList lContactsCache;
 extern BOOL g_flag_bOnModulesLoadedCalled;
-extern HIMAGELIST hCListImages;
 extern SKINOBJECTSLIST g_SkinObjectList;
 extern CURRWNDIMAGEDATA * g_pCachedWindow;
 extern BOOL g_mutex_bLockUpdating;
-extern HIMAGELIST hCListImages;
 extern STATUSBARDATA g_StatusBarData;
 extern SKINOBJECTSLIST g_SkinObjectList;
 extern CURRWNDIMAGEDATA * g_pCachedWindow;
@@ -58,17 +54,13 @@ extern BOOL g_flag_bFullRepaint;
 extern BOOL g_bMultiConnectionMode;
 extern BYTE g_bCalledFromShowHide;
 extern HICON g_hListeningToIcon;
-extern BOOL glOtherSkinWasLoaded;
-extern BYTE glSkinWasModified;
 extern HWND g_hCLUIOptionsWnd;
 extern BOOL g_bTransparentFlag;
 extern HINSTANCE g_hInst;
-extern HIMAGELIST hCListImages;
 extern BOOL g_mutex_bChangingMode;
 extern UINT g_dwMainThreadID;
 extern HANDLE g_hAwayMsgThread, g_hGetTextAsyncThread, g_hSmoothAnimationThread;
 extern HWND g_hwndViewModeFrame;
-extern HANDLE hSmileyAddOptionsChangedHook,hAvatarChanged,hIconChangedHook;
 extern BYTE gl_TrimText;
 
 /************************************************************************/
@@ -203,7 +195,6 @@ int     Docking_ProcessWindowMessage(WPARAM wParam, LPARAM lParam);
 void    DrawBackGround(HWND hwnd,HDC mhdc, HBITMAP hBmpBackground, COLORREF bkColour, DWORD backgroundBmpUse );
 HRESULT BackgroundsLoadModule();
 int     BackgroundsUnloadModule();
-INT_PTR CALLBACK DlgSkinEditorOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);   //SkinEditor.c
 INT_PTR CALLBACK DlgTmplEditorOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);   //RowTemplate.c
 BOOL    FindMenuHanleByGlobalID(HMENU hMenu, int globalID, struct _MenuItemHandles * dat);   //GenMenu.c
 BOOL    MatchMask(char *name, char *mask);                                    //mod_skin_selector.c
@@ -272,42 +263,43 @@ void    ToolbarButtonUnloadModule();
 // INTERFACES
 
 void    cliCheckCacheItem(ClcCacheEntry *pdnce);
-void    cliFreeCacheItem( ClcCacheEntry *p );
-void    cliRebuildEntireList(HWND hwnd,ClcData *dat);
-void    cliRecalcScrollBar(HWND hwnd,ClcData *dat);
+void    cliFreeCacheItem(ClcCacheEntry *p);
+void    cliRebuildEntireList(HWND hwnd, ClcData *dat);
+void    cliRecalcScrollBar(HWND hwnd, ClcData *dat);
 void    CLUI_cliOnCreateClc(void);
 int     cli_AddItemToGroup(ClcGroup *group, int iAboveItem);
-int     cli_AddInfoItemToGroup(ClcGroup *group,int flags,const TCHAR *pszText);
+int     cli_AddInfoItemToGroup(ClcGroup *group, int flags, const TCHAR *pszText);
 int     cliGetGroupContentsCount(ClcGroup *group, int visibleOnly);
 int     cliFindRowByText(HWND hwnd, ClcData *dat, const TCHAR *text, int prefixOk);
-int     cliGetRowsPriorTo(ClcGroup *group,ClcGroup *subgroup,int contactIndex);
-int     cli_IconFromStatusMode(const char *szProto,int nStatus, MCONTACT hContact);
+int     cliGetRowsPriorTo(ClcGroup *group, ClcGroup *subgroup, int contactIndex);
+int     cli_IconFromStatusMode(const char *szProto, int nStatus, MCONTACT hContact);
 int     cli_GetContactIcon(MCONTACT hContact);
 int     cli_RemoveEvent(MCONTACT hContact, HANDLE hDbEvent);
-void    cli_AddContactToTree(HWND hwnd,ClcData *dat,MCONTACT hContact,int updateTotalCount,int checkHideOffline);
+void    cli_AddContactToTree(HWND hwnd, ClcData *dat, MCONTACT hContact, int updateTotalCount, int checkHideOffline);
 void    cli_DeleteItemFromTree(HWND hwnd, MCONTACT hItem);
-void    cli_FreeContact( ClcContact* );
-void    cli_FreeGroup( ClcGroup* );
+void    cli_FreeContact(ClcContact*);
+void    cli_FreeGroup(ClcGroup*);
 char*   cli_GetGroupCountsText(ClcData *dat, ClcContact *contact);
-void    cli_ChangeContactIcon(MCONTACT hContact,int iIcon,int add);
-LRESULT cli_ProcessExternalMessages(HWND hwnd,ClcData *dat,UINT msg,WPARAM wParam, LPARAM lParam);
-struct  CListEvent* cliCreateEvent( void );
+void    cli_ChangeContactIcon(MCONTACT hContact, int iIcon, int add);
+void    cli_SetContactCheckboxes(ClcContact*, int);
+LRESULT cli_ProcessExternalMessages(HWND hwnd, ClcData *dat, UINT msg, WPARAM wParam, LPARAM lParam);
+struct  CListEvent* cliCreateEvent(void);
 struct  CListEvent* cli_AddEvent(CLISTEVENT *cle);
 LRESULT CALLBACK cli_ContactListControlWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 int     cliShowHide(WPARAM wParam, LPARAM lParam);
-BOOL    CLUI__cliInvalidateRect(HWND hWnd, CONST RECT* lpRect,BOOL bErase );
-int     cliCompareContacts(const ClcContact *contact1,const ClcContact *contact2);
+BOOL    CLUI__cliInvalidateRect(HWND hWnd, CONST RECT* lpRect, BOOL bErase);
+int     cliCompareContacts(const ClcContact *contact1, const ClcContact *contact2);
 int     cliFindItem(HWND hwnd, ClcData *dat, DWORD dwItem, ClcContact **contact, ClcGroup **subgroup, int *isVisible);
 int     cliTrayCalcChanged(const char *szChangedProto, int averageMode, int netProtoCount);
 int     cliTrayIconPauseAutoHide(WPARAM wParam, LPARAM lParam);
-void    cliCluiProtocolStatusChanged(int status,const char * proto);
+void    cliCluiProtocolStatusChanged(int status, const char * proto);
 HMENU   cliBuildGroupPopupMenu(ClcGroup *group);
 void    cliInvalidateDisplayNameCacheEntry(MCONTACT hContact);
 void    cliCheckCacheItem(ClcCacheEntry *pdnce);
 void    cli_SaveStateAndRebuildList(HWND hwnd, ClcData *dat);
 void    CLUI_cli_LoadCluiGlobalOpts(void);
 INT_PTR cli_TrayIconProcessMessage(WPARAM wParam, LPARAM lParam);
-BOOL    CLUI__cliInvalidateRect(HWND hWnd, CONST RECT* lpRect,BOOL bErase );
+BOOL    CLUI__cliInvalidateRect(HWND hWnd, CONST RECT* lpRect, BOOL bErase);
 
 ClcContact*    cliCreateClcContact( void );
 ClcCacheEntry* cliCreateCacheItem(MCONTACT hContact);

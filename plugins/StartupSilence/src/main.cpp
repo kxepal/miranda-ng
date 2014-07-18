@@ -153,10 +153,7 @@ int DisablePopup(WPARAM wParam, LPARAM lParam)
 
 void EnablePopupModule()
 {
-	if (ServiceExists(POPUPONOFFPP) && db_get_b(NULL,"Popup", "ModuleIsEnabled", 0) == 0) {
-		CallService(POPUPONOFFPP, NULL, NULL);
-	}
-	if (ServiceExists(POPUPONOFF) && db_get_b(NULL, "YAPP", "Enabled", 0) == 0) {
+	if (ServiceExists(POPUPONOFF) && db_get_b(NULL,"Popup", "ModuleIsEnabled", 0) == 0) {
 		CallService(POPUPONOFF, NULL, NULL);
 	}
 }
@@ -240,9 +237,9 @@ static INT_PTR AdvSt()
 				ppd.lchIcon = (HICON)CallService(MS_SKIN2_GETICONBYHANDLE, 0, (LPARAM)(NonStatusAllow == 1 ? GetIconHandle(ALL_ENABLED_FLT) : GetIconHandle(MENU_NAME)));
 				ppd.lchContact = NULL;
 				ppd.iSeconds = PopUpTime;
-				wcsncpy_s(ppd.lptzText, lptzText, size_t(lptzText));
+				wcsncpy_s(ppd.lptzText, lptzText, _TRUNCATE);
 				lptzText = TranslateT(MENU_NAME);
-				wcsncpy_s(ppd.lptzContactName, lptzText, size_t(lptzText));
+				wcsncpy_s(ppd.lptzContactName, lptzText, _TRUNCATE);
 				PUAddPopupT(&ppd);
 			}
 
@@ -253,7 +250,7 @@ static INT_PTR AdvSt()
 			if (PopUp == 1) {
 				lptzText = (DefEnabled == 1 && DefPopup == 1) ? TranslateT(ALL_ENABLED_FLT) : ALL_ENABLED;
 				ppd.lchIcon = (HICON)CallService(MS_SKIN2_GETICONBYHANDLE, 0, (LPARAM)((DefEnabled == 1 && DefPopup == 1) ? GetIconHandle(ALL_ENABLED_FLT) : GetIconHandle(MENU_NAME)));
-				wcsncpy_s(ppd.lptzText, lptzText, size_t(lptzText));
+				wcsncpy_s(ppd.lptzText, lptzText, _TRUNCATE);
 				PUAddPopupT(&ppd);
 			}
 			if (DefEnabled == 1) { //predefined sound setting
@@ -276,9 +273,9 @@ static INT_PTR SturtupSilenceEnabled(WPARAM wParam, LPARAM lParam)
 		ppd.lchIcon = (HICON)CallService(MS_SKIN2_GETICONBYHANDLE, 0, (LPARAM)(Enabled == 1 ? GetIconHandle(ENABLE_SILENCE) : GetIconHandle(DISABLE_SILENCE)));
 		ppd.lchContact = NULL;
 		ppd.iSeconds = PopUpTime;
-		wcsncpy_s(ppd.lptzText, lptzText, size_t(lptzText));
+		wcsncpy_s(ppd.lptzText, lptzText, _TRUNCATE);
 		lptzText = TranslateT(MENU_NAME);
-		wcsncpy_s(ppd.lptzContactName, lptzText, size_t(lptzText));
+		wcsncpy_s(ppd.lptzContactName, lptzText, _TRUNCATE);
 		PUAddPopupT(&ppd);
 	}
 	return 0;
@@ -422,7 +419,7 @@ static INT_PTR CALLBACK DlgProcOptions(HWND hwndDlg, UINT msg, WPARAM wParam, LP
 			break;
 
 		case IDC_DELAY2:
-			if (!(ServiceExists(POPUPONOFF) || ServiceExists(POPUPONOFFPP))) {
+			if (!ServiceExists(POPUPONOFF)) {
 				MessageBox(0, NEEDPOPUP, NOTICE, MB_OK);
 				CheckDlgButton(hwndDlg, IDC_DELAY2, BST_UNCHECKED);
 				PopUp = (BYTE)db_set_b(NULL, MODULE_NAME, PopUpComp, 0);

@@ -7,22 +7,50 @@
 ;============================================================
 [Internet Relay Chat (IRC) protocol support for Miranda NG.]
 Поддержка протокола Internet Relay Chat (IRC) в Miranda NG.
+[Default network]
+Сеть по умолчанию
+[Enable]
+Включено
+[Server name]
+Имя сервера
+[Internet address]
+Сетевой адрес
+[Port range]
+Диапазон портов
+[Password]
+Пароль
 [&Add]
 &Добавить
 [&Edit]
 &Править
 [&Del]
 &Удалить
-[Enable]
-Включено
+[User info - Required]
+Инфо пользователя - Необходимо
+[Nick]
+Ник
+[Alternative nick]
+Запасной ник
+[Full name (e-mail)]
+Полное имя
+[User ID (Ident)]
+ID пользователя
+[Ident]
+Идентификация
+[System]
+Система
+[Port]
+Порт
 [only while connecting]
 Только на время соединения
+[Other]
+Другое
 [Force visible (-i)]
 Включить видимость (-i)
 [Rejoin channel if kicked]
-Перезайти при переподключении
+Перезайти на канал после кика
 [Rejoin channels on reconnect]
-Зайти в комнаты чата при подключении
+Перезайти при переподключении
 [Disable tray balloon on error]
 Отключить сообщения в трее
 [Show addresses]
@@ -38,41 +66,13 @@
 ['Old style' mode changes]
 "Старый" стиль режимов
 [Update online statuses for users]
-Обновлять статусы для польз.
-[Update statuses in channel nick list]
-Обнов. статусы в списке комнаты чата
-[Internet address]
-Сетевой адрес
-[Port range]
-Диапазон портов
-[Nick]
-Ник
-[User ID (Ident)]
-ID пользователя
-[Full name (e-mail)]
-Полное имя
-[Password]
-Пароль
-[Server name]
-Имя сервера
-[Alternative nick]
-Альтерн. ник
-[Ident]
-Идентификация
-[System]
-Система
-[Port]
-Порт
-[Default network]
-Сеть по умолчанию
-[User info - Required]
-Инфо пользователя - Необходимо
-[Other]
-Другое
+Обновлять статусы для пользователей
 [Check every (s):]
 Проверять каждые (с):
+[Update statuses in channel nick list]
+Обнов. статусы в списке комнаты чата
 [Don't check if more than (users):]
-Не проверять, если больше (польз):
+Не проверять, если польз. более:
 [User information]
 Информация
 [Ping]
@@ -135,6 +135,10 @@ ID пользователя
 Авто
 [Off]
 Откл.
+[Host address]
+Адрес сервера
+[Server description]
+Описание
 [Network]
 Сеть
 [Channels on server]
@@ -166,9 +170,9 @@ Wildcard поиск по сети
 [Excepts]
 Исключения
 [Only Ops set topic]
-Смена темы ОПами
+Смена темы только ОПами
 [No external messages]
-Сообщ. извне выкл
+Сообщения извне выключены
 [Invite only]
 По приглашениям
 [Moderated]
@@ -198,13 +202,13 @@ Wildcard поиск по сети
 [Send-ahead]
 Упреждающий
 [Attempt reverse DCC (good if firewalled)]
-Реверсивное DCC (для брандмауэров)
+Реверсный DCC (для брандмауэров)
 [none]
 нет
 [everyone on the contact list]
-все в списке
+всех в списке
 [everyone]
-все
+всех
 [Disconnect DCC chats when disconnecting from server]
 Отключать DCC-чаты при выходе с сервера
 [Manually set external IP:]
@@ -217,14 +221,14 @@ Wildcard поиск по сети
 Чаты СТСР
 [Send mode:]
 Режим отправки:
-[Packet size (b):]
-Размер пакета (б):
+[Packet size (bytes):]
+Размер пакета (байт):
 [Get IP address from server]
 Получить IP у сервера
 [Auto-accept from:]
 Автоприем от:
 [Send notice]
-Посылать уведомление
+Отправить уведомление
 [CTCP Chat Request]
 Запрос на СТСР-чат
 [&Accept]
@@ -232,10 +236,10 @@ Wildcard поиск по сети
 [&Deny]
 &Запретить
 [Enable (*)]
-Активировать (*)
+Включено (*)
 [Ignore channel messages by default]
-Игнорировать сообщения комнаты чата по умолчанию
-[Ignore filetransfer requests]
+Игнорировать сообщения комнаты чата по умолч.
+[Ignore file transfer requests]
 Игнорировать передачи файлов
 [Ignore DCC Chat requests]
 Игнорировать запросы DCC чатов
@@ -244,15 +248,15 @@ Wildcard поиск по сети
 [Ignore users]
 Игнорировать пользователей
 [(*) Queries from users on your contact list are never ignored]
-(*) Не игнорировать запросы от пользователей из списка
+(*) Запросы от пользователей из списка контактов не игнорируются
 [Queries]
 Запросы
 [Messages]
 Сообщения
 [Notices]
 Уведомления
-[Ignore mask ( nick!user@host )]
-Маска игнорирования( nick!user@host )
+[Ignore mask (nick!user@host)]
+Маска игнорирования (nick!user@host)
 [Network (*)]
 Сеть (*)
 [Ignore events]
@@ -263,8 +267,6 @@ Wildcard поиск по сети
 Сервер:
 [Password:]
 Пароль:
-[Alternate nick]
-Альтернативный ник
 [CTCP chat request from %s]
 Запрос СТСР-чата от %s
 [%s sets mode %s]
@@ -308,7 +310,7 @@ DCC: Запрос на продолжение закачки файла от %s 
 [Done: %u channels]
 Готово: %u комнат чата
 [(probably truncated by server)]
-(возможно ограничено сервером)
+(возможно, ограничено сервером)
 [Change nickname]
 Сменить ник
 [IRC error]
@@ -323,8 +325,6 @@ DCC: Запрос на продолжение закачки файла от %s 
 Укажите причину
 [Ban'n Kick]
 Выгнать и забанить
-[Jerk]
-Jerk
 [*Disconnected*]
 *Отключён*
 [The usage of /AWAY in your perform buffer is restricted\n as IRC sends this command automatically.]
@@ -335,10 +335,12 @@ Jerk
 Функция проверки приятелей включена
 [The buddy check function is disabled]
 Функция проверки приятелей выключена
+[Incorrect parameters. Usage: /sleep [ms], ms should be greater than 0 and less than 4000.]
+Неверные параметры. Использование: /sleep [мс], количество миллисекунд должно быть числом между 0 и 4000
 [Ignore system is enabled]
-Система игнорирования вкл
+Система игнорирования вкл.
 [Ignore system is disabled]
-Система игнорирования выкл
+Система игнорирования выкл.
 [%s on %s is now ignored (+%s)]
 %s на %s игнорируется (+%s)
 [%s is not ignored now]
@@ -373,22 +375,18 @@ Jerk
 Введите ответ
 [Failed to connect to]
 Не удалось подключиться к
-[DCC ERROR: Unable to bind local port for passive filetransfer]
+[DCC ERROR: Unable to bind local port for passive file transfer]
 Ошибка DCC: Невозможно открыть локальный порт для пассивной передачи файлов
 [%s server connection]
-%s подключение к серверу 
+%s подключение к серверу
 [%s client-to-client connections]
 %s подключения между клиентами
-[The IRC protocol depends on another plugin called 'Chat'\n\nDo you want to download it from the Miranda NG web site now?]
-Этот протокол требует наличия плагина chat.\n\nЗагрузить его с сайта Miranda NG?
-[Information]
-Информация
 [Nickname]
 Ник
 [DCC ERROR: No valid files specified]
 Ошибка DCC: Нет доступных файлов
 [DCC reversed file transfer request sent to %s [%s]]
-DCC-запрос на реверсивную передачу послан %s [%s]
+DCC-запрос на реверсную передачу послан %s [%s]
 [DCC file transfer request sent to %s [%s]]
 DCC-запрос на передачу файла послан %s [%s]
 [DCC ERROR: Unable to bind local port]
@@ -479,6 +477,26 @@ DCC-запрос на передачу файла послан %s [%s]
 <Автоматически>
 [<Local IP: ]
 <Локальный IP:\s
+[Event: Available]
+Событие: Доступен
+[Event: Away]
+Событие: Отсутствую
+[Event: N/A]
+Событие: Недоступен
+[Event: Occupied]
+Событие: Занят
+[Event: DND]
+Событие: Не беспокоить
+[Event: Free for chat]
+Событие: Готов болтать
+[Event: On the phone]
+Событие: На телефоне
+[Event: Out for lunch]
+Событие: Обедаю
+[Event: Disconnect]
+Событие: Отключён
+[ALL NETWORKS]
+Все сети
 [Click to set commands that will be performed for this event]
 Кликните для установки команд обработки этого события
 [Click to delete the commands for this event]
@@ -501,6 +519,8 @@ DCC-запрос на передачу файла послан %s [%s]
 Изменить игнор
 [Account]
 Учётная запись
+[DCC and CTCP]
+DCC и CTCP
 [Advanced]
 Дополнительно
 [WallOps from %s: ]
@@ -508,7 +528,7 @@ WallOps от %s:\s
 [%s invites you to %s]
 %s приглашает вас на %s
 [%s is away]
-%s отсутствует...
+%s отсутствует
 [These are online: ]
 В сети:\s
 [CTCP %s reply sent to %s]
@@ -518,7 +538,7 @@ WallOps от %s:\s
 [Notice to %s: ]
 Уведомление для %s:\s
 [&Quick connect]
-&Быстрый коннект
+&Быстрое соединение
 [&Join channel]
 &Войти в комнату чата
 [&Change your nickname]
@@ -547,9 +567,9 @@ WallOps от %s:\s
 Выберите IRC сеть и введите пароль, если необходимо
 [Please enter a unique nickname]
 Введите уникальный ник
-[Please enter your authentification code]
+[Please enter your authentication code]
 Введите код аутентификации
-[Authentificate nick]
+[Authenticate nick]
 Аутентифицировать
 [Are you sure you want to unregister your current nick?]
 Вы уверены, что хотите удалить ваш ник?
@@ -630,9 +650,9 @@ WallOps от %s:\s
 [List your channels]
 Список ваших комнат чата
 [Kill unauthorized: off]
-Убить запрещённых: выкл
+Убить запрещённых: выкл.
 [Kill unauthorized: on]
-Убить запрещённых: вкл
+Убить запрещённых: вкл.
 [Kill unauthorized: quick]
 Убить запрещённых: быстро
 [Hide nick from list]
@@ -646,7 +666,7 @@ WallOps от %s:\s
 [&Invite to channel]
 &Пригласить
 [Send &notice]
-Посылать &уведомление
+Отправить &уведомление
 [&Slap]
 &Шлепок
 [Nickserv info]

@@ -1,7 +1,7 @@
 ﻿;============================================================
-;  File: miranda32.exe
+;  File: miranda32/64.exe
 ;  Module: Miranda Core
-;  Versions: 0.8.0 - 0.95.1
+;  Version: 0.95.2
 ;============================================================
 [Enter account name (for example, My Google)]
 Введите имя (например, Google)
@@ -49,15 +49,15 @@
 Параметры показа контактов
 [Instead of displaying contacts by their nickname,\ndrag to choose another order:]
 Вместо показа псевдонимов,\nвыберите перетаскиванием другой приоритет показа имён:
-[Miranda NG Profile Manager]
+[Miranda NG profile manager]
 Менеджер профилей Miranda NG
 [&Run]
 &Запустить
 [&Exit]
 Вы&ход
-[Start in Service Mode with]
+[Start in service mode with]
 Запуск в служебном режиме с
-[Find/Add contacts]
+[Find/add contacts]
 Найти/Добавить контакты
 [Search:]
 Искать:
@@ -83,7 +83,7 @@
 Добавить в список
 [Custom]
 Настроить
-[Find/Add contacts\nHere you can add contacts to your contact list]
+[Find/add contacts\nHere you can add contacts to your contact list]
 Поиск контактов\nЗдесь вы можете найти и добавить контакты в список контактов
 [Options\nConfigure your Miranda NG options]
 Настройки\nОсновной диалог настроек Miranda NG
@@ -161,7 +161,7 @@
 Функцию OutputDebugString()
 [File]
 Файл
-[Run program when Miranda NG starts (eg tail -f, dbgview, etc.):]
+[Run program when Miranda NG starts (e.g., tail -f, dbgview, etc.):]
 Запускать программу вместе с Miranda NG (например, tail -f, dbgview и т.д.):
 [Run now]
 Зап. сейчас
@@ -278,11 +278,11 @@
 [Profile]
 Профиль
 [e.g., Workplace]
-напр. "Рабочий"
+например, "Рабочий"
 [You can select a different profile driver from the default, it may offer more features or abilities, if in doubt use the default.]
 Выбор драйвера базы данных. Если вы не уверены, какой выбрать - используйте драйвер по умолчанию.
-[e.g., Miranda Database]
-напр. Miranda Database
+[e.g., dbx mmap]
+например, dbx mmap
 [Driver]
 Драйвер
 [Problem: Unable to find any database drivers, this means you cannot create a new profile, you need to get dbx_mmap.dll]
@@ -293,6 +293,8 @@
 Описание:
 [Author(s):]
 Автор(ы):
+[E-mail:]
+Почта:
 [Homepage:]
 Сайт:
 [Unique ID:]
@@ -419,11 +421,11 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 Шрифт для заголовков основных разделов или текстовых элементов.
 [Normal text:]
 Обычный текст:
-[This font is used to display most text element or section bodies.]
+[This font is used to display most text elements or section bodies.]
 Шрифт для большинства текстовых элементов или разделов.
 [Minor notes:]
 Примечания:
-[This font is used to display various addtional notes.]
+[This font is used to display various additional notes.]
 Шрифт для различных дополнительных заметок.
 [Welcome to Miranda NG's account manager!\nHere you can set up your IM accounts.\n\nSelect an account from the list on the left to see the available options. Alternatively, just click on the Plus sign underneath the list to set up a new IM account.]
 Добро пожаловать в менеджер учётных записей Miranda NG!\nЗдесь вы можете настроить свои учётные записи.\n\nСлева в списке можно выбрать учётную запись, или кликнуть на значок плюса снизу для добавления новой учётной записи.
@@ -447,6 +449,64 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 *будут отображаться только первые %d значков
 [You can group/ungroup icons by selecting them (CTRL+left click) and using the popup menu (right click)]
 Вы можете группировать/разгруппировывать значки, выделяя их (CTRL+клик левой кнопкой мыши) и вызывая меню с помощью правой кнопки мыши.
+[Add to existing metacontact]
+Добавить к метаконтакту
+[Please select a metacontact:]
+Выберите метаконтакт
+[Sort alphabetically]
+По алфавиту
+[Editing]
+Редактирование
+[Information]
+Информация
+[Contacts]
+Контакты
+[&Remove]
+&Удалить
+[&Set as default]
+&По умолчанию
+[Move &up]
+&Вверх
+[Move &down]
+&Вниз
+[Send &offline]
+В &оффлайн
+[Context menu]
+Контекстное меню
+[Use contact's unique ID]
+UIN, E-mail и т.д.
+[Use contact's display name]
+Использовать имя
+[Contact labels]
+Метки контактов
+[When I click on a sub in the popup menu...]
+При щелчке по контакту в меню субконтактов...
+[Set default and open message window]
+Открыть окно сообщения
+[Show subcontact context menu]
+Показывать контекстное меню
+[Show user information]
+Показывать инфо пользователя
+[Contact list]
+Список контактов
+[Display subcontact nickname]
+Использовать ник субконтакта
+[Display subcontact display name]
+Использовать отображаемое имя
+[Lock name to first contact]
+Фиксировать имя
+[Current language:]
+Язык интерфейса:
+[Last modified using:]
+Проверен на версии:
+[Date:]
+Дата:
+[Locale:]
+Язык:
+[Reload langpack]
+Перезагрузить языковой пакет
+[Download more language packs]
+Загрузить дополнительные переводы
 [Tray]
 Трей
 [&Hide/Show]
@@ -524,7 +584,7 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [&Close]
 &Закрыть
 [%s message for %s]
-%s (%s)
+%s сообщение для %s
 [Retrieving %s message...]
 Загрузка сообщения "%s"...
 [Status messages]
@@ -564,7 +624,7 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [&Room settings]
 &Настройки
 [&Show/Hide nick list]
-&Показать/Скрыть список ников
+&Показать/Скрыть список пользователей
 [Show these events only:]
 Показывать только:
 [Actions]
@@ -579,8 +639,6 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 Смены темы
 [Status changes]
 Смены статуса
-[Information]
-Информация
 [Disconnects]
 Отключения
 [User kicks]
@@ -639,6 +697,8 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 Очистить ча&т
 [Word lookup]
 Найти слово
+[Wikipedia]
+Википедия
 [Link]
 Ссылка
 [Open a &new browser window]
@@ -699,8 +759,6 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 Несколько значков
 [Only when statuses differ]
 При разных статусах
-[Contact list]
-Список контактов
 [System tray icon]
 Значок в трее
 [System tray icon when using multiple protocols]
@@ -726,9 +784,9 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [Show drop shadow (restart required)]
 Тень (нужен перезапуск)
 [Pin to desktop]
-Прикрепить к столу
+Прикрепить к рабочему столу
 [Hide contact list after it has been idle for]
-Скрыть список, при неактивности в течение
+Скрыть список, если я неактивен более
 [seconds]
 секунд
 [Automatically resize window to height of list]
@@ -746,7 +804,7 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [Translucency options]
 Настройки прозрачности
 [Fade contact list in/out]
-Плавно скрыть список
+Плавно скрывать список контактов
 [Transparent contact list]
 Прозрачный список контактов
 [Inactive opacity:]
@@ -762,7 +820,7 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [Disable drag and drop of items]
 Отключить перетаскивание элементов
 [Disable rename of items by clicking twice]
-Отключить переименование по двойному щелчку
+Отключить переименование по дв. щелчку
 [Show selection even when list is not focused]
 Выделение, даже если окно неактивно
 [Make selection highlight translucent]
@@ -806,7 +864,7 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [Gray out entire list when:]
 Сделать серым, если:
 [Contact list background]
-Фон списка
+Фон списка контактов
 [Background color]
 Цвет фона
 [Selection color]
@@ -828,9 +886,9 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [Use Windows colors]
 Цвета Windows
 [Status bar]
-Панель статуса
+Панель статусов
 [Show status bar]
-Показывать панель статуса
+Показывать панель статусов
 [Show icons]
 Показывать значки
 [Show protocol names]
@@ -901,8 +959,6 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 &Отказать
 [From:]
 От:
-[Date:]
-Дата:
 [Files:]
 Файлы:
 [Save to:]
@@ -1081,8 +1137,14 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 Показывать имена
 [Show timestamp]
 Показывать время
+[Show seconds]
+Секунды
 [Show dates]
 Показывать даты
+[Show formatting]
+Показывать форматирование
+[Load history events]
+Подгрузка истории
 [Load unread events only]
 Только непрочитанные события
 [Load number of previous events]
@@ -1091,14 +1153,6 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 События, полученные менее чем
 [minutes old]
 минут назад
-[Show status changes]
-Показывать изменения статуса
-[Show seconds]
-Секунды
-[Load history events]
-Подгрузка истории
-[Show formatting]
-Показывать форматирование
 [Send typing notifications to the following users when you are typing a message to them:]
 Оповещать отмеченных пользователей о том, что вы набираете сообщение:
 [Show typing notifications when a user is typing a message]
@@ -1132,7 +1186,7 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [Message history]
 История сообщений
 [&Find...]
-&Найти
+&Найти...
 [Add phone number]
 Добавить телефон
 [Enter country, area code and phone number:]
@@ -1208,9 +1262,9 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [%u requests authorization]
 %u запрашивает авторизацию
 [%s added you to their contact list]
-%s добавил вас в свой список
+%s добавил вас в свой список контактов
 [%u added you to their contact list]
-%u добавил вас в свой список
+%u добавил вас в свой список контактов
 [Alerts]
 Уведомления
 [Added event]
@@ -1244,7 +1298,7 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [I've been away since %time%.]
 Отошел в %time%.
 [Give it up, I'm not in!]
-Меня нет.
+Ну нет меня сейчас, нет...
 [Not right now.]
 Не сейчас.
 [Give a guy some peace, would ya?]
@@ -1272,11 +1326,11 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [Message background]
 Фон поля ввода
 [Nick list background]
-Фон списка
+Фон списка пользователей
 [Nick list lines]
-Цвета линий в списке
+Цвета линий в списке пользователей
 [Nick list background (selected)]
-Заливка списка (выбрано)
+Заливка списка пользователей (выбрано)
 [Use a tabbed interface]
 Использовать вкладки
 [Close tab on double click]
@@ -1619,8 +1673,6 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 Пользователь не зарегистрировал свой адрес e-mail.
 [Send e-mail]
 Отправить e-mail
-[&E-mail]
-&E-mail
 [File from %s]
 Файл от %s
 [bytes]
@@ -1628,7 +1680,7 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [&File]
 &Файл
 [File &transfers...]
-Передачи &файлов
+Передачи &файлов...
 [Incoming]
 Входящие
 [Complete]
@@ -1712,7 +1764,7 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [< Copyright]
 < Права
 [&About...]
-&О программе
+&О программе...
 [&Support]
 &Поддержка
 [&Miranda NG homepage]
@@ -1732,7 +1784,7 @@ Miranda NG перезапускается.\nПожалуйста, подожди
 [%s is typing a message...]
 %s набирает текст...
 [File sent]
-Посылка файла
+Отправка файла
 [Outgoing messages]
 Исходящие сообщения
 [Incoming messages]
@@ -1860,7 +1912,7 @@ URL от %s
 [Owner]
 Владелец
 [View/change my &details...]
-Личные &данные
+Личные &данные...
 [%s is online]
 %s в сети
 [Add contact]
@@ -1878,19 +1930,19 @@ URL от %s
 [User has disconnected]
 Пользователь отключился
 [User kicked ...]
-Пинок
+Пинок...
 [User is now known as ...]
-Смена псевдонима
+Смена псевдонима...
 [Notice from user]
 Уведомление
 [The topic is ...]
-Смена темы
+Смена темы...
 [Information messages]
 Информационные сообщения
 [User enables status for ...]
-Установка статуса
+Установка статуса...
 [User disables status for ...]
-Снятие статуса
+Снятие статуса...
 [Action message]
 Действие
 [Highlighted message]
@@ -2009,6 +2061,8 @@ URL от %s
 Ник
 [FirstName]
 Имя
+[E-mail]
+Почта
 [LastName]
 Фамилия
 [Username]
@@ -2145,8 +2199,8 @@ Miranda NG не может открыть этот профиль
 Все сети
 [Handle]
 Название
-[&Find/Add contacts...]
-Добавить &контакты
+[&Find/add contacts...]
+Добавить &контакты...
 [Could not start a search on '%s', there was a problem - is %s connected?]
 Не могу запустить поиск в сети %s. Пожалуйста, проверьте подключение к сети %s.
 [Could not search on any of the protocols, are you online?]
@@ -2199,8 +2253,106 @@ Miranda NG не может открыть этот профиль
 Наборы значков
 [** All contacts **]
 ** Все контакты **
-[Contacts]
-Контакты
+[(incompatible)]
+(несовместим)
+[Unknown]
+Неизвестно
+[built-in]
+встроенный
+[Languages]
+Языки
+[You are going to remove all the contacts associated with this metacontact.\nThis will delete the metacontact.\n\nProceed anyway?]
+Вы собираетесь удалить все субконтакты из метаконтакта.\nЭто приведёт к удалению метаконтакта.\n\nПродолжить?
+[Either there is no metacontact in the database (in this case you should first convert a contact into one)\nor there is none that can host this contact.\nAnother solution could be to convert this contact into a new metacontact.\n\nConvert this contact into a new metacontact?]
+В базе не найдено ни одного метаконтакта (в этом случае нужно сначала преобразовать один обычный контакт в метаконтакт).\nНапример, можно преобразовать этот контакт в новый метаконтакт.\n\nПреобразовать этот контакт в метаконтакт?
+[This contact is a metacontact.\nYou can't add a metacontact to another metacontact.\n\nPlease choose another.]
+Этот контакт уже является метаконтактом.\nНевозможно добавить один метаконтакт в другой.\n\nПожалуйста, выберите другой контакт.
+[Metacontact conflict]
+Конфликт метаконтактов
+[This contact is already associated to a metacontact.\nYou cannot add a contact to multiple metacontacts.]
+Этот контакт уже добавлен в метаконтакт.\nВы не можете добавить контакт в несколько метаконтактов.
+[Multiple metacontacts]
+Множество метаконтактов
+[No suitable metacontact found]
+Не найдено подходящего метаконтакта
+[a contact]
+контакт
+[Adding %s...]
+Добавление %s...
+[Please select a metacontact]
+Выберите метаконтакт
+[No metacontact selected]
+Метаконтакт не выбран
+[Assignment to the metacontact failed.]
+Не удалось добавить к метаконтакту.
+[Assignment failure]
+Неудачное назначение
+[Protocol]
+Протокол
+[Send offline]
+Отправка в оффлайн
+[Send &online]
+В &онлайн
+[Delete metacontact?]
+Удалить метаконтакт?
+[Toggle off]
+Выключить
+[Toggle on]
+Включить
+[Convert to metacontact]
+Сделать метаконтактом
+[Add to existing]
+Добавить
+[Edit]
+Изменить
+[Set to default]
+По умолчанию
+[There was a problem in assigning the contact to the metacontact]
+Обнаружена проблема добавления контакта к метаконтакту
+[This will remove the metacontact permanently.\n\nProceed anyway?]
+Удаление метаконтакта.\n\nПродолжить?
+[Are you sure?]
+Вы уверены?
+[Remove from metacontact]
+Удалить из метаконтакта
+[Toggle metacontacts off]
+Выключить метаконтакты
+[Toggle metacontacts on]
+Включить метаконтакты
+[Add to existing metacontact...]
+Добавить к метаконтакту...
+[Edit metacontact...]
+Изменить метаконтакт...
+[Set as metacontact default]
+Метаконтакт по умолчанию
+[Delete metacontact]
+Удалить метаконтакт
+[Subcontacts]
+Субконтакты
+[Metacontacts]
+Метаконтакты
+[No online contacts found.]
+Не найдено контактов в сети.
+[Sender]
+Отправитель
+[Could not retrieve contact protocol]
+Не могу запросить протокол контакта
+[Assignment error]
+Ошибка назначения
+[Could not get unique ID of contact]
+Не могу получить уникальный ID контакта
+[Contact is 'not on list' - please add the contact to your contact list before assigning.]
+Контакт не в списке. Пожалуйста, добавьте контакт в список перед назначением.
+[Metacontact is full]
+Метаконтакт полон
+[Could not write contact protocol to metacontact]
+Ошибка записи протокола контакта в метаконтакт
+[Could not write unique ID of contact to metacontact]
+Ошибка записи уникального ID контакта в метаконтакт
+[Could not write nickname of contact to metacontact]
+Не могу записать ник контакта в метаконтакт
+[Standard netlib log]
+Стандартный журнал netlib
 [No times]
 Без времени
 [Standard hh:mm:ss times]
@@ -2215,8 +2367,8 @@ Miranda NG не может открыть этот профиль
 Выбрать путь к файлу журнала
 [Select program to be run]
 Выбрать программу для запуска
-[Standard netlib log]
-Стандартный журнал netlib
+[<mixed>]
+<различные>
 [<All connections>]
 <Все подключения>
 [Network]
@@ -2247,7 +2399,7 @@ Miranda NG не может открыть этот профиль
 '%s' отключён, включить?
 [Re-enable Miranda plugin?]
 Включить плагин?
-[Unable to load plugin in Service Mode!]
+[Unable to load plugin in service mode!]
 Невозможно загрузить плагин в служебном режиме!
 [Unable to start any of the installed contact list plugins, I even ignored your preferences for which contact list couldn't load any.]
 Невозможно загрузить ни один из установленных плагинов списка контактов. Даже отключённые в настройках не запускаются.
@@ -2280,19 +2432,15 @@ Miranda NG не может открыть этот профиль
 [Account error]
 Ошибка учётной записи
 [Account is disabled. Please activate it to access options.]
-Учётная запись отключена. Активируйте для настроек.
+Учётная запись отключена. Активируйте её для получения доступа к настройкам.
 [New account]
 Новая учётная запись
-[Edit]
-Изменить
 [Remove account]
 Удалить
 [Configure...]
 Настройка...
 [Upgrade account]
 Модернизация
-[Protocol]
-Протокол
 [Account ID]
 ID учётной записи
 [<unknown>]
@@ -2314,7 +2462,7 @@ ID учётной записи
 [You need to disable plugin to delete this account]
 Для удаления учётной записи необходимо отключить протокол
 [&Accounts...]
-&Учётные записи
+&Учётные записи...
 [Remove shortcut]
 Удалить сочетание
 [Add another shortcut]
@@ -2435,8 +2583,6 @@ ANSI плагин
 <не указано>
 [Unspecified]
 Не указано
-[Unknown]
-Неизвестно
 [Afghanistan]
 Афганистан
 [Aland Islands]

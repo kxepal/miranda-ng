@@ -22,9 +22,12 @@ DWORD CMraProto::StartConnect()
 		MraPopupShowFromAgentW(MRA_POPUP_TYPE_WARNING, 0, TranslateT("Please, setup password in options"));
 	else {
 		InterlockedExchange((volatile LONG*)&m_dwThreadWorkerLastPingTime, GetTickCount());
-		ForkThreadEx(&CMraProto::MraThreadProc, NULL, 0);
+		if (INVALID_HANDLE_VALUE != ForkThreadEx(&CMraProto::MraThreadProc, NULL, 0))
+			return 0; /* OK. */
+		MraPopupShowFromAgentW(MRA_POPUP_TYPE_ERROR, 0, TranslateT("Thread creation failure"));
 	}
-	return 0;
+	InterlockedExchange((volatile LONG*)&m_dwThreadWorkerRunning, FALSE);
+	return ERROR_OPERATION_ABORTED;
 }
 
 void CMraProto::MraThreadProc(LPVOID lpParameter)
@@ -49,6 +52,9 @@ void CMraProto::MraThreadProc(LPVOID lpParameter)
 	InterlockedExchange((volatile LONG*)&m_dwThreadWorkerLastPingTime, GetTickCount());
 	if (MraGetNLBData(szHost, &nloc.wPort) == NO_ERROR) {
 		nloc.szHost = szHost;
+		//nloc.szHost = "217.69.141.245";
+		//nloc.wPort = 443;
+		//nloc.flags |= NLOCF_SSL;
 		dwCurConnectReTryCount = dwConnectReTryCount;
 		do {
 			InterlockedExchange((volatile LONG*)&m_dwThreadWorkerLastPingTime, GetTickCount());
@@ -77,7 +83,7 @@ void CMraProto::MraThreadProc(LPVOID lpParameter)
 				InterlockedExchange((volatile LONG*)&m_dwThreadWorkerLastPingTime, GetTickCount());
 				m_hConnection = (HANDLE)CallService(MS_NETLIB_OPENCONNECTION, (WPARAM)m_hNetlibUser, (LPARAM)&nloc);
 			}
-			while (--dwCurConnectReTryCount && m_hConnection == NULL);
+				while (--dwCurConnectReTryCount && m_hConnection == NULL);
 
 			if (m_hConnection) {
 				bConnected = TRUE;
@@ -96,8 +102,7 @@ void CMraProto::MraThreadProc(LPVOID lpParameter)
 	}
 
 	MraMPopSessionQueueFlush(hMPopSessionQueue);
-	Netlib_CloseHandle(m_hConnection);// called twice, if user set offline, its normal
-	m_hConnection = NULL;
+	NETLIB_CLOSEHANDLE(m_hConnection);
 	dwCMDNum = 0;
 
 	InterlockedExchange((volatile LONG*)&m_dwThreadWorkerRunning, FALSE);
@@ -139,7 +144,7 @@ DWORD CMraProto::MraGetNLBData(CMStringA &szHost, WORD *pwPort)
 		InterlockedExchange((volatile LONG*)&m_dwThreadWorkerLastPingTime, GetTickCount());
 		nls.hReadConns[0] = (HANDLE)CallService(MS_NETLIB_OPENCONNECTION, (WPARAM)m_hNetlibUser, (LPARAM)&nloc);
 	}
-	while (--dwCurConnectReTryCount && nls.hReadConns[0] == NULL);
+		while (--dwCurConnectReTryCount && nls.hReadConns[0] == NULL);
 
 	if (nls.hReadConns[0]) {
 		nls.cbSize = sizeof(nls);
@@ -214,132 +219,115 @@ DWORD CMraProto::MraNetworkDispatcher()
 	m_dwThreadWorkerLastPingTime = GetTickCount();
 	while (m_iStatus != ID_STATUS_OFFLINE && bContinue) {
 		DWORD dwSelectRet = CallService(MS_NETLIB_SELECT, 0, (LPARAM)&nls);
-		switch (dwSelectRet) {
-		case SOCKET_ERROR:
+		if (SOCKET_ERROR == dwSelectRet) {
 			if (m_iStatus != ID_STATUS_OFFLINE) {
 				dwRetErrorCode = GetLastError();
 				ShowFormattedErrorMessage(L"Disconnected, socket error", dwRetErrorCode);
 			}
-			bContinue = FALSE;
 			break;
-
-		case 0:// Time out
-		case 1:
-			m_dwThreadWorkerLastPingTime = GetTickCount();
-			// server ping
-			if (m_dwNextPingSendTickTime <= m_dwThreadWorkerLastPingTime) {
-				m_dwNextPingSendTickTime = (m_dwThreadWorkerLastPingTime + (m_dwPingPeriod * 1000));
-				MraSendCMD(MRIM_CS_PING, NULL, 0);
-			}
-			{
-				DWORD dwCMDNum, dwFlags, dwAckType;
-				MCONTACT hContact;
-				LPBYTE lpbData;
-				size_t dwDataSize;
-				while (!MraSendQueueFindOlderThan(hSendQueueHandle, SEND_QUEUE_TIMEOUT, &dwCMDNum, &dwFlags, &hContact, &dwAckType, &lpbData, &dwDataSize)) {
-					switch (dwAckType) {
-					case ACKTYPE_ADDED:
-					case ACKTYPE_AUTHREQ:
-					case ACKTYPE_CONTACTS:
-						//nothing to do
-						break;
-					case ACKTYPE_MESSAGE:
-						ProtoBroadcastAck(hContact, dwAckType, ACKRESULT_FAILED, (HANDLE)dwCMDNum, (LPARAM)"Undefined message deliver error, time out");
-						break;
-					case ACKTYPE_GETINFO:
-						ProtoBroadcastAck(hContact, dwAckType, ACKRESULT_FAILED, (HANDLE)1, 0);
-						break;
-					case ACKTYPE_SEARCH:
-						ProtoBroadcastAck(hContact, dwAckType, ACKRESULT_SUCCESS, (HANDLE)dwCMDNum, 0);
-						break;
-					case ICQACKTYPE_SMS:
-						mir_free(lpbData);
-						break;
-					}
-					MraSendQueueFree(hSendQueueHandle, dwCMDNum);
+		}
+		// Time out or normal
+		m_dwThreadWorkerLastPingTime = GetTickCount();
+		/* Server ping. */
+		if (m_dwNextPingSendTickTime <= m_dwThreadWorkerLastPingTime) {
+			m_dwNextPingSendTickTime = (m_dwThreadWorkerLastPingTime + (m_dwPingPeriod * 1000));
+			MraSendCMD(MRIM_CS_PING, NULL, 0);
+		}
+		{ /* Remove old items from send queue. */
+			DWORD dwCMDNum, dwFlags, dwAckType;
+			MCONTACT hContact;
+			LPBYTE lpbData;
+			size_t dwDataSize;
+			while (!MraSendQueueFindOlderThan(hSendQueueHandle, SEND_QUEUE_TIMEOUT, &dwCMDNum, &dwFlags, &hContact, &dwAckType, &lpbData, &dwDataSize)) {
+				switch (dwAckType) {
+				case ACKTYPE_ADDED:
+				case ACKTYPE_AUTHREQ:
+				case ACKTYPE_CONTACTS:
+					//nothing to do
+					break;
+				case ACKTYPE_MESSAGE:
+					ProtoBroadcastAck(hContact, dwAckType, ACKRESULT_FAILED, (HANDLE)dwCMDNum, (LPARAM)"Undefined message deliver error, time out");
+					break;
+				case ACKTYPE_GETINFO:
+					ProtoBroadcastAck(hContact, dwAckType, ACKRESULT_FAILED, (HANDLE)1, 0);
+					break;
+				case ACKTYPE_SEARCH:
+					ProtoBroadcastAck(hContact, dwAckType, ACKRESULT_SUCCESS, (HANDLE)dwCMDNum, 0);
+					break;
+				case ICQACKTYPE_SMS:
+					ProtoBroadcastAck(NULL, dwAckType, ACKRESULT_FAILED, (HANDLE)dwCMDNum, 0);
+					mir_free(lpbData);
+					break;
 				}
+				MraSendQueueFree(hSendQueueHandle, dwCMDNum);
 			}
+		}
 
-			if (dwSelectRet == 0) // Time out
+		if (dwSelectRet == 0) // Time out
+			continue;
+
+		// expand receive buffer dynamically
+		if ((dwRcvBuffSize - dwRcvBuffSizeUsed) < BUFF_SIZE_RCV_MIN_FREE) {
+			dwRcvBuffSize += BUFF_SIZE_RCV;
+			lpbBufferRcv = (LPBYTE)mir_realloc(lpbBufferRcv, dwRcvBuffSize);
+		}
+
+		DWORD dwBytesReceived = Netlib_Recv(nls.hReadConns[0], (LPSTR)(lpbBufferRcv + dwRcvBuffSizeUsed), (dwRcvBuffSize - dwRcvBuffSizeUsed), 0);
+		if ( !dwBytesReceived || dwBytesReceived == SOCKET_ERROR) { // disconnected
+			if (m_iStatus != ID_STATUS_OFFLINE) {
+				dwRetErrorCode = GetLastError();
+				ShowFormattedErrorMessage(L"Disconnected, socket read error", dwRetErrorCode);
+			}
+			break;
+		}
+
+		dwRcvBuffSizeUsed += dwBytesReceived;
+		while (TRUE) {
+			dwDataCurrentBuffSize = (dwRcvBuffSize - dwDataCurrentBuffOffset);
+			dwDataCurrentBuffSizeUsed = (dwRcvBuffSizeUsed - dwDataCurrentBuffOffset);
+			pmaHeader = (mrim_packet_header_t*)(lpbBufferRcv + dwDataCurrentBuffOffset);
+
+			// packet header received
+			if (dwDataCurrentBuffSizeUsed < sizeof(mrim_packet_header_t)) { // packet to small, continue receiving
+				debugLogW(L"Packet to small, continue receiving\n");
+				memmove(lpbBufferRcv, (lpbBufferRcv + dwDataCurrentBuffOffset), dwDataCurrentBuffSizeUsed);
+				dwRcvBuffSizeUsed = dwDataCurrentBuffSizeUsed;
+				dwDataCurrentBuffOffset = 0;
 				break;
-
-			// expand receive buffer dynamically
-			if ((dwRcvBuffSize - dwRcvBuffSizeUsed) < BUFF_SIZE_RCV_MIN_FREE) {
-				dwRcvBuffSize += BUFF_SIZE_RCV;
-				lpbBufferRcv = (LPBYTE)mir_realloc(lpbBufferRcv, dwRcvBuffSize);
 			}
-
-			DWORD dwBytesReceived = Netlib_Recv(nls.hReadConns[0], (LPSTR)(lpbBufferRcv + dwRcvBuffSizeUsed), (dwRcvBuffSize - dwRcvBuffSizeUsed), 0);
-			if (dwBytesReceived && dwBytesReceived != SOCKET_ERROR) {
-				dwRcvBuffSizeUsed += dwBytesReceived;
-
-				while (TRUE) {
-					dwDataCurrentBuffSize = (dwRcvBuffSize - dwDataCurrentBuffOffset);
-					dwDataCurrentBuffSizeUsed = (dwRcvBuffSizeUsed - dwDataCurrentBuffOffset);
-					pmaHeader = (mrim_packet_header_t*)(lpbBufferRcv + dwDataCurrentBuffOffset);
-
-					// packet header received
-					if (dwDataCurrentBuffSizeUsed >= sizeof(mrim_packet_header_t)) {
-						// packet OK
-						if (pmaHeader->magic == CS_MAGIC) {
-							// full packet received, may be more than one
-							if ((dwDataCurrentBuffSizeUsed - sizeof(mrim_packet_header_t)) >= pmaHeader->dlen) {
-
-								bContinue = MraCommandDispatcher(pmaHeader);
-
-								// move pointer to next packet in buffer
-								if (dwDataCurrentBuffSizeUsed - sizeof(mrim_packet_header_t) > pmaHeader->dlen)
-									dwDataCurrentBuffOffset += sizeof(mrim_packet_header_t)+pmaHeader->dlen;
-								// move pointer to begin of buffer
-								else {
-									// динамическое уменьшение буффера приёма
-									if (dwRcvBuffSize > BUFF_SIZE_RCV) {
-										dwRcvBuffSize = BUFF_SIZE_RCV;
-										lpbBufferRcv = (LPBYTE)mir_realloc(lpbBufferRcv, dwRcvBuffSize);
-									}
-									dwDataCurrentBuffOffset = 0;
-									dwRcvBuffSizeUsed = 0;
-									break;
-								}
-							}
-							// not all packet received, continue receiving
-							else {
-								if (dwDataCurrentBuffOffset) {
-									memmove(lpbBufferRcv, (lpbBufferRcv + dwDataCurrentBuffOffset), dwDataCurrentBuffSizeUsed);
-									dwRcvBuffSizeUsed = dwDataCurrentBuffSizeUsed;
-									dwDataCurrentBuffOffset = 0;
-								}
-								debugLogW(L"Not all packet received, continue receiving\n");
-								break;
-							}
-						}
-						// bad packet
-						else {
-							debugLogW(L"Bad packet\n");
-							dwDataCurrentBuffOffset = 0;
-							dwRcvBuffSizeUsed = 0;
-							break;
-						}
-					}
-					// packet to small, continue receiving
-					else {
-						debugLogW(L"Packet to small, continue receiving\n");
-						memmove(lpbBufferRcv, (lpbBufferRcv + dwDataCurrentBuffOffset), dwDataCurrentBuffSizeUsed);
-						dwRcvBuffSizeUsed = dwDataCurrentBuffSizeUsed;
-						dwDataCurrentBuffOffset = 0;
-						break;
-					}
+			if (pmaHeader->magic != CS_MAGIC) { // bad packet
+				debugLogW(L"Bad packet\n");
+				dwDataCurrentBuffOffset = 0;
+				dwRcvBuffSizeUsed = 0;
+				break;
+			}
+			// packet OK
+			if ((dwDataCurrentBuffSizeUsed - sizeof(mrim_packet_header_t)) < pmaHeader->dlen) { // not all packet received, continue receiving
+				if (dwDataCurrentBuffOffset) {
+					memmove(lpbBufferRcv, (lpbBufferRcv + dwDataCurrentBuffOffset), dwDataCurrentBuffSizeUsed);
+					dwRcvBuffSizeUsed = dwDataCurrentBuffSizeUsed;
+					dwDataCurrentBuffOffset = 0;
 				}
+				debugLogW(L"Not all packet received, continue receiving\n");
+				break;
 			}
-			// disconnected
+			// full packet received, may be more than one
+			bContinue = MraCommandDispatcher(pmaHeader);
+
+			// move pointer to next packet in buffer
+			if (dwDataCurrentBuffSizeUsed - sizeof(mrim_packet_header_t) > pmaHeader->dlen)
+				dwDataCurrentBuffOffset += sizeof(mrim_packet_header_t)+pmaHeader->dlen;
+			// move pointer to begin of buffer
 			else {
-				if (m_iStatus != ID_STATUS_OFFLINE) {
-					dwRetErrorCode = GetLastError();
-					ShowFormattedErrorMessage(L"Disconnected, socket read error", dwRetErrorCode);
+				// динамическое уменьшение буффера приёма
+				if (dwRcvBuffSize > BUFF_SIZE_RCV) {
+					dwRcvBuffSize = BUFF_SIZE_RCV;
+					lpbBufferRcv = (LPBYTE)mir_realloc(lpbBufferRcv, dwRcvBuffSize);
 				}
-				bContinue = FALSE;
+				dwDataCurrentBuffOffset = 0;
+				dwRcvBuffSizeUsed = 0;
+				break;
 			}
-			break;
 		}
 	}
 	mir_free(lpbBufferRcv);
@@ -500,17 +488,22 @@ bool CMraProto::CmdUserInfo(BinBuffer &buf)
 		}
 		else if (szString == "micblog.show_title") {
 			debugLogA(szString);
-			buf >> szStringW;
+			buf >> szString;
 			debugLogW(szStringW);
 		}
-		else if (szString == "micblog.status.id") {
+		else if (szString == "micblog.status.xml") {
+			debugLogA(szString);
 			buf >> szString;
-			DWORDLONG dwBlogStatusID = _atoi64(szString);
+			debugLogA(szString);
+		}
+		else if (szString == "micblog.status.id") {
+			buf >> szStringW;
+			DWORDLONG dwBlogStatusID = _ttoi64(szStringW);
 			mraWriteContactSettingBlob(NULL, DBSETTING_BLOGSTATUSID, &dwBlogStatusID, sizeof(DWORDLONG));
 		}
 		else if (szString == "micblog.status.time") {
-			buf >> szString;
-			setDword(DBSETTING_BLOGSTATUSTIME, atoi(szString));
+			buf >> szStringW;
+			setDword(DBSETTING_BLOGSTATUSTIME, _ttoi(szStringW));
 		}
 		else if (szString == "micblog.status.text") {
 			buf >> szStringW;
@@ -519,11 +512,13 @@ bool CMraProto::CmdUserInfo(BinBuffer &buf)
 		else if (szString == "HAS_MYMAIL" || szString == "mrim.status.open_search" || szString == "rb.target.cookie" ||
 			szString == "show_web_history_link" || szString == "friends_suggest" || szString == "timestamp" ||
 			szString == "trusted_update" || szString == "mrim.wp.dating") {
-			buf >> szString;
+			debugLogA(szString);
+			buf >> szStringW;
+			debugLogW(szStringW);
 		}
 		else _CrtDbgBreak();
 	}
-	MraUpdateEmailStatus("", "", 0, 0);
+	MraUpdateEmailStatus("", "", 0, 0, false);
 	return true;
 }
 
@@ -586,13 +581,15 @@ bool CMraProto::CmdPopSession(BinBuffer &buf)
 	DWORD dwTemp = buf.getDword();
 	if (dwTemp) {
 		CMStringA szString; buf >> szString;
-		MraMPopSessionQueueSetNewMPopKey(hMPopSessionQueue, szString);
-		MraMPopSessionQueueStart(hMPopSessionQueue);
+		if (NO_ERROR == MraMPopSessionQueueSetNewMPopKey(hMPopSessionQueue, szString)) {
+			MraMPopSessionQueueStart(hMPopSessionQueue);
+			return true;
+		}
 	}
-	else { //error
-		MraPopupShowFromAgentW(MRA_POPUP_TYPE_WARNING, 0, TranslateT("Server error: can't get MPOP key for web authorize"));
-		MraMPopSessionQueueFlush(hMPopSessionQueue);
-	}
+	//error
+	MraPopupShowFromAgentW(MRA_POPUP_TYPE_WARNING, 0, TranslateT("Server error: can't get MPOP key for web authorize"));
+	MraMPopSessionQueueFlush(hMPopSessionQueue);
+
 	return true;
 }
 
@@ -675,8 +672,15 @@ bool CMraProto::CmdUserStatus(BinBuffer &buf)
 
 		MraContactCapabilitiesSet(hContact, dwFutureFlags);
 		setByte(hContact, DBSETTING_XSTATUSID, (BYTE)dwXStatus);
-		mraSetStringW(hContact, DBSETTING_XSTATUSNAME, szStatusTitle);
-		mraSetStringW(hContact, DBSETTING_XSTATUSMSG, szStatusDesc);
+		if (dwXStatus) {
+			mraSetStringW(hContact, DBSETTING_XSTATUSNAME, szStatusTitle);
+			mraSetStringW(hContact, DBSETTING_XSTATUSMSG, szStatusDesc);
+		}
+		else {
+			delSetting(hContact, DBSETTING_XSTATUSNAME);
+			delSetting(hContact, DBSETTING_XSTATUSMSG);
+		}
+
 
 		if (dwTemp != ID_STATUS_OFFLINE) { // пишем клиента только если юзер не отключён, иначе не затираем старое
 			if (!szUserAgentFormatted.IsEmpty()) {
@@ -705,8 +709,8 @@ bool CMraProto::CmdUserStatus(BinBuffer &buf)
 
 bool CMraProto::CmdContactAck(int cmd, int seq, BinBuffer &buf)
 {
-	DWORD dwAckType; MCONTACT hContact; LPBYTE pData; size_t dataLen;
-	if (!MraSendQueueFind(hSendQueueHandle, seq, NULL, &hContact, &dwAckType, &pData, &dataLen)) {
+	DWORD dwAckType; MCONTACT hContact;
+	if (!MraSendQueueFind(hSendQueueHandle, seq, NULL, &hContact, &dwAckType, NULL, NULL)) {
 		DWORD dwTemp = buf.getDword();
 		switch (dwTemp) {
 		case CONTACT_OPER_SUCCESS:// ## добавление произведено успешно
@@ -753,8 +757,8 @@ bool CMraProto::CmdContactAck(int cmd, int seq, BinBuffer &buf)
 
 bool CMraProto::CmdAnketaInfo(int seq, BinBuffer &buf)
 {
-	DWORD dwAckType, dwFlags; MCONTACT hContact; LPBYTE pData; size_t dataLen;
-	if (MraSendQueueFind(hSendQueueHandle, seq, &dwFlags, &hContact, &dwAckType, &pData, &dataLen)) {
+	DWORD dwAckType, dwFlags; MCONTACT hContact;
+	if (MraSendQueueFind(hSendQueueHandle, seq, &dwFlags, &hContact, &dwAckType, NULL, NULL)) {
 		MraPopupShowFromAgentW(MRA_POPUP_TYPE_DEBUG, 0, TranslateT("MRIM_ANKETA_INFO: not found in queue"));
 		return true;
 	}
@@ -777,14 +781,19 @@ bool CMraProto::CmdAnketaInfo(int seq, BinBuffer &buf)
 	case MRIM_ANKETA_INFO_STATUS_OK:
 		// поиск успешно завершен
 		DWORD dwFieldsNum, dwMaxRows, dwServerTime;
+		DWORD dwID, dwContactSeverFlags, dwStatus, dwXStatus;
 		buf >> dwFieldsNum >> dwMaxRows >> dwServerTime;
 
 		CMStringA *pmralpsFields = new CMStringA[dwFieldsNum];
 		CMStringA val;
-		CMStringW valW;
+		CMStringW valW, StatusNameW, StatusMsgW;
+
+		/* Default contact statuses in mail.ru format. */
+		dwStatus = STATUS_OFFLINE;
+		dwXStatus = MRA_XSTATUS_OFFLINE;
 
 		// read headers name
-		for (unsigned i = 0; i < dwFieldsNum; i++) {
+		for (DWORD i = 0; i < dwFieldsNum; i++) {
 			buf >> pmralpsFields[i];
 			debugLogA("%s ", pmralpsFields[i]);
 		}
@@ -794,7 +803,7 @@ bool CMraProto::CmdAnketaInfo(int seq, BinBuffer &buf)
 			if (dwAckType == ACKTYPE_GETINFO && hContact) {
 				setDword(hContact, "InfoTS", (DWORD)_time32(NULL));
 				//MRA_LPS mralpsUsernameValue;
-				for (unsigned i = 0; i < dwFieldsNum; i++) {
+				for (DWORD i = 0; i < dwFieldsNum; i++) {
 					CMStringA &fld = pmralpsFields[i];
 					if (fld == "Nickname") {
 						buf >> valW;
@@ -809,8 +818,8 @@ bool CMraProto::CmdAnketaInfo(int seq, BinBuffer &buf)
 						mraSetStringW(hContact, "LastName", valW);
 					}
 					else if (fld == "Sex") {
-						buf >> valW;
-						switch (_wtoi(valW)) {
+						buf >> val;
+						switch (atoi(val)) {
 						case 1:// мужской
 							setByte(hContact, "Gender", 'M');
 							break;
@@ -894,49 +903,36 @@ bool CMraProto::CmdAnketaInfo(int seq, BinBuffer &buf)
 					}
 					else if (fld == "mrim_status") {
 						buf >> val;
-						if (val.GetLength()) {
-							DWORD dwID, dwContactSeverFlags;
-							GetContactBasicInfoW(hContact, &dwID, NULL, NULL, &dwContactSeverFlags, NULL, NULL, NULL, NULL);
-							// для авторизованного нам и так присылают правильный статус
-							if (dwID == -1 || (dwContactSeverFlags & CONTACT_INTFLAG_NOT_AUTHORIZED)) {
-								MraSetContactStatus(hContact, GetMirandaStatusFromMraStatus(atoi(val), MRA_MIR_XSTATUS_NONE, NULL));
-								setByte(hContact, DBSETTING_XSTATUSID, (BYTE)MRA_MIR_XSTATUS_NONE);
-							}
-						}
+						if (val.GetLength())
+							dwStatus = atoi(val);
 					}
 					else if (fld == "status_uri") {
 						buf >> val;
-						if (val.GetLength()) {
-							DWORD dwID, dwContactSeverFlags, dwXStatus;
-							GetContactBasicInfoW(hContact, &dwID, NULL, NULL, &dwContactSeverFlags, NULL, NULL, NULL, NULL);
-							if (dwID == -1 || (dwContactSeverFlags & CONTACT_INTFLAG_NOT_AUTHORIZED)) {
-								MraSetContactStatus(hContact, GetMirandaStatusFromMraStatus(atoi(val), GetMraXStatusIDFromMraUriStatus(val), &dwXStatus));
-								setByte(hContact, DBSETTING_XSTATUSID, (BYTE)dwXStatus);
-							}
-						}
+						if (val.GetLength())
+							dwXStatus = GetMraXStatusIDFromMraUriStatus(val);
 					}
 					else if (fld == "status_title") {
-						buf >> valW;
-						if (valW.GetLength()) {
-							DWORD dwID, dwContactSeverFlags;
-							GetContactBasicInfoW(hContact, &dwID, NULL, NULL, &dwContactSeverFlags, NULL, NULL, NULL, NULL);
-							if (dwID == -1 || (dwContactSeverFlags & CONTACT_INTFLAG_NOT_AUTHORIZED))
-								mraSetStringW(hContact, DBSETTING_XSTATUSNAME, valW);
-						}
+						buf >> StatusNameW;
 					}
 					else if (fld == "status_desc") {
-						buf >> valW;
-						if (valW.GetLength()) {
-							DWORD dwID, dwContactSeverFlags;
-							GetContactBasicInfoW(hContact, &dwID, NULL, NULL, &dwContactSeverFlags, NULL, NULL, NULL, NULL);
-							if (dwID == -1 || dwContactSeverFlags&CONTACT_INTFLAG_NOT_AUTHORIZED)
-								mraSetStringW(hContact, DBSETTING_XSTATUSMSG, valW);
-						}
+						buf >> StatusMsgW;
 					}
 					else {// for DEBUG ONLY
 						buf >> val;
 						debugLogA("%s = %s\n", fld, val);
 					}
+				} /* for */
+				// для авторизованного нам и так присылают правильный статус
+				GetContactBasicInfoW(hContact, &dwID, NULL, NULL, &dwContactSeverFlags, NULL, NULL, NULL, NULL);
+				if (dwID == -1 || (dwContactSeverFlags & CONTACT_INTFLAG_NOT_AUTHORIZED)) {
+					/* Convert mail.ru statuses to miranda. */
+					dwStatus = GetMirandaStatusFromMraStatus(dwStatus, dwXStatus, &dwXStatus);
+					MraSetContactStatus(hContact, dwStatus);
+					setByte(hContact, DBSETTING_XSTATUSID, (BYTE)dwXStatus);
+					if (StatusNameW.GetLength())
+						mraSetStringW(hContact, DBSETTING_XSTATUSNAME, StatusNameW);
+					if (StatusMsgW.GetLength())
+						mraSetStringW(hContact, DBSETTING_XSTATUSMSG, StatusMsgW);
 				}
 			}
 			else if (dwAckType == ACKTYPE_SEARCH) {
@@ -955,7 +951,7 @@ bool CMraProto::CmdAnketaInfo(int seq, BinBuffer &buf)
 				psr.email = szEmail;
 				psr.id = szEmail;
 
-				for (unsigned i = 0; i < dwFieldsNum; i++) {
+				for (DWORD i = 0; i < dwFieldsNum; i++) {
 					CMStringA &fld = pmralpsFields[i];
 					if (fld == "Username") {
 						buf >> val;
@@ -963,19 +959,19 @@ bool CMraProto::CmdAnketaInfo(int seq, BinBuffer &buf)
 					}
 					else if (fld == "Domain") { // имя было уже задано ранее
 						buf >> val;
-						wcsncpy_s(szEmail, _A2T(mralpsUsernameValue + "@" + val), SIZEOF(szEmail));
+						wcsncpy_s(szEmail, _A2T(mralpsUsernameValue + "@" + val), _TRUNCATE);
 					}
 					else if (fld == "Nickname") {
 						buf >> valW;
-						wcsncpy_s(szNick, valW, SIZEOF(szNick));
+						wcsncpy_s(szNick, valW, _TRUNCATE);
 					}
 					else if (fld == "FirstName") {
 						buf >> valW;
-						wcsncpy_s(szFirstName, valW, SIZEOF(szFirstName));
+						wcsncpy_s(szFirstName, valW, _TRUNCATE);
 					}
 					else if (fld == "LastName") {
 						buf >> valW;
-						wcsncpy_s(szLastName, valW, SIZEOF(szLastName));
+						wcsncpy_s(szLastName, valW, _TRUNCATE);
 					}
 					else buf >> val;
 				}
@@ -1280,7 +1276,7 @@ bool CMraProto::CmdClist2(BinBuffer &buf)
 						mraWriteContactSettingBlob(hContact, DBSETTING_BLOGSTATUSID, &dwBlogStatusID.QuadPart, sizeof(DWORDLONG));
 						mraSetStringW(hContact, DBSETTING_BLOGSTATUS, wszBlogStatus);
 						mraSetStringW(hContact, DBSETTING_BLOGSTATUSMUSIC, wszBlogStatusMusic);
-						if (IsXStatusValid(dwXStatus))
+						if (IsXStatusValid(dwXStatus) || wszBlogStatus.GetLength())
 							SetExtraIcons(hContact);
 
 						if (dwTemp != ID_STATUS_OFFLINE) { // пишем клиента только если юзер не отключён, иначе не затираем старое
@@ -1429,7 +1425,7 @@ bool CMraProto::CmdNewMail(BinBuffer &buf)
 	DWORD dwSave = m_dwEmailMessagesUnread;
 	m_dwEmailMessagesUnread = dwUnreadCount;// store new value
 	if (getByte("IncrementalNewMailNotify", MRA_DEFAULT_INC_NEW_MAIL_NOTIFY) == 0 || dwSave < dwUnreadCount || dwUnreadCount == 0)
-		MraUpdateEmailStatus(szEmail, szString, dwDate, dwUIDL);
+		MraUpdateEmailStatus(szEmail, szString, dwDate, dwUIDL, false);
 	return true;
 }
 
@@ -1450,6 +1446,7 @@ bool CMraProto::CmdBlogStatus(BinBuffer &buf)
 			mraWriteContactSettingBlob(hContact, DBSETTING_BLOGSTATUSID, &dwBlogStatusID, sizeof(DWORDLONG));
 			mraSetStringW(hContact, DBSETTING_BLOGSTATUS, wszText);
 		}
+		SetExtraIcons(hContact);
 	}
 	return true;
 }
@@ -1509,25 +1506,21 @@ bool CMraProto::MraCommandDispatcher(mrim_packet_header_t *pmaHeader)
 		dwAckType = m_dwEmailMessagesUnread;// save old value
 		m_dwEmailMessagesUnread = dwTemp;// store new value
 		if (getByte("IncrementalNewMailNotify", MRA_DEFAULT_INC_NEW_MAIL_NOTIFY) == 0 || dwAckType < dwTemp || dwTemp == 0)
-			MraUpdateEmailStatus("", "", 0, 0);
+			MraUpdateEmailStatus("", "", 0, 0, false);
 		break;
 
 	case MRIM_CS_SMS_ACK:
 		buf >> dwTemp;
 		if (MraSendQueueFind(hSendQueueHandle, pmaHeader->seq, NULL, &hContact, &dwAckType, &pByte, &dwSize) == NO_ERROR) {
+			/* pByte point to phone number ansi string. */
+			/* dwAckType = ICQACKTYPE_SMS */
 			CMStringA szEmail;
 			if (mraGetStringA(NULL, "e-mail", szEmail)) {
-				DWORD dwPhoneSize = *(DWORD*)pByte;
-				DWORD dwMessageSize = dwSize - (dwPhoneSize + sizeof(DWORD)+2);
-				LPSTR lpszPhone = (LPSTR)pByte + sizeof(DWORD);
-				LPWSTR lpwszMessage = (LPWSTR)(lpszPhone + dwPhoneSize + 1);
-
-				mir_snprintf((LPSTR)szBuff, SIZEOF(szBuff),
+				mir_snprintf((LPSTR)szBuff, sizeof(szBuff),
 					"<sms_response><source>Mail.ru</source><deliverable>Yes</deliverable><network>Mail.ru, Russia</network><message_id>%s-1-1955988055-%s</message_id><destination>%s</destination><messages_left>0</messages_left></sms_response>\r\n",
-					szEmail.c_str(), lpszPhone, lpszPhone);
-				ProtoBroadcastAck(NULL, dwAckType, ACKRESULT_SENTREQUEST, (HANDLE)pmaHeader->seq, (LPARAM)szBuff);
+					szEmail.c_str(), (LPSTR)pByte, (LPSTR)pByte);
+				ProtoBroadcastAck(NULL, ICQACKTYPE_SMS, ACKRESULT_SENTREQUEST, (HANDLE)pmaHeader->seq, (LPARAM)szBuff);
 			}
-
 			mir_free(pByte);
 			MraSendQueueFree(hSendQueueHandle, pmaHeader->seq);
 		}
@@ -1543,6 +1536,7 @@ bool CMraProto::MraCommandDispatcher(mrim_packet_header_t *pmaHeader)
 		break;
 
 	case MRIM_CS_UNKNOWN:
+	case MRIM_CS_UNKNOWN2:
 	case MRIM_CS_USER_GEO:
 	case MRIM_CS_SERVER_SETTINGS:
 		break;
@@ -1781,7 +1775,7 @@ DWORD CMraProto::MraRecvCommand_Message(DWORD dwTime, DWORD dwFlags, CMStringA &
 
 						// found
 						(*lpbBufferCurPos) = 0;
-						lpbBufferCurPos++;
+						lpbBufferCurPos ++;
 					}
 					ProtoChainRecv(hContact, PSR_CONTACTS, 0, (LPARAM)&pre);
 				}
@@ -1891,10 +1885,10 @@ DWORD GetMirandaStatusFromMraStatus(DWORD dwMraStatus, DWORD dwXStatusMra, DWORD
 		}
 		if (pdwXStatusMir) *pdwXStatusMir = dwXStatusMra - MRA_XSTATUS_INDEX_OFFSET + 1;
 		return ID_STATUS_ONLINE;
+	default:
+		if (dwMraStatus & STATUS_FLAG_INVISIBLE)
+			return ID_STATUS_INVISIBLE;
 	}
-
-	if (dwMraStatus & STATUS_FLAG_INVISIBLE)
-		return ID_STATUS_INVISIBLE;
 
 	return ID_STATUS_OFFLINE;
 }

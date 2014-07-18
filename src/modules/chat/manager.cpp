@@ -88,7 +88,7 @@ static void SM_FreeSession(SESSION_INFO *si)
 	// contact may have been deleted here already, since function may be called after deleting
 	// contact so the handle may be invalid, therefore db_get_b shall return 0
 	if (si->hContact && db_get_b(si->hContact, si->pszModule, "ChatRoom", 0) != 0) {
-		ci.SetOffline(si->hContact, si->iType == GCW_CHATROOM ? TRUE : FALSE);
+		ci.SetOffline(si->hContact, (si->iType == GCW_CHATROOM || si->iType == GCW_PRIVMESS) ? TRUE : FALSE);
 		db_set_s(si->hContact, si->pszModule, "Topic", "");
 		db_set_s(si->hContact, si->pszModule, "StatusBar", "");
 		db_unset(si->hContact, "CList", "StatusMsg");
@@ -552,7 +552,7 @@ static BOOL SM_SendUserMessage(const TCHAR *pszID, const char *pszModule, const 
 	SESSION_INFO *pTemp = ci.wndList;
 	while (pTemp != NULL) {
 		if ((!pszID || !lstrcmpi(pTemp->ptszID, pszID)) && !lstrcmpiA(pTemp->pszModule, pszModule)) {
-			if (pTemp->iType == GCW_CHATROOM)
+			if (pTemp->iType == GCW_CHATROOM || pTemp->iType == GCW_PRIVMESS)
 				DoEventHook(pTemp->ptszID, pTemp->pszModule, GC_USER_MESSAGE, NULL, pszText, 0);
 			if (pszID)
 				return TRUE;
@@ -774,7 +774,7 @@ static char* SM_GetUsers(SESSION_INFO *si)
 		lstrcpyA(p + pLen + nameLen, " ");
 		utemp = utemp->next;
 	}
-	while (utemp != NULL);
+		while (utemp != NULL);
 	return p;
 }
 
@@ -833,7 +833,7 @@ static void MM_IconsChanged(void)
 
 		if (ci.OnCreateModule) // recreate icons
 			ci.OnCreateModule(pTemp);
-		
+
 		pTemp = pTemp->next;
 	}
 }
@@ -1221,8 +1221,8 @@ static TCHAR* UM_FindUserAutoComplete(USERINFO* pUserList, const TCHAR* pszOrigi
 	USERINFO *pTemp = pUserList;
 	while (pTemp != NULL) {
 		if (pTemp->pszNick && my_strstri(pTemp->pszNick, pszOriginal) == pTemp->pszNick)
-		if (lstrcmpi(pTemp->pszNick, pszCurrent) > 0 && (!pszName || lstrcmpi(pTemp->pszNick, pszName) < 0))
-			pszName = pTemp->pszNick;
+			if (lstrcmpi(pTemp->pszNick, pszCurrent) > 0 && (!pszName || lstrcmpi(pTemp->pszNick, pszName) < 0))
+				pszName = pTemp->pszNick;
 
 		pTemp = pTemp->next;
 	}
@@ -1414,14 +1414,14 @@ INT_PTR SvcGetChatManager(WPARAM wParam, LPARAM lParam)
 	ci.SM_GetUsers = SM_GetUsers;
 	ci.SM_GetUserFromIndex = SM_GetUserFromIndex;
 	ci.SM_InvalidateLogDirectories = SM_InvalidateLogDirectories;
-	
+
 	ci.MM_AddModule = MM_AddModule;
 	ci.MM_FindModule = MM_FindModule;
 	ci.MM_FixColors = MM_FixColors;
 	ci.MM_FontsChanged = MM_FontsChanged;
 	ci.MM_IconsChanged = MM_IconsChanged;
 	ci.MM_RemoveAll = MM_RemoveAll;
-	
+
 	ci.TM_AddStatus = TM_AddStatus;
 	ci.TM_FindStatus = TM_FindStatus;
 	ci.TM_StringToWord = TM_StringToWord;
@@ -1440,7 +1440,7 @@ INT_PTR SvcGetChatManager(WPARAM wParam, LPARAM lParam)
 	ci.UM_RemoveUser = UM_RemoveUser;
 	ci.UM_RemoveAll = UM_RemoveAll;
 	ci.UM_CompareItem = UM_CompareItem;
-	
+
 	ci.LM_AddEvent = LM_AddEvent;
 	ci.LM_TrimLog = LM_TrimLog;
 	ci.LM_RemoveAll = LM_RemoveAll;
@@ -1450,15 +1450,15 @@ INT_PTR SvcGetChatManager(WPARAM wParam, LPARAM lParam)
 	ci.SetAllOffline = SetAllOffline;
 	ci.AddEvent = AddEvent;
 	ci.FindRoom = FindRoom;
-	
+
 	ci.Log_CreateRTF = Log_CreateRTF;
 	ci.Log_CreateRtfHeader = Log_CreateRtfHeader;
 	ci.LoadMsgDlgFont = LoadMsgDlgFont;
 	ci.MakeTimeStamp = MakeTimeStamp;
-	
+
 	ci.DoEventHook = DoEventHook;
 	ci.DoEventHookAsync = DoEventHookAsync;
-	
+
 	ci.DoSoundsFlashPopupTrayStuff = DoSoundsFlashPopupTrayStuff;
 	ci.DoTrayIcon = DoTrayIcon;
 	ci.DoPopup = DoPopup;

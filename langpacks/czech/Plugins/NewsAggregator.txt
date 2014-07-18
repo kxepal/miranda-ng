@@ -20,8 +20,6 @@ Importovat
 Exportovat
 [Retrieve news at startup]
 Získat novinky při spuštění
-[OK]
-OK
 [Cancel]
 Zrušit
 [General Settings]
@@ -119,6 +117,7 @@ Aktivovat automatickou aktualizaci
 Zkont. zdroj
 [Change feed]
 Změnit zdroj
+;file \plugins\NewsAggregator\Src\NewsAggregator.cpp
 ;file \plugins\NewsAggregator\Src\Options.cpp
 [Enter Feed name]
 

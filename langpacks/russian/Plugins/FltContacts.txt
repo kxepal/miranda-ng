@@ -19,8 +19,10 @@
 пикселей
 [Hide all contacts]
 Прятать все контакты
-[Hide when a fulscreen app is active]
+[Hide when a fullscreen app is active]
 Прятать когда приложение развернуто
+[Show tooltips*]
+Всплывающие подсказки*
 [ms]
 мс
 [Tooltips]
@@ -43,10 +45,16 @@
 Один щелчок
 [Dim idle contacts]
 Затемнить неактивных пользователей
+[Idle contacts]
+Неактивные пользователи
 [Border]
 Рамка
 [Draw border]
 Показывать рамку
+[Left-top edge's color:]
+Цвет левого верхнего угла:
+[Right-bottom edge's color:]
+Цвет правого нижнего угла:
 [Background]
 Фон
 [Background color:]
@@ -87,7 +95,7 @@
 Показать/Скрыть все контакты
 [Floating Contacts]
 Плавающие контакты
-[Contact List]
+[Contact list]
 Список контактов
 [Main Features]
 Главное

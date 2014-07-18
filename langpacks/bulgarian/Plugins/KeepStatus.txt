@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: KeepStatus.dll
 ;  Plugin: Keep status
-;  Version: 0.9.0.1
+;  Version: 0.9.0.2
 ;  Authors: P Boon
 ;============================================================
 [KeepStatus, A connection checker, for use with (or without) StartupStatus and/or AdvancedAutoAway.]
@@ -45,6 +45,7 @@
 [Set]
 Задай
 [when full-screen mode is active]
+
 [when screen saver engages]
 при включване на screen saver
 [when workstation is locked]
@@ -67,8 +68,6 @@
 Само при състояние:
 [Command line]
 Команден ред
-[OK]
-ОК
 [Copy to clipboard]
 Запис в клипборда
 [Command line:]
@@ -287,7 +286,7 @@ Dial-up (експериментално)
 [No internet connection seems available... (last try (%d))]
 Няма налична връзка с интернет... (нов опит (%d))
 [No internet connection seems available... (next retry (%d) in %d s)]
-Няма налична връзка с интернет... (нов опит (%d) след %dсек) 
+Няма налична връзка с интернет... (нов опит (%d) след %dсек)
 [Status was set ok]
 Зададено е състояние
 [Giving up]

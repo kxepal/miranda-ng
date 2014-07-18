@@ -28,8 +28,6 @@ De:
 A:
 [Add number to list]
 
-[&H]
-&H
 [Save number]
 
 [Multiple >>]
@@ -37,8 +35,6 @@ A:
 [Enter message:]
 
 [Chars:]
-
-[%d/160]
 
 [&Send]
 &Enviar
@@ -52,7 +48,7 @@ A:
 
 [SMS Plugin]
 
-[Begining]
+[Beginning]
 
 [End]
 
@@ -68,8 +64,6 @@ A:
 
 [SMS Message Sent]
 
-[&OK]
-
 [Message ID:]
 
 [Source:]
@@ -80,7 +74,7 @@ A:
 [From %s:\r\n\r\n]
 
 [Events]
-
+Eventos
 ;file \plugins\SMS\src\receive.cpp
 [SMS message didn't send by %S to %s because: %S]
 
@@ -105,7 +99,7 @@ Ver historial del usuario
 [The SMS message send to %s timed out.]
 
 [The phone number should start with a + and consist of numbers, spaces, brackets and hyphens only.]
-
+El número de teléfono debe comenzar con + y se componen sólo de números, espacios, paréntesis y guiones.
 [Invalid Phone Number]
 Número de teléfono no válido
 [Message is too long, press OK to continue.]
@@ -123,8 +117,6 @@ Número de teléfono no válido
 [<< Single]
 
 ;file \plugins\SMS\src\SMSConstans.h
-[SMS]
-
 [Send &SMS...]
 
 [&SMS Message]

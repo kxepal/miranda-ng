@@ -112,7 +112,7 @@ AIM Установить Instant Idle
 [Screen Name]
 Имя AIM
 [E-mail]
-E-mail
+Почта
 [Confirm Account]
 Подтвердить
 [*Applied upon reconnect]
@@ -147,6 +147,12 @@ E-mail
 Неправильное имя AIM или пароль.
 [Unknown error occurred when attempting to connect.]
 Неизвестная ошибка при соединении.
+[Check your Screen Name.]
+Проверьте свой псевдоним.
+[Check your Password.]
+Проверьте свой пароль.
+[Check your Email Address.]
+Проверьте свой адрес электронной почты.
 [Service temporarily unavailable.]
 Сервис временно недоступен.
 [An Error has occurred.]
@@ -154,9 +160,9 @@ E-mail
 [AIM Link Protocol]
 Протокол AIM
 [%s server connection]
-%s подключение к серверу 
+%s подключение к серверу
 [%s Client-to-client connection]
-%s подключения между клиентами 
+%s подключения между клиентами
 [[Auto-Response]:]
 (Автоответ):
 [No information has been provided by the server.]

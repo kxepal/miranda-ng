@@ -18,8 +18,6 @@ Cancelar
 
 [Buddy Pounce]
 
-[OK]
-Aceptar
 [The Message:]
 
 [Delete Pounce]
@@ -80,13 +78,13 @@ Ocupado
 [DND]
 No molestar
 [Free For Chat]
-
+Libre para el chat	
 [Invisible]
 Invisible
 [On The Phone]
-
+En el teléfono
 [Out To Lunch]
-
+Salí a comer
 [Send If Their Status changes]
 
 [From Offline]
@@ -138,5 +136,7 @@ Días
 [Message failed to send to %s]
 
 ;file \plugins\BuddyPounce\src\main.cpp
+[&Buddy Pounce]
+
 [Message Sessions]
 Sesiones de mensaje

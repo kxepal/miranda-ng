@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Включаемый файл, созданный в Microsoft Visual C++.
-// Используется d:\MNG_orig\plugins\Clist_nicer\res\resource.rc
+// Microsoft Visual C++ generated include file.
+// Used by ..\res\resource.rc
 //
 #define IDD_OPT_VIEWMODES               1
 #define IDD_OPT_SKIN                    4
@@ -10,10 +10,9 @@
 #define IDD_OPTIONSDIALOG               101
 #define IDD_CLNABOUT                    102
 #define IDD_OPT_CLIST                   126
-#define IDI_NOTICK                      143
-#define IDI_TICK                        146
+#define IDI_ADDGROUP                    143
+#define IDI_CLIST                       146
 #define IDI_OPTIONS                     163
-#define IDI_RENAME                      173
 #define IDI_DELETE                      175
 #define IDI_CLVM_OPTIONS                176
 #define IDI_CLVM_SELECT                 177

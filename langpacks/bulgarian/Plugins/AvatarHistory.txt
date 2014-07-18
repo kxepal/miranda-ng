@@ -28,13 +28,11 @@
 Запазване на промените в историята
 [Show popups for this user]
 Показване на popup за потребителя
-[OK]
-ОК
 [Protocols]
 Протоколи
 [Enable tracking for these protocols:]
 Следене на следните протоколи:
-[MetaContacts have special handling: the info is always copied from subcontacts (notifications from a meta are ignored)]
+[Metacontacts have special handling: the info is always copied from subcontacts (notifications from a meta are ignored)]
 Метаконтактите се третират различно. Инф. винаги се взима от подконтактите (известията от метаконтактите се игнорират)
 [Show popup when a contact change his avatar]
 popup когато контакта промени аватара си
@@ -124,7 +122,7 @@ popup когато контакта промени аватара си
 ;file \plugins\AvatarHistory\src\AvatarHistory.cpp
 [AVH Debug]
 
-[Removed avatar, no avatar before...skipping]
+[Removed avatar, no avatar before... skipping]
 
 [Hashes are the same... skipping]
 

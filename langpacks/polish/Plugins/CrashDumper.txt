@@ -19,7 +19,7 @@ Do pliku
 [Support for miranda-vi.org]
 Wsparcie dla miranda-vi.org
 [Username]
-Użytkownik
+Użytkownik:
 [Password]
 Hasło:
 [Upload automatically when changed]
@@ -33,11 +33,11 @@ Twórz raporty w podfolderach używając bieżącej daty
 [View]
 Pokaż
 [&Copy]
-Kopiuj
+&Kopiuj
 [Co&py All]
-Kopiuj wszystko
+Ko&piuj wszystko
 [Select &All]
-Zaznacz wszystko
+Zaznacz &wszystko
 ;file \plugins\CrashDumper\src\crshdmp.cpp
 [VersionInfo stored into file %s]
 Informacje o wersji zachowano w pliku: %s
@@ -58,7 +58,7 @@ Raporty błędów
 [Version Information]
 Informacje o wersji
 [Copy to clipboard]
-Kopiuj do schowka 
+Kopiuj do schowka
 [Store to file]
 Zapisz do pliku
 [Show]
@@ -79,8 +79,8 @@ Pokaż Informacje o wersji
 [Crash Dumper]
 Raporty błędów
 ;file \plugins\CrashDumper\src\exhndlr.cpp
-[Crash Report write location is inaccesible]
-Nie można zapisać raportu o błędach
+[Crash Report write location is not available]
+Ścieżka zapisu raportów błędów jest niedostępna
 [Miranda crashed. Crash report stored in the folder:\n %s\n\n Would you like store it in the clipboard as well?]
 Wystąpił błąd Mirandy. Raport błędów zachowany w folderze:\n %s\n\n Czy zapisać raport?
 ;file \plugins\CrashDumper\src\ui.cpp

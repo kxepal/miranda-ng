@@ -560,8 +560,8 @@ KN_FP_MASK def_kn_fp_mask[] =
 	{"client_rss09x",           _T("*RSS*0.9*"),                                _T("RSS 0.9x"),                      IDI_RSS09,               RSS_CASE,           TRUE    },
 	{"client_rss2",             _T("*RSS*2.*"),                                 _T("RSS 2"),                         IDI_RSS2,                RSS_CASE,           TRUE    },
 	{"client_rss1",             _T("*RSS*1.*"),                                 _T("RSS 1"),                         IDI_RSS1,                RSS_CASE,           TRUE    },
-	{"client_atom3",            _T("*Atom*3.*"),                                _T("Atom 3"),                        IDI_ATOM3,               RSS_CASE,           TRUE    },
-	{"client_atom1",            _T("*Atom*1.*"),                                _T("Atom 1"),                        IDI_ATOM1,               RSS_CASE,           TRUE    },
+	{"client_atom3",            _T("*Atom*3*"),                                 _T("Atom 3"),                        IDI_ATOM3,               RSS_CASE,           TRUE    },
+	{"client_atom1",            _T("*Atom*1*"),                                 _T("Atom 1"),                        IDI_ATOM1,               RSS_CASE,           TRUE    },
 
 //#########################################################################################################################################################################
 //#################################    QQ   ###############################################################################################################################
@@ -592,6 +592,11 @@ KN_FP_MASK def_kn_fp_mask[] =
 //#########################################################################################################################################################################
 	{"client_Android",          _T("*Android*"),                                _T("Android"),                       IDI_ANDROID,             MULTI_CASE,         TRUE    },
 
+	{"client_Facebook_web",     _T("*Facebook*website*"),                       _T("Facebook (website)"),            IDI_FACEBOOK_WEB,        OTHER_PROTOS_CASE,  TRUE    },
+	{"client_Facebook_mobile",  _T("*Facebook*mobile*"),                        _T("Facebook (mobile)"),             IDI_FACEBOOK_MOBILE,     OTHER_PROTOS_CASE,  TRUE    },
+	{"client_Facebook_other",   _T("*Facebook*other*"),                         _T("Facebook (other)"),              IDI_FACEBOOK_OTHER,      OTHER_PROTOS_CASE,  TRUE    },
+	{"client_Facebook_app",     _T("*Facebook*App*"),                           _T("Facebook App"),                  IDI_FACEBOOK_APP,        OTHER_PROTOS_CASE,  TRUE    },
+	{"client_Facebook_mess",    _T("*Facebook*Messenger*"),                     _T("Facebook Messenger"),            IDI_FACEBOOK_MESSENGER,  OTHER_PROTOS_CASE,  TRUE    },
 	{"client_Facebook",         _T("*Facebook*"),                               _T("Facebook"),                      IDI_FACEBOOK,            OTHER_PROTOS_CASE,  TRUE    },
 
 	{"client_Pidgin",           _T("|*Pidgin*|*libpurple*|Purple*"),            _T("Pidgin (libpurple)"),            IDI_PIDGIN,              MULTI_CASE                  },

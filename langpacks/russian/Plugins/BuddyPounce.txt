@@ -5,6 +5,8 @@
 ;  Version: 0.3.2.1
 ;  Authors: Jonathan Gordon
 ;============================================================
+[Allows you to send a message to contacts if they change status.]
+Позволяет вам отправлять сообщения контактам, если они меняют статус.
 [Confirm Pounce send]
 Подтверждение отправки отложенных
 [Send]
@@ -12,7 +14,7 @@
 [Cancel]
 Отмена
 [Pounce being sent to]
-Отлож. сообщ. послано для
+Сообщение будет отправлено
 [Buddy Pounce]
 Отложенное сообщение
 [The Message:]
@@ -32,7 +34,7 @@
 [<< Simple]
 << Простой
 [Advanced >>]
-Дополнительно >>
+Расширенный >>
 [The Message]
 Сообщение
 [Dialog]
@@ -48,21 +50,21 @@
 [Show Delivery Messages]
 Показ. доставл. сообщения
 [These settings are also used when sending a "Simple" pounce]
-Эти настройки также используются для "простых" отлож.сообщений
+Эти настройки также используются для "простых" отлож. сообщений
 [Send If My Status Is...]
-Посылать, если мой статус...
+Отправлять, если мой статус...
 [Send If They Change Status to...]
-Посылать, если они изменяют статус на...
+Отправлять, если они изменяют статус на...
 [Reuse Pounce]
-Применить отложенное
+Повторить отложенное
 [Give Up delay]
 Задержка отмены
 [Confirmation Window]
 Окно подтверждения
 [Send If My Status Is]
-Послать, если мой статус
+Отправлять, если мой статус
 [Any]
-Любое
+Любой
 [Online]
 В сети
 [Away]
@@ -82,7 +84,7 @@
 [Out To Lunch]
 Обедаю
 [Send If Their Status changes]
-Посылать, если они изменяют статус
+Отправлять, если они изменяют статус
 [From Offline]
 Из оффлайна
 [To Online]
@@ -105,17 +107,33 @@
 -> Обедаю
 [The Message    (%d Characters)]
 Сообщение      (%d символов)
+[Couldn't allocate enough memory]
+Не удалось выделить достаточное количество памяти
+[error......]
+ошибка......
+[The Message    (0 Characters)]
+Сообщение    (0 символов)
+[Reuse this message? (0 to use it once)]
+Повторить сообщение? (0, чтобы не повторять)
 [Times]
-Время
+раз
+[Give up after... (0 to not give up)]
+Отказаться после... (0, чтобы не отказываться)
 [Days]
-Дней
+дней
+[Show confirmation window? (0 to not Show)]
+Показать окно подтверждения? (0, чтобы не показывать)
+[Seconds to wait before sending]
+секунд подождать перед отправкой
 [Pounce being sent to %s in %d seconds]
-Pounce отослан %s за %d секунд
+Сообщение будет отправлено %s через %d секунд
 [Retry]
 Ещё раз
 [Message successfully sent to %s]
 Сообщение успешно послано %s
 [Message failed to send to %s]
 Ошибка отправки сообщения для %s
+[&Buddy Pounce]
+&Отложенное сообщение
 [Message Sessions]
 Беседы

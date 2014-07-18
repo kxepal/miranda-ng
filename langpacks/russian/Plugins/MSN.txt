@@ -1,7 +1,7 @@
 ﻿#muuid {97724af9-f3fb-47d3-a3bf-eaa935c74e6d}
 ;============================================================
 ;  File: MSN.dll
-;  Plugin: MSN Protocol
+;  Plugin: MSN protocol
 ;  Version: 0.11.0.2
 ;  Authors: Boris Krasnovskiy, George Hazan, Richard Hughes
 ;============================================================
@@ -53,8 +53,6 @@
 Вы в списке контакта на сервере
 [Refresh]
 Обновить
-[Hotmail]
-Hotmail
 [Disable Popup notifications]
 Отключить уведомление всплывающими окнами
 [Disable Tray notifications]
@@ -99,6 +97,8 @@ Hotmail
 Удалить из адресной книги Hotmail
 [Block Contact]
 Заблокировать
+[Invite Contact To Chat]
+Пригласить контакт в чат
 [&Invite]
 &Пригласить
 [&Cancel]
@@ -121,6 +121,10 @@ Hotmail
 &История пользователя
 [Contact tried to open an audio conference (not currently supported)]
 Контакт пытался открыть аудиоконференцию (не поддерживается)
+[%I64u bytes]
+%I64u байт
+[Accept NetMeeting request from %s?]
+Принять запрос NetMeeting от %s?
 [MSN Protocol]
 Протокол MSN
 [MSN Alert]
@@ -147,6 +151,8 @@ MSN Чат
 Протокол MSN
 [Contact %s has been removed from the server.\nWould you like to keep it as "Local Only" contact to preserve history?]
 Контакт %s был удален с сервера.\nХотите ли вы оставить его в локальном списке, чтобы сохранить историю?
+[%s protocol]
+Протокол %s
 [Subject: %s]
 Тема: %s
 [Hotmail from %s (%S)]
@@ -166,7 +172,7 @@ MSN Чат
 [You must be talking to start Netmeeting]
 Вы должны разговаривать перед запуском Netmeeting
 [Set &Nickname]
-&Псевдоним...
+&Псевдоним
 [Create &Chat]
 Создать &чат
 [Display &Hotmail Inbox]
@@ -247,8 +253,10 @@ Live уведомление
 %s подключение к серверу
 [Contact already in your contact list]
 Контакт уже в вашем списке
+[Protocol is offline]
+Протокол не в сети
 [You cannot send message to yourself]
-Вы не можете посылать сообщения самому себе
+Вы не можете отправлять сообщения самому себе
 [Message is too long: SMS page limited to 133 UTF8 chars]
 Слишком большое сообщение, максимум 133 символа UTF8
 [Message is too long: MSN messages are limited by 1202 UTF8 chars]

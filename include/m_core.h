@@ -66,7 +66,9 @@ typedef UINT32 MCONTACT;
   #define DBVT_TCHAR DBVT_ASCIIZ
 #endif
 #define DBVTF_VARIABLELENGTH  0x80
-typedef struct {
+
+typedef struct
+{
 	BYTE type;
 	union {
 		BYTE bVal; char cVal;
@@ -87,27 +89,30 @@ typedef struct {
 	};
 } DBVARIANT;
 
-#define DBEF_FIRST      1  // this is the first event in the chain;
-                           // internal only: *do not* use this flag
-#define DBEF_SENT       2  // this event was sent by the user. If not set this
-                           // event was received.
-#define DBEF_READ       4  // event has been read by the user. It does not need
-                           // to be processed any more except for history.
+#define DBEF_SENT       2  // this event was sent by the user. If not set this event was received.
+#define DBEF_READ       4  // event has been read by the user. It does not need to be processed any more except for history.
 #define DBEF_RTL        8  // event contains the right-to-left aligned text
 #define DBEF_UTF       16  // event contains a text in utf-8
 #define DBEF_ENCRYPTED 32  // event is encrypted (never reported outside a driver)
 
-typedef struct {
-	int cbSize;             // size of the structure in bytes
+typedef struct
+{
+	int   cbSize;           // size of the structure in bytes
 	char *szModule;         // pointer to name of the module that 'owns' this
 	                        // event, ie the one that is in control of the data format
 	DWORD timestamp;        // seconds since 00:00, 01/01/1970. Gives us times until
 	                        // 2106 unless you use the standard C library which is
 	                        // signed and can only do until 2038. In GMT.
 	DWORD flags;            // the omnipresent flags
-	WORD eventType;         // module-defined event type field
+	WORD  eventType;        // module-defined event type field
 	DWORD cbBlob;           // size of pBlob in bytes
 	PBYTE pBlob;            // pointer to buffer containing module-defined event data
+
+#if defined(__cplusplus)
+	bool __forceinline markedRead() const
+	{	return (flags & (DBEF_SENT | DBEF_READ)) != 0;
+	}
+#endif
 } DBEVENTINFO;
 
 MIR_CORE_DLL(INT_PTR) db_free(DBVARIANT *dbv);
@@ -273,7 +278,7 @@ Returns the handle, or NULL if hDbEvent is invalid or is the last event
 Events in a chain are sorted chronologically automatically
 */
 
-MIR_CORE_DLL(HANDLE) db_event_next(HANDLE hDbEvent);
+MIR_CORE_DLL(HANDLE) db_event_next(MCONTACT hContact, HANDLE hDbEvent);
 
 /*
 Retrieves a handle to the previous event in a chain before hDbEvent
@@ -281,7 +286,7 @@ Returns the handle, or NULL if hDbEvent is invalid or is the first event
 Events in a chain are sorted chronologically automatically
 */
 
-MIR_CORE_DLL(HANDLE) db_event_prev(HANDLE hDbEvent);
+MIR_CORE_DLL(HANDLE) db_event_prev(MCONTACT hContact, HANDLE hDbEvent);
 
 /******************************************************************************
  * DATABASE SETTINGS
@@ -348,7 +353,7 @@ typedef int (*MIRANDAHOOKOBJPARAM)(void*, WPARAM, LPARAM, LPARAM);
 
 typedef INT_PTR (*MIRANDASERVICE)(WPARAM, LPARAM);
 typedef INT_PTR (*MIRANDASERVICEPARAM)(WPARAM, LPARAM, LPARAM);
-typedef INT_PTR (*MIRANDASERVICEOBJ)(void*, LPARAM, LPARAM);
+typedef INT_PTR (*MIRANDASERVICEOBJ)(void*, WPARAM, LPARAM);
 typedef INT_PTR (*MIRANDASERVICEOBJPARAM)(void*, WPARAM, LPARAM, LPARAM);
 
 #ifdef _WIN64
@@ -534,12 +539,13 @@ MIR_CORE_DLL(void)        List_ObjCopy(SortedList* s, SortedList* d, size_t item
 // logging functions
 
 MIR_CORE_DLL(HANDLE) mir_createLog(const char *pszName, const TCHAR *ptszDescr, const TCHAR *ptszFile, unsigned options);
+MIR_CORE_DLL(void)   mir_closeLog(HANDLE hLogger);
 
-MIR_C_CORE_DLL(int) mir_writeLogA(HANDLE logger, const char *format, ...);
-MIR_C_CORE_DLL(int) mir_writeLogW(HANDLE logger, const WCHAR *format, ...);
+MIR_C_CORE_DLL(int) mir_writeLogA(HANDLE hLogger, const char *format, ...);
+MIR_C_CORE_DLL(int) mir_writeLogW(HANDLE hLogger, const WCHAR *format, ...);
 
-MIR_CORE_DLL(int) mir_writeLogVA(HANDLE logger, const char *format, va_list args);
-MIR_CORE_DLL(int) mir_writeLogVW(HANDLE logger, const WCHAR *format, va_list args);
+MIR_CORE_DLL(int) mir_writeLogVA(HANDLE hLogger, const char *format, va_list args);
+MIR_CORE_DLL(int) mir_writeLogVW(HANDLE hLogger, const WCHAR *format, va_list args);
 
 ///////////////////////////////////////////////////////////////////////////////
 // md5 functions
@@ -582,22 +588,29 @@ MIR_CORE_DLL(HINSTANCE) GetInstByAddress(void* codePtr);
 
 MIR_CORE_DLL(void)   CreatePathToFile(char* wszFilePath);
 MIR_CORE_DLL(int)    CreateDirectoryTree(const char* szDir);
-MIR_CORE_DLL(int)    PathToRelative(const char *pSrc, char *pOut);
+MIR_CORE_DLL(int)    PathIsAbsolute(const char *pSrc);
 
 MIR_CORE_DLL(void)   CreatePathToFileW(WCHAR* wszFilePath);
 MIR_CORE_DLL(int)    CreateDirectoryTreeW(const WCHAR* szDir);
-MIR_CORE_DLL(int)    PathToRelativeW(const WCHAR *pSrc, WCHAR *pOut);
+MIR_CORE_DLL(int)    PathIsAbsoluteW(const WCHAR *pSrc);
 
 #if defined( __cplusplus )
-	MIR_CORE_DLL(int) PathToAbsolute(const char *pSrc, char *pOut, char* base=0);
-	MIR_CORE_DLL(int) PathToAbsoluteW(const WCHAR *pSrc, WCHAR *pOut, WCHAR* base=0);
+	MIR_CORE_DLL(int) PathToAbsolute(const char *pSrc, char *pOut, const char* base=0);
+	MIR_CORE_DLL(int) PathToAbsoluteW(const WCHAR *pSrc, WCHAR *pOut, const WCHAR* base = 0);
+
+	MIR_CORE_DLL(int) PathToRelative(const char *pSrc, char *pOut, const char* base = 0);
+	MIR_CORE_DLL(int) PathToRelativeW(const WCHAR *pSrc, WCHAR *pOut, const WCHAR* base = 0);
 #else
-	MIR_CORE_DLL(int) PathToAbsolute(const char *pSrc, char *pOut, char* base);
-	MIR_CORE_DLL(int) PathToAbsoluteW(const WCHAR *pSrc, WCHAR *pOut, WCHAR* base);
+	MIR_CORE_DLL(int) PathToAbsolute(const char *pSrc, char *pOut, const char* base);
+	MIR_CORE_DLL(int) PathToAbsoluteW(const WCHAR *pSrc, WCHAR *pOut, const WCHAR* base);
+
+	MIR_CORE_DLL(int) PathToRelative(const char *pSrc, char *pOut, const char* base);
+	MIR_CORE_DLL(int) PathToRelativeW(const WCHAR *pSrc, WCHAR *pOut, const WCHAR* base);
 #endif
 
 #define CreatePathToFileT CreatePathToFileW
 #define CreateDirectoryTreeT CreateDirectoryTreeW
+#define PathIsAbsoluteT PathIsAbsoluteW
 #define PathToAbsoluteT PathToAbsoluteW
 #define PathToRelativeT PathToRelativeW
 

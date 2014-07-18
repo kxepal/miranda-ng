@@ -6,7 +6,7 @@
 ;  Authors: Miranda NG Team
 ;============================================================
 [VKontakte protocol support for Miranda NG.]
-
+Support du protocole VKontakte pour Miranda NG.
 ;file \protocols\VKontakte\res\resource.rc
 [E-mail or phone number:]
 
@@ -38,8 +38,6 @@ Soumettre
 Annuler
 [Invite user to chat]
 
-[OK]
-OK
 [Choose one of your contacts to be invited:]
 
 [Create group chat]
@@ -102,5 +100,7 @@ Audio
 Video
 [Document]
 Document
+[Wall post]
+
 [Unsupported or unknown attachment type: %s]
 

@@ -1,7 +1,7 @@
 ﻿#muuid {748f8934-781a-528d-5208-001265404ab3}
 ;============================================================
 ;  File: Tlen.dll
-;  Plugin: Tlen Protocol
+;  Plugin: Tlen protocol
 ;  Version: 2.1.0.0
 ;  Authors: Santithorn Bunchua, Adam Strzelecki, Piotr Piastucki
 ;============================================================
@@ -89,17 +89,15 @@ Tekst
 [Delay]
 Wyświetlaj
 [&From Popup plugin]
-Z wtyczki PopUp
+&Z wtyczki Popup
 [&Custom]
-Własne
+&Niestandardowe
 [P&ermanent]
 S&tałe
 [Preview]
 Podgląd
 [Tlen Password]
 Hasło Tlen
-[OK]
-OK
 [Cancel]
 Anuluj
 [Nickname:]
@@ -107,7 +105,7 @@ Pseudonim:
 [First name:]
 Imię:
 [Last name:]
-Nazwisko: 
+Nazwisko:
 [E-mail:]
 E-mail:
 [Gender:]
@@ -150,8 +148,8 @@ Informacje osobiste
 Wiek:
 [to]
 Do
-[Extra Search Criterias]
-Dodatkowe kryteria wyszukiwania
+[Extra Search Criteria]
+Dodatkowe Kryteria Wyszukiwania
 [Status:]
 Status:
 [Plan:]
@@ -161,7 +159,7 @@ Rozmowa głosowa Tlen
 [Quality]
 Jakość
 [In]
-W
+Wejście
 [Out]
 Wyjście
 [Finish]
@@ -169,7 +167,7 @@ Zakończ
 [Tlen Voice Chat Invitation]
 Zaproszenie do rozmowy głosowej w Tlen
 [&Accept]
-Akceptuj
+&Akceptuj
 [From:]
 Od:
 [The following invitation to join a voice chat is received.]
@@ -178,7 +176,7 @@ Otrzymano następujące zaproszenie do dołączenia do rozmowy głosowej.
 [Protocol icon]
 Ikona protokołu
 [Tlen inbox]
-Skrzynka odbiorcza Tlen
+Skrzynka pocztowa Tlen
 [Group chats]
 Rozmowy grupowe
 [Tlen chats]
@@ -195,8 +193,6 @@ Wyślij obrazek
 Przychodząca wiadomość e-mail
 [Alert]
 Alert
-[Tlen Chats]
-Czaty Tlen
 [Multi-User Conference]
 Konferencja
 [Tlen Mail]
@@ -230,33 +226,6 @@ Błąd podczas ustawiania awatara na koncie Tlen
 Autoryzacja nieudana dla %s@%s.
 [Tlen Authentication]
 Autoryzacja Tlen
-;file \protocols\Tlen\src\tlen_muc.cpp
-[You have been kicked. Reason: %s ]
-Zostałeś wykopany. Powód: %s 
-[You cannot join this chat room, because you are banned.]
-Nie  możesz dołączyć do tego pokoju, ponieważ zostałeś zbanowany.
-[Chat room not found.]
-Pokój czatowy nie znaleziony.
-[This is a private chat room and you are not one of the members.]
-To jest pokój prywatny, a ty nie jesteś jednym z jego członków.
-[You cannot send any message unless you join this chat room.]
-Nie możesz wysłać żadnej wiadomości dopóki nie dołączysz do tego pokoju.
-[Chat room with already created.]
-Pokój czatowy już istnieje.
-[Nickname '%s' is already registered.]
-Nick "%s" jest już zarejestrowany.
-[Nickname already in use, please try another one. Hint: '%s' is free.]
-Nick już w użyciu, spróbuj innego. Porada: "%s" jest wolny.
-[You cannot register more than %s nicknames.]
-Nie możesz zarejestrować więcej niż %s nicków.
-[You cannot create more than %s chat rooms.]
-Nie możesz stworzyć więcej niż %s pokoi.
-[You cannot join more than %s chat rooms.]
-Nie możesz dołączyć do więcej niż %s pokoi.
-[Anonymous nicknames are not allowed in this chat room.]
-Anonimowe nicki nie są dozwolone w tym pokoju.
-[Unknown error code: %d]
-Kod nieznanego błędu: %d
 ;file \protocols\Tlen\src\tlen_opt.cpp
 [General]
 Ogólne
@@ -293,15 +262,11 @@ Ignoruj obrazki od nieautoryzowanych kontaktów
 [Ignore all images]
 Ignoruj wszystkie obrazki
 [<Last message>]
-<Ostatnia wiadomość>
+<Ostatni opis>
 [Forwarding]
 Przekierowanie
-[SOCKS4]
-SOCKS4
-[SOCKS5]
-SOCKS5
-[%s mail]
-%s mail
+[%S mail]
+%S wiadomość
 ;file \protocols\Tlen\src\tlen_picture.cpp
 [Image sent file://%s]
 Wysłany obrazek://%s
@@ -317,22 +282,6 @@ Musisz być połączony z kontem Tlen aby móc ustawić awatar.
 Wprowadź hasło dla %s
 [Tlen Connection Error]
 Błąd połączenia Tlen
-[Windows Server 2003]
-Windows Server 2003
-[Windows XP]
-Windows XP
-[Windows 2000]
-Windows 2000
-[Windows NT]
-Windows NT
-[Windows 95]
-Windows 95
-[Windows 98]
-Windows 98
-[Windows ME]
-Windows ME
-[Windows]
-Windows
 [%s Web Messages]
 %s wiadomości w przeglądarce
 [Web message]
@@ -345,6 +294,8 @@ E-mail
 Otrzymano alert.
 [Private conference]
 Prywatna konferencja
+[%s mail]
+%s mail
 [Subject]
 Temat
 ;file \protocols\Tlen\src\tlen_userinfo.cpp
@@ -360,7 +311,7 @@ brak
 nie na liście
 ;file \protocols\Tlen\src\tlen_voice.cpp
 [...Connecting...]
-...Połączenie...
+...Łączenie...
 [...Waiting for connection...]
 ...Oczekuje na połączenie...
 [...Finished...]

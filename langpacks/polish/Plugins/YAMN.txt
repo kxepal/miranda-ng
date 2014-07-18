@@ -6,10 +6,8 @@
 ;  Authors: y_b, tweety, majvan
 ;============================================================
 [Mail notifier and browser for Miranda NG. Included POP3 protocol.]
-Powiadomienia o poczcie i przeglądarka dla Mirandy NG. Dołączona obsługa POP3
+Powiadomienia o poczcie i przeglądarka dla Mirandy NG. Dołączona obsługa POP3.
 ;file \plugins\YAMN\res\YAMN.rc
-[OK]
-OK
 [Installed plugins]
 Zainstalowane wtyczki
 [Version:]
@@ -21,7 +19,7 @@ Własność:
 [Contact:]
 Kontakt:
 [WWW:]
-WWW:
+Strona domowa:
 [Account]
 Konto
 [Name:]
@@ -35,7 +33,7 @@ SSL
 [APOP]
 APOP
 [User Name:]
-Login:
+Użytkownik:
 [Password:]
 Hasło:
 [Codepage:]
@@ -55,7 +53,7 @@ Sprawdź przy starcie
 [Check interval [min]:]
 Odstęp sprawdzania [min]:
 [Only check when...]
-Sprawdź wyłącznie, gdy...
+Sprawdź tylko, gdy...
 [Auto retrieve body]
 Automatycznie pobierz treść
 [Check from menu]
@@ -63,13 +61,13 @@ Sprawdź z menu
 [Use contact notification for this account]
 Użyj powiadomienia kontaktu dla tego konta
 [Replace nickname]
-Zastąp przydomek
+Zastąp nick
 [Disable Events]
 Wyłącz zdarzenia
 [Notifications]
 Powiadomienia
 [New Mail]
-Nowy mail
+Nowy e-mail
 [Sound]
 Dźwięk
 [Message]
@@ -81,13 +79,13 @@ Ikona w zasobniku
 [Execute Application]
 Uruchom program
 [Errors]
-Błędy
+Powiadom...
 [Sound notification if failed]
-Powiadomienie dźwiękiem, gdy niepowodzenie
+...dźwiękiem, gdy niepowodzenie
 [Message notification if failed]
-Powiadomienie wiadomością, jeśli niepowodzenie
+...wiadomością, jeśli niepowodzenie
 [Tray icon notification if failed]
-Powiadomienie ikoną w zasobniku, jeśli niepowodzenie
+...ikoną w zasobniku, jeśli niepowodzenie
 [Reset counter]
 Resetuj licznik
 [Check while...]
@@ -103,7 +101,7 @@ Dostępny
 [Away]
 Zaraz wracam
 [N/A]
-Niedostępny
+Wrócę później
 [Occupied]
 Zajęty
 [DND]
@@ -117,23 +115,23 @@ Pod telefonem
 [Out to lunch]
 Na obiedzie
 [YAMN General Options]
-Ogólne Opcje YAMN
+Ogólne opcje YAMN
 [TopToolBar button "Check mail"]
 Przycisk paska narzędzi "Sprawdź pocztę"
 [Enable YAMN Main Menu]
 Włącz YAMN w menu głównym
 [Show YAMN as a Protocol (Require Restart)]
-Pokaż YAMN jako Protokół (Wymagany restart)
+Pokaż YAMN jako protokół (wymagany restart)
 [MailBrowser Options]
 Opcje przeglądania wiadomości
 [Enable Close on Delete Button]
-Włącz przycisk 'Zamknij przy Usuwaniu'
-[Show long localised date]
-Pokaż długi, lokalny format daty
+Włącz przycisk "Zamknij przy usuwaniu"
+[Show long localized date]
+Pokaż długą zlokalizowaną datę
 [Don't show today's date]
 Nie pokazuj dzisiejszej daty
 [Date/Time Representation]
-Reprezentacja daty/czasu
+Format daty/czasu
 [Don't show seconds]
 Nie pokazuj sekund
 [Mail Notifications]
@@ -147,11 +145,11 @@ Więcej popupów
 [Use custom color]
 Użyj niestandardowych kolorów
 [No new mail notifications]
-Powiadomienie o braku nowych wiadomości E-mail
+Powiadomienie o braku nowych wiadomości e-mail
 [Popup if no mail]
 Popup jeśli brak e-maili
-[Persistant message]
-Powtarzająca się wiadomość
+[Persistent message]
+Stała wiadomość
 [Connection failure notifications]
 Powiadomienia o niepowodzeniu połączenia
 [Popup notification if failed]
@@ -161,20 +159,20 @@ Popup gdy niepowodzenie
 [Preview]
 Podgląd
 [Background color]
-Kolor tła
+Tło
 [Text color]
-Kolor tekstu
+Tekst
 ;file \plugins\YAMN\src\main.cpp
 [Check &mail (All Account)]
-Sprawdź wiadomości e-mail
+Sprawdź wiadomości e-&mail
 [Check &mail (This Account)]
-Sprawdź wiadomości e-mail
+Sprawdź wiadomości e-&mail
 [Launch application]
 Włącz aplikacje
 [YAMN]
 Powiadomienia e-mail
 [YAMN Account Folder]
-Folder kont mailowych
+Folder kont YAMN
 [Check mail]
 Sprawdź wiadomości e-mail
 [Connect Fail]
@@ -202,9 +200,9 @@ Nieznany błąd
 [%s - %d new mail messages, %d total]
 Konto: %s, Nowych wiadomości: %d, Łącznie: %d
 [- new mail message(s)]
-- nowych wiadomości E-mail
+- nowych wiadomości e-mail
 [%s : %d new mail message(s), %d total]
-%s: nowych wiadomości: %d, Łącznie: %d
+%s: Nowych wiadomości: %d, Łącznie: %d
 [%d new mail message(s), %d total]
 Nowych wiadomości: %d, Łącznie: %d
 [No new mail message, %d spam(s)]
@@ -263,7 +261,7 @@ Błąd odczytu pliku. Plik jest obecnie w użyciu?
 [Error while copying data to disk occurred. Is file in use?]
 Błąd podczas kopiowania danych na dysk. Czy plik jest w użyciu?
 [POP3 plugin - write file error]
-Wtyczka POP3 - bład zapisu pliku
+Wtyczka POP3 - błąd zapisu pliku
 [Connecting to server]
 Łączenie do serwera
 [Entering POP3 account]
@@ -271,9 +269,9 @@ Wchodzenie na konto POP3
 [Searching for new mail message]
 Przeszukiwanie skrzynki
 [Reading body %s]
-Odczytytwanie treści %s
+Odczytywanie treści %s
 [Reading new mail messages (%d%% done)]
-Czytanie nowych wiadomości email (wykonano %d%%)
+Czytanie nowych wiadomości e-mail (wykonano %d%%)
 [Deleting requested mails]
 Usuwanie wybranych wiadomości
 [Deleting spam]

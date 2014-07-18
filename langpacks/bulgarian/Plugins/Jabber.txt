@@ -1,19 +1,17 @@
 ﻿#muuid {144e80a2-d198-428b-acbe-9d55dacc7fde}
 ;============================================================
 ;  File: Jabber.dll
-;  Plugin: Jabber Protocol
+;  Plugin: Jabber protocol
 ;  Version: 0.11.0.4
 ;  Authors: George Hazan, Maxim Mluhov, Victor Pavlychko, Artem Shpynov, Michael Stepura
 ;============================================================
-[Jabber protocol support for Miranda NG.]
-Осигурява комуникация чрез протокола Jabber в Miranda NG.
+[Jabber (XMPP) protocol support for Miranda NG.]
+Осигурява комуникация чрез протокола Jabber (XMPP) в Miranda NG.
 ;file \protocols\JabberG\res\jabber.rc
 [Edit Note]
 Редактиране на бележка
 [Tags:]
 Тагове:
-[OK]
-ОК
 [Cancel]
 Отказ
 [Type:]
@@ -50,8 +48,6 @@
 Внос от файл
 [Export to file]
 Износ във файл
-[Jabber]
-Jabber
 [Username:]
 Потребител:
 [Change password]
@@ -417,6 +413,8 @@ XML конзола
 Jabber дейност
 [Jabber Mood]
 Jabber настроение
+[Fatal error, image services not found. Jabber Protocol will be disabled.]
+
 ;file \protocols\JabberG\src\jabber.h
 [I'm happy Miranda NG user. Get it at http://miranda-ng.org/.]
 Аз съм щастлив потребил на Miranda NG. Можете да свалите програмата от http://miranda-ng.org/.
@@ -471,7 +469,7 @@ Jabber настроение
 
 [Can inform about its Jabber capabilities]
 
-[Supports stream initiation (for filetransfers for ex.)]
+[Supports stream initiation (e.g., for filetransfers)]
 
 [Supports stream initiation for file transfers]
 
@@ -533,7 +531,7 @@ Jabber настроение
 
 [Receives information about the music to which a user is listening]
 
-[Supports private XML Storage (for bookmakrs and other)]
+[Supports private XML Storage (for bookmarks and other)]
 
 [Supports attention requests ('nudge')]
 
@@ -693,26 +691,26 @@ Jabber настроение
 Истински JID: %s
 [%s\nSend group chat invitation.]
 %s\nИзпращане на покана за групов чат.
-[not on roster]
-не е в списъка с хора
-[Member Info:]
-Членска информация:
-[from]
-от
+[%s (not on roster)]
+%s не е в списъка с хора
+[Member Info: %s]
+Членска информация: %s
+[Member Information\n%s from %s]
+
 [Real JID not available]
 Истинският JID не е наличен
-[Reason to kick]
-Причина за изгонването
-[Reason to ban]
-Причина за банване
+[Reason to kick %s]
+Причина за изгонването %s
+[Reason to ban %s]
+Причина за банване %s
 [Invite %s to %s]
 Покани %s в %s
-[Set topic for]
-Задаване на тема за
-[Change nickname in]
+[Set topic for %s]
+Задаване на тема за %s
+[Change nickname in %s]
 
-[Reason to destroy]
-Причина за унищожаване
+[Reason to destroy %s]
+Причина за унищожаване %s
 ;file \protocols\JabberG\src\jabber_console.cpp
 [Can't send data while you are offline.]
 Изпращането на данни е невъзможно извън линия.
@@ -871,39 +869,39 @@ Jabber грешка
 Имейл адрес
 [FAQ Entry]
 
-[Whether to Allow Occupants to Invite Others]
+[Whether to allow occupants to invite others]
 
-[Whether to Allow Occupants to Change Subject]
+[Whether to allow occupants to change subject]
 
-[Whether to Enable Logging of Room Conversations]
+[Whether to enable logging of room conversations]
 
-[Natural Language for Room Discussions]
+[Natural language for room discussions]
 
-[Maximum Number of Room Occupants]
+[Maximum number of room occupants]
 
-[Whether an Make Room Members-Only]
+[Whether to make room members-only]
 
-[Whether to Make Room Moderated]
+[Whether to make room moderated]
 
-[Whether a Password is Required to Enter]
+[Whether a password is required to enter]
 
-[Whether to Make Room Persistent]
+[Whether to make room persistent]
 
-[Roles for which Presence is Broadcast]
+[Roles for which presence is broadcast]
 
-[Whether to Allow Public Searching for Room]
+[Whether to allow public searching for room]
 
-[Full List of Room Admins]
+[Full list of room admins]
 
-[Short Description of Room]
+[Short description of room]
 
-[Natural-Language Room Name]
+[Natural-language room name]
 
-[Full List of Room Owners]
+[Full list of room owners]
 
-[The Room Password]
+[The room password]
 
-[Affiliations that May Discover Real JIDs of Occupants]
+[Affiliations that may discover real JIDs of occupants]
 
 [Precondition: node configuration with the specified access model]
 
@@ -921,7 +919,7 @@ Jabber грешка
 
 [The minimum number of milliseconds between sending any two notification digests]
 
-[The DateTime at which a leased subscription will end or has ended]
+[The date and time at which a leased subscription will end or has ended]
 
 [Whether an entity wants to receive an XMPP message body in addition to the payload format]
 
@@ -981,7 +979,7 @@ Jabber грешка
 
 [The JIDs of those to contact with questions]
 
-[The datetime when the node was created]
+[The date and time when the node was created]
 
 [The JID of the node creator]
 
@@ -1082,6 +1080,8 @@ Jabber грешка
 
 [Bookmarks...]
 Отметки...
+[Change nickname in <%s>]
+
 [has set the subject to:]
 зададе темата:
 [%s\nIncoming group chat invitation.]
@@ -1170,8 +1170,8 @@ RSS услуга
 [Privacy]
 Поверителност
 ;file \protocols\JabberG\src\jabber_iqid.cpp
-[Authentication failed for]
-Неуспешно удостоверяване за
+[Authentication failed for %s.]
+Неуспешно удостоверяване за %s.
 [Jabber Authentication]
 Jabber удостоверяване
 [Registration successful]
@@ -1197,8 +1197,10 @@ Jabber удостоверяване
 Списък с администратори
 [Owner List]
 Списък със собственици
-[Removing]
-Премахване...
+[Reason to ban]
+Причина за банване
+[Removing %s?]
+
 ;file \protocols\JabberG\src\jabber_iq_handlers.cpp
 [Http authentication request received]
 Получена е HTTP молба за удостоверяване
@@ -1259,8 +1261,8 @@ Jabber източник
 Списъци за поверителност
 [Service discovery]
 Откриване на услуги
-[Last active]
-Последно активен
+[Last active (%s)]
+Последно активен (%s)
 [No activity yet, use server's choice]
 Все още няма активност, сървърът избира
 [Highest priority (server's choice)]
@@ -1673,7 +1675,7 @@ Jabber източник
 Потвърдете паролата
 [Passwords do not match.]
 Паролите не съвпадат
-[This operation will kill your account, roster and all another information stored at the server. Are you ready to do that?]
+[This operation will kill your account, roster and all other information stored at the server. Are you ready to do that?]
 Акаунтът ви ще бъде заличен от сървъра, списъкът с хора и цялата информация, която сте съхранили на сървъра. Наистина ли желаете това?
 [Account removal warning]
 Предупреждение за премахване на акаунт
@@ -1802,8 +1804,8 @@ Facebook чат
 [Some changes will take effect the next time you connect to the Jabber network.]
 Някои промени ще бъдат осъществени при следващото свързване към мрежата Jabber.
 ;file \protocols\JabberG\src\jabber_password.cpp
-[Set New Password for]
-Задаване на нова парола за
+[Set New Password for %s@%S]
+Задаване на нова парола за %s@%S
 [New password does not match.]
 Новата парола не съвпада
 [Current password is incorrect.]
@@ -1857,13 +1859,13 @@ Facebook чат
 Премахване на списъка
 [** Default **]
 ** Стандарт **
-[** Subsription: both **]
+[** Subscription: both **]
 ** Упълномощаване: двустранно **
-[** Subsription: to **]
+[** Subscription: to **]
 ** Упълномощаване: за **
-[** Subsription: from **]
+[** Subscription: from **]
 ** Упълномощаване: от **
-[** Subsription: none **]
+[** Subscription: none **]
 ** Упълномощаване: няма **
 [<none>]
 <няма>
@@ -1932,7 +1934,7 @@ Facebook чат
 [List Editor...]
 Редактиране на списък...
 ;file \protocols\JabberG\src\jabber_proto.cpp
-[No compatible file transfer machanism exist]
+[No compatible file transfer mechanism exists]
 Не съществува съвместим механизъм за обмен на файлове
 [Protocol is offline or no JID]
 Протоколът е "Извън линия" или няма JID
@@ -2034,7 +2036,7 @@ Facebook чат
 [sent unknown presence type]
 
 [Nick:]
-
+Прякор:
 [Status:]
 
 [Status text:]
@@ -2042,8 +2044,8 @@ Facebook чат
 [Real JID:]
 
 ;file \protocols\JabberG\src\jabber_thread.cpp
-[Enter password for]
-Въведете парола за
+[Enter password for %s]
+Въведете парола за %s
 [Error: Not enough memory]
 Грешка: Недостатъчна памет
 [Error: Cannot connect to the server]
@@ -2052,6 +2054,8 @@ Facebook чат
 Грешка: Връзката е изгубена
 [Requesting registration instruction...]
 Изтегляне на инструкции за регистрация...
+[Authentication failed for %s@%S.]
+
 [Message redirected from: %s\r\n%s]
 Пренасочено съобщение от: %s\r\n%s
 [Sending registration information...]
@@ -2093,6 +2097,8 @@ Facebook чат
 и двамата
 [to]
 до
+[from]
+от
 [none]
 няма
 [Last logoff time]
@@ -2187,8 +2193,6 @@ Jabber vCard: Редактиране на телефонен номер
 [%s connection]
 %s връзка
 ;file \protocols\JabberG\src\jabber_xstatus.cpp
-[OK (%d)]
-
 [Afraid]
 Уплашен
 [Amazed]

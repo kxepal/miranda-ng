@@ -18,8 +18,6 @@
 
 [Buddy Pounce]
 
-[OK]
-ОК
 [The Message:]
 
 [Delete Pounce]
@@ -80,13 +78,13 @@
 [DND]
 Не безпокойте
 [Free For Chat]
-
+Готов за чат
 [Invisible]
 Невидим
 [On The Phone]
-
+На телефона
 [Out To Lunch]
-
+На обяд
 [Send If Their Status changes]
 
 [From Offline]
@@ -138,5 +136,7 @@
 [Message failed to send to %s]
 
 ;file \plugins\BuddyPounce\src\main.cpp
+[&Buddy Pounce]
+
 [Message Sessions]
 Разговори

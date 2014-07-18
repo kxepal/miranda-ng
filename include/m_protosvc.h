@@ -143,6 +143,7 @@ static __inline unsigned long Proto_Status2Flag(int status)
 #define PF4_IMSENDOFFLINE    0x00000100 // protocol supports sending offline messages (v0.8.0+)
 #define PF4_INFOSETTINGSVC   0x00000200 // protocol supports user info translation services (v0.8.0+)
 #define PF4_NOAUTHDENYREASON 0x00000400 // protocol doesn't support authorization deny reason (v0.9.0+)
+#define PF4_GROUPCHATFILES   0x00000800 // protocol supports sending files to group chats (v0.95.2+)
 
 #define PFLAG_UNIQUEIDTEXT  100    //returns a static buffer of text describing the unique field by which this protocol identifies users (already translated), or NULL
 
@@ -450,19 +451,19 @@ typedef struct {
 #define PS_FILERESUMEW    "/FileResumeW"
 
 //Asks a protocol to join the chatroom from contact  v0.8.0+
-//wParam = (WPARAM)(HANDLE)hContact
-//lParam = (LPARAM)0
+//wParam = (MCONTACT)hContact
+//lParam = 0
 //Returns 0 on success, nonzero on failure
 #define PS_JOINCHAT "/JoinChat"
 
 //Asks a protocol to leave the chatroom from contact  v0.8.0+
-//wParam = (WPARAM)(HANDLE)hContact
-//lParam = (LPARAM)0
+//wParam = (MCONTACT)hContact
+//lParam = 0
 //Returns 0 on success, nonzero on failure
 #define PS_LEAVECHAT "/LeaveChat"
 
 //Asks a protocol to read contact information and translate them (for a lookup fields)  v0.8.0+
-//wParam = (WPARAM)(HANDLE)hContact
+//wParam = (MCONTACT)hContact
 //lParam = (LPARAM)(DBCONTACTGETSETTING*)&dbcgs
 //The flag PF4_INFOSETTINGSVC indicates that a protocol supports this. Basically it should
 //do the same as MS_DB_CONTACT_GETSETTING_STR, except that for a lookup settings (e.g. Language)
@@ -506,8 +507,8 @@ typedef struct {
 
 // Get the max allowed length for the user nickname
 // Optional, default value is 1024
-// wParam = (WPARAM)0
-// lParam = (LPARAM)0
+// wParam = 0
+// lParam = 0
 // return = <= 0 for error, >0 the max length of the nick
 #define PS_GETMYNICKNAMEMAXLENGTH "/GetMyNicknameMaxLength"
 
@@ -521,7 +522,7 @@ typedef struct {
 
 // Get the WAYD message for the user
 // wParam = (WPARAM)WAYD_xxx
-// lParam = (LPARAM)0
+// lParam = 0
 // Returns the text or NULL if there is none. Remember to mir_free the return value.
 #define PS_GETMYWAYD "/GetMyWAYD"
 
@@ -533,14 +534,14 @@ typedef struct {
 
 // Get the max allowed length that a WAYD message can have
 // Optional, default value is 1024
-// wParam = (WPARAM)0
-// lParam = (LPARAM)0
+// wParam = 0
+// lParam = 0
 // Returns the max length
 #define PS_GETMYWAYDMAXLENGTH "/GetMyWAYDMaxLength"
 
 // Get the unread email message count, optional
-// wParam = (WPARAM)0
-// lParam = (LPARAM)0
+// wParam = 0
+// lParam = 0
 // Returns the number of unread emails
 #define PS_GETUNREADEMAILCOUNT "/GetUnreadEmailCount"
 
@@ -666,7 +667,7 @@ typedef struct {
 #define PSS_AUTHREQUESTW   "/AuthRequestW"
 
 // Send "User is Typing" (user is typing a message to the user) v0.3.3+
-// wParam = (WPARAM)(HANDLE)hContact
+// wParam = (MCONTACT)hContact
 // lParam = (LPARAM)(int)typing type - see PROTOTYPE_SELFTYPING_X defines in m_protocols.h
 #define PSS_USERISTYPING   "/UserIsTyping"
 

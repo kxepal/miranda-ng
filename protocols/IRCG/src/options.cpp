@@ -273,9 +273,9 @@ struct { UINT cpId; TCHAR *cpName; } static cpTable[] =
 
 static CCtrlCombo* sttCombo;
 
-static BOOL CALLBACK sttLangAddCallback(CHAR *str)
+static BOOL CALLBACK sttLangAddCallback(TCHAR *str)
 {
-	UINT cp = atoi(str);
+	UINT cp = _ttoi(str);
 	CPINFOEX cpinfo;
 	if (GetCPInfoEx(cp, 0, &cpinfo)) {
 		TCHAR* b = _tcschr(cpinfo.CodePageName, '(');
@@ -957,16 +957,16 @@ static TDbSetting OtherSettings[] =
 };
 
 static char* sttPerformEvents[] = {
-	"Event: Available",
-	"Event: Away",
-	"Event: N/A",
-	"Event: Occupied",
-	"Event: DND",
-	"Event: Free for chat",
-	"Event: On the phone",
-	"Event: Out for lunch",
-	"Event: Disconnect",
-	"ALL NETWORKS"
+	LPGEN("Event: Available"),
+	LPGEN("Event: Away"),
+	LPGEN("Event: N/A"),
+	LPGEN("Event: Occupied"),
+	LPGEN("Event: DND"),
+	LPGEN("Event: Free for chat"),
+	LPGEN("Event: On the phone"),
+	LPGEN("Event: Out for lunch"),
+	LPGEN("Event: Disconnect"),
+	LPGEN("ALL NETWORKS")
 };
 
 static LRESULT CALLBACK EditSubclassProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -1026,7 +1026,6 @@ void COtherPrefsDlg::OnInitDialog()
 	m_quitMessage.SetText(m_proto->m_quitMessage);
 	m_perform.SetState(m_proto->m_perform);
 	m_scripting.SetState(m_proto->m_scriptingEnabled);
-	m_scripting.Enable(m_bMbotInstalled);
 	m_performCombo.Enable(m_proto->m_perform);
 	m_pertormEdit.Enable(m_proto->m_perform);
 	m_add.Enable(m_proto->m_perform);
@@ -1035,11 +1034,10 @@ void COtherPrefsDlg::OnInitDialog()
 	m_codepage.AddString(TranslateT("Default ANSI codepage"), CP_ACP);
 
 	sttCombo = &m_codepage;
-	EnumSystemCodePagesA(sttLangAddCallback, CP_INSTALLED);
+	EnumSystemCodePages(sttLangAddCallback, CP_INSTALLED);
 
-	int i;
-	for (i = m_codepage.GetCount(); i >= 0; i--) {
-		if (m_codepage.GetItemData(i) == m_proto->getCodepage()) {
+	for (int i = m_codepage.GetCount(); i >= 0; i--) {
+		if (m_codepage.GetItemData(i) == m_proto->m_codepage) {
 			m_codepage.SetCurSel(i);
 			break;
 		}
@@ -1049,7 +1047,7 @@ void COtherPrefsDlg::OnInitDialog()
 	if (m_proto->m_codepage == CP_UTF8)
 		m_autodetect.Disable();
 
-	for (i = 0; i < g_servers.getCount(); i++) {
+	for (int i = 0; i < g_servers.getCount(); i++) {
 		SERVER_INFO& si = g_servers[i];
 		int idx = m_performCombo.FindStringA(si.m_group, -1, true);
 		if (idx == CB_ERR) {
@@ -1058,8 +1056,8 @@ void COtherPrefsDlg::OnInitDialog()
 		}
 	}
 
-	for (i = 0; i < SIZEOF(sttPerformEvents); i++) {
-		int idx = m_performCombo.InsertString(_A2T(sttPerformEvents[i]), i);
+	for (int i = 0; i < SIZEOF(sttPerformEvents); i++) {
+		int idx = m_performCombo.InsertString(_A2T(Translate(sttPerformEvents[i])), i);
 		addPerformComboValue(idx, sttPerformEvents[i]);
 	}
 
@@ -1672,7 +1670,7 @@ int CIrcProto::OnInitOptionsPages(WPARAM wParam, LPARAM)
 	Options_AddPage(wParam, &odp);
 
 	odp.pszTemplate = MAKEINTRESOURCEA(IDD_PREFS_CTCP);
-	odp.ptszTab = LPGENT("DCC'n CTCP");
+	odp.ptszTab = LPGENT("DCC and CTCP");
 	odp.dwInitParam = (LPARAM)&OptCreateConn;
 	OptCreateConn.create = CCtcpPrefsDlg::Create;
 	OptCreateConn.param = this;
@@ -1704,9 +1702,9 @@ void CIrcProto::InitPrefs(void)
 	ConnectSettings[3].defStr = _T("30");
 	ConnectSettings[4].defStr = _T("10");
 
-	CtcpSettings[0].defStr = _T(STR_USERINFO);
+	CtcpSettings[0].defStr = STR_USERINFO;
 
-	OtherSettings[0].defStr = _T(STR_QUITMESSAGE);
+	OtherSettings[0].defStr = STR_QUITMESSAGE;
 
 	ReadSettings(ConnectSettings, SIZEOF(ConnectSettings));
 	ReadSettings(CtcpSettings, SIZEOF(CtcpSettings));

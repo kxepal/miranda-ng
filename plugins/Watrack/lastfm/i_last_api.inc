@@ -80,7 +80,7 @@ begin
       else if StrCmp(res,'BADAUTH' )=0 then StrCopy(tmp,Translate('Bad Auth. Check login and password'))
       else if StrCmp(res,'BADTIME' )=0 then StrCopy(tmp,Translate('Bad TimeStamp'))
       else if StrCmp(res,'FAILED',6)=0 then StrCopy(tmp,res+7);
-      CallService(MS_POPUP_SHOWMESSAGEW,wparam(@request),SM_ERROR);
+      CallService(MS_POPUP_SHOWMESSAGE,wparam(@request),SM_ERROR);
     end;
     mFreeMem(res);
   end;
@@ -223,7 +223,7 @@ begin
 end;
 
 var
-  xmlparser:XML_API_W;
+  xmlparser:TXML_API_W;
 
 function FixInfo(info:pWideChar):pWideChar;
 var
@@ -300,7 +300,7 @@ begin
   begin
     UTF8ToWide(res,pcw);
     mFreeMem(res);
-    xmlparser.cbSize:={XML_API_SIZEOF_V1;//}SizeOf(XML_API_W);
+    xmlparser.cbSize:={XML_API_SIZEOF_V1;//}SizeOf(TXML_API_W);
     CallService(MS_SYSTEM_GET_XI,0,lparam(@xmlparser));
     with xmlparser do
     begin
@@ -370,7 +370,6 @@ begin
       pcw:=#0;
       StrDupW(data.tags,pWideChar(@request));
       DestroyNode(root);
-      mFreeMem(pcw);
     end;
   end;
 end;
@@ -424,7 +423,7 @@ begin
   begin
     UTF8ToWide(res,pcw);
     mFreeMem(res);
-    xmlparser.cbSize:={XML_API_SIZEOF_V1;//}SizeOf(XML_API_W);
+    xmlparser.cbSize:={XML_API_SIZEOF_V1;//}SizeOf(TXML_API_W);
     CallService(MS_SYSTEM_GET_XI,0,lparam(@xmlparser));
     with xmlparser do
     begin
@@ -479,7 +478,6 @@ begin
       StrDupW(data.tags,pWideChar(@request));
 
       DestroyNode(root);
-      mFreeMem(pcw);
     end;
   end;
 end;
@@ -533,7 +531,7 @@ begin
   begin
     UTF8ToWide(res,pcw);
     mFreeMem(res);
-    xmlparser.cbSize:={XML_API_SIZEOF_V1;//}SizeOf(XML_API_W);
+    xmlparser.cbSize:={XML_API_SIZEOF_V1;//}SizeOf(TXML_API_W);
     CallService(MS_SYSTEM_GET_XI,0,lparam(@xmlparser));
     with xmlparser do
     begin
@@ -593,7 +591,6 @@ begin
       StrDupW(data.tags,pWideChar(@request));
 
       DestroyNode(root);
-      mFreeMem(pcw);
     end;
   end;
 end;

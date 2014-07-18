@@ -1,12 +1,12 @@
 ﻿#muuid {a71f8335-7b87-4432-b8a3-81479431c6f5}
 ;============================================================
 ;  File: SkypeClassic.dll
-;  Plugin: Skype Protocol (Classic)
+;  Plugin: Skype protocol (Classic)
 ;  Version: 0.0.0.54
 ;  Authors: leecher, tweety, jls17
 ;============================================================
 [Skype protocol support for Miranda NG. Classic implementation which requires running original Skype client.]
-
+Support du protocole Skype pour Miranda NG. Une implémentation classique nécessitant d'exécuter le client Skype originel.
 ;file \protocols\SkypeClassic\res\Resource.rc
 [Set]
 OK
@@ -39,13 +39,13 @@ Effacer
 [times to connect to Skype API before giving up]
 
 [User name:]
-Votre nom:
+Votre nom :
 [Password:]
 Passe :
 [Dial]
 
 [Number:]
-Numéro:
+Numéro :
 [Cancel]
 Annuler
 [%s is calling]
@@ -56,26 +56,24 @@ Annuler
 
 [Hang up]
 
-[OK]
-OK
 [Dialog]
-
+Dialogue
 [Use Skype proxy connection over network instead of local Skype API]
 
 [Host:]
-Hôte:
+Hôte :
 [Port:]
-Port:
+Port :
 [* You must restart Miranda NG in order to let the settings take effect]
 
 [This Skype proxy requires password authentication:]
 
 [Name:]
-Nom:
+Nom :
 [Birthday:]
 
 [Sex:]
-
+Sexe :
 [City:]
 Ville :
 [Country:]
@@ -87,7 +85,7 @@ Pays :
 [Office phone:]
 
 [Homepage:]
-Page web:
+Page web :
 [Save]
 Sauver
 [Enable Skype menu options (currently: Find/Add user)]
@@ -163,7 +161,7 @@ Aperçu
 [Unknown]
 Inconnu
 [&Invite user...]
-
+&Inviter l'utilisateur...
 [Me]
 
 [&Leave chat session]
@@ -179,7 +177,7 @@ Inconnu
 ;file \protocols\SkypeClassic\src\skype.cpp
 [Do a SkypeOut-call]
 
-[invited ]
+[invited]
 
 [Phone call]
 
@@ -201,7 +199,7 @@ Inconnu
 [Skype proxy]
 
 [Avatar]
-
+Avatar
 [Details]
 
 [MALE]

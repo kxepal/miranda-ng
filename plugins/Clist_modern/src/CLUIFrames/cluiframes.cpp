@@ -873,7 +873,7 @@ static HMENU CLUIFramesCreateMenuForFrame(int frameid,int root,int popuppos,HGEN
 	mi.pszPopupName = (char *)root;
 	mi.popupPosition = frameid;
 	mi.position = popuppos++;
-	mi.pszName = LPGEN("&Floating Mode");
+	mi.pszName = LPGEN("&Floating mode");
 	mi.flags = CMIF_CHILDPOPUP;
 	mi.pszService = "Set_Floating";
 	mi.pszContactOwner = (char *)0;
@@ -1029,7 +1029,6 @@ static int CLUIFramesModifyContextMenuForFrame(WPARAM wParam, LPARAM lParam)
 		if (g_pfwFrames[pos].align&alBottom) mi.flags |= CMIF_CHECKED;
 		ModifyMItem((WPARAM)_hmiAlignBottom,(LPARAM)&mi);
 
-
 		mi.flags = CMIM_FLAGS|CMIF_CHILDPOPUP;
 		if (g_pfwFrames[pos].collapsed) mi.flags |= CMIF_CHECKED;
 		if ((!g_pfwFrames[pos].visible) || (g_pfwFrames[pos].Locked) || (pos == CLUIFramesGetalClientFrame())) mi.flags |= CMIF_GRAYED;
@@ -1176,7 +1175,7 @@ static int UpdateTBToolTip(int framepos)
 	TOOLINFO ti = { sizeof(ti) };
 	ti.lpszText = g_pfwFrames[framepos].TitleBar.tooltip;
 	ti.hinst = g_hInst;
-	ti.uFlags = TTF_IDISHWND|TTF_SUBCLASS ;
+	ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
 	ti.uId = (UINT_PTR)g_pfwFrames[framepos].TitleBar.hwnd;
 	return SendMessage(g_pfwFrames[framepos].TitleBar.hwndTip, TTM_UPDATETIPTEXT, 0, (LPARAM)&ti);
 }
@@ -1217,19 +1216,19 @@ static int _us_DoSetFrameOptions(WPARAM wParam, LPARAM lParam)
 		fw.TitleBar.ShowTitleBarTip = FALSE;
 		if (lParam & F_SHOWTBTIP) fw.TitleBar.ShowTitleBarTip = TRUE;
 
-		SendMessageA(fw.TitleBar.hwndTip,TTM_ACTIVATE,(WPARAM)fw.TitleBar.ShowTitleBarTip,0);
+		SendMessageA(fw.TitleBar.hwndTip, TTM_ACTIVATE, (WPARAM)fw.TitleBar.ShowTitleBarTip, 0);
 		{
-			int style = (int)GetWindowLongPtr(fw.hWnd,GWL_STYLE);
+			LONG_PTR style = GetWindowLongPtr(fw.hWnd, GWL_STYLE);
 			style &= (~WS_BORDER);
-			if (!(lParam & F_NOBORDER ) && !g_CluiData.fLayered )
+			if (!(lParam & F_NOBORDER) && !g_CluiData.fLayered)
 				style |= WS_BORDER;
 
-			SetWindowLongPtr(fw.hWnd,GWL_STYLE,(long)style);
-			SetWindowLongPtr(fw.TitleBar.hwnd,GWL_STYLE,(long)style& ~(WS_VSCROLL | WS_HSCROLL));
+			SetWindowLongPtr(fw.hWnd, GWL_STYLE, style);
+			SetWindowLongPtr(fw.TitleBar.hwnd, GWL_STYLE, style& ~(WS_VSCROLL | WS_HSCROLL));
 		}
 
-		CLUIFramesOnClistResize((WPARAM)pcli->hwndContactList,0);
-		SetWindowPos(fw.TitleBar.hwnd, 0, 0, 0, 0, 0, SWP_NOZORDER|SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED|SWP_NOACTIVATE);
+		CLUIFramesOnClistResize((WPARAM)pcli->hwndContactList, 0);
+		SetWindowPos(fw.TitleBar.hwnd, 0, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED | SWP_NOACTIVATE);
 		return 0;
 
 	case FO_NAME:
@@ -1742,7 +1741,7 @@ static int CLUIFramesLoadMainMenu()
 	mi.flags = CMIF_ROOTHANDLE;
 	mi.position = separator++;
 	mi.hParentMenu = _hmiRoot;
-	mi.pszName = LPGEN("Show All Frames");
+	mi.pszName = LPGEN("Show all frames");
 	mi.pszService = MS_CLIST_FRAMES_SHOWALLFRAMES;
 	Menu_AddMainMenuItem(&mi);
 
@@ -1778,7 +1777,8 @@ static HFONT CLUILoadTitleBarFont()
 //wparam = (CLISTFrame*)clfrm
 static int _us_DoAddFrame(WPARAM wParam, LPARAM lParam)
 {
-	int style,retval;
+	int retval;
+	LONG_PTR style;
 	//char * CustomName = NULL;
 	CLISTFrame *clfrm = (CLISTFrame *)wParam;
 
@@ -1839,40 +1839,31 @@ static int _us_DoAddFrame(WPARAM wParam, LPARAM lParam)
 
 	//Frames[nFramescount].OwnerWindow = 0;
 
-
-
 	g_pfwFrames[g_nFramesCount].TitleBar.hwnd
-		 = CreateWindow(CLUIFrameTitleBarClassName,g_pfwFrames[g_nFramesCount].name,
-		( db_get_b(0, CLUIFrameModule,"RemoveAllTitleBarBorders",1)?0:WS_BORDER)
-
-		|WS_CHILD|WS_CLIPCHILDREN|
-		(g_pfwFrames[g_nFramesCount].TitleBar.ShowTitleBar?WS_VISIBLE:0)|
+		= CreateWindow(CLUIFrameTitleBarClassName, g_pfwFrames[g_nFramesCount].name,
+		(db_get_b(0, CLUIFrameModule, "RemoveAllTitleBarBorders", 1) ? 0 : WS_BORDER)
+		| WS_CHILD | WS_CLIPCHILDREN |
+		(g_pfwFrames[g_nFramesCount].TitleBar.ShowTitleBar ? WS_VISIBLE : 0) |
 		WS_CLIPCHILDREN,
-		0, 0, 0, 0, pcli->hwndContactList,NULL,g_hInst,NULL);
-	SetWindowLongPtr(g_pfwFrames[g_nFramesCount].TitleBar.hwnd,GWLP_USERDATA,g_pfwFrames[g_nFramesCount].id);
-
+		0, 0, 0, 0, pcli->hwndContactList, NULL, g_hInst, NULL);
+	SetWindowLongPtr(g_pfwFrames[g_nFramesCount].TitleBar.hwnd, GWLP_USERDATA, g_pfwFrames[g_nFramesCount].id);
 
 	g_pfwFrames[g_nFramesCount].TitleBar.hwndTip
-		 = CreateWindowExA(0, TOOLTIPS_CLASSA, NULL,
+		 = CreateWindowEx(0, TOOLTIPS_CLASS, NULL,
 		WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		pcli->hwndContactList, NULL, g_hInst,
 		NULL);
 
-	SetWindowPos(g_pfwFrames[g_nFramesCount].TitleBar.hwndTip, HWND_TOPMOST, 0, 0, 0, 0,
-		SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+	SetWindowPos(g_pfwFrames[g_nFramesCount].TitleBar.hwndTip, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 	{
-		TOOLINFOA ti;
-		int res;
-
-		ZeroMemory(&ti,sizeof(ti));
-		ti.cbSize = sizeof(ti);
-		ti.lpszText = "";
+		TOOLINFO ti = { sizeof(ti) };
+		ti.lpszText = _T("");
 		ti.hinst = g_hInst;
-		ti.uFlags = TTF_IDISHWND|TTF_SUBCLASS ;
+		ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
 		ti.uId = (UINT_PTR)g_pfwFrames[g_nFramesCount].TitleBar.hwnd;
-		res = SendMessageA(g_pfwFrames[g_nFramesCount].TitleBar.hwndTip,TTM_ADDTOOL, 0, (LPARAM)&ti);
+		SendMessage(g_pfwFrames[g_nFramesCount].TitleBar.hwndTip, TTM_ADDTOOL, 0, (LPARAM)&ti);
 	}
 
 	SendMessageA(g_pfwFrames[g_nFramesCount].TitleBar.hwndTip,TTM_ACTIVATE,(WPARAM)g_pfwFrames[g_nFramesCount].TitleBar.ShowTitleBarTip,0);
@@ -1888,14 +1879,9 @@ static int _us_DoAddFrame(WPARAM wParam, LPARAM lParam)
 
 	CLUIFramesLoadFrameSettings(id2pos(retval));
 	if (g_pfwFrames[g_nFramesCount-1].collapsed == FALSE)
-	{
 		g_pfwFrames[g_nFramesCount-1].height = 0;
-	}
 
 	// create frame
-
-
-	//    else Frames[nFramescount-1].height = Frames[nFramescount-1].HeightWhenCollapsed;
 
 	style = GetWindowLongPtr(g_pfwFrames[g_nFramesCount-1].hWnd,GWL_STYLE);
 	style &= (~WS_BORDER);
@@ -1905,8 +1891,7 @@ static int _us_DoAddFrame(WPARAM wParam, LPARAM lParam)
 	SetWindowLongPtr(g_pfwFrames[g_nFramesCount-1].TitleBar.hwnd,GWL_STYLE,GetWindowLongPtr(g_pfwFrames[g_nFramesCount-1].TitleBar.hwnd,GWL_STYLE)&~(WS_VSCROLL|WS_HSCROLL));
 
 	if (g_pfwFrames[g_nFramesCount-1].order == 0){g_pfwFrames[g_nFramesCount-1].order = g_nFramesCount;};
-
-
+																  
 	//need to enlarge parent
 	{
 		RECT mainRect;
@@ -2679,7 +2664,7 @@ void DrawBackGround(HWND hwnd,HDC mhdc, HBITMAP hBmpBackground, COLORREF bkColou
 	int y;
 	PAINTSTRUCT paintst = {0};
 	HBITMAP hBmpOsb,hOldBmp;
-	DWORD style = GetWindowLongPtr(hwnd,GWL_STYLE);
+	LONG_PTR style = GetWindowLongPtr(hwnd,GWL_STYLE);
 	int grey = 0;
 	HFONT oFont;
 	HBRUSH hBrushAlternateGrey = NULL;
@@ -3704,7 +3689,7 @@ static int _us_DoSetFrameFloat(WPARAM wParam, LPARAM lParam)
 		else
 		{
 			RECT recttb,rectw,border;
-			int temp;
+			LONG_PTR temp;
 			int neww,newh;
 			BOOLEAN locked;
 
@@ -3975,7 +3960,7 @@ int CLUIFrames_UpdateBorders()
 {
 	for (int i = 0; i < g_nFramesCount; i++) {
 		if (!g_pfwFrames[i].floating) {
-			DWORD style = (int)GetWindowLongPtr(g_pfwFrames[i].hWnd, GWL_STYLE) & (~WS_BORDER);
+			LONG_PTR style = GetWindowLongPtr(g_pfwFrames[i].hWnd, GWL_STYLE) & (~WS_BORDER);
 			if (!g_CluiData.fLayered && g_pfwFrames[i].UseBorder) style |= WS_BORDER;
 			SetWindowLongPtr(g_pfwFrames[i].hWnd, GWL_STYLE, style);
 			CLUIFramesModifyMainMenuItems(g_pfwFrames[i].id, 0);

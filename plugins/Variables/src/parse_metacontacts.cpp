@@ -26,8 +26,7 @@ static TCHAR *parseGetParent(ARGUMENTSINFO *ai)
 
 	MCONTACT hContact = NULL;
 
-	CONTACTSINFO ci = { 0 };
-	ci.cbSize = sizeof(ci);
+	CONTACTSINFO ci = { sizeof(ci) };
 	ci.tszContact = ai->targv[1];
 	ci.flags = 0xFFFFFFFF ^ (CI_TCHAR == 0 ? CI_UNICODE : 0);
 	int count = getContactFromString(&ci);
@@ -40,38 +39,26 @@ static TCHAR *parseGetParent(ARGUMENTSINFO *ai)
 		return NULL;
 	}
 
-	hContact = (MCONTACT)CallService(MS_MC_GETMETACONTACT, hContact, 0);
+	hContact = db_mc_getMeta(hContact);
 	if (hContact == NULL)
 		return NULL;
 
-	TCHAR* szUniqueID = NULL;
+	ptrT szUniqueID;
 	char* szProto = GetContactProto(hContact);
 	if (szProto != NULL)
 		szUniqueID = getContactInfoT(CNF_UNIQUEID, hContact);
 
 	if (szUniqueID == NULL) {
 		szProto = PROTOID_HANDLE;
-		szUniqueID = (TCHAR *)mir_alloc(32);
-		mir_sntprintf(szUniqueID, 32, _T("%p"), hContact);
-		if (szProto == NULL || szUniqueID == NULL)
-			return NULL;
+		TCHAR tszID[40];
+		mir_sntprintf(tszID, SIZEOF(tszID), _T("%p"), hContact);
+		szUniqueID = mir_tstrdup(tszID);
 	}
 
-	size_t size = strlen(szProto) + _tcslen(szUniqueID) + 4;
-	TCHAR *res = (TCHAR *)mir_alloc(size * sizeof(TCHAR));
-	if (res == NULL) {
-		mir_free(szUniqueID);
+	if (szUniqueID == NULL)
 		return NULL;
-	}
 
-	TCHAR *tszProto = mir_a2t(szProto);
-	if (tszProto != NULL && szUniqueID != NULL) {
-		mir_sntprintf(res, size, _T("<%s:%s>"), tszProto, szUniqueID);
-		mir_free(szUniqueID);
-		mir_free(tszProto);
-	}
-
-	return res;
+	return mir_tstrdup(CMString(FORMAT, _T("<%S:%s>"), szProto, szUniqueID));
 }
 
 static TCHAR *parseGetDefault(ARGUMENTSINFO *ai)
@@ -95,7 +82,7 @@ static TCHAR *parseGetDefault(ARGUMENTSINFO *ai)
 		return NULL;
 	}
 
-	hContact = (MCONTACT)CallService(MS_MC_GETDEFAULTCONTACT, hContact, 0);
+	hContact = db_mc_getDefault(hContact);
 	if (hContact == NULL)
 		return NULL;
 
@@ -150,7 +137,7 @@ static TCHAR *parseGetMostOnline(ARGUMENTSINFO *ai)
 		return NULL;
 	}
 
-	hContact = (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, hContact, 0);
+	hContact = db_mc_getMostOnline(hContact);
 	if (hContact == NULL)
 		return NULL;
 
@@ -186,9 +173,7 @@ static TCHAR *parseGetMostOnline(ARGUMENTSINFO *ai)
 
 void registerMetaContactsTokens()
 {
-	if (ServiceExists(MS_MC_GETPROTOCOLNAME)) {
-		registerIntToken(MC_GETPARENT, parseGetParent, TRF_FUNCTION, LPGEN("MetaContacts")"\t(x)\t"LPGEN("get parent metacontact of contact x"));
-		registerIntToken(MC_GETDEFAULT, parseGetDefault, TRF_FUNCTION, LPGEN("MetaContacts")"\t(x)\t"LPGEN("get default subcontact x"));
-		registerIntToken(MC_GETMOSTONLINE, parseGetMostOnline, TRF_FUNCTION, LPGEN("MetaContacts")"\t(x)\t"LPGEN("get the 'most online' subcontact x"));
-	}
+	registerIntToken(MC_GETPARENT, parseGetParent, TRF_FUNCTION, LPGEN("Metacontacts")"\t(x)\t"LPGEN("get parent metacontact of contact x"));
+	registerIntToken(MC_GETDEFAULT, parseGetDefault, TRF_FUNCTION, LPGEN("Metacontacts")"\t(x)\t"LPGEN("get default subcontact x"));
+	registerIntToken(MC_GETMOSTONLINE, parseGetMostOnline, TRF_FUNCTION, LPGEN("Metacontacts")"\t(x)\t"LPGEN("get the 'most online' subcontact x"));
 }

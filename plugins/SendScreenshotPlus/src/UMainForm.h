@@ -29,12 +29,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifndef UMainFormH
 #define UMainFormH
 
-#define SS_JUSTSAVE		0
-#define SS_FILESEND		1
-#define SS_EMAIL		2
-#define SS_HTTPSERVER	3
-#define SS_FTPFILE		4
-#define SS_IMAGESHACK	5
+#define SS_JUSTSAVE			0
+#define SS_FILESEND			1
+#define SS_EMAIL			2
+#define SS_HTTPSERVER		3
+#define SS_FTPFILE			4
+#define SS_DROPBOX			5
+#define SS_IMAGESHACK		6
+#define SS_UPLOADPIE_30M	7
+#define SS_UPLOADPIE_1D		8
+#define SS_UPLOADPIE_1W		9
+#define SS_IMGUR			10
 
 // Used for our own cheap TrackMouseEvent
 #define BUTTON_POLLDELAY    50
@@ -61,15 +66,15 @@ class TfrmMain{
 		~TfrmMain();
 
 		BYTE		m_opt_tabCapture;			//capure tab page
-		BYTE		m_opt_btnDesc;				//TCheckBox *chkDesc;
 		BYTE		m_opt_cboxDesktop;			//TRadioButton *rbtnDesktop;
-		BYTE		m_opt_chkEditor;			//TCheckBox *chkEditor;
 		BYTE		m_opt_chkTimed;				//TCheckBox *chkTimed;
 		BYTE		m_opt_cboxSendBy;			//TComboBox *cboxSendBy;
+		BYTE		m_opt_btnDesc;				//TCheckBox *chkDesc;
+		BYTE		m_opt_chkEditor;			//TCheckBox *chkEditor;
 		bool		m_bOnExitSave;
 
 		static void Unload();
-		void		Init(LPTSTR DestFolder, MCONTACT Contact);
+		void		Init(TCHAR* DestFolder, MCONTACT Contact);
 		void		Close(){SendMessage(m_hWnd,WM_CLOSE,0,0);}
 		void		Show(){ShowWindow(m_hWnd,SW_SHOW);}
 		void		Hide(){ShowWindow(m_hWnd,SW_HIDE);}
@@ -80,13 +85,12 @@ class TfrmMain{
 	private:
 		HWND		m_hWnd;
 		MCONTACT	m_hContact;
-		bool		m_bDeleteAfterSend;
-		bool		m_bFormAbout, m_bFormEdit;
+		bool		m_bFormAbout;
 		HWND		m_hTargetWindow, m_hLastWin;
 		HWND		m_hTargetHighlighter;
-		LPTSTR		m_FDestFolder;
-		LPTSTR		m_pszFile;
-		LPTSTR		m_pszFileDesc;
+		TCHAR*		m_FDestFolder;
+		TCHAR*		m_pszFile;
+		TCHAR*		m_pszFileDesc;
 		FIBITMAP*	m_Screenshot;//Graphics::TBitmap *Screenshot;
 		RGBQUAD		m_AlphaColor;
 		CSend*		m_cSend;
@@ -104,17 +108,18 @@ class TfrmMain{
 		static void edtSizeUpdate(RECT rect, HWND hTarget, UINT Ctrl);
 
 	protected:
-		size_t			m_MonitorCount;
 		MONITORINFOEX*	m_Monitors;
+		size_t			m_MonitorCount;
 		RECT			m_VirtualScreen;
 
 		BYTE			m_opt_chkOpenAgain;			//TCheckBox *chkOpenAgain;
+		BYTE			m_opt_chkIndirectCapture;	//TCheckBox *chkIndirectCapture;
 		BYTE			m_opt_chkClientArea;		//TCheckBox *chkClientArea;
 		BYTE			m_opt_edtQuality;			//TLabeledEdit *edtQuality;
-		BYTE			m_opt_btnDeleteAfterSend;	//TCheckBox *chkDeleteAfterSend;
+		bool			m_opt_btnDeleteAfterSend;	//TCheckBox *chkDeleteAfterSend;
 		BYTE			m_opt_cboxFormat;			//TComboBox *cboxFormat;
 		BYTE			m_opt_edtTimed;				//TLabeledEdit *edtTimed;
-		bool			m_bCapture;					//is capture activ
+		bool			m_bCapture;					//is capture active
 		HWND			m_hwndTab;					//TabControl handle
 		HWND			m_hwndTabPage;				//TabControl activ page handle
 		HIMAGELIST		m_himlTab;					//TabControl imagelist
@@ -132,8 +137,7 @@ class TfrmMain{
 		void UMevent(WPARAM wParam, LPARAM lParam);
 		void UMClosing(WPARAM wParam, LPARAM lParam);
 
-		static INT_PTR CALLBACK DlgProc_CaptureWindow (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		static INT_PTR CALLBACK DlgProc_CaptureDesktop(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		static INT_PTR CALLBACK DlgProc_CaptureTabPage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 //		LRESULT CALLBACK DlgProc_UseLastFile   (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 

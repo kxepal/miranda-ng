@@ -392,13 +392,10 @@ TCHAR* GGPROTO::gc_getchat(uin_t sender, uin_t *recipients, int recipients_count
 static MCONTACT gg_getsubcontact(GGPROTO* gg, MCONTACT hContact)
 {
 	char* szProto = GetContactProto(hContact);
-	char* szMetaProto = (char*)CallService(MS_MC_GETPROTOCOLNAME, 0, 0);
-
-	if (szProto && szMetaProto && (INT_PTR)szMetaProto != CALLSERVICE_NOTFOUND && !lstrcmpA(szProto, szMetaProto))
-	{
-		int nSubContacts = (int)CallService(MS_MC_GETNUMCONTACTS, hContact, 0), i;
+	if (szProto && !lstrcmpA(szProto, META_PROTO)) {
+		int nSubContacts = db_mc_getSubCount(hContact), i;
 		for (i = 0; i < nSubContacts; i++) {
-			MCONTACT hMetaContact = (MCONTACT)CallService(MS_MC_GETSUBCONTACT, hContact, i);
+			MCONTACT hMetaContact = db_mc_getSub(hContact, i);
 			szProto = GetContactProto(hMetaContact);
 			if (szProto && !lstrcmpA(szProto, gg->m_szModuleName))
 				return hMetaContact;
@@ -415,7 +412,7 @@ static void gg_gc_resetclistopts(HWND hwndList)
 	SendMessage(hwndList, CLM_SETBKCOLOR, GetSysColor(COLOR_WINDOW), 0);
 	SendMessage(hwndList, CLM_SETGREYOUTFLAGS, 0, 0);
 	SendMessage(hwndList, CLM_SETINDENT, 10, 0);
-	SendMessage(hwndList, CLM_SETHIDEEMPTYGROUPS, (WPARAM)TRUE, 0);
+	SendMessage(hwndList, CLM_SETHIDEEMPTYGROUPS, TRUE, 0);
 	for (i = 0; i <= FONTID_MAX; i++)
 		SendMessage(hwndList, CLM_SETTEXTCOLOR, i, GetSysColor(COLOR_WINDOWTEXT));
 }

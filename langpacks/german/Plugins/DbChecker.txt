@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: DbChecker.dll
 ;  Plugin: Database checker
-;  Version: 0.11.0.1
+;  Version: 0.95.0.3
 ;  Authors: George Hazan
 ;============================================================
 [Miranda NG Database Checker.]
@@ -14,7 +14,7 @@ Willkommen zum Miranda-Datenbankreparaturassistenten
 Die Verwendung dieses Tools löscht unnütze Einträge, die beim normalen Gebrauch entstehen können, untersucht die Datenbank auf mögliche Fehler und versucht diese zu beheben.
 [To continue, click Next.]
 Um fortzufahren, drücken Sie "Weiter".
-[This program is licenced under the terms of the GNU General Public License.]
+[This program is licensed under the terms of the GNU General Public License.]
 Dieses Programm wurde unter der GNU General Public License lizenziert.
 [Miranda Database Tool]
 Miranda-Datenbankassistent
@@ -111,8 +111,6 @@ Datenbanktreiber '%s' unterstützt keine Überprüfung.
 Datenbank
 [Total size]
 Gesamtgröße
-[Wasted]
-Überflüssig
 [Miranda Databases (*.dat)]
 Miranda-Datenbanken (*.dat)
 [All Files]

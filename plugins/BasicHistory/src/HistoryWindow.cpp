@@ -477,7 +477,7 @@ INT_PTR HistoryWindow::DeleteAllUserHistory(WPARAM hContact, LPARAM)
 	CallService(MS_DB_SETSAFETYMODE, FALSE, 0);
 	HANDLE hDbEvent = db_event_last(hContact);
 	while (hDbEvent != NULL) {
-		HANDLE hPrevEvent = db_event_prev(hDbEvent);
+		HANDLE hPrevEvent = db_event_prev(hContact, hDbEvent);
 		hDbEvent = ( db_event_delete(hContact, hDbEvent) == 0) ? hPrevEvent : NULL;
 	}
 	CallService(MS_DB_SETSAFETYMODE, TRUE, 0);
@@ -1634,28 +1634,23 @@ void HistoryWindow::EnableWindows(BOOL enable)
 void HistoryWindow::ReloadContacts()
 {
 	HWND contactList = GetDlgItem(hWnd,IDC_LIST_CONTACTS);
-	if (EventList::GetContactMessageNumber(NULL))
-	{
-		if (hSystem == NULL)
-		{
-			CLCINFOITEM cii = { 0 };
-			cii.cbSize = sizeof(cii);
+	if (EventList::GetContactMessageNumber(NULL)) {
+		if (hSystem == NULL) {
+			CLCINFOITEM cii = { sizeof(cii) };
 			cii.flags = CLCIIF_GROUPFONT | CLCIIF_BELOWCONTACTS;
 			cii.pszText = TranslateT("System");
 			hSystem = (MCONTACT)SendMessage(contactList, CLM_ADDINFOITEM, 0, (LPARAM) & cii);
 		}
 	}
-	else
-	{
-		if (hSystem != NULL)
-		{
+	else {
+		if (hSystem != NULL) {
 			SendMessage(contactList, CLM_DELETEITEM, (WPARAM)hSystem, 0);
 			hSystem = NULL;
 		}
 	}
 
 	for (MCONTACT _hContact = db_find_first(); _hContact; _hContact = db_find_next(_hContact)) {
-		if (EventList::GetContactMessageNumber(_hContact) && (metaContactProto == NULL || db_get_b(_hContact, metaContactProto, "IsSubcontact", 0) == 0)) {
+		if (EventList::GetContactMessageNumber(_hContact) && (metaContactProto == NULL || !db_mc_isSub(_hContact))) {
 			HANDLE hItem = (HANDLE)SendMessage(contactList, CLM_FINDCONTACT, (WPARAM)_hContact, 0);
 			if (hItem == NULL)
 				SendMessage(contactList, CLM_ADDCONTACT, (WPARAM)_hContact, 0);

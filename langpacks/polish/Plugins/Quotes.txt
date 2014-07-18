@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Quotes.dll
 ;  Plugin: Quotes
-;  Version: 0.0.24.0
+;  Version: 0.0.26.0
 ;  Authors: Dioksin
 ;============================================================
 [Shows currency rates and economic quotes.]
@@ -10,8 +10,6 @@ Umożliwia monitorowanie zmian kursów walutowych i cen akcji.
 ;file \plugins\Quotes\res\Forex.rc
 [Variable List]
 Lista zmiennych
-[OK]
-OK
 [Edit Settings]
 Edytuj ustawienia
 [Use contact specific settings]
@@ -19,31 +17,31 @@ Użyj specyficznych ustawień kontaktu
 [Log]
 Dziennik
 [Use &Internal History]
-Użyj wewnętrznej historii
+Użyj &wewnętrznej historii
 [&Format:]
-Format:
+&Format:
 [&Variables...]
-Zmienne...
+&Zmienne...
 [&Add to History only if Value Changed]
-Dodaj do historii tylko, jeśli wartość się zmieniła
+&Dodaj do historii tylko, jeśli wartość się zmieniła
 [Use &External File]
-Użyj pliku zewnętrznego
+Użyj pliku &zewnętrznego
 [&Select File:]
-Zaznacz plik:
+&Zaznacz plik:
 [&Browse...]
-Przeglądaj...
+&Przeglądaj...
 [Variables Allowed: %miranda_userdata%,%quotename%]
 Dozwolone zmienne: %miranda_userdata%, %quotename%
 [F&ormat:]
 F&ormat
 [V&ariables...]
-Zmienne...
+Z&mienne...
 [Add to &Log only if Value Changed]
-Dodaj do loga tylko, jeśli wartość się zmieniła
+Dodaj do &dziennika tylko, jeśli wartość się zmieniła
 [Show &Popup Window]
-Pokaż okno popup
+Pokaż okno &popup
 [Show Popup Window Only if Value &Changed]
-Pokaż popup tylko, jeśli wartość się zmieniła
+Pokaż popup tylko, jeśli wartość się &zmieniła
 [Cancel]
 Anuluj
 [Popup settings...]
@@ -51,11 +49,11 @@ Ustawienia popup...
 [Currency Converter]
 Przelicznik walut
 [&to:]
-do:
+&do:
 [&Swap]
-Zamień
+&Zamień
 [Convert]
-Konwerter
+Konwertuj
 [Info provided by <a href="http://www.google.com">Google</a>]
 Informacje dostarczone przez <a href="http://www.google.com">Google</a>
 [Close]
@@ -93,21 +91,17 @@ Nie dodawaj popupów do historii
 [Preview]
 Podgląd
 [&Choose Quotes to watch in contact list:]
-Wybierz notowania giełdowe, które chcesz obserwować na swojej liście kontaktów:
+&Wybierz notowania giełdowe, które chcesz obserwować na swojej liście kontaktów:
 [&Refresh Quotes Every:]
-Odświeżaj notowania co:
+&Odświeżaj notowania co:
 [&Display in Contact List as:]
-Wyświetlaj na liście kontaktów jako:
+&Wyświetlaj na liście jako:
 [&Status Message:]
-Opis:
+&Opis:
 [&Tendency:]
-Tendencja:
+&Tendencja:
 [&Advanced Settings...]
-Zaawansowane ustawienia...
-[Static]
-Statyczne
-[<a>SysLink1</a>]
-<a>SysLink1</a>
+&Zaawansowane ustawienia...
 [Current Rate:]
 Aktualna ocena:
 [Rate Fetch Time:]
@@ -115,23 +109,23 @@ Czas pobierania wskaźnika:
 [Previous Rate:]
 Poprzedni wskaźnik:
 [&Convert:]
-Konwertuj:
+&Konwertuj:
 [&Add]
-Dodaj
+&Dodaj
 [&Watched currency rates:]
-Obserwowane wskaźniki walutowe:
+&Obserwowane wskaźniki walutowe:
 [&Remove]
-Usuń
+&Usuń
 [&Refresh Rates Every:]
-Odświeżaj wskaźniki co:
+&Odświeżaj wskaźniki co:
 [Quote\\Rate Info]
 Informacje o wskaźniku giełdowym
 [Type &Stock Name or Symbol:]
-Wpisz nazwę giełdową lub symbol:
+Wpisz nazwę &giełdową lub symbol:
 [&Watched Quotes:]
-Obserwowane notowania:
+&Obserwowane notowania:
 [Status &Message:]
-Opis:
+&Opis:
 ;file \plugins\Quotes\src\Chart.h
 [There is no to show]
 Nie ma nic do pokazania
@@ -139,7 +133,7 @@ Nie ma nic do pokazania
 [Seconds]
 Sekund
 [Minutes]
-Minuty
+Minut
 [Hours]
 Godzin
 [Enter integer value between 1 and 60.]
@@ -154,8 +148,14 @@ Informacje dostarczone przez
 [Enter positive number.]
 Wprowadź liczbę dodatnią.
 ;file \plugins\Quotes\src\Forex.cpp
+[Auto Update Enabled]
+Włącz autoaktualizację
+[Auto Update Disabled]
+Wyłącz autoaktualizację
 [Quotes]
 Notowania giełdowe
+[Enable/Disable Auto Update]
+Włącz/Wyłącz autoaktualizację
 [Refresh All Quotes\\Rates]
 Odśwież wszystkie wskaźniki giełdowe
 [Currency Converter...]
@@ -172,6 +172,12 @@ Otwórz plik dziennika...
 Notowanie...
 [Edit Settings...]
 Edytuj ustawienia...
+[Enable/Disable Quotes Auto Update]
+Włącz/Wyłącz Automatyczną Aktualizację Notowań Giełdowych
+[Quotes Auto Update Enabled]
+Autoaktualizacja notowań włączona
+[Quotes Auto Update Disabled]
+Autoaktualziacja notowań wyłączona
 [Network]
 Protokoły
 ;file \plugins\Quotes\src\HTTPSession.cpp
@@ -197,7 +203,7 @@ Przycisk zamiany
 [Import]
 Importuj
 ;file \plugins\Quotes\src\ImportExport.cpp
-[Xml File (*.xml)]
+[XML File (*.xml)]
 Plik XML (*.xml)
 [All files (*.*)]
 Wszystkie pliki (*.*)
@@ -261,7 +267,7 @@ Znak procenta (%)
 [Tabulation]
 Tabulacja
 [Left slash (\\)]
-Lewy slash (\\)
+Lewy ukośnik (\\)
 [Open Price]
 Cena otwarta
 [Percent Change to After Hours]

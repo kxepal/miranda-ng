@@ -113,6 +113,7 @@ var
   res:LRESULT;
   largv:array [0..MaxArgCount-1] of uint_ptr;
   i:integer;
+  loaded:bool;
 begin
   result:=0;
   if (dllname =nil) or (dllname^ =#0) or
@@ -122,7 +123,13 @@ begin
     exit;
   end;
 
-  hDLL:=LoadLibraryA(dllname);
+  loaded:=false;
+  hDLL:=GetModuleHandleA(dllname);
+  if hDLL=0 then
+  begin
+    loaded:=true;
+    hDLL:=LoadLibraryA(dllname);
+  end;
 //  hDLL:=GetDllHandle(dllname);
   if hDLL<>0 then
   begin
@@ -220,7 +227,8 @@ begin
       
     end; 
 //    FreeDllHandle(hDLL);
-    FreeLibrary(hDLL);
+    if loaded then
+      FreeLibrary(hDLL);
   end;
 
 end;
@@ -422,7 +430,7 @@ begin
   end;
 end;
 
-procedure SearchDllByFName(flist,dlist:HWND;idx:Integer=-1);
+procedure SearchDllByFName(flist,dlist:HWND;idx:integer=-1);
 var
   pc,p,pp,pz:pAnsiChar;
   lptr:pointer;
@@ -612,7 +620,7 @@ begin
   ShowHideBlock(Dialog,true);
 end;
 
-function DlgProc(Dialog:HWnd;hMessage:UINT;wParam:WPARAM;lParam:LPARAM):lresult; stdcall;
+function DlgProc(Dialog:HWND;hMessage:uint;wParam:WPARAM;lParam:LPARAM):LRESULT; stdcall;
 var
   wnd,wnd1:HWND;
   buf:array [0..63] of AnsiChar;
@@ -831,6 +839,7 @@ begin
               CheckDlgButton(Dialog,IDC_CLOSE_ARG,BST_UNCHECKED);
 
               ShowHideBlock(Dialog,false);
+              exit;
             end;
 
             IDC_CLOSE_ARG: begin
@@ -840,6 +849,7 @@ begin
               CheckDlgButton(Dialog,IDC_CLOSE_RES,BST_UNCHECKED);
 
               ShowHideBlock(Dialog,true);
+              exit;
             end;
           end;
           SendMessage(GetParent(GetParent(Dialog)),PSM_CHANGED,0,0);

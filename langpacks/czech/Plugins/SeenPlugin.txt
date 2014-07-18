@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: SeenPlugin.dll
 ;  Plugin: Last seen
-;  Version: 5.0.4.8
+;  Version: 5.0.4.9
 ;  Authors: Heiko Schillinger, YB
 ;============================================================
 [Logs when a user was last seen online and which users were online while you were away.]
@@ -10,12 +10,12 @@ Zaznamenává kdy byl uživatel naposledy spatřen a kteří uživatelé se při
 ;file \plugins\SeenPlugin\res\resource.rc
 [Last seen options]
 Nastavení
-[Last seen menuitem]
+[Last seen menu item]
 Položky menu
 [Show icon]
 Zobrazit ikonu
-[Userinfo tab]
-Záložka s informacemi o uživateli
+[User info tab]
+Záložka s informacemi o kontaktu
 [Log to file]
 Záznam do souboru
 [Log to history]
@@ -66,12 +66,8 @@ Offline
 Výchozí barvy
 [Last seen plugin]
 Sledování změny stavu
-[OK]
-OK
 [You missed following contacts:]
 Zmeškali jste tyto kontakty:
-[Test\nTest]
-Test\nTest
 [Alert when user status changes]
 Upozornit při změně stavu
 ;file \plugins\SeenPlugin\src\history.cpp

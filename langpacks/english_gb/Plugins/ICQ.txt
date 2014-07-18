@@ -1,8 +1,8 @@
 ﻿#muuid {73a9615c-7d4e-4555-badb-ee05dc928eff}
 ;============================================================
 ;  File: ICQ.dll
-;  Plugin: IcqOscarJ Protocol
-;  Version: 0.11.2.0
+;  Plugin: IcqOscarJ protocol
+;  Version: 0.11.2.1
 ;  Authors: Joe Kucera, Bio, Martin Öberg, Richard Hughes, Jon Keating, etc.
 ;============================================================
 [Enter an authorization request]
@@ -45,8 +45,8 @@ Request authorisation
 Grant authorisation
 [Revoke authorization]
 Revoke authorisation
-[You have to be online to sychronize the server-list!]
-You have to be online to sychronise the server-list!
+[You have to be online to synchronize the server-list!]
+You have to be online to synchronise the server-list!
 [Failed to Initialize File Transfer. No valid files were specified.]
 Failed to Initialise File Transfer. No valid files were specified.
 [Failed to Initialize File Transfer. Unable to bind local port and File proxy unavailable.]

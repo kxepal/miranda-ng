@@ -68,24 +68,24 @@ int __forceinline __strcmp(const char * src, const char * dst)
 	return(ret);
 }
 
-static int ClcEventAdded(WPARAM wParam, LPARAM lParam)
+static int ClcEventAdded(WPARAM hContact, LPARAM lParam)
 {
 	DWORD new_freq = 0;
 
 	cfg::dat.t_now = time(NULL);
 
-	if (wParam && lParam) {
+	if (hContact && lParam) {
 		DBEVENTINFO dbei = { sizeof(dbei) };
 		db_event_get((HANDLE)lParam, &dbei);
 		if (dbei.eventType == EVENTTYPE_MESSAGE && !(dbei.flags & DBEF_SENT)) {
-			DWORD firstTime = cfg::getDword(wParam, "CList", "mf_firstEvent", 0);
-			DWORD count = cfg::getDword(wParam, "CList", "mf_count", 0);
+			DWORD firstTime = cfg::getDword(hContact, "CList", "mf_firstEvent", 0);
+			DWORD count = cfg::getDword(hContact, "CList", "mf_count", 0);
 			count++;
 			new_freq = count ? (dbei.timestamp - firstTime) / count : 0x7fffffff;
-			cfg::writeDword(wParam, "CList", "mf_freq", new_freq);
-			cfg::writeDword(wParam, "CList", "mf_count", count);
+			cfg::writeDword(hContact, "CList", "mf_freq", new_freq);
+			cfg::writeDword(hContact, "CList", "mf_count", count);
 
-			TExtraCache *p = cfg::getCache(wParam, NULL);
+			TExtraCache *p = cfg::getCache(hContact, NULL);
 			if (p) {
 				p->dwLastMsgTime = dbei.timestamp;
 				if (new_freq)
@@ -97,79 +97,86 @@ static int ClcEventAdded(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-static int ClcSettingChanged(WPARAM wParam, LPARAM lParam)
+static int ClcSettingChanged(WPARAM hContact, LPARAM lParam)
 {
 	char *szProto = NULL;
 	DBCONTACTWRITESETTING *cws = (DBCONTACTWRITESETTING *) lParam;
 
-	if (wParam) {
+	if (hContact) {
 		if ( !__strcmp(cws->szModule, "CList")) {
 			if ( !__strcmp(cws->szSetting, "StatusMsg"))
-				SendMessage(pcli->hwndContactTree, INTM_STATUSMSGCHANGED, wParam, lParam);
+				SendMessage(pcli->hwndContactTree, INTM_STATUSMSGCHANGED, hContact, lParam);
 		}
 		else if ( !__strcmp(cws->szModule, "UserInfo")) {
 			if ( !__strcmp(cws->szSetting, "ANSIcodepage"))
-				pcli->pfnClcBroadcast(INTM_CODEPAGECHANGED, wParam, lParam);
+				pcli->pfnClcBroadcast(INTM_CODEPAGECHANGED, hContact, lParam);
 			else if ( !__strcmp(cws->szSetting, "Timezone") || !__strcmp(cws->szSetting, "TzName"))
-				ReloadExtraInfo(wParam);
+				ReloadExtraInfo(hContact);
 		}
-		else if (wParam != 0 && (szProto = GetContactProto(wParam)) != NULL) {
+		else if (hContact != 0 && (szProto = GetContactProto(hContact)) != NULL) {
 			char *id = NULL;
 			if ( !__strcmp(cws->szModule, "Protocol") && !__strcmp(cws->szSetting, "p")) {
 				char *szProto_s;
-				pcli->pfnClcBroadcast(INTM_PROTOCHANGED, wParam, lParam);
+				pcli->pfnClcBroadcast(INTM_PROTOCHANGED, hContact, lParam);
 				if (cws->value.type == DBVT_DELETED)
 					szProto_s = NULL;
 				else
 					szProto_s = cws->value.pszVal;
-				pcli->pfnChangeContactIcon(wParam, IconFromStatusMode(szProto_s, szProto_s == NULL ? ID_STATUS_OFFLINE : cfg::getWord(wParam, szProto_s, "Status", ID_STATUS_OFFLINE), wParam, NULL), 0);
+				pcli->pfnChangeContactIcon(hContact, IconFromStatusMode(szProto_s, szProto_s == NULL ? ID_STATUS_OFFLINE : cfg::getWord(hContact, szProto_s, "Status", ID_STATUS_OFFLINE), hContact, NULL), 0);
 			}
 			// something is being written to a protocol module
 			if ( !__strcmp(szProto, cws->szModule)) {
 				// was a unique setting key written?
-				pcli->pfnInvalidateDisplayNameCacheEntry(wParam);
+				pcli->pfnInvalidateDisplayNameCacheEntry(hContact);
 				if ( !__strcmp(cws->szSetting, "Status")) {
-					if (!cfg::getByte(wParam, "CList", "Hidden", 0)) {
+					if (!cfg::getByte(hContact, "CList", "Hidden", 0)) {
 						if (cfg::getByte("CList", "HideOffline", SETTING_HIDEOFFLINE_DEFAULT)) {
 							// User's state is changing, and we are hideOffline-ing
 							if (cws->value.wVal == ID_STATUS_OFFLINE) {
-								pcli->pfnChangeContactIcon(wParam, IconFromStatusMode(cws->szModule, cws->value.wVal, wParam, NULL), 0);
-								CallService(MS_CLUI_CONTACTDELETED, wParam, 0);
+								pcli->pfnChangeContactIcon(hContact, IconFromStatusMode(cws->szModule, cws->value.wVal, hContact, NULL), 0);
+								CallService(MS_CLUI_CONTACTDELETED, hContact, 0);
 								return 0;
 							}
-							pcli->pfnChangeContactIcon(wParam, IconFromStatusMode(cws->szModule, cws->value.wVal, wParam, NULL), 1);
+							pcli->pfnChangeContactIcon(hContact, IconFromStatusMode(cws->szModule, cws->value.wVal, hContact, NULL), 1);
 						}
-						pcli->pfnChangeContactIcon(wParam, IconFromStatusMode(cws->szModule, cws->value.wVal, wParam, NULL), 0);
+						pcli->pfnChangeContactIcon(hContact, IconFromStatusMode(cws->szModule, cws->value.wVal, hContact, NULL), 0);
 					}
-					SendMessage(pcli->hwndContactTree, INTM_STATUSCHANGED, wParam, lParam);
+					SendMessage(pcli->hwndContactTree, INTM_STATUSCHANGED, hContact, lParam);
 					return 0;
 				}
 				else if (strstr("YMsg|StatusDescr|XStatusMsg", cws->szSetting))
-					SendMessage(pcli->hwndContactTree, INTM_STATUSMSGCHANGED, wParam, lParam);
+					SendMessage(pcli->hwndContactTree, INTM_STATUSMSGCHANGED, hContact, lParam);
 				else if (strstr(cws->szSetting, "XStatus"))
-					SendMessage(pcli->hwndContactTree, INTM_XSTATUSCHANGED, wParam, lParam);
+					SendMessage(pcli->hwndContactTree, INTM_XSTATUSCHANGED, hContact, lParam);
 				else if ( !__strcmp(cws->szSetting, "Timezone") || !__strcmp(cws->szSetting, "TzName"))
-					ReloadExtraInfo(wParam);
+					ReloadExtraInfo(hContact);
 
-				if (cfg::dat.bMetaAvail && !(cfg::dat.dwFlags & CLUI_USEMETAICONS) && !__strcmp(szProto, cfg::dat.szMetaName)) {
+				if (!(cfg::dat.dwFlags & CLUI_USEMETAICONS) && !__strcmp(szProto, META_PROTO))
 					if ((lstrlenA(cws->szSetting) > 6 && !strncmp(cws->szSetting, "Status", 6)) || strstr("Default,ForceSend,Nick", cws->szSetting))
-						pcli->pfnClcBroadcast(INTM_NAMEORDERCHANGED, wParam, lParam);
-				}
+						pcli->pfnClcBroadcast(INTM_NAMEORDERCHANGED, hContact, lParam);
 			}
-			if (cfg::dat.bMetaAvail && cfg::dat.bMetaEnabled && !__strcmp(cws->szModule, cfg::dat.szMetaName) && !__strcmp(cws->szSetting, "IsSubcontact"))
-				pcli->pfnClcBroadcast(INTM_HIDDENCHANGED, wParam, lParam);
+			if (cfg::dat.bMetaEnabled && !__strcmp(cws->szModule, META_PROTO) && !__strcmp(cws->szSetting, "IsSubcontact"))
+				pcli->pfnClcBroadcast(INTM_HIDDENCHANGED, hContact, lParam);
 		}
 	}
-	else if (!__strcmp(cws->szModule, cfg::dat.szMetaName)) {
-		BYTE bMetaEnabled = cfg::getByte(cfg::dat.szMetaName, "Enabled", 1);
+	else if (!__strcmp(cws->szModule, META_PROTO)) {
+		BYTE bMetaEnabled = cfg::getByte(META_PROTO, "Enabled", 1);
 		if (bMetaEnabled != (BYTE)cfg::dat.bMetaEnabled) {
 			cfg::dat.bMetaEnabled = bMetaEnabled;
 			pcli->pfnClcBroadcast(CLM_AUTOREBUILD, 0, 0);
 		}
 	}
-	else if (!__strcmp(cws->szModule, "Skin")) {
+	else if (!__strcmp(cws->szModule, "Skin") && !__strcmp(cws->szSetting, "UseSound")) {
 		cfg::dat.soundsOff = cfg::getByte(cws->szModule, cws->szSetting, 0) ? 0 : 1;
-		ClcSetButtonState(IDC_TBSOUND, cfg::dat.soundsOff ? BST_UNCHECKED : BST_CHECKED);
+		ClcSetButtonState(IDC_TBSOUND, cfg::dat.soundsOff ? BST_CHECKED : BST_UNCHECKED);
+		SetButtonStates(pcli->hwndContactList);
+	}
+	else if (!__strcmp(cws->szModule, "CList") && !__strcmp(cws->szSetting, "UseGroups")) {
+		ClcSetButtonState(IDC_TBHIDEGROUPS, cfg::getByte(cws->szModule, cws->szSetting, SETTING_USEGROUPS_DEFAULT));
+		SetButtonStates(pcli->hwndContactList);
+	}
+	else if (!__strcmp(cws->szModule, "TopToolBar") && !__strcmp(cws->szSetting, "UseFlatButton")) {
+		SetButtonToSkinned();
 	}
 	else if (szProto == NULL) {
 		if ( !__strcmp(cws->szSetting, "XStatusId"))
@@ -178,7 +185,7 @@ static int ClcSettingChanged(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-static int ClcPreshutdown(WPARAM wParam, LPARAM lParam)
+static int ClcPreshutdown(WPARAM, LPARAM)
 {
 	cfg::shutDown = TRUE;
 	if (hSvc_GetContactStatusMsg)
@@ -186,7 +193,7 @@ static int ClcPreshutdown(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-int ClcShutdown(WPARAM wParam, LPARAM lParam)
+int ClcShutdown(WPARAM, LPARAM)
 {
 	DeleteObject(cfg::dat.hPen3DBright);
 	DeleteObject(cfg::dat.hPen3DDark);
@@ -208,7 +215,7 @@ int LoadCLCModule(void)
 	g_cxsmIcon = GetSystemMetrics(SM_CXSMICON);
 	g_cysmIcon = GetSystemMetrics(SM_CYSMICON);
 
-	hCListImages = (HIMAGELIST) CallService(MS_CLIST_GETICONSIMAGELIST, 0, 0);
+	hCListImages = (HIMAGELIST)CallService(MS_CLIST_GETICONSIMAGELIST, 0, 0);
 
 	HookEvent(ME_DB_CONTACT_SETTINGCHANGED, ClcSettingChanged);
 	HookEvent(ME_DB_EVENT_ADDED, ClcEventAdded);
@@ -381,8 +388,8 @@ LBL_Def:
 		if (!pcli->pfnFindItem(hwnd, dat, wParam, &contact, NULL, NULL))
 			break;
 
-		if (contact->bIsMeta && cfg::dat.bMetaAvail && !(cfg::dat.dwFlags & CLUI_USEMETAICONS)) {
-			contact->hSubContact = (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, (WPARAM)contact->hContact, 0);
+		if (contact->bIsMeta && !(cfg::dat.dwFlags & CLUI_USEMETAICONS)) {
+			contact->hSubContact = db_mc_getMostOnline(contact->hContact);
 			contact->metaProto = GetContactProto(contact->hSubContact);
 			contact->iImage = pcli->pfnGetContactIcon(contact->hSubContact);
 			if (contact->pExtra) {
@@ -405,7 +412,7 @@ LBL_Def:
 		if (!FindItem(hwnd, dat, (HANDLE)wParam, &contact, NULL, NULL))
 			break;
 		if (lParam == 0)
-			SendMessage(hwnd, CLM_AUTOREBUILD, 0, 0);
+			pcli->pfnInitAutoRebuild(hwnd);
 		goto LBL_Def;
 
 	case INTM_NAMECHANGED:
@@ -562,14 +569,11 @@ LBL_Def:
 
 			if (!FindItem(hwnd, dat, (HANDLE)hContact, &contact, NULL, NULL)) {
 				p = cfg::getCache(hContact, szProto);
-				if (!dat->bisEmbedded && cfg::dat.bMetaAvail && szProto) {				// may be a subcontact, forward the xstatus
-					if (cfg::getByte(hContact, cfg::dat.szMetaName, "IsSubcontact", 0)) {
-						MCONTACT hMasterContact = (MCONTACT)cfg::getDword(hContact, cfg::dat.szMetaName, "Handle", 0);
-						if (hMasterContact && hMasterContact != hContact)				// avoid recursive call of settings handler
-							cfg::writeByte(hMasterContact, cfg::dat.szMetaName, "XStatusId",
-							(BYTE)cfg::getByte(hContact, szProto, "XStatusId", 0));
-						break;
-					}
+				if (!dat->bisEmbedded && szProto) {				// may be a subcontact, forward the xstatus
+					MCONTACT hMasterContact = db_mc_getMeta(hContact);
+					if (hMasterContact && hMasterContact != hContact)				// avoid recursive call of settings handler
+						cfg::writeByte(hMasterContact, META_PROTO, "XStatusId", (BYTE)cfg::getByte(hContact, szProto, "XStatusId", 0));
+					break;
 				}
 			}
 			else {

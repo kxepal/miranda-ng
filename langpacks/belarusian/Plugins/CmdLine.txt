@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: CmdLine.dll
 ;  Plugin: Command line
-;  Version: 0.0.4.1
+;  Version: 0.0.4.2
 ;  Authors: Cristian Libotean
 ;============================================================
 [This plugin lets you control Miranda from the command line.]
@@ -11,7 +11,7 @@
 [No help for '%s'.]
 Няма дапамогі для '%s'.
 [Available commands: ]
-Даступныя каманды: 
+Даступныя каманды:\s
 [Miranda has been closed or an error has occurred while waiting for the result, could not process request.]
 Miranda была зачынена ці адбылася памылка пры чаканні выніку, немагчыма апрацаваць запыт.
 ;file \plugins\CmdLine\MimCmd\src\MimCmd.cpp
@@ -55,7 +55,7 @@ Miranda была зачынена ці адбылася памылка пры ч
 Запускае праверку пошты ў плагіне YAMN.\nВыкарыстанне: yamn check
 [Calls a Miranda service.\nUsage: callservice <service> (d|s)<wParam> (d|s)<lParam>.\nThe command will call Miranda <service> service using wParam and lParam as arguments; the first letter of the paramater must be either 'd' if the parameter is a decimal number or 's' if the parameter is a string. Be careful when you use this function as you can only pass numbers and strings as data.\nNOTE: If you pass invalid data to a service Miranda might crash.]
 Выклікае сэрвіс Miranda.\nВыкарыстанне: callservice <сэрвіс> (d | s) <wParam> (d | s) <lParam>.\nКаманда выклікае <сэрвіс> Miranda з выкарыстаннем у якасці аргументаў wParam і lParam. Першая літара параметру павінна быць альбо 'd' (калі параметр - лічба), альбо 's' (калі параметр - радок). Будзьце асцярожныя з выкарыстаннем гэтай каманды, бо можна передвать толькі лічбы і радкі як значэнні параметраў.\nЗАЎВАГА: Калі вы пакажаце няслушныя дадзеныя ў параметрах сэрвісу, Miranda можа аварыйна завяршыцца.
-[Sends a message to the specified contact(s).\nUsage: message <contact> [<contact> [<contact> [...]]] <message>.\nThe command will send <message> to the specified contact(s) - at least one contact must be specified - all parameters except the last one are considered recipients.\n<Contact> has the following format: <name>[:<account>]. <Name> is the contact display name or unique ID and <account> is an optional parameter representing the account of the contact (useful in case there is more than one contact with the same name).\nNOTE: The message string cannot exceed 512 characters.]
+[Sends a message to the specified contact(s).\nUsage: message <contact> [<contact> [<contact> [...]]] <message>.\nThe command will send <message> to the specified contact(s) - at least one contact must be specified - all parameters except the last one are considered recipients.\n<Contact> has the following format: <name>[:<account>]. <Name> is the contact display name or unique ID and <account> is an optional parameter representing the account of the contact (useful in case there is more than one contact with the same name).\nNOTE: The message string cannot exceed 512 characters. You can use \\n for new line (and \\\\n for \\n).]
 Даслылае паведамленне пазначаным кантактам.\nВыкарыстанне: message <кантакт> [<кантакт>  [<кантакт> ] [...]]] <Паведамленне>.\nКоманда адправіць<паведамленне> пазначаным кантактам. Трэба пазначыць мінімум адзін кантакт - усе параметры акрамя апошняга лічацца атрымальнікамі.\n<Кантакт> мае наступны фармат: <імя>[:<конт>]. <імя> - адлюстроўваемае імя кантакта, ці яго ID, <конт> - дадатковы параметр, конт кантакта (калі ёсць некалькі канатктаў з аднолькавым іменем).\nЗаўвага: <паведамленне> не павінна перавышаць 512 сімвалаў.
 [Allows you to manage database settings.\nUsage:\n  db set <module> <name> (b|i|d|s|w)<value>\n  db delete <module> <name>\n  db get <module> <name>.\nThe command can set a database entry to the specified value (if the entry does not exist it will be created) as well as read or delete a specified database entry. <Module> is the name of the module where the key should be located, <name> is the name of the key and <value> is the value to be written. A character must be placed before <value> in order to specify what kind of data to write: b - byte, i - integer (word), d - double word, s - string, w - wide string.]
 Дазваляе кіраваць наладамі ў базе дадзеных.\nвыкарыстанне:\n db set <плагін> <імя> (b|i |d|s|w) <значэнне>\n db delete <плагін> <імя>\n db get <плагін> <імя>.\nКаманда дазваляе счытваць, выдаляць і налаждваць значэнні параметраў у базе (калі названага параметра няма, ён будзе створаны).\n<Плагін> - імя плагіна, у якім знаходзіцца ключ, <імя> - імя ключа, а <значэнне> гэта дадзеныя ключа. Перад <значэнне> павінен быць паказаны сімвал для указання тыпу дадзеных ключа: b - байт, i - цэлае (слова), d - падвойнае слова, s - радок, w - юнікод.
@@ -72,8 +72,6 @@ Miranda была зачынена ці адбылася памылка пры ч
 [Ignores or removes ignore flags for specific contacts.\nUsage:\n  ignore (block | unblock) <contact> [<contact> [<contact> [...]]].\nThe command will set or remove ignore flags for the specified contacts]
 Уключэнне і адключэнне сцяга "ігнараваць" для паказаных кантактаў.\nВыкарыстанне:\n  ignore (block | unblock) <кантакт> [<кантакт> [<кантакт> [...]]].\nКаманда пераключыць (усталюе ці выдаліць) ігнараванне для пазначаных кантактаў.
 ;file \plugins\CmdLine\src\mimcmd_handlers.cpp
-[Command '%s' is not currently supported.]
-Каманда '%s' не падтрымліваецца.
 [Wrong number of parameters for command '%s'.]
 Няслушная колькасць параметраў для каманды '%s'
 [Unknown parameter '%s' for command '%s'.]
@@ -151,7 +149,9 @@ CallService выклік паспяховы: служба '%S' вярнула %�
 [Contact '%s' has %d events in history.]
 Кантакт '%s' мае %d падзей у гісторыі.
 [Error setting nickname to '%s' for protocol '%s']
-Памылка ўстаноўкі мянушкі '%s' для пратакола '%s' 
+Памылка ўстаноўкі мянушкі '%s' для пратакола '%s'
+[Command '%s' is not currently supported.]
+Каманда '%s' не падтрымліваецца.
 ;file \plugins\CmdLine\src\services.cpp
 [Could not create CommandLine listening server!]
 Немагчыма стварыць сервер CommandLine!

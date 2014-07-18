@@ -31,25 +31,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 static HMENU hMainMenu, hMainStatusMenu;
 
+void InitIconLibMenuIcons();
+extern IconItemT iconItem[];
+
 void DestroyTrayMenu(HMENU hMenu)
 {
-    int i, cnt;
+	int i, cnt;
 
-    cnt = GetMenuItemCount(hMenu);
-    for (i=0; i<cnt; ++i)
-    {
-        HMENU hSubMenu = GetSubMenu(hMenu, i);
-        if (hSubMenu == hMainStatusMenu || hSubMenu == hMainMenu)
-            RemoveMenu(hMenu, i--, MF_BYPOSITION);
-    }
-    DestroyMenu(hMenu);
+	cnt = GetMenuItemCount(hMenu);
+	for (i = 0; i < cnt; ++i)
+	{
+		HMENU hSubMenu = GetSubMenu(hMenu, i);
+		if (hSubMenu == hMainStatusMenu || hSubMenu == hMainMenu)
+			RemoveMenu(hMenu, i--, MF_BYPOSITION);
+	}
+	DestroyMenu(hMenu);
 }
 
-INT_PTR CloseAction(WPARAM wParam,LPARAM lParam)
+INT_PTR CloseAction(WPARAM wParam, LPARAM lParam)
 {
 	int k;
 	cfg::shutDown = 1;
-	k=CallService(MS_SYSTEM_OKTOEXIT,0,0);
+	k = CallService(MS_SYSTEM_OKTOEXIT, 0, 0);
 	if (k) {
 		DestroyWindow(pcli->hwndContactList);
 		PostQuitMessage(0);
@@ -61,16 +64,12 @@ INT_PTR CloseAction(WPARAM wParam,LPARAM lParam)
 
 static HANDLE hWindowListIGN = 0;
 
-/*
- * dialog procedure for handling the contact ignore dialog (available from the contact
- * menu
- */
-
+// dialog procedure for handling the contact ignore dialog (available from the contact menu
 static INT_PTR CALLBACK IgnoreDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	MCONTACT hContact = (MCONTACT)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
-	switch(msg) {
+	switch (msg) {
 	case WM_INITDIALOG:
 		{
 			DWORD dwMask;
@@ -87,14 +86,14 @@ static INT_PTR CALLBACK IgnoreDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPA
 			hwndAdd = GetDlgItem(hWnd, IDC_IGN_ADDPERMANENTLY); // CreateWindowEx(0, _T("CLCButtonClass"), _T("FOO"), WS_VISIBLE | BS_PUSHBUTTON | WS_CHILD | WS_TABSTOP, 200, 276, 106, 24, hWnd, (HMENU)IDC_IGN_ADDPERMANENTLY, g_hInst, NULL);
 			CustomizeButton(hwndAdd, false, true, false);
 
-			SendMessage(hwndAdd, BM_SETIMAGE, IMAGE_ICON, (LPARAM)LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(210), IMAGE_ICON, 16, 16, LR_SHARED));
+			SendMessage(hwndAdd, BM_SETIMAGE, IMAGE_ICON, (LPARAM)LoadSkinnedIcon(SKINICON_OTHER_ADDCONTACT));
 			SetWindowText(hwndAdd, TranslateT("Add permanently"));
 			EnableWindow(hwndAdd, cfg::getByte(hContact, "CList", "NotOnList", 0));
 
 			hwndAdd = GetDlgItem(hWnd, IDC_DSP_LOADDEFAULT); // CreateWindowEx(0, _T("CLCButtonClass"), _T("FOO"), WS_VISIBLE | BS_PUSHBUTTON | WS_CHILD | WS_TABSTOP, 200, 276, 106, 24, hWnd, (HMENU)IDC_IGN_ADDPERMANENTLY, g_hInst, NULL);
 			CustomizeButton(hwndAdd, false, true, false);
 
-			SendMessage(hwndAdd, BM_SETIMAGE, IMAGE_ICON, (LPARAM)LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_DELETE), IMAGE_ICON, 16, 16, LR_SHARED));
+			SendMessage(hwndAdd, BM_SETIMAGE, IMAGE_ICON, (LPARAM)LoadSkinnedIcon(SKINICON_OTHER_DELETE));
 			SetWindowText(hwndAdd, TranslateT("Revert to default"));
 			EnableWindow(hwndAdd, TRUE);
 
@@ -117,9 +116,9 @@ static INT_PTR CALLBACK IgnoreDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPA
 				else {
 					TCHAR szTitle[512];
 					DWORD dwFlags = cfg::getDword(hContact, "CList", "CLN_Flags", 0);
-					BYTE  bSecondLine = cfg::getByte(hContact, "CList", "CLN_2ndline", -1);
+					BYTE bSecondLine = cfg::getByte(hContact, "CList", "CLN_2ndline", -1);
 					DWORD dwXMask = cfg::getDword(hContact, "CList", "CLN_xmask", 0);
-					int   i = 0;
+					int i = 0;
 
 					mir_sntprintf(szTitle, 512, TranslateT("Contact list display and ignore options for %s"), contact ? contact->szText : (TCHAR *)CallService(MS_CLIST_GETCONTACTDISPLAYNAME, hContact, GCDNF_TCHAR));
 
@@ -165,7 +164,7 @@ static INT_PTR CALLBACK IgnoreDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPA
 		return TRUE;
 
 	case WM_COMMAND:
-		switch(LOWORD(wParam)) {
+		switch (LOWORD(wParam)) {
 		case IDC_IGN_PRIORITY:
 			SendMessage(pcli->hwndContactTree, CLM_TOGGLEPRIORITYCONTACT, hContact, 0);
 			return 0;
@@ -174,7 +173,7 @@ static INT_PTR CALLBACK IgnoreDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPA
 			return 0;
 		case IDC_IGN_NONE:
 			SendMessage(hWnd, WM_USER + 100, hContact, 0);
-		  	return 0;
+			return 0;
 		case IDC_IGN_ALWAYSONLINE:
 			if (IsDlgButtonChecked(hWnd, IDC_IGN_ALWAYSONLINE))
 				CheckDlgButton(hWnd, IDC_IGN_ALWAYSOFFLINE, FALSE);
@@ -218,7 +217,7 @@ static INT_PTR CALLBACK IgnoreDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPA
 					LRESULT iSel = SendDlgItemMessage(hWnd, IDC_AVATARDISPMODE, CB_GETCURSEL, 0, 0);
 					DWORD dwFlags = cfg::getDword(hContact, "CList", "CLN_Flags", 0), dwXMask = 0;
 					LRESULT  checked = 0;
-					int      i = 0;
+					int i = 0;
 
 					FindItem(pcli->hwndContactTree, cfg::clcdat, (HANDLE)hContact, &contact, NULL, NULL);
 					if (iSel != CB_ERR) {
@@ -279,7 +278,7 @@ static INT_PTR CALLBACK IgnoreDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPA
 			break;
 		}
 		break;
-	case WM_USER + 100:                                         // fill dialog (wParam = hContact, lParam = mask)
+	case WM_USER + 100:	// fill dialog (wParam = hContact, lParam = mask)
 		{
 			CheckDlgButton(hWnd, IDC_IGN_MSGEVENTS, lParam & (1 << (IGNOREEVENT_MESSAGE - 1)) ? BST_CHECKED : BST_UNCHECKED);
 			CheckDlgButton(hWnd, IDC_IGN_FILEEVENTS, lParam & (1 << (IGNOREEVENT_FILE - 1)) ? BST_CHECKED : BST_UNCHECKED);
@@ -289,7 +288,7 @@ static INT_PTR CALLBACK IgnoreDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPA
 			CheckDlgButton(hWnd, IDC_IGN_ONLINE, lParam & (1 << (IGNOREEVENT_USERONLINE - 1)) ? BST_CHECKED : BST_UNCHECKED);
 			return 0;
 		}
-	case WM_USER + 110:                                         // retrieve value
+	case WM_USER + 110:	// retrieve value
 		{
 			DWORD *dwNewMask = (DWORD *)lParam, dwMask = 0;
 
@@ -304,7 +303,7 @@ static INT_PTR CALLBACK IgnoreDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPA
 				*dwNewMask = dwMask;
 			return 0;
 		}
-	case WM_USER + 120:                                         // set visibility status
+	case WM_USER + 120:	// set visibility status
 		{
 			ClcContact *contact = NULL;
 			if (FindItem(pcli->hwndContactTree, cfg::clcdat, (HANDLE)hContact, &contact, NULL, NULL)) {
@@ -317,7 +316,7 @@ static INT_PTR CALLBACK IgnoreDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPA
 			}
 			return 0;
 		}
-	case WM_USER + 130:                                         // update apparent mode
+	case WM_USER + 130:	// update apparent mode
 		{
 			ClcContact *contact = NULL;
 
@@ -357,7 +356,6 @@ static INT_PTR CALLBACK IgnoreDialogProc(HWND hWnd, UINT msg, WPARAM wParam, LPA
  *
  * if dialog is already open, focus it.
 */
-
 static INT_PTR SetContactIgnore(WPARAM wParam, LPARAM lParam)
 {
 	HWND hWnd = 0;
@@ -366,43 +364,32 @@ static INT_PTR SetContactIgnore(WPARAM wParam, LPARAM lParam)
 		hWindowListIGN = WindowList_Create();
 
 	hWnd = WindowList_Find(hWindowListIGN, wParam);
-	if ( wParam ) {
-		if ( hWnd == 0 )
+	if (wParam) {
+		if (hWnd == 0)
 			CreateDialogParam(g_hInst, MAKEINTRESOURCE(IDD_QUICKIGNORE), 0, IgnoreDialogProc, (LPARAM)wParam);
-		else if ( IsWindow( hWnd ))
+		else if (IsWindow(hWnd))
 			SetFocus(hWnd);
 	}
 	return 0;
 }
 
-/*
- * service function: Set a contacts floating status.
- * (clist_nicer+ specific service)
- *
- * Servicename = CList/SetContactFloating
- *
- * a floating contact appears as a small independent top level window anywhere on
- * the desktop.
-*/
-
 int InitCustomMenus(void)
 {
-	CreateServiceFunction("CloseAction",CloseAction);
+	InitIconLibMenuIcons();
+
+	CreateServiceFunction("CloseAction", CloseAction);
 	CreateServiceFunction("CList/SetContactIgnore", SetContactIgnore);
-	{
-		//FYR: Visibility and ignore item moved back to clist_nicer from core
-		HANDLE hIgnoreItem = 0;  // FYR: moved from global it is never used globally
-		if ( !hIgnoreItem ) {
-			CLISTMENUITEM mi = { sizeof(mi) };
-			mi.position = 200000;
-			mi.pszPopupName = ( char* )-1;
-			mi.pszService = "CList/SetContactIgnore";
-			mi.pszName = LPGEN("&Contact list settings...");
-			hIgnoreItem = Menu_AddContactMenuItem(&mi);
-		}
-	}
-	hMainStatusMenu = (HMENU)CallService(MS_CLIST_MENUGETSTATUS,0,0);
-	hMainMenu = (HMENU)CallService(MS_CLIST_MENUGETMAIN,0,0);
+
+	CLISTMENUITEM mi = { sizeof(mi) };
+	mi.position = 200000;
+	mi.pszPopupName = (char *)-1;
+	mi.pszService = "CList/SetContactIgnore";
+	mi.icolibItem = iconItem[1].hIcolib;
+	mi.pszName = LPGEN("&Contact list settings...");
+	Menu_AddContactMenuItem(&mi);
+
+	hMainStatusMenu = (HMENU)CallService(MS_CLIST_MENUGETSTATUS, 0, 0);
+	hMainMenu = (HMENU)CallService(MS_CLIST_MENUGETMAIN, 0, 0);
 
 	return 0;
 }

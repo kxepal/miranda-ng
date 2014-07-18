@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: TabSRMM.dll
 ;  Plugin: TabSRMM
-;  Version: 3.3.0.3
+;  Version: 3.3.1.4
 ;  Authors: The Miranda developers team and contributors
 ;============================================================
 [IM and group chat module for Miranda NG.]
@@ -10,8 +10,6 @@ Sofortnachrichten- und Gruppenchat-Modul für Miranda NG.
 ;file \plugins\TabSRMM\res\chat.rc
 [You can add the user by user name or his ID. Wildcards are allowed and recommended.]
 Sie können den Nutzer nach Benutzernamen oder seiner ID hinzufügen. Platzhalter sind erlaubt und empfohlen.
-[OK]
-OK
 [Cancel]
 Abbrechen
 [Show these events]
@@ -118,8 +116,6 @@ Verlauf löschen
 Alles ko&pieren
 [Word lookup]
 Wort nachschlagen
-[Google]
-Google
 [Wikipedia]
 Wikipedia
 [Link]
@@ -129,7 +125,7 @@ In &neuem Browserfenster öffnen
 [&Open in current browser window]
 In aktuellem Br&owserfenster öffnen
 [&Copy link]
-Link kopieren
+Link &kopieren
 [Message]
 Nachricht
 [Undo]
@@ -153,7 +149,7 @@ Tab s&chließen
 [C&lose other tabs]
 Andere Tabs sch&ließen
 [&Open at this position]
-An dieser Position öffnen
+An dieser Position &öffnen
 ;file \plugins\TabSRMM\res\msgwindow.rc
 [&Retry]
 &Wiederholen
@@ -213,7 +209,7 @@ Begrenze Nachrichtenvorschau auf
 [characters]
 Zeichen
 [Only show event notifications when my status is...]
-Zeige Ereignisbenachrichtigungen nur, wenn mein Status wie folgt ist ...
+Zeige Ereignisbenachrichtigungen nur, wenn mein Status wie folgt ist...
 [Popup Options]
 Einstellungen für Popups
 [Text]
@@ -391,9 +387,9 @@ Px
 [Template sets]
 Formatvorlagen für Nachrichten
 [Standard templates...]
-Normale Vorlagen
+Normale Vorlagen...
 [RTL templates...]
-RTL-Vorlagen
+RTL-Vorlagen...
 [Load History Events]
 Vergangene Ereignisse laden
 [Load unread events only]
@@ -408,8 +404,8 @@ Minuten alt
 Globale Nachrichtenverlauf-Darstellung
 [Typing Notification]
 Tippbenachrichtigungen
-[Send typing notifications to the following users when you are typing a message to the them:]
-Sende eine Tippbenachrichtung an die folgenden Benutzer, wenn ich anfange zu schreiben:
+[Send typing notifications to the following users when you are typing a message to them:]
+An folgende Kontakte eine Benachrichtigung senden, wenn Sie gerade eine Nachricht tippen:
 [        Show typing notifications in the message window]
           Schreibhinweise im Nachrichtenfenster anzeigen
 [Flash window once on typing events (only if flashing enabled)]
@@ -431,7 +427,7 @@ Tabeinstellungen
 [Miscellaneous options]
 Diverse Einstellungen
 [Setup status modes for automatic tab creation...]
-Statusmodus für automatische Tab-/Fenstererzeugung
+Statusmodus für automatische Tab-/Fenstererzeugung...
 [Limit nicknames on tabs to]
 Begrenze Nicks im Tab auf
 [ESC key behavior]
@@ -486,7 +482,7 @@ Millisekunden
 Hilfe zu Containern
 [Windows Aero settings]
 Windows-Aero-Einstellungen
-[Use Aero UI elements(only when not using a custom skin)]
+[Use Aero UI elements (only when not using a custom skin)]
 Aero-UI-Elemente verwenden (nur wenn kein eigener Skin verwendet wird)
 [Use Windows 7 task bar enhancements (restart required)]
 Windows-7-Taskleisten-Funktionen verwenden (Neustart nötig)
@@ -541,7 +537,7 @@ Verwerfen
 [Revert to Default]
 Zurücksetzen
 [Reset all templates...]
-Alle Vorlagen zurücksetzen
+Alle Vorlagen zurücksetzen...
 [Default width for fixed (single row) tabs]
 Standardgröße für fixierte (einzeilige) Tabs
 [Tab text label padding vertical]
@@ -591,9 +587,9 @@ Theme-Unterstützung
 [You can export and import all your color and font settings here. This allows you to create a Theme file which can be shared between different profiles or with your buddies.]
 Sie können all Ihre Farben sowie die Schriftart-Einstellungen exportieren und importieren. Damit können Sie eine Theme-Datei erstellen, die mit mehreren Profilen oder mit Ihren Freunden geteilt werden kann.
 [Export to a file...]
-Exportiere in eine Datei ...
+Exportiere in eine Datei...
 [Import from a file...]
-Importiere aus einer Datei ...
+Importiere aus einer Datei...
 [Icons]
 Icons
 [Event type icons in the message log]
@@ -601,7 +597,7 @@ Ereignistypicons im Nachrichtenverlauf
 [Text symbols as event markers]
 Textsymbole als 'Ereignis-Marker'
 [Use different icons to mark incoming and outgoing messages]
-Verwende unterschiedliche Icons für ein- und ausgehende Nachrichten
+Unterschiedliche Icons für ein- und ausgehende Nachrichten verwenden
 [Date and time]
 Datum und Uhrzeit
 [Show timestamps]
@@ -611,7 +607,7 @@ Sekunden im Zeitstempel anzeigen
 [Show date in timestamps]
 Datum im Zeitstempel anzeigen
 [Use contacts local time]
-lokale Kontaktzeit verwenden
+Lokale Kontaktzeit verwenden
 [Format]
 Format
 [Indent message body]
@@ -709,7 +705,7 @@ Verlauf einfrieren
 [Open in &new window]
 In &neuem Fenster öffnen
 [&Open in existing window]
-In bestehendem Fenster öffnen
+In bestehendem Fenster &öffnen
 [Editor]
 Editor
 [Paste formatted Text]
@@ -723,7 +719,7 @@ Nachrichtenlänge grafisch anzeigen
 [Close Tab]
 Tab schließen
 [Close Other Tabs]
-andere Tabs schließen
+Andere Tabs schließen
 [Leave Chat Room]
 Chatraum verlassen
 [Save Tab Position]
@@ -763,7 +759,7 @@ An &mehrere Kontakte senden
 [Send to &Container]
 An den &Container senden
 [Send &Later]
-Später senden
+S&päter senden
 [Force &ANSI]
 &ANSI erzwingen
 [Send unsafe (ignore Timeouts)]
@@ -791,7 +787,7 @@ Niemals senden
 [Unread Menu]
 Ungelesen-Menü
 [Recent Sessions]
-Zuletzt geöffnet
+Letzte Sitzungen
 [Favorites]
 Favoriten
 [Show the Tray Icon]
@@ -833,7 +829,7 @@ Formatierung entfernen
 [Dummy]
 Dummy
 [No Message Sessions opened]
-Keine offenen Nachrichtenfenster
+Keine offenen Nachrichtensitzungen
 [Add Contact to Favorites]
 Kontakt zu Favoriten hinzufügen
 [Remove Contact from Favorites]
@@ -861,9 +857,9 @@ Ausgewähltes fortsetzen
 [Cancel all Multisend Jobs]
 Alle Mehrfach-Senden-Liste Aufgaben abbrechen
 [Copy Message to Clipboard]
-Kopiere Nachrichten in Zwischenablage
+Nachrichten in Zwischenablage kopieren
 [&File]
-Datei
+&Datei
 [Save Message Log As...]
 Verlauf speichern als...
 [Close Message Session\tCtrl-W]
@@ -959,21 +955,11 @@ Channelmanager
 <Trennlinie>
 ;file \plugins\TabSRMM\src\container.cpp
 [Message Session...]
-Nachrichtensitzung ...
+Nachrichtensitzung...
 [Default container]
 Standardcontainer
 [Attach to]
 Zuordnen zu
-[Meta Contact]
-Metakontakt
-[(Forced)]
-(Erzwungen)
-[Autoselect]
-Automatisch auswählen
-[Use Protocol]
-Benutze Protokoll
-[Set Default Protocol]
-Standardprotokoll festlegen
 ;file \plugins\TabSRMM\src\containeroptions.cpp
 [General options]
 Allgemeine Einstellungen
@@ -1043,11 +1029,13 @@ Es stehen %d Nachrichten aus. Nachrichtenlänge: %d Byte, Nachrichtenlänge begr
 ;file \plugins\TabSRMM\src\eventpopups.cpp
 [One of your popup actions is set to DISMISS EVENT.\nNote that this options may have unwanted side effects as it REMOVES the event from the unread queue.\nThis may lead to events not showing up as "new". If you don't want this behavior, please review the Event Notifications settings page.]
 Eine Ihrer Popupaktionen ist auf "Ereignis verwerfen" gesetzt.\nBeachten Sie, dass diese Option unerwünschte Nebeneffekte haben könnte, da sie das Ereignis aus der Ungelesen-Warteschlange ENTFERNT.\nDies kann dazu führen, dass Ereignisse nicht als "neu" angezeigt werden. Wenn Sie dieses Verhalten nicht wollen, überprüfen Sie bitte die Ereignisbenachrichtigungen-Einstellungen.
+[TabSRMM warning message]
+TabSRMM-Warnmeldung
 [Incoming file]
 Eingehende Datei
 [No description given]
 Keine Beschreibung vorhanden.
-[Incoming file (invalid format]
+[Incoming file (invalid format)]
 Eingehende Datei (falsches Format)
 [Unknown event]
 Unbekanntes Ereignis
@@ -1062,15 +1050,19 @@ Rich-Edit-Datei
 Konfigurationsproblem|Die Funktion zum unbeaufsichtigten Senden ist deaktiviert. Die Funktionen \\b1 später senden\\b0 und \\b1 an mehrere Kontakte senden\\b0 hängen davon ab.\n\nSie müssen sie unter \\b1Optionen->Nachrichtensitzungen->Erw. Einstellungen\\b0 aktivieren. Ein Neustart ist erforderlich.
 [You cannot edit user notes when there are unsent messages]
 Sie können keine Benutzernachrichten editieren, wenn ungesendete Nachrichten ausstehen.
-[%s is typing a message.]
-%s tippt eine Nachricht.
+[Version]
+Version
+[%s is typing a message...]
+%s tippt eine Nachricht...
 [Last received: %s at %s]
 Letzte Nachricht am %s um %s empfangen
 [%s has entered text.]
 %s hat einen Text eingegeben.
-[Autoscrolling is disabled, %d message(s) queued (press F12 to enable it)]
+[%s is typing a message]
+%s tippt eine Nachricht
+[Auto scrolling is disabled, %d message(s) queued (press F12 to enable it)]
 Autoscrolling ist deaktiviert, %d Nachricht(en) in der Warteschlange (F12 drücken um es zu aktivieren)
-[UID: %s (SHIFT click -> copy to clipboard)\nClick for User's Details\nRight click for MetaContact control\nClick dropdown to add or remove user from your favorites.]
+[UID: %s (SHIFT click -> copy to clipboard)\nClick for User's Details\nRight click for metacontact control\nClick dropdown to add or remove user from your favorites.]
 UID: %s (Umschalt + Klick -> kopiert in Zwischenablage)\nKlick fur Benutzerdetails\nRechtsklick fur Einstellungen von Metakontakte\nKlick auf das Auswahlfeld, um Benutzer hinzuzufugen oder zu entfernen.
 [No UID]
 Keine UID
@@ -1202,9 +1194,9 @@ Immer aus
 [Always on]
 Immer an
 [Use default size]
-Standardgröße
+Standardgröße verwenden
 [Use private size]
-Private Größe
+Private Größe verwenden
 [Use Global Setting]
 Globale Einstellung verwenden
 [Show always (if present)]
@@ -1237,7 +1229,7 @@ Seitenleiste aus- oder einklappen
 [Character Encoding]
 Zeichenkodierung
 [Contact not on list. You may add it...]
-Kontakt ist nicht in Ihrer Liste. Sie können ihn hinzufügen ...
+Kontakt ist nicht in Ihrer Liste. Sie können ihn hinzufügen...
 [A message failed to send successfully.]
 Nachricht konnte nicht gesendet werden.
 [WARNING: The message you are trying to paste exceeds the message size limit for the active protocol. It will be sent in chunks of max %d characters]
@@ -1246,7 +1238,7 @@ ACHTUNG: Die Nachricht, die Sie zum Einfügen ausgewählt haben, überschreitet 
 Die Nachricht, die Sie versuchten einzufügen, überschritt die maximale Größe des aktiven Protokolls. Nur die ersten %d Zeichen werden gesendet.
 [Save and close session]
 Speichern und schließen
-[Autoscrolling is disabled (press F12 to enable it)]
+[Auto scrolling is disabled (press F12 to enable it)]
 Autoscrolling ist deaktiviert (drücken Sie auf F12, um es zu aktivieren)
 [Click for contact menu\nClick dropdown for window settings]
 Klicken Sie auf die Schaltfläche für Kontaktmenü\nKlicken Sie auf das Auswahlfeld für Fenstereinstellungen
@@ -1262,12 +1254,6 @@ Zustellungsfehler: %s
 Zeitüberschreitung beim Versenden einer Nachricht
 [You are editing the user notes. Click the button again or use the hotkey (default: Alt-N) to save the notes and return to normal messaging mode]
 Sie editieren Benutzernotizen. Klicken Sie erneut auf die Taste oder verwenden Sie die Tastenkombination (Standard: Alt+N) zum Speichern der Notizen
-[Unforce failed]
-Erzwingen fehlgeschlagen
-[The selected protocol cannot be forced at this time]
-Das ausgewählte Protokoll kann momentan nicht erzwungen werden.
-[Warning: you have selected a subprotocol for sending the following messages which is currently offline]
-Achtung: Sie haben ein Unterprotokoll für die Zusendung der folgenden Meldungen ausgewählt, leider ist es derzeit offline.
 [Contact is offline and this protocol does not support sending files to offline users.]
 Kontakt ist offline, und das Protokoll unterstützt keine Datenübertragung zu Leuten, die offline sind.
 ;file \plugins\TabSRMM\src\msgdlgutils.cpp
@@ -1288,7 +1274,7 @@ Entweder das Nudge-Plugin ist nicht installiert oder das Kontakt-Protokoll unter
 ['(Unknown Contact)']
 (Unbekannter Kontakt)
 [JPEG-compressed images]
-JPEG_komprimierte Grafiken
+JPEG-komprimierte Bilder
 ;file \plugins\TabSRMM\src\msglog.cpp
 [Thai]
 Thailändisch
@@ -1416,7 +1402,7 @@ Ereignisbenachrichtigungen
 [Message window]
 Nachrichtenfenster
 [Load and apply]
-Skin laden
+Laden und Übernehmen
 [Window layout tweaks]
 Fenster-Anordnung
 [Settings]
@@ -1625,6 +1611,8 @@ Skin ändern
 ;file \plugins\TabSRMM\src\translator.cpp
 [Message window tweaks]
 Nachrichtenfenster-Tweaks
+[Display metacontact icons]
+Metakontact-Icon anzeigen
 [Error feedback]
 Fehlermeldung
 [Show skinnable tooltip in chat (Tipper plugin required)]
@@ -1635,14 +1623,18 @@ Tipp-Klänge aktivieren
 Animierte GIF-Avatare deaktivieren (hat keinen Effekt auf bereits geöffnete Fenster)
 [Close current tab on send]
 Aktuellen Tab nach dem Senden schließen
-[Disable error popups on sending failures]
-Fehler-Popups bei Sendefehlern deaktivieren
 [Automatic keyboard layout: Do not load the system default for new contacts]
 Automatisches Tastaturlayout: Lade nicht das Systemstandard-Layout für neue Kontakte
 [Enable unattended send (experimental feature, required for multisend and send later) (*)]
 Unbeaufsichtigtes Senden aktivieren (experimentell, benötigt für multisend und 'später senden' (*)
 [Show client description in info panel]
 Client-Beschreibung im Infobereich anzeigen
+[On tab control]
+Auf der Tableiste
+[On the button bar]
+Auf der Werkzeugleiste
+[Disable error popups on sending failures]
+Fehler-Popups bei Sendefehlern deaktivieren
 [Show a preview of the event]
 Vorschau des Ereignisses zeigen
 [Don't announce event when message dialog is open]
@@ -1711,7 +1703,7 @@ Markierten Text automatisch kopieren
 Verlaufseinstellungen
 [Support for external plugins]
 Unterstützung für externe Plugins
-[Timestamp settings (note: timstamps also depend on your templates)]
+[Timestamp settings (note: timestamps also depend on your templates)]
 Zeitstempel-Einstellungen (Hinweis: ist auch von der verwendeten Vorlage abhängig)
 [Message log icons]
 Icons im Nachrichtenverlauf
@@ -1807,7 +1799,7 @@ Editiere Benutzernachricht|Sie sind dabei, die Benutzernachricht zu editieren. K
 Fehlende Komponenten|Das Icon-Pack fehlt. Bitte installieren Sie es in den Standard-"Icons"-Ordner.\n\nKeine Icons sind vorhanden.
 [Aero peek warning|You have enabled Aero Peek features and loaded a custom container window skin\n\nThis can result in minor visual anomalies in the live preview feature.]
 Aero-Peek Warnung|Sie haben Aero-Peek Funktionen aktiviert und einen eigenen Container-Fenster-Skin geladenn.\n\nDies kann zu kleinen visuellen Defekten in der Live-Vorschau führen.
-[Filetransfer problem|Sending the image by file transfer failed.\n\nPossible reasons: File transfers not supported, either you or the target contact is offline, or you are invisible and the target contact is not on your visibilty list.]
+[File transfer problem|Sending the image by file transfer failed.\n\nPossible reasons: File transfers not supported, either you or the target contact is offline, or you are invisible and the target contact is not on your visibilty list.]
 Dateiübertragungs-Problem|Das Bild konnte nicht als Dateiübertragung gesendet werden.\n\nMögliche Gründe: Dateiübertragungen werden nicht unterstützt, entweder Sie oder der Zielkontakt sind offline, oder Sie sind unsichtbar und der Zielkontakt ist nicht auf Ihrer Sichtbarkeitsliste.
 [Settings problem|The option \\b1 History->Imitate IEView API\\b0  is enabled and the History++ plugin is active. This can cause problems when using IEView as message log viewer.\n\nShould I correct the option (a restart is required)?]
 Einstellungsproblem|Die Einstellung \\b1 Verlauf->IEView-API imitieren\\b0 ist aktiviert und das History++ Plugin ist aktiv. Das kann Probleme verursachen, wenn IEView als Nachrichtenverlauf-Betrachter verwendet wird.\n\nSoll ich diese Einstellung korrigieren (ein Neustart ist nötig)?
@@ -1817,8 +1809,6 @@ Fenster schließen|Sie sind dabei ein Fenster mit mehreren Tabs zu schließen.\n
 Optionsdialog schließen|Um die Änderungen, die durch den Import eines Themes im Optionsdialog vorgenommen werden, zu übernehmen, muss der Dialog nach dem Laden eines Themes geschlossen werden \\b1und ungespeicherte Änderungen könnten verloren gehen\\b0.\n\nMöchten Sie den Vorgang fortsetzen?
 [Loading a theme|Loading a color and font theme can overwrite the settings defined by your skin.\n\nDo you want to continue?]
 Skin laden|Das Laden von Farben und Schriftarten kann Einstellungen Ihres Skins überschreiben.\n\nWollen Sie fortfahren?
-[TabSRMM warning message]
-TabSRMM-Warnmeldung
 ;file \plugins\TabSRMM\src\chat\colorchooser.cpp
 [Text color]
 Textfarbe
@@ -1852,9 +1842,9 @@ Das Thema ist '%s%s'
 ;file \plugins\TabSRMM\src\chat\main.cpp
 ;file \plugins\TabSRMM\src\chat\muchighlight.cpp
 [Add user to highlight list]
-Füge Benutzer zur "Highlight"-Liste hinzu
+Füge Benutzer zur Hervorhebungsliste hinzu
 [Edit user highlight list]
-Editiere Benutzer-"Highlight"-Liste
+Benutzerhervorhebungsliste bearbeiten
 ;file \plugins\TabSRMM\src\chat\options.cpp
 [Input area background]
 Nachrichteneingabefeld Hintergrund
@@ -1948,7 +1938,7 @@ Ungelesener Hintergrund
 * Statusänderungen
 [* Dividers]
 * Trennlinien
-[* Error and warning Messages]
+[* Error and warning messages]
 * Fehler und Warnungen
 [* Symbols (incoming)]
 * Symbole (eingehend)
@@ -1997,7 +1987,7 @@ IRC-ähnliche Statusanzeigen in der Nickliste verwenden
 [Use alternative sorting method in member list]
 Alternative Sortierung in der Nickliste verwenden
 [Prefix all events with a timestamp]
-Zeitstempel bei allen Ereignissen als Perfix
+Zeitstempel bei allen Ereignissen als Präfix
 [Timestamp only when event time differs]
 Zeitstempel nur wenn Ereignis-Zeit abweicht
 [Timestamp has same color as the event]
@@ -2008,12 +1998,12 @@ Zweite Zeile einer Nachricht einziehen
 Benutzername im Nachrichtenverlauf auf 20 Zeichen beschränken
 [Add a colon (:) to auto-completed user names]
 Doppelpunkt (:) zu automatisch vervollständigten Benutzernamen hinzufügen
-[Start private conversation on doubleclick in nick list (insert nick if unchecked)]
+[Start private conversation on double click in nick list (insert nick if unchecked)]
 Private Unterhaltung bei Doppelklick in Nickliste starten (fügt sonst Nick ein)
 [Strip colors from messages in the log]
 Farben aus Nachrichten im Verlauf entfernen
 [Enable the 'event filter' for new rooms]
-'Ereignis-Filter' für neue Nachrichten aktivieren
+'Ereignis-Filter' für neue Räume aktivieren
 [Use IRC style status indicators in the log]
 IRC-ähnliche Statusanzeigen im Verlauf verwenden
 [Allow clickable user names in the message log]
@@ -2081,15 +2071,15 @@ Hilfsoperatoren
 [Channel operators]
 Channeloperatoren
 [Extended mode 1]
-Erweiterter Modus #1
+Erweiterter Modus 1
 [Extended mode 2]
-Erweiterter Modus #2
+Erweiterter Modus 2
 [Selection background]
 Markierter Hintergrund
 [Selected text]
 Markierter Text
 [Incremental search highlight]
-Inkrementelle Suche
+Inkrementelle Suchhervorhebung
 [Fields background]
 Felder-Hintergrund
 [Nick list background]
@@ -2098,9 +2088,11 @@ Hintergrund Benutzerliste
 Gruppenchat-Verlaufshintergrund
 [nick of current contact (if defined)]
 Nick des aktuellen Kontaktes (falls definiert)
-[protocol name of current contact (if defined). Account name is used when protocol supports multiaccounts]
+[protocol name of current contact (if defined). Account name is used when protocol supports multiple accounts]
 Protokollname des aktuellen Nutzers (falls definiert). Kontoname wird verwendet, falls das Protokoll Multikonten unterstützt.
-[User ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
+[user-defined account name of current contact (if defined).]
+Selbstgewählter Kontenname des aktuellen Kontaktes (falls definiert).
+[user ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
 Benutzer-ID des aktuellen Kontaktes (falls definiert). Es ist wie UIN-Nummer für ICQ, JID für Jabber, etc.
 [path to Miranda root folder]
 Pfad zum Miranda-Hauptverzeichnis
@@ -2151,9 +2143,9 @@ Ordner wählen
 [No markers]
 Keine Markierungen
 [Show as icons]
-Zeige als Icons
+Als Icons anzeigen
 [Show as text symbols]
-Zeige als Textsymbole
+Als Textsymbole anzeigen
 ;file \plugins\TabSRMM\src\chat\tools.cpp
 [%s%s says:%s %s]
 %s%s sagt:%s %s
@@ -2164,9 +2156,9 @@ Kein Wort zum Nachschlagen
 [&Message %s]
 &Nachricht an %s
 [Highlight User...]
-"Highlighte" Benutzer ...
+Benutzer hervorheben...
 [Edit Highlight List...]
-Editiere "Highlight" Liste ...
+Hervorhebungsliste bearbeiten...
 ;file \plugins\TabSRMM\src\chat\window.cpp
 [Unique ID]
 Unique ID
@@ -2194,7 +2186,7 @@ Minuten
 Minute
 [, %d %s idle]
 , %d %s untätig
-[The filter canoot be enabled, because there are no event types selected either global or for this chat room]
+[The filter cannot be enabled, because there are no event types selected either global or for this chat room]
 Ihr Filter kann nicht aktiviert werden, weil keine Ereignistypen global oder für diesen Chatraum ausgewählt wurden
 [Event filter error]
 Ereignisfilter-Fehler

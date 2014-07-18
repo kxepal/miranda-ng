@@ -37,7 +37,7 @@ Otrzymując
 [Message]
 Wiadomość
 [URL]
-URL
+Link
 [File transfer]
 Transfer pliku
 [...change status to...]
@@ -46,6 +46,6 @@ Transfer pliku
 ...jeśli status to...
 ;file \plugins\StatusChange\src\main.cpp
 [Status Change]
-Status Change
+Zmiana statusu
 [Status]
 Status

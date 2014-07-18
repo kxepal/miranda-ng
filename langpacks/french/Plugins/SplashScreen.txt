@@ -34,7 +34,7 @@ ms
 
 [Fade out:]
 
-[Advaimg library not found. Please get it from nigtlies to be able to use images.]
+[AdvaImg plugin not found. Please get it from http://miranda-ng.org/p/AdvaImg/ to be able to use images.]
 
 [Preview...]
 Aperçu...
@@ -43,15 +43,12 @@ Aperçu...
 
 [Error]
 Erreur
-[Call Splash Service]
-
 ;file \plugins\SplashScreen\src\options.cpp
 [Graphic files]
 
 [Sound Files]
-
+Fichiers son
 [Skins]
 Skins
 [Splash Screen]
 
-;file \plugins\SplashScreen\src\services.cpp

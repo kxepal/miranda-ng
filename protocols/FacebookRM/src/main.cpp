@@ -87,8 +87,6 @@ static int protoUninit(PROTO_INTERFACE* proto)
 	return EXIT_SUCCESS;
 }
 
-static HANDLE g_hEvents[1];
-
 extern "C" int __declspec(dllexport) Load(void)
 {
 	mir_getLP(&pluginInfo);
@@ -117,6 +115,9 @@ extern "C" int __declspec(dllexport) Load(void)
 	agent << __VERSION_STRING_DOTS;
 	g_strUserAgent = agent.str();
 
+	// Initialize random generator
+	srand(::time(NULL));
+
 	return 0;
 }
 
@@ -126,8 +127,6 @@ extern "C" int __declspec(dllexport) Load(void)
 extern "C" int __declspec(dllexport) Unload(void)
 {
 	UninitContactMenus();
-	for(size_t i=0; i<SIZEOF(g_hEvents); i++)
-		UnhookEvent(g_hEvents[i]);
 
 	return 0;
 }

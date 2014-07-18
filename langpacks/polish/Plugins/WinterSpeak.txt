@@ -9,7 +9,7 @@
 Interfejs Mirandy dla API mowy Microsoft(SAPI).
 ;file \plugins\WinterSpeak\res\Speak.rc
 [Engine Settings]
-Ustawienia Silnika
+Ustawienia silnika
 [Engine]
 Silnik
 [Voice]
@@ -37,7 +37,7 @@ Zaraz wracam
 [DND]
 Nie przeszkadzać
 [NA]
-Niedostępny
+Wrócę później
 [Occupied]
 Zajęty
 [Free for chat]
@@ -96,7 +96,7 @@ Usuń
 test test 1 2 3
 ;file \plugins\WinterSpeak\src\EventInformation.cpp
 [incoming message from %u]
-%u
+Wiadomość od %u
 [incoming URL from %u]
 Link od %u
 [you have been added to %u's contact list]
@@ -109,7 +109,7 @@ Przychodzący plik od %u
 %u mówi
 ;file \plugins\WinterSpeak\src\main.cpp
 [Speak]
-Mów
+Mowa
 [Engine/Voice]
 Silnik/Głos
 [Announce]
@@ -121,18 +121,18 @@ Sesja rozmowy
 Otrzymano wiadomość
 ;file \plugins\WinterSpeak\src\UserInformation.cpp
 [%u is now offline]
-%u rozłączony
+%u (Rozłączony)
 [%u is now online]
-%u dostępny
+%u (Dostępny)
 [%u is away]
-%u zaraz wracam
+%u (Zaraz wracam)
 [%u is invisible]
-%u niewidoczny
+%u (Niewidoczny)
 [%u is not available]
-%u niedostępny
+%u (Wrócę później)
 [%u does not want to be disturbed]
-%u nie przeszkadzać
+%u (Nie przeszkadzać)
 [%u is occupied]
-%u zajęty
+%u (Zajęty)
 [%u is free for chat]
-%u porozmawiajmy
+%u (Porozmawiajmy)

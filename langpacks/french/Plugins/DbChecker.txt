@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: DbChecker.dll
 ;  Plugin: Database checker
-;  Version: 0.11.0.1
+;  Version: 0.95.0.3
 ;  Authors: George Hazan
 ;============================================================
 [Miranda NG Database Checker.]
@@ -14,7 +14,7 @@
 
 [To continue, click Next.]
 
-[This program is licenced under the terms of the GNU General Public License.]
+[This program is licensed under the terms of the GNU General Public License.]
 
 [Miranda Database Tool]
 
@@ -110,8 +110,6 @@ Erreur
 [Database]
 
 [Total size]
-
-[Wasted]
 
 [Miranda Databases (*.dat)]
 

@@ -1,7 +1,7 @@
 ﻿#muuid {9b8e1735-970d-4ce0-930c-a561956bdca2}
 ;============================================================
 ;  File: Xfire.dll
-;  Plugin: Xfire Protocol
+;  Plugin: Xfire protocol
 ;  Version: 0.1.9.0
 ;  Authors: dufte
 ;============================================================
@@ -11,9 +11,9 @@ Wsparcie dla protokołu xFire.
 [Password:]
 Hasło:
 [Login name:]
-Nazwa użytkownika:
+Użytkownik:
 [XFire]
-XFire
+xFire
 [Nick:]
 Nick:
 [Current protocol version:]
@@ -48,8 +48,8 @@ Pokazuj znajomym moich znajomych
 Opcje
 [More options]
 Więcej opcji
-[Display Error and Infomessage:]
-Pokaż błąd i informacje:
+[Display Error and Info message:]
+Wyświetl błąd i informację:
 [Main group for clan groups:]
 Główna grupa dla grupy klanowej:
 [Automatically scan for games:]
@@ -69,7 +69,7 @@ Ta lista pokazuje twoich wszystkich zablokowanych użytkowników. Możesz usuną
 [You can simply block someone, if you right click on his friend request in contact list and choose Block User...]
 Możesz łatwo blokować osoby, kiedy klikniesz PPM na znajomego na liście i wybierając opcje Zablokuj kontakt...
 [This file is used for the game search, game detection and game ID resolving. It contains all Xfire supported games.]
-Ten plik zostaje użyty do poszukiwania gier. 
+Ten plik zostaje użyty do poszukiwania gier.
 [This file contains all original game icons. You can also activate the option for icon downloading, if you don't have it.]
 Ten plik posiada wszystkie oryginalne ikonki gier. Możesz również aktywować opcje pobierania dodatkowych ikon.
 [Be sure you put these files in following folder:]
@@ -78,8 +78,8 @@ Upewnij się że pliki znajdują się w folderze:
 Opis
 [Enable]
 Włącz
-[With this feature, following status message will be set on your other protocol plugins, if you are ingame. So your other buddies can also see what you play. It will also change the status to occupied, if this option is enabled.]
-Kiedy grasz w jakąś grę i chcesz pokazać komuś w co grasz, zaznacz tą opcję, ustawi ona w opisie dane na temat w co w tej chwili grasz. Możesz również zmienić automatycznie status kiedy grasz.
+[With this feature, following status message will be set on your other protocol plugins, if you are in game. So your other buddies can also see what you play. It will also change the status to occupied, if this option is enabled.]
+Dzięki tej funkcji następujący opis zostanie ustawiony dla wszystkich protokołów, gdy grasz tak, by twoi znajomi mogli także wiedzieć w co grasz. Zmieni ona także status na "Zajęty" jeżęli ta funkcja jest włączona.
 [Following Variables are available: %myxfiregame%, %myxfirevoice%, %myxfireserverip%, %myxfirevoiceip%]
 Dostępne zmienne: %myxfiregame%, %myxfirevoice%, %myxfireserverip%, %myxfirevoiceip%
 [Status message:]
@@ -116,8 +116,8 @@ Edytuj...
 Użytkownik:
 [Game]
 Gra
-[Voicechat]
-Głosowy chat
+[Voice chat]
+Czat głosowy
 [Name:]
 Nazwa:
 [IP:]
@@ -134,14 +134,12 @@ Wpisz hasło
 Dołącz
 [Set Nickname]
 Edytuj nick
-[OK]
-OK
 [Cancel]
 Anuluj
 [New xfire_games.ini]
 Nowy xfire_games.ini
-[There is a new XFire gamelist online, do you want to update now?]
-Znaleziono nową listę gier xFire, czy chcesz ją zaktualizować?
+[There is a new XFire game list online, do you want to update now?]
+W internecie znajduje się nowa lista gier XFire. Czy chcesz ją teraz uaktualnić?
 [New supported games:]
 Nowe wsparcie gier:
 [Update]
@@ -182,9 +180,9 @@ Opcje xFire
 [Please choose one game in the list!]
 Proszę wybrać jedną grę z listy!
 [If you add a mod of an Xfire supported game, then you can specify what game ID will be sent to Xfire. So if you add a Half-Life mod, you can set the Half-Life game ID and if you start the game, your Xfire buddies will see the Half-Life game icon next to your name and the game time will be tracked.]
-Jeśli wybierzesz moda gry wspieranej przez Xfire, możesz określić jakie ID gry zostanie wysłane. Tak więc, gdy dodasz moda Half-Life możesz ustawić ID gry Half-Life, a gdy rozpoczniesz grę, Twoi znajomi zobaczą ikonę Half-Life obok Twojego kontaktu, a czas gry będzie mierzony.
+Jeśli wybierzesz moda gry wspieranej przez xFire, możesz określić jakie ID gry zostanie wysłane. Tak więc, gdy dodasz moda Half-Life możesz ustawić ID gry Half-Life, a gdy rozpoczniesz grę, twoi znajomi zobaczą ikonę Half-Life obok twojego kontaktu, a czas gry będzie mierzony.
 [Every game in Xfire needs an ID. Use a number above the last used ID to avoid problems with used IDs. Every number above 10000 should be save. This ID will not be sent to Xfire, when you start a game.]
-Każda gra w Xfire musi mieć swoje ID. Używaj liczb większych niż ostatnio użyte ID, by uniknąć problemów z używanymi ID. Każda liczba powyżej 10000 powinna być bezpieczna. To ID nie zostanie wysłane do  Xfire, gdy rozpoczniesz grę.
+Każda gra w xFire musi mieć swoje ID. Używaj liczb większych niż ostatnio użyte ID, by uniknąć problemów z używanymi ID. Każda liczba powyżej 10000 powinna być bezpieczna. To ID nie zostanie wysłane do xFire, gdy rozpoczniesz grę.
 [Please enter a game name.]
 Proszę podać nazwę gry.
 [Please enter a game ID.]
@@ -211,7 +209,7 @@ Nie teraz.
 [Give a guy some peace, would ya?]
 Proszę, daj mi spokój!
 [Well, I would talk to you if Miranda ICQ supported chat]
-Hmm, chętnie bym z Tobą porozmawiał, gdyby Miranda ICQ wspierała czat.
+Hmm, chętnie bym z tobą porozmawiał, gdyby Miranda ICQ wspierała czat.
 [That'll be the phone.]
 Muszę odebrać telefon.
 [Mmm... food.]
@@ -233,14 +231,14 @@ Błąd podczas aktualizacji Icons.dll.
 ;file \protocols\Xfire\src\main.cpp
 [Protocol icon]
 Ikona protokołu
-[%s (Nickname: %s) has invited you to join the %s clan. Message: %s%sPlease go to the XFireclan-Site to accept the Invitation.]
-%s (Nick: %s) zaprasza cię do klanu %s. Wiadomość: %s%s proszę przejść do XFireclan-Site aby zaakceptować zaproszenie.
+[%s (Nickname: %s) has invited you to join the %s clan. Message: %s%sPlease go to the XFire clan site to accept the Invitation.]
+%s (nick: %s zaprosił cię do przyłączenia się do klanu %s. Wiadomość: %s%sPrzejdź proszę na stronę klanu, aby przyjąć zaproszenie.
 [Friends of Friends Playing]
 Znajomi znajomych, którzy grają
 [Login failed.]
 Logowanie nieudane.
 [The protocol version is too old. Changed current version from %d to %d. You can reconnect now.]
-Wersja protokołu jest za stara. Zmieniono aktualną wersję z %d do %d. Możesz ponownie się połączyć. 
+Wersja protokołu jest za stara. Zmieniono aktualną wersję z %d do %d. Możesz ponownie się połączyć.
 [The protocol version is too old. Cannot detect a new version number.]
 Wersja protokołu jest za stara. Nie można wykryć numeru nowszej wersji.
 [Someone logged in with your account. Disconnect.]
@@ -276,27 +274,27 @@ Nastąpiło pierwsze uruchomienie wtyczki. Czy chcesz automatycznie pobrać xfir
 [Away from Keyboard]
 Z dala od klawiatury
 [&XFire Online Profile]
-Profil xFire Online
+Profil &xFire Online
 [XFire &Clan Site]
-Strona Klanu xFire
+Strona &Klanu xFire
 [C&opy Server Address and Port]
-Kopiuj Adres/Port Serwera
+K&opiuj Adres/Port Serwera
 [Cop&y Voice Server Address and Port]
-Kopiuj Adres/Port serwera głosowego
+Kop&iuj Adres/Port serwera głosowego
 [Join &Game...]
-Dołącz do gry...
+Dołącz do &gry...
 [Play this game...]
 Graj...
 [Remove F&riend...]
-Usuń znajomego
+Usuń &znajomego
 [Block U&ser...]
-Zablokowani...
+Za&blokuj
 [&My XFire Online Profile]
-Mój profil xFire
+&Mój profil xFire
 [&Activity Report]
-Raporty aktywności
+Raporty &aktywności
 [&Rescan my games...]
-Przeskanuj ponownie moje Gry
+&Przeskanuj ponownie moje Gry
 [Set &Nickname]
 Edytuj &nick
 [Protocols]
@@ -328,7 +326,7 @@ Czy na pewno chcesz usunąć znajomego %s?
 [Confirm Delete]
 Zatwierdź usuwanie
 [Block this user from ever contacting you again?]
-Czy chcesz zablokować tą osobę, by nie kontaktowała się z Tobą w przyszłości?
+Czy chcesz zablokować tą osobę, by nie kontaktowała się z tobą w przyszłości?
 [Block Confirmation]
 Potwierdzenie zablokowania
 ;file \protocols\Xfire\src\options.cpp
@@ -368,12 +366,12 @@ Pokaż popup kiedy ktoś z listy zacznie grać
 Nie twórz automatycznie grup klanowych
 [Enable MBot support]
 Włącz wsparcie MBot
-[Gamedetection]
+[Game detection]
 Wykrywanie gier
 [Disable game detection]
 Wyłącz wykrywanie gier
-[Use TSRemote.dll to get teamspeak server info]
-Użyj TSRemote.dll aby dostać info serwera teamspeak
+[Use TSRemote.dll to get TeamSpeak server info]
+Użyj TSRemote.dll, aby uzyskać informacje o serwerze TeamSpeak
 [Disable popups when ingame]
 Wyłącz popupy kiedy gram
 [Disable sound events when ingame]
@@ -394,8 +392,8 @@ Nazwa użytkownika musi składać się z małych liter, zostanie więc zapisana 
 Nowe ustawienia będą dostępne po ponownym połączeniu się do xFire
 [Hidden]
 Ukryte
-[Messagebox]
-Skrzynka wiadomości
+[Message box]
+Okno wiadomości
 [Popup]
 Popup
 [No]

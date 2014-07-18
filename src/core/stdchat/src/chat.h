@@ -70,8 +70,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "richutil.h"
 
 #define EM_SUBCLASSED          (WM_USER+200)
-#define EM_UNSUBCLASSED        (WM_USER+201)
-#define EM_ACTIVATE            (WM_USER+202)
+#define EM_ACTIVATE            (WM_USER+201)
 
 struct TABLIST
 {
@@ -98,7 +97,9 @@ struct GlobalLogSettings : public GlobalLogSettingsBase
 {
 	int   iX, iY;
 	bool  bTabsEnable, TabsAtBottom, TabCloseOnDblClick, TabRestore;
-	HFONT MessageBoxFont;
+	
+	HFONT MessageAreaFont;
+	COLORREF MessageAreaColor;
 };
 
 extern GlobalLogSettings g_Settings;
@@ -179,6 +180,7 @@ void CheckColorsInModule(const char* pszModule);
 int  GetRichTextLength(HWND hwnd);
 UINT CreateGCMenu(HWND hwndDlg, HMENU *hMenu, int iIndex, POINT pt, SESSION_INFO *si, TCHAR* pszUID, TCHAR* pszWordText);
 void DestroyGCMenu(HMENU *hMenu, int iIndex);
+bool LoadMessageFont(LOGFONT *lf, COLORREF *colour);
 
 // message.c
 char* Message_GetFromStream(HWND hwndDlg, SESSION_INFO *si);

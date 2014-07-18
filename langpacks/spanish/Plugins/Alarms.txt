@@ -23,7 +23,7 @@ Editar
 [minutes]
 
 [Row height:]
-
+Alto de fila:
 [Indent:]
 
 [Reminder frame]
@@ -50,8 +50,6 @@ Editar
 Previsualizar
 [Alarm]
 
-[OK]
-Aceptar
 [Cancel]
 Cancelar
 [Title:]
@@ -146,6 +144,10 @@ Fondo
 [Window]
 Ventana
 ;file \plugins\Alarms\src\frame.cpp
+[%dh %dm]
+
+[%dm]
+
 [Hide reminders]
 
 [Show reminders]

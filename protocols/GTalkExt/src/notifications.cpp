@@ -25,8 +25,6 @@
 #include "options.h"
 #include "inbox.h"
 
-#define NUMBER_EMAILS_MESSAGE  "You've received an e-mail\n%s unread threads"
-
 #define PLUGIN_DATA_PROP_NAME       _T("{DB5CE833-C3AC-4851-831C-DDEBD9FA0508}")
 #define EVT_DELETED_HOOK_PROP_NAME  _T("{87CBD2BC-8806-413C-8FD5-1D61ABCA4AF8}")
 
@@ -256,7 +254,7 @@ void UnreadMailNotification(LPCSTR acc, LPCTSTR jid, LPCTSTR url, LPCTSTR unread
 	POPUPDATAT data = {0};
 
 	FormatPseudocontactDisplayName(&data.lptzContactName[0], jid, unreadCount);
-	mir_sntprintf(&data.lptzText[0], SIZEOF(data.lptzText), TranslateT(NUMBER_EMAILS_MESSAGE), unreadCount);
+	mir_sntprintf(&data.lptzText[0], SIZEOF(data.lptzText), TranslateT("You've received an e-mail\n%s unread threads"), unreadCount);
 
 	ShowNotification(acc, &data, jid, url, unreadCount);
 }
@@ -270,7 +268,10 @@ void UnreadThreadNotification(LPCSTR acc, LPCTSTR jid, LPCTSTR url, LPCTSTR unre
 	LPTSTR currSender = senders;
 
 	for (int i = 0; i < SENDER_COUNT && mtn->senders[i].addr; i++) {
-		mir_sntprintf(currSender, SENDER_COUNT * 100, _T("    %s <%s>\n"), mtn->senders[i].name, mtn->senders[i].addr);
+		if (mtn->senders[i].name)
+			mir_sntprintf(currSender, SENDER_COUNT * 100, _T("    %s <%s>\n"), mtn->senders[i].name, mtn->senders[i].addr);
+		else
+			mir_sntprintf(currSender, SENDER_COUNT * 100, _T("    %s\n"), mtn->senders[i].addr);
 		currSender += lstrlen(currSender);
 	}
 
@@ -291,7 +292,7 @@ void ClearNotificationContactHistory(LPCSTR acc)
 		return;
 
 	for (HANDLE hEvent = db_event_first(hContact); hEvent;) {
-		HANDLE hEvent1 = db_event_next(hEvent);
+		HANDLE hEvent1 = db_event_next(hContact, hEvent);
 		db_event_delete(hContact, hEvent);
 		hEvent = hEvent1;
 	}

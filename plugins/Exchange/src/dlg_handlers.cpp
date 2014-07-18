@@ -58,7 +58,7 @@ INT_PTR CALLBACK DlgProcOptions(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 			SetDlgItemInt(hWnd, IDC_RECONNECT_INTERVAL, db_get_dw(NULL, ModuleName, "ReconnectInterval", DEFAULT_RECONNECT_INTERVAL), FALSE);
 			CheckDlgButton(hWnd, IDC_USE_POPUPS, (BOOL) db_get_b(NULL, ModuleName, "UsePopups", 0) ? BST_CHECKED : BST_UNCHECKED);
-			EnableWindow(GetDlgItem(hWnd, IDC_USE_POPUPS), ServiceExists(MS_POPUP_ADDPOPUP)); //disable the popups checkbox if no popup module is present
+			EnableWindow(GetDlgItem(hWnd, IDC_USE_POPUPS), ServiceExists(MS_POPUP_ADDPOPUPT)); //disable the popups checkbox if no popup module is present
 
 			CheckDlgButton(hWnd, IDC_CHECK_EMAILS, (bCheck) ? BST_CHECKED : BST_UNCHECKED);
 			EnableWindow(GetDlgItem(hWnd, IDC_INTERVAL_EDIT), bCheck);
@@ -192,7 +192,7 @@ INT_PTR CALLBACK DlgProcEmails(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 			LVCOLUMN col = {0};
 			HWND hList = GetDlgItem(hWnd, IDC_EMAILS_LIST);
-			OldListProc = (WNDPROC) SetWindowLong(hList, GWLP_WNDPROC, (LONG) ListSubclassProc);
+			OldListProc = (WNDPROC) SetWindowLongPtr(hList, GWLP_WNDPROC, (LONG_PTR) ListSubclassProc);
 			ListView_SetExtendedListViewStyle(hList, LVS_EX_FULLROWSELECT | LVS_EX_CHECKBOXES);
 			col.mask = LVCF_TEXT | LVCF_WIDTH;
 			col.cx = 100;
@@ -223,7 +223,7 @@ INT_PTR CALLBACK DlgProcEmails(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		{
 			HWND hList = GetDlgItem(hWnd, IDC_EMAILS_LIST);
 			ListView_DeleteAllItems(hList);
-			int count = GetWindowLong(hWnd, GWLP_USERDATA);
+			int count = GetWindowLongPtr(hWnd, GWLP_USERDATA);
 			LVITEM item = {0};
 			TEmailHeader email = {0};
 			email.cbSize = sizeof(TEmailHeader);
@@ -313,7 +313,7 @@ INT_PTR CALLBACK DlgProcEmails(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			count = exchangeServer.GetUnreadEmailsCount();
 			if (count > 0)
 			{
-				SetWindowLong(hWnd, GWLP_USERDATA, count);
+				SetWindowLongPtr(hWnd, GWLP_USERDATA, count);
 				SendMessage(hWnd, EXM_UPDATE_EMAILS, 0, 0);
 			}
 			else SendMessage(hWnd, WM_CLOSE, 0, 0);

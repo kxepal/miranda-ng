@@ -138,18 +138,9 @@ void CGlobals::reloadSystemModulesChanged()
 	g_iButtonsBarGap = M.GetByte("ButtonsBarGap", 1);
 	m_hwndClist = (HWND)CallService(MS_CLUI_GETHWND, 0, 0);
 
-	g_MetaContactsAvail = (ServiceExists(MS_MC_GETDEFAULTCONTACT) ? 1 : 0);
+	bMetaEnabled = abs(M.GetByte(META_PROTO, "Enabled", -1));
 
-	if (g_MetaContactsAvail) {
-		mir_snprintf(szMetaName, 256, "%s", (char *)CallService(MS_MC_GETPROTOCOLNAME, 0, 0));
-		bMetaEnabled = abs(M.GetByte(szMetaName, "Enabled", -1));
-	}
-	else {
-		szMetaName[0] = 0;
-		bMetaEnabled = 0;
-	}
-
-	g_PopupAvail = ServiceExists(MS_POPUP_ADDPOPUP);
+	g_PopupAvail = ServiceExists(MS_POPUP_ADDPOPUPT);
 
 	CLISTMENUITEM mi = { sizeof(mi) };
 	mi.position = -2000090000;
@@ -378,13 +369,11 @@ int CGlobals::ModulesLoaded(WPARAM wParam, LPARAM lParam)
 
 	HookEvent(ME_DB_EVENT_ADDED, CMimAPI::DispatchNewEvent);
 	HookEvent(ME_DB_EVENT_ADDED, CMimAPI::MessageEventAdded);
-	if (PluginConfig.g_MetaContactsAvail) {
-		HookEvent(ME_MC_SUBCONTACTSCHANGED, MetaContactEvent);
-		HookEvent(ME_MC_FORCESEND, MetaContactEvent);
-		HookEvent(ME_MC_UNFORCESEND, MetaContactEvent);
-	}
 	HookEvent(ME_FONT_RELOAD, ::FontServiceFontsChanged);
 	HookEvent(ME_TTB_MODULELOADED, TopToolbarLoaded);
+
+	HookEvent(ME_MC_DEFAULTTCHANGED, MetaContactEvent);
+	HookEvent(ME_MC_SUBCONTACTSCHANGED, MetaContactEvent);
 	return 0;
 }
 
@@ -393,20 +382,19 @@ int CGlobals::ModulesLoaded(WPARAM wParam, LPARAM lParam)
 // needed to catch status, nickname and other changes in order to update open message
 // sessions.
 
-int CGlobals::DBSettingChanged(WPARAM wParam, LPARAM lParam)
+int CGlobals::DBSettingChanged(WPARAM hContact, LPARAM lParam)
 {
 	DBCONTACTWRITESETTING *cws = (DBCONTACTWRITESETTING *) lParam;
 	const char 	*szProto = NULL;
 	const char  *setting = cws->szSetting;
-	HWND		hwnd = 0;
 	CContactCache* c = 0;
-	bool		fChanged = false, fNickChanged = false, fExtendedStatusChange = false;
+	bool fChanged = false, fNickChanged = false, fExtendedStatusChange = false;
 
-	hwnd = M.FindWindow(wParam);
+	HWND hwnd = M.FindWindow(hContact);
 
-	if (hwnd == 0 && wParam != 0) {     // we are not interested in this event if there is no open message window/tab
+	if (hwnd == 0 && hContact != 0) {     // we are not interested in this event if there is no open message window/tab
 		if (!strcmp(setting, "Status") || !strcmp(setting, "MyHandle") || !strcmp(setting, "Nick") || !strcmp(cws->szModule, SRMSGMOD_T)) {
-			c = CContactCache::getContactCache(wParam);
+			c = CContactCache::getContactCache(hContact);
 			if (c) {
 				fChanged = c->updateStatus();
 				if (strcmp(setting, "Status"))
@@ -418,13 +406,13 @@ int CGlobals::DBSettingChanged(WPARAM wParam, LPARAM lParam)
 		return 0;
 	}
 
-	if (wParam == 0 && !strcmp("Nick", setting)) {
+	if (hContact == 0 && !strcmp("Nick", setting)) {
 		M.BroadcastMessage(DM_OWNNICKCHANGED, 0, (LPARAM)cws->szModule);
 		return 0;
 	}
 
-	if (wParam) {
-		c = CContactCache::getContactCache(wParam);
+	if (hContact) {
+		c = CContactCache::getContactCache(hContact);
 		if (c) {
 			szProto = c->getProto();
 			if (!strcmp(cws->szModule, SRMSGMOD_T)) {					// catch own relevant settings
@@ -434,9 +422,9 @@ int CGlobals::DBSettingChanged(WPARAM wParam, LPARAM lParam)
 		}
 	}
 
-	if (wParam == 0 && !lstrcmpA(setting, "Enabled")) {
-		if (PluginConfig.g_MetaContactsAvail && !lstrcmpA(cws->szModule, PluginConfig.szMetaName)) { 		// catch the disabled meta contacts
-			PluginConfig.bMetaEnabled = abs(M.GetByte(PluginConfig.szMetaName, "Enabled", -1));
+	if (hContact == 0 && !lstrcmpA(setting, "Enabled")) {
+		if (!lstrcmpA(cws->szModule, META_PROTO)) { 		// catch the disabled meta contacts
+			PluginConfig.bMetaEnabled = abs(M.GetByte(META_PROTO, "Enabled", -1));
 			CContactCache::cacheUpdateMetaChanged();
 		}
 	}
@@ -444,8 +432,8 @@ int CGlobals::DBSettingChanged(WPARAM wParam, LPARAM lParam)
 	if (lstrcmpA(cws->szModule, "CList") && (szProto == NULL || lstrcmpA(cws->szModule, szProto)))
 		return 0;
 
-	if (PluginConfig.g_MetaContactsAvail && !lstrcmpA(cws->szModule, PluginConfig.szMetaName))
-		if (wParam != 0 && !lstrcmpA(setting, "Nick"))      // filter out this setting to avoid infinite loops while trying to obtain the most online contact
+	if (!lstrcmpA(cws->szModule, META_PROTO))
+		if (hContact != 0 && !lstrcmpA(setting, "Nick"))      // filter out this setting to avoid infinite loops while trying to obtain the most online contact
 			return 0;
 
 	if (hwnd) {
@@ -497,10 +485,10 @@ int CGlobals::DBSettingChanged(WPARAM wParam, LPARAM lParam)
 /////////////////////////////////////////////////////////////////////////////////////////
 // event fired when a contact has been deleted. Make sure to close its message session
 
-int CGlobals::DBContactDeleted(WPARAM wParam, LPARAM lParam)
+int CGlobals::DBContactDeleted(WPARAM hContact, LPARAM lParam)
 {
-	if (wParam) {
-		CContactCache *c = CContactCache::getContactCache(wParam);
+	if (hContact) {
+		CContactCache *c = CContactCache::getContactCache(hContact);
 		if (c)
 			c->deletedHandler();
 	}
@@ -512,15 +500,16 @@ int CGlobals::DBContactDeleted(WPARAM wParam, LPARAM lParam)
 // our contact cache and, if a message window exists, tell it to update
 // relevant information.
 
-int CGlobals::MetaContactEvent(WPARAM wParam, LPARAM lParam)
+int CGlobals::MetaContactEvent(WPARAM hContact, LPARAM lParam)
 {
-	if (wParam) {
-		CContactCache *c = CContactCache::getContactCache(wParam);
+	if (hContact) {
+		CContactCache *c = CContactCache::getContactCache(hContact);
 		if (c) {
 			c->updateMeta(true);
 			if (c->getHwnd()) {
-				c->updateUIN();								// only do this for open windows, not needed normally
+				c->updateUIN();   // only do this for open windows, not needed normally
 				::PostMessage(c->getHwnd(), DM_UPDATETITLE, 0, 0);
+				::PostMessage(c->getHwnd(), DM_UPDATEPICLAYOUT, 0, 0);
 			}
 		}
 	}
@@ -590,7 +579,7 @@ void CGlobals::RestoreUnreadMessageAlerts(void)
 		while (hDbEvent) {
 			DBEVENTINFO dbei = { sizeof(dbei) };
 			db_event_get(hDbEvent, &dbei);
-			if (!(dbei.flags & (DBEF_SENT | DBEF_READ)) && dbei.eventType == EVENTTYPE_MESSAGE) {
+			if (!dbei.markedRead() && dbei.eventType == EVENTTYPE_MESSAGE) {
 				if (M.FindWindow(hContact) != NULL)
 					continue;
 
@@ -602,7 +591,7 @@ void CGlobals::RestoreUnreadMessageAlerts(void)
 				cle.ptszTooltip = toolTip;
 				CallService(MS_CLIST_ADDEVENT, 0, (LPARAM)&cle);
 			}
-			hDbEvent = db_event_next(hDbEvent);
+			hDbEvent = db_event_next(hContact, hDbEvent);
 		}
 	}
 }

@@ -61,7 +61,6 @@
     <ClCompile Include="src\skypesvc.cpp" />
     <ClCompile Include="src\utf8.cpp" />
     <ClCompile Include="src\util.cpp" />
-    <ClCompile Include="src\voiceservice.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\alogon.h" />
@@ -82,7 +81,6 @@
     <ClInclude Include="src\utf8.h" />
     <ClInclude Include="src\util.h" />
     <ClInclude Include="src\version.h" />
-    <ClInclude Include="src\voiceservice.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5F9243AE-C6C9-4F42-B670-67A97767A50B}</ProjectGuid>
@@ -142,7 +140,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>false</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -212,7 +210,7 @@
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>

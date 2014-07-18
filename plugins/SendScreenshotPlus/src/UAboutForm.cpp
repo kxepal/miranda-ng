@@ -47,7 +47,6 @@ INT_PTR CALLBACK TfrmAbout::DlgTfrmAbout(HWND hWnd, UINT msg, WPARAM wParam, LPA
 {
 	if (msg == WM_CTLCOLOREDIT || msg == WM_CTLCOLORSTATIC) {
 		switch ( GetWindowLongPtr(( HWND )lParam, GWL_ID )) {
-			case IDC_WHITERECT:
 			case IDC_CREDIT:
 			case IDC_LICENSE:
 				SetTextColor((HDC)wParam,GetSysColor(COLOR_WINDOWTEXT));
@@ -55,7 +54,6 @@ INT_PTR CALLBACK TfrmAbout::DlgTfrmAbout(HWND hWnd, UINT msg, WPARAM wParam, LPA
 			default:
 				return FALSE;
 		}
-		SetBkColor((HDC)wParam, GetSysColor(COLOR_WINDOW));
 		return (LRESULT)GetStockObject(WHITE_BRUSH); 	//GetSysColorBrush(COLOR_WINDOW);
 	}
 
@@ -93,17 +91,17 @@ LRESULT TfrmAbout::wmInitdialog(WPARAM wParam, LPARAM lParam) {
 	HRSRC hResInfo;
 	DWORD ResSize;
 	TCHAR oldTitle[256], newTitle[256];
-	LPTSTR temp = NULL;
-	LPTSTR pszTitle = NULL;
+	TCHAR* temp;
+	TCHAR* pszTitle = NULL;
 	// Headerbar
-	LPTSTR pszPlug = mir_a2t(__PLUGIN_NAME);
-	LPTSTR pszVer  = mir_a2t(__VERSION_STRING_DOTS);
+	TCHAR* pszPlug = mir_a2t(__PLUGIN_NAME);
+	TCHAR* pszVer  = mir_a2t(__VERSION_STRING_DOTS);
 	GetDlgItemText( m_hWnd, IDC_HEADERBAR, oldTitle, SIZEOF( oldTitle ));
 	mir_sntprintf( newTitle, SIZEOF(newTitle), oldTitle, pszPlug, pszVer );
-	mir_freeAndNil(pszPlug);
-	mir_freeAndNil(pszVer);
+	mir_free(pszPlug);
+	mir_free(pszVer);
 	SetDlgItemText( m_hWnd, IDC_HEADERBAR, newTitle );
-	SendMessage(GetDlgItem(m_hWnd, IDC_HEADERBAR), WM_SETICON, 0, (WPARAM)IcoLib_GetIcon(ICO_PLUG_SSWINDOW1, true));
+	SendMessage(GetDlgItem(m_hWnd, IDC_HEADERBAR), WM_SETICON, ICON_BIG, (LPARAM)Skin_GetIcon(ICO_COMMON_SSWINDOW1,1));
 
 	//License
 	{	mir_tcsadd(pszTitle ,_T(__COPYRIGHT));
@@ -115,7 +113,7 @@ LRESULT TfrmAbout::wmInitdialog(WPARAM wParam, LPARAM lParam) {
 		temp = mir_a2t(pszMsg);
 		temp [ResSize] = 0;			//LockResource is not NULL terminatet !!
 		mir_tcsadd(pszTitle ,temp);
-		mir_freeAndNil(temp);
+		mir_free(temp);
 		SetDlgItemText(m_hWnd,IDC_LICENSE, pszTitle);
 		mir_freeAndNil(pszTitle);
 	}
@@ -128,17 +126,17 @@ LRESULT TfrmAbout::wmInitdialog(WPARAM wParam, LPARAM lParam) {
 		temp = mir_a2t(pszMsg);
 		temp [ResSize] = 0;			//LockResource is not NULL terminatet !!
 		mir_tcsadd(pszTitle ,temp);
-		mir_freeAndNil(temp);
+		mir_free(temp);
 		SetDlgItemText(m_hWnd,IDC_CREDIT, pszTitle);
 		mir_freeAndNil(pszTitle);
 	}
 
-	SendMessage(m_hWnd, WM_SETICON, ICON_BIG,	(LPARAM)IcoLib_GetIcon(ICO_PLUG_SSWINDOW1, true));
-	SendMessage(m_hWnd, WM_SETICON, ICON_SMALL,	(LPARAM)IcoLib_GetIcon(ICO_PLUG_SSWINDOW2));
+	SendMessage(m_hWnd, WM_SETICON, ICON_BIG,	(LPARAM)Skin_GetIcon(ICO_COMMON_SSWINDOW1,1));
+	SendMessage(m_hWnd, WM_SETICON, ICON_SMALL,	(LPARAM)Skin_GetIcon(ICO_COMMON_SSWINDOW2));
 
 	//init controls
 	btnPageClick();
-	SendMessage(GetDlgItem(m_hWnd, IDA_CONTRIBLINK), BUTTONSETDEFAULT, (WPARAM)1, NULL);
+	SendMessage(GetDlgItem(m_hWnd, IDA_CONTRIBLINK), BUTTONSETDEFAULT, 1, NULL);
 
 	TranslateDialogDefault(m_hWnd);
 	return FALSE;
@@ -196,7 +194,7 @@ void TfrmAbout::btnPageClick() {
 		ShowWindow(GetDlgItem(m_hWnd, IDC_CREDIT), SW_HIDE);
 		ShowWindow(GetDlgItem(m_hWnd, IDC_LICENSE), SW_SHOW);
 		SendDlgItemMessage(m_hWnd, IDA_CONTRIBLINK, BUTTONADDTOOLTIP, (WPARAM)TranslateT("Credits >"), MBBF_TCHAR);
-		HICON hIcon = IcoLib_GetIcon(ICO_PLUG_ARROWR);
+		HICON hIcon = Skin_GetIcon(ICO_COMMON_ARROWR);
 		SendMessage(hCtrl, BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
 		SetWindowText(hCtrl, hIcon ? TranslateT("Credits") : TranslateT("Credits >"));
 	}
@@ -204,7 +202,7 @@ void TfrmAbout::btnPageClick() {
 		ShowWindow(GetDlgItem(m_hWnd, IDC_CREDIT), SW_SHOW);
 		ShowWindow(GetDlgItem(m_hWnd, IDC_LICENSE), SW_HIDE);
 		SendDlgItemMessage(m_hWnd, IDA_CONTRIBLINK, BUTTONADDTOOLTIP, (WPARAM)TranslateT("< Copyright"), MBBF_TCHAR);
-		HICON hIcon = IcoLib_GetIcon(ICO_PLUG_ARROWL);
+		HICON hIcon = Skin_GetIcon(ICO_COMMON_ARROWL);
 		SendMessage(hCtrl, BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
 		SetWindowText(hCtrl, hIcon ? TranslateT("Copyright") : TranslateT("< Copyright"));
 	}

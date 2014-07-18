@@ -1,12 +1,12 @@
 ﻿#muuid {144e80a2-d198-428b-acbe-9d55dacc7fde}
 ;============================================================
 ;  File: Jabber.dll
-;  Plugin: Jabber Protocol
+;  Plugin: Jabber protocol
 ;  Version: 0.11.0.4
 ;  Authors: George Hazan, Maxim Mluhov, Victor Pavlychko, Artem Shpynov, Michael Stepura
 ;============================================================
-[Jabber protocol support for Miranda NG.]
-Поддержка протокола Jabber в Miranda NG.
+[Jabber (XMPP) protocol support for Miranda NG.]
+Поддержка протокола Jabber (XMPP) в Miranda NG.
 [Edit Note]
 Редактировать заметку
 [Tags:]
@@ -152,7 +152,7 @@ Jabber Пароль
 [Title:]
 Должность:
 [E-mail:]
-E-mail:
+Почта:
 [Phone:]
 Телефон:
 [Jabber vCard: Add Email Address]
@@ -181,14 +181,8 @@ Jabber vCard: добавление телефона
 Мобильный
 [Video]
 Видео
-[BBS]
-ББС
 [Modem]
 Модем
-[ISDN]
-Номер
-[PCS]
-Шт
 [Load]
 Загрузить
 [Save]
@@ -264,7 +258,7 @@ Jabber vCard: добавление телефона
 [URL]
 Ссылка
 [Auto-join (Automatically join Bookmarks must be enabled in Miranda options)]
-Авто-вход (Необходимо включить автоматический вход в настройках)
+Автовход (Необходимо включить автоматический вход в настройках)
 [Room JID/ URL:]
 JID / URL:
 [Bookmark Name:]
@@ -292,7 +286,7 @@ JID / URL:
 [Add rule (Ins)]
 Добавить правило (Ins)
 [Edit rule... (F2)]
-Изменить правило (F2)
+Изменить правило... (F2)
 [Move rule up (Alt+Up)]
 Переместить вверх (Alt+вверх)
 [Move rule down (Alt+Down)]
@@ -316,7 +310,7 @@ JID / URL:
 [Outgoing presence]
 Nсход. присутствие
 [New privacy list name:]
-Hовое имя списка приватности:
+Новое имя списка приватности:
 [Enter the name of the new list:]
 Введите имя нового списка:
 [Service Discovery]
@@ -332,13 +326,13 @@ Hовое имя списка приватности:
 [Node:]
 Узел:
 [Account type:]
-Тип аккаунта:
+Тип уч. записи:
 [Login server:]
 Сервер:
 [Register account now]
-Зарегистрировать аккаунт
+Зарегистрировать уч. запись
 [Jabber Account Information:]
-Информация Jabber аккаунта:
+Информация об уч. записи Jabber:
 [Member Information]
 Права доступа
 [Member Information\n<user ID>]
@@ -376,7 +370,7 @@ HTTP авторизация\nПринять или отклонить входя
 [Request method is:]
 Метод запроса:
 [If you wish to confirm this request, please click authorize. Otherwise, press deny to reject it.]
-Нажмите "авторизировать" чтобы принять запрос или нажмите "запретить" для отклонения.
+Нажмите "авторизовать" чтобы принять запрос или нажмите "запретить" для отклонения.
 [Authorize]
 Авторизовать
 [Deny]
@@ -451,7 +445,7 @@ Jabber Ad-Hoc команды на %s
 Просмотр списка служб
 [Can inform about its Jabber capabilities]
 Сообщение поддерживаемых функций Jabber (CAPs)
-[Supports stream initiation (for filetransfers for ex.)]
+[Supports stream initiation (e.g., for filetransfers)]
 Инициирование потока (передача файлов наружу)
 [Supports stream initiation for file transfers]
 Инициирование потока для передачи файлов
@@ -511,7 +505,7 @@ xHTML формат чат сообщений
 Отправка мелодий (слушаю музыку)
 [Receives information about the music to which a user is listening]
 Прием мелодий (слушает музыку)
-[Supports private XML Storage (for bookmakrs and other)]
+[Supports private XML Storage (for bookmarks and other)]
 Хранение XML (для закладок и пр.)
 [Supports attention requests ('nudge')]
 Поддержка уведомлений внимания ('Встряска')
@@ -523,6 +517,10 @@ xHTML формат чат сообщений
 Поддержка заметок Miranda NG
 [Supports Jingle]
 Поддержка Jingle
+[Supports Roster Exchange]
+Поддержка обмена ростера
+[Supports direct chat invitations (XEP-0249)]
+Поддержка прямых приглашений в чат (XEP-0249)
 [Enter the text you see]
 Введите текст, который видите
 [None]
@@ -564,7 +562,7 @@ xHTML формат чат сообщений
 [because room is now members-only]
 потому что комната только для постоянных участников
 [user banned]
-забаненый
+забаненный
 [Change &nickname]
 Изменить &ник
 [&Invite a user]
@@ -682,7 +680,7 @@ xHTML формат чат сообщений
 [Reason to destroy %s]
 Причина уничтожения %s
 [Can't send data while you are offline.]
-Невозможно послать - не в сети.
+Невозможно отправить - не в сети.
 [Jabber Error]
 Jabber ошибка
 [request timeout.]
@@ -804,7 +802,7 @@ Jabber ошибка
 [Discovery failed]
 Определение не удалось
 [Discovery in progress]
-Определение...
+Определение
 [Apply filter]
 Применить фильтр
 [Reset filter]
@@ -836,17 +834,17 @@ Jabber ошибка
 [Allow Messages]
 Разрешить сообщения
 [Allow Presences (in)]
-Разрешить присутствие (вх)
+Разрешить присутствие (вх.)
 [Allow Presences (out)]
-Разрешить присутствие (исх)
+Разрешить присутствие (исх.)
 [Allow Queries]
 Разрешить запросы
 [Deny Messages]
 Запретить сообщения
 [Deny Presences (in)]
-Запретить присутствие (вх)
+Запретить присутствие (вх.)
 [Deny Presences (out)]
-Запретить присутствие (исх)
+Запретить присутствие (исх.)
 [Deny Queries]
 Запретить запросы
 [Protocols]
@@ -864,7 +862,7 @@ Jabber ошибка
 [Registration successful]
 Регистрация успешно пройдена
 [Password is successfully changed. Don't forget to update your password in the Jabber protocol option.]
-Пароль успешно изменен. Не забудьте обновить Ваш пароль в настройках учётной записи Jabber.
+Пароль успешно изменен. Не забудьте обновить ваш пароль в настройках учётной записи Jabber.
 [Password cannot be changed.]
 Пароль не может быть изменен
 [Jabber Bookmarks Error]
@@ -1352,7 +1350,7 @@ Jabber ошибка
 [Confirm password]
 Введите пароль
 [This operation will kill your account, roster and all other information stored at the server. Are you ready to do that?]
-Эта операция удалит Вашу учётную запись, ростер и всю информацию хранимую на сервере. Вы действительно хотите удалить учётную запись?
+Эта операция удалит вашу учётную запись, ростер и всю информацию, хранимую на сервере. Вы действительно хотите удалить учётную запись?
 [Account removal warning]
 Удаление учётной записи
 [You can change your password only when you are online]
@@ -1362,7 +1360,7 @@ Jabber ошибка
 [Messaging]
 Сообщения
 [Send messages slower, but with full acknowledgement]
-Отсылать сообщения медленнее, но с подтверждением
+Отправлять сообщения медленнее, но с подтверждением
 [Enable avatars]
 Включить аватары
 [Log chat state changes]
@@ -1412,7 +1410,7 @@ Jabber ошибка
 [Allow servers to request version (XEP-0092)]
 Отвечать серверу на запросы о версиях ПО (XEP-0092)
 [Show information about operating system in version replies]
-Посылать информацию об операционной системе в запросах версии
+Отправлять информацию об операционной системе в запросах версии
 [Accept only in band incoming filetransfers (don't disclose own IP)]
 Разрешать передачу файлов только внутри потока (не раскрывать свой IP)
 [Accept HTTP Authentication requests (XEP-0070)]
@@ -1527,22 +1525,22 @@ XML для MS Excel (кодировка UTF-8)
 Удалить
 [** Default **]
 ** По умолчанию **
-[** Subsription: both **]
+[** Subscription: both **]
 ** Подписка: обе **
-[** Subsription: to **]
+[** Subscription: to **]
 ** Подписка: в **
-[** Subsription: from **]
+[** Subscription: from **]
 ** Подписка: от **
-[** Subsription: none **]
+[** Subscription: none **]
 ** Подписка: нет **
 [<none>]
 <нет>
 [Message]
 Сообщение
 [Presence (in)]
-Присутствие (вх)
+Присутствие (вх.)
 [Presence (out)]
-Присутствие (исх)
+Присутствие (исх.)
 [Query]
 Запрос
 [List has no rules, empty lists will be deleted then changes applied]
@@ -1601,7 +1599,7 @@ XML для MS Excel (кодировка UTF-8)
 Невозможно сохранить список, т.к. вы не в сети.
 [List Editor...]
 Редактор списков...
-[No compatible file transfer machanism exist]
+[No compatible file transfer mechanism exists]
 Не найдено ни одного совместимого механизма передачи файлов
 [Protocol is offline or no JID]
 Протокол не в сети или нет JID
@@ -1674,7 +1672,7 @@ XML для MS Excel (кодировка UTF-8)
 [Error %s %s\r\nPlease select other server]
 Ошибка %s %s\r\nПожалуйста, выберите другой сервер
 [Error: unknown reply received\r\nPlease select other server]
-Ошибка: принят неизвестный ответ\r\nПожалуйта выберите другой сервер
+Ошибка: принят неизвестный ответ\r\nПожалуйста, выберите другой сервер
 [Error %s %s\r\nTry to specify more detailed]
 Ошибка %s %s\r\nПопытайтесь указать больше деталей
 [Search error]
@@ -1762,7 +1760,7 @@ XML для MS Excel (кодировка UTF-8)
 [none]
 нет
 [Last logoff time]
-Время выхода:
+Время выхода
 [Uptime]
 Время работы
 [Logoff message]
@@ -1816,7 +1814,7 @@ XML для MS Excel (кодировка UTF-8)
 [Remote server error]
 Ошибка удалённого сервера
 [Service unavailable]
-Cлужба недоступна
+Служба недоступна
 [Remote server timeout]
 Таймаут удалённого сервера
 [Unknown error]
@@ -1837,8 +1835,6 @@ Cлужба недоступна
 Женский
 [Only JPG, GIF, and BMP image files smaller than 40 KB are supported.]
 Поддерживаются только изображения JPG, GIF и BMP, которые меньше 40 Кб.
-[Jabber vCard]
-Jabber vCard
 [Jabber vCard: Edit Email Address]
 Jabber vCard: редактирование E-mail
 [Jabber vCard: Edit Phone Number]
@@ -1848,7 +1844,7 @@ Jabber vCard: редактирование телефона
 [Note]
 Заметка
 [%s connection]
-%s подключение 
+%s подключение
 [Afraid]
 Испуганный
 [Amazed]
@@ -1878,7 +1874,7 @@ Jabber vCard: редактирование телефона
 [Confident]
 Уверенный
 [Confused]
-Cмущённый
+Смущённый
 [Contemplative]
 Задумчивый
 [Contented]

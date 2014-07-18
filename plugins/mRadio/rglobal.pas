@@ -21,7 +21,7 @@ const
 
 const
   chan         :HSTREAM = 0;
-  ActiveContact:HCONTACT = 0;
+  ActiveContact:TMCONTACT = 0;
   ActiveURL    :PWideChar = nil;
 
 const
@@ -119,6 +119,7 @@ const
   IcoBtnRecDn   :PAnsiChar = 'Radio_RecDn';
   IcoBtnAdd     :PAnsiChar = 'Radio_Add';
   IcoBtnDel     :PAnsiChar = 'Radio_Del';
+  IcoBtnOpen    :PAnsiChar = 'Radio_Open';
 
 //----- EAX -----
 
@@ -159,17 +160,16 @@ const
 
 
 function MakeMessage:pWideChar;
-procedure SetStatus(hContact:HCONTACT;status:integer);
+procedure SetStatus(hContact:TMCONTACT;status:integer);
 function GetDefaultRecPath:pWideChar;
 function GetStatusText(status:integer;toCList:boolean=false):PWideChar;
-
 
 implementation
 
 uses
   common, dbsettings;
 
-procedure SetStatus(hContact:HCONTACT;status:integer);
+procedure SetStatus(hContact:TMCONTACT;status:integer);
 begin
 //  if Status=ID_STATUS_OFFLINE then
 //    MyStopBass;

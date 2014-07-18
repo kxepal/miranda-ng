@@ -10,8 +10,6 @@
 ;file \plugins\WhoUsesMyFiles\res\resource.rc
 [WUMF: Current connections]
 
-[OK]
-ОК
 [Popup delay settings]
 
 [Popup Delay (seconds)]
@@ -57,8 +55,6 @@
 [Show current connections]
 
 ;file \plugins\WhoUsesMyFiles\src\wumf.cpp
-[ID]
-Идентификатор
 [User]
 Потребител
 [File]
@@ -88,7 +84,7 @@
 
 [Show connections list]
 
-[Wumf]
+[Who uses my files]
 
 [Services]
 Услуги

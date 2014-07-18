@@ -186,7 +186,7 @@ int fnAddContactToGroup(struct ClcData *dat, ClcGroup *group, MCONTACT hContact)
 	i = cli.pfnAddItemToGroup(group, index + 1);
 	char *szProto = GetContactProto(hContact);
 	group->cl.items[i]->type = CLCIT_CONTACT;
-	group->cl.items[i]->iImage = CallService(MS_CLIST_GETCONTACTICON, (WPARAM) hContact, 0);
+	group->cl.items[i]->iImage = CallService(MS_CLIST_GETCONTACTICON, hContact, 0);
 	group->cl.items[i]->hContact = hContact;
 	group->cl.items[i]->proto = szProto;
 	if (szProto != NULL && !cli.pfnIsHiddenMode(dat, db_get_w(hContact, szProto, "Status", ID_STATUS_OFFLINE)))
@@ -378,7 +378,7 @@ void fnRebuildEntireList(HWND hwnd, struct ClcData *dat)
 				group->totalMembers++;
 
 				if (dat->filterSearch && dat->szQuickSearch[0] != '\0') {
-					TCHAR *name = cli.pfnGetContactDisplayName(hContact, GCDNF_TCHAR);
+					TCHAR *name = cli.pfnGetContactDisplayName(hContact, 0);
 					TCHAR *lowered_name = CharLowerW(NEWTSTR_ALLOCA(name));
 					TCHAR *lowered_search = CharLowerW(NEWTSTR_ALLOCA(dat->szQuickSearch));
 

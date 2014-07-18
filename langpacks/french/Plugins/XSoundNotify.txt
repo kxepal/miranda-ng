@@ -24,19 +24,15 @@ Changer
 RAZ
 [Ignore sound for this contact]
 
-[XSoundNotify]
-
-[OK]
-OK
 [Cancel]
 Annuler
 ;file \plugins\XSoundNotify\src\dialog.cpp
 [Custom sound for %s (%s)]
 
 [Sound files]
-
+Fichiers son
 [WAV files]
-
+Fichiers WAV
 ;file \plugins\XSoundNotify\src\options.cpp
 [Sounds]
 Sons

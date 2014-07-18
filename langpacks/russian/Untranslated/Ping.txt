@@ -1,5 +1,0 @@
-﻿[OK]
-[All\0*.*\0Text\0*.TXT\0]
-[Ping Graph]
-[Ping Reply]
-[Ping Timeout]

@@ -81,8 +81,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\include;..\..\plugins\ExternalAPI;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\api;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\ipc;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\types;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading\win;..\..\..\SkypeKit\SDK\ipc\cpp;..\..\..\SkypeKit\SDK\ipc\cpp\VideoBuffers;..\..\..\SkypeKit\SDK\ipc\cpp\platform\se;..\..\..\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include;..\..\..\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include\openssl;..\..\..\SkypeKit\SDK\ipc\cpp\ssl\cyassl\ctaocrypt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\include;..\..\plugins\ExternalAPI;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\api;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\ipc;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\types;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading\win;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\VideoBuffers;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\platform\se;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include\openssl;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\ssl\cyassl\ctaocrypt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -94,7 +94,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProfileDir)..\..\bin12\lib;$(ProfileDir)..\..\..\SkypeKit\SDK\lib\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProfileDir)..\..\bin12\lib;$(ProfileDir)..\..\..\miranda-private-keys\SkypeKit\SDK\lib2013\Debug</AdditionalLibraryDirectories>
       <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>comctl32.lib;Shlwapi.lib;Ws2_32.lib;Advapi32.lib;skypekit-cyassl_lib_x86.lib;skypekit-cppwrapper_2_lib_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -110,7 +110,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\include;..\..\plugins\ExternalAPI;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\api;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\ipc;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\types;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading\win;..\..\..\SkypeKit\SDK\ipc\cpp;..\..\..\SkypeKit\SDK\ipc\cpp\VideoBuffers;..\..\..\SkypeKit\SDK\ipc\cpp\platform\se;..\..\..\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include;..\..\..\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include\openssl;..\..\..\SkypeKit\SDK\ipc\cpp\ssl\cyassl\ctaocrypt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\plugins\ExternalAPI;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\api;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\ipc;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\types;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading\win;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\VideoBuffers;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\platform\se;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include\openssl;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\ssl\cyassl\ctaocrypt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -122,7 +122,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProfileDir)..\..\bin12\lib;$(ProfileDir)..\..\..\SkypeKit\SDK\lib\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProfileDir)..\..\bin12\lib;$(ProfileDir)..\..\..\miranda-private-keys\SkypeKit\SDK\lib2013\Debug</AdditionalLibraryDirectories>
       <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>comctl32.lib;Shlwapi.lib;Ws2_32.lib;Advapi32.lib;skypekit-cyassl_lib_x64.lib;skypekit-cppwrapper_2_lib_x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -139,8 +139,8 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\include;..\..\plugins\ExternalAPI;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\api;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\ipc;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\types;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading\win;..\..\..\SkypeKit\SDK\ipc\cpp;..\..\..\SkypeKit\SDK\ipc\cpp\VideoBuffers;..\..\..\SkypeKit\SDK\ipc\cpp\platform\se;..\..\..\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include;..\..\..\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include\openssl;..\..\..\SkypeKit\SDK\ipc\cpp\ssl\cyassl\ctaocrypt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\include;..\..\plugins\ExternalAPI;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\api;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\ipc;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\types;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading\win;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\VideoBuffers;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\platform\se;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include\openssl;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\ssl\cyassl\ctaocrypt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ObjectFileName>$(IntDir)\%(RelativeDir)\</ObjectFileName>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -153,7 +153,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <AdditionalDependencies>comctl32.lib;Shlwapi.lib;Ws2_32.lib;Advapi32.lib;skypekit-cyassl_lib_x86.lib;skypekit-cppwrapper_2_lib_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProfileDir)..\..\bin12\lib;$(ProfileDir)..\..\..\SkypeKit\SDK\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProfileDir)..\..\bin12\lib;$(ProfileDir)..\..\..\miranda-private-keys\SkypeKit\SDK\lib2013\Release</AdditionalLibraryDirectories>
       <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
     </Link>
     <ResourceCompile>
@@ -168,7 +168,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\include;..\..\plugins\ExternalAPI;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\api;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\ipc;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\types;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading;..\..\..\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading\win;..\..\..\SkypeKit\SDK\ipc\cpp;..\..\..\SkypeKit\SDK\ipc\cpp\VideoBuffers;..\..\..\SkypeKit\SDK\ipc\cpp\platform\se;..\..\..\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include;..\..\..\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include\openssl;..\..\..\SkypeKit\SDK\ipc\cpp\ssl\cyassl\ctaocrypt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\plugins\ExternalAPI;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\api;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\ipc;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\types;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading;..\..\..\miranda-private-keys\SkypeKit\SDK\interfaces\skype\cpp_embedded\src\platform\threading\win;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\VideoBuffers;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\platform\se;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\ssl\cyassl\include\openssl;..\..\..\miranda-private-keys\SkypeKit\SDK\ipc\cpp\ssl\cyassl\ctaocrypt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ObjectFileName>$(IntDir)\%(RelativeDir)\</ObjectFileName>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -181,7 +181,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <AdditionalDependencies>comctl32.lib;Shlwapi.lib;Ws2_32.lib;Advapi32.lib;skypekit-cyassl_lib_x64.lib;skypekit-cppwrapper_2_lib_x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProfileDir)..\..\bin12\lib;$(ProfileDir)..\..\..\SkypeKit\SDK\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProfileDir)..\..\bin12\lib;$(ProfileDir)..\..\..\miranda-private-keys\SkypeKit\SDK\lib2013\Release</AdditionalLibraryDirectories>
       <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
     </Link>
     <ResourceCompile>

@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: WhenWasIt.dll
 ;  Plugin: Birthday reminder
-;  Version: 0.3.3.4
+;  Version: 0.3.3.5
 ;  Authors: Cristian Libotean
 ;============================================================
 [Notifies you of upcoming birthdays.]
@@ -70,8 +70,6 @@ Zavřít
 Zobrazit všechny kontakty
 [Set birthday:]
 Nastavit narozeniny:
-[OK]
-OK
 [Manage anniversaries]
 Spravovat výročí
 [Title:]

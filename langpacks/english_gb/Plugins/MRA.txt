@@ -1,9 +1,9 @@
 ﻿#muuid {e7c48bab-8ace-4cb3-8446-d4b73481f497}
 ;============================================================
 ;  File: MRA.dll
-;  Plugin: MRA
+;  Plugin: MRA protocol
 ;  Version: 2.1.0.8
-;  Authors: Ivan Rozhuk
+;  Authors: Rozhuk Ivan
 ;============================================================
 [Automatically request authorization on logon]
 Automatically request authorisation on logon
@@ -11,6 +11,8 @@ Automatically request authorisation on logon
 Automatically grant authorisation to users in contact list
 [Automatically grant authorization to new users]
 Automatically grant authorisation to new users
+[Automatic authorization on Mail.ru web services]
+Automatic authorisation on Mail.ru web services
 [Background color]
 Background colour
 [&Use Windows colors]

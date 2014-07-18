@@ -1,9 +1,9 @@
 ﻿#muuid {e7c48bab-8ace-4cb3-8446-d4b73481f497}
 ;============================================================
 ;  File: MRA.dll
-;  Plugin: MRA
+;  Plugin: MRA protocol
 ;  Version: 2.1.0.8
-;  Authors: Ivan Rozhuk
+;  Authors: Rozhuk Ivan
 ;============================================================
 [Miranda Mail.ru Agent protocol plugin.]
 Пратакол Mail.ru Agent для Miranda NG.
@@ -30,6 +30,8 @@
 Аўтаматычна аўтарызоўваць кантакты ў спісе
 [Automatically grant authorization to new users]
 Аўтаматычна аўтарызоўваць новыя кантакты
+[Automatic authorization on Mail.ru web services]
+Аўтаматычная аўтарызацыя на вэб-сэрвісах Mail.ru
 [Notify me when a message delivery has failed]
 Абвясціць, калі паведамленне не дайшло
 [Notify about new mail if increment]
@@ -64,7 +66,7 @@
 да:
 [Birthday:]
 Дзень нараджэння:
-[Zodiak:]
+[Zodiac:]
 Задыяк:
 [Location]
 Месца
@@ -234,8 +236,6 @@ xСтатус "%s"
 Анкета
 [My Album]
 Мой альбом
-[My Blog]
-Мой блог
 [My Blog Status]
 Мой блог статус
 [My Video]
@@ -256,12 +256,12 @@ xСтатус "%s"
 Запытаць аўтарызацыю
 [Grant authorization]
 Аўтарызаваць
+[&Send E-Mail]
+Звязацца па пошце
 [&Send postcard]
 Адправіць паштоўку
 [&View Album]
 Глядзець альбом
-[&Read Blog]
-Блог
 [Reply Blog Status]
 Адказаць на статус блога
 [View Video]
@@ -372,6 +372,8 @@ Mail.ru дадаткова
 Калі ласка, увядзіце e-mail у наладах
 [Please, setup password in options]
 Калі ласка, увядзіце пароль у наладах
+[Thread creation failure]
+Памылка стварэння струменя
 [Logon error: invalid login/password]
 Памылка пры праверкі імя карыстача/пароля
 [MRIM_CS_MESSAGE_STATUS: not found in queue]
@@ -408,7 +410,7 @@ MRIM_CS_SMS_ACK: не знойдзены ў чэргі
 [On WC]
 У туалеце
 [Cooking]
-Гатую 
+Гатую
 [Walking]
 Гуляю
 [Alien]
@@ -493,3 +495,5 @@ MRIM_CS_SMS_ACK: не знойдзены ў чэргі
 Зорка
 [Music]
 Музыка
+[Dating]
+Знаёмствы

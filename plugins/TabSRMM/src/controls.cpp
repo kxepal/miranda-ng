@@ -82,7 +82,7 @@ CMenuBar::CMenuBar(HWND hwndParent, const TContainerData *pContainer)
 	m_isContactMenu = m_isMainMenu = false;
 	HookEventParam(ME_LANGPACK_CHANGED, &::resetLP, (LPARAM)this);
 
-	::SetWindowLongPtr(m_hwndToolbar, GWLP_USERDATA, (UINT_PTR)this);
+	::SetWindowLongPtr(m_hwndToolbar, GWLP_USERDATA, (LONG_PTR)this);
 	mir_subclassWindow(m_hwndToolbar, wndProc);
 }
 
@@ -1013,7 +1013,7 @@ LONG_PTR CALLBACK StatusBarSubclassProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 							mir_sntprintf(wBuf, SIZEOF(wBuf), TranslateT("Sounds are %s. Click to toggle status, hold SHIFT and click to set for all open containers"),
 								pContainer->dwFlags & CNT_NOSOUND ? TranslateT("disabled") : TranslateT("enabled"));
 
-						else if (sid->dwId == MSG_ICON_UTN && dat && dat->bType == SESSIONTYPE_IM) {
+						else if (sid->dwId == MSG_ICON_UTN && dat && (dat->bType == SESSIONTYPE_IM || dat->si->iType == GCW_PRIVMESS)) {
 							int mtnStatus = db_get_b(dat->hContact, SRMSGMOD, SRMSGSET_TYPING, M.GetByte(SRMSGMOD, SRMSGSET_TYPINGNEW, SRMSGDEFSET_TYPINGNEW));
 							mir_sntprintf(wBuf, SIZEOF(wBuf), TranslateT("Sending typing notifications is %s."),
 								mtnStatus ? TranslateT("enabled") : TranslateT("disabled"));
@@ -1036,7 +1036,7 @@ LONG_PTR CALLBACK StatusBarSubclassProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 					int iQueued = db_get_dw(dat->hContact, "SendLater", "count", 0);
 					gtxl.codepage = CP_UTF8;
 					gtxl.flags = GTL_DEFAULT | GTL_PRECISE | GTL_NUMBYTES;
-					iLength = SendDlgItemMessage(dat->hwnd, dat->bType == SESSIONTYPE_IM ? IDC_MESSAGE : IDC_CHAT_MESSAGE, EM_GETTEXTLENGTHEX, (WPARAM)& gtxl, 0);
+					iLength = SendDlgItemMessage(dat->hwnd, dat->bType == SESSIONTYPE_IM ? IDC_MESSAGE : IDC_CHAT_MESSAGE, EM_GETTEXTLENGTHEX, (WPARAM)&gtxl, 0);
 					tooltip_active = TRUE;
 
 					const TCHAR *szFormat = TranslateT("There are %d pending send jobs. Message length: %d bytes, message length limit: %d bytes\n\n%d messages are queued for later delivery");

@@ -33,43 +33,42 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 INT_PTR CALLBACK DlgProcSBarOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
 
-#define FONTF_NORMAL 0
-#define FONTF_BOLD   1
-#define FONTF_ITALIC 2
-#define FONTF_UNDERLINE  4
+#define FONTF_NORMAL	0
+#define FONTF_BOLD		1
+#define FONTF_ITALIC	2
+#define FONTF_UNDERLINE	4
 
-struct FontOptionsList
-{
-	DWORD      dwFlags;
-	int        fontID;
-	TCHAR     *szGroup;
-	TCHAR     *szDescr;
-	COLORREF   defColour;
-	TCHAR     *szDefFace;
-	BYTE       defCharset, defStyle;
-	char       defSize;
+struct FontOptionsList {
+	DWORD dwFlags;
+	int fontID;
+	TCHAR *szGroup;
+	TCHAR *szDescr;
+	COLORREF defColour;
+	TCHAR *szDefFace;
+	BYTE defCharset, defStyle;
+	char defSize;
 	FONTEFFECT defeffect;
 
-	COLORREF   colour;
-	TCHAR      szFace[LF_FACESIZE];
-	BYTE       charset, style;
-	char       size;
+	COLORREF colour;
+	TCHAR szFace[LF_FACESIZE];
+	BYTE charset, style;
+	char size;
 };
 
-#define CLCGROUP        LPGENT("Contact List")_T("/")LPGENT("Contact names")
-#define CLCLINESGROUP   LPGENT("Contact List")_T("/")LPGENT("Row items")
-#define CLCFRAMESGROUP  LPGENT("Contact List")_T("/")LPGENT("Frame texts")
-#define CLCCOLOURSGROUP LPGENT("Contact List")_T("/")LPGENT("Special colors")
+#define CLCGROUP			LPGENT("Contact list")_T("/")LPGENT("Contact names")
+#define CLCLINESGROUP		LPGENT("Contact list")_T("/")LPGENT("Row items")
+#define CLCFRAMESGROUP		LPGENT("Contact list")_T("/")LPGENT("Frame texts")
+#define CLCCOLOURSGROUP		LPGENT("Contact list")_T("/")LPGENT("Special colors")
 
-#define DEFAULT_COLOUR     RGB(0, 0, 0)
-#define DEFAULT_GREYCOLOUR RGB(128, 128, 128)
-#define DEFAULT_BACKCOLOUR RGB(255, 255, 255)
+#define DEFAULT_COLOUR		RGB(0, 0, 0)
+#define DEFAULT_GREYCOLOUR	RGB(128, 128, 128)
+#define DEFAULT_BACKCOLOUR	RGB(255, 255, 255)
 
-#define DEFAULT_FAMILY     _T("Arial")
-#define DEFAULT_EFFECT     { 0, 0x00000000, 0x00000000 }
+#define DEFAULT_FAMILY		_T("Arial")
+#define DEFAULT_EFFECT		{ 0, 0x00000000, 0x00000000 }
 
-#define DEFAULT_SIZE      -11
-#define DEFAULT_SMALLSIZE  -8
+#define DEFAULT_SIZE		-11
+#define DEFAULT_SMALLSIZE	-8
 
 static struct FontOptionsList fontOptionsList[] = {
 	{ FIDF_CLASSGENERAL, FONTID_CONTACTS,              CLCGROUP,       LPGENT("Standard contacts"),                                           DEFAULT_COLOUR,     DEFAULT_FAMILY, DEFAULT_CHARSET, FONTF_NORMAL, DEFAULT_SIZE, DEFAULT_EFFECT },
@@ -100,17 +99,15 @@ static struct FontOptionsList fontOptionsList[] = {
 	{ FIDF_CLASSGENERAL, FONTID_VIEMODES,              CLCFRAMESGROUP, LPGENT("Current view mode text"),                                      DEFAULT_COLOUR,     DEFAULT_FAMILY, DEFAULT_CHARSET, FONTF_NORMAL, DEFAULT_SIZE, DEFAULT_EFFECT },
 };
 
-struct ColourOptionsList
-{
-	char*    chGroup;
-	char*    chName;
-	TCHAR*   szGroup;
-	TCHAR*   szDescr;
+struct ColourOptionsList {
+	char *chGroup;
+	char *chName;
+	TCHAR *szGroup;
+	TCHAR *szDescr;
 	COLORREF defColour;
 };
 
-static struct ColourOptionsList colourOptionsList[] =
-{
+static struct ColourOptionsList colourOptionsList[] = {
 	{ "CLC",            "BkColour",          CLCGROUP,         LPGENT("Background"),                              CLCDEFAULT_BKCOLOUR },
 	{ "CLC",            "Rows_BkColour",     CLCLINESGROUP,    LPGENT("Background"),                              CLCDEFAULT_BKCOLOUR },
 	{ "CLC",            "Frames_BkColour",   CLCFRAMESGROUP,   LPGENT("Background"),                              CLCDEFAULT_BKCOLOUR },
@@ -126,7 +123,7 @@ static struct ColourOptionsList colourOptionsList[] =
 	{ "ModernSettings", "KeyColor",          CLCCOLOURSGROUP,  LPGENT("3rd party frames transparent back color"), SETTING_KEYCOLOR_DEFAULT }
 };
 
-void RegisterCLUIFonts( void )
+void RegisterCLUIFonts(void)
 {
 	static bool registered = false;
 	if (registered)
@@ -193,9 +190,9 @@ DWORD GetDefaultExStyle(void)
 {
 	BOOL param;
 	DWORD ret = CLCDEFAULT_EXSTYLE;
-	if (SystemParametersInfo(SPI_GETLISTBOXSMOOTHSCROLLING, 0, &param,FALSE) && !param)
+	if (SystemParametersInfo(SPI_GETLISTBOXSMOOTHSCROLLING, 0, &param, FALSE) && !param)
 		ret |= CLS_EX_NOSMOOTHSCROLLING;
-	if (SystemParametersInfo(SPI_GETHOTTRACKING, 0, &param,FALSE) && !param)
+	if (SystemParametersInfo(SPI_GETHOTTRACKING, 0, &param, FALSE) && !param)
 		ret &= ~CLS_EX_TRACKSELECT;
 	return ret;
 }
@@ -233,8 +230,7 @@ void GetFontSetting(int i, LOGFONT *lf, COLORREF *colour, BYTE *effect, COLORREF
 	}
 }
 
-struct CheckBoxToStyleEx_t
-{
+struct CheckBoxToStyleEx_t {
 	int id;
 	DWORD flag;
 	int neg;
@@ -259,6 +255,7 @@ struct CheckBoxValues_t {
 	DWORD style;
 	TCHAR *szDescr;
 };
+
 static const struct CheckBoxValues_t greyoutValues[] = {
 	{ GREYF_UNFOCUS, LPGENT("Not focused") },
 	{ MODEF_OFFLINE, LPGENT("Offline") },
@@ -273,8 +270,7 @@ static const struct CheckBoxValues_t greyoutValues[] = {
 	{ PF2_ONTHEPHONE, LPGENT("On the phone") }
 };
 
-static const struct CheckBoxValues_t offlineValues[] =
-{
+static const struct CheckBoxValues_t offlineValues[] = {
 	{ MODEF_OFFLINE, LPGENT("Offline") },
 	{ PF2_ONLINE, LPGENT("Online") },
 	{ PF2_SHORTAWAY, LPGENT("Away") },
@@ -287,19 +283,18 @@ static const struct CheckBoxValues_t offlineValues[] =
 	{ PF2_ONTHEPHONE, LPGENT("On the phone") }
 };
 
-static void FillCheckBoxTree(HWND hwndTree,const struct CheckBoxValues_t *values,int nValues,DWORD style)
+static void FillCheckBoxTree(HWND hwndTree, const struct CheckBoxValues_t *values, int nValues, DWORD style)
 {
 	TVINSERTSTRUCT tvis;
 	tvis.hParent = NULL;
 	tvis.hInsertAfter = TVI_LAST;
-	tvis.item.mask = TVIF_PARAM|TVIF_TEXT|TVIF_STATE|TVIF_IMAGE;
-	for (int i=0; i < nValues; i++) {
+	tvis.item.mask = TVIF_PARAM | TVIF_TEXT | TVIF_STATE;
+	for (int i = 0; i < nValues; i++) {
 		tvis.item.lParam = values[i].style;
 		tvis.item.pszText = TranslateTS(values[i].szDescr);
 		tvis.item.stateMask = TVIS_STATEIMAGEMASK;
-		tvis.item.state = INDEXTOSTATEIMAGEMASK((style&tvis.item.lParam) != 0?2:1);
-		tvis.item.iImage = tvis.item.iSelectedImage = (style&tvis.item.lParam) != 0?1:0;
-		TreeView_InsertItem(hwndTree,&tvis);
+		tvis.item.state = INDEXTOSTATEIMAGEMASK((style & tvis.item.lParam) != 0 ? 2 : 1);
+		TreeView_InsertItem(hwndTree, &tvis);
 	}
 }
 
@@ -307,18 +302,28 @@ static DWORD MakeCheckBoxTreeFlags(HWND hwndTree)
 {
 	DWORD flags = 0;
 	TVITEM tvi;
-	tvi.mask = TVIF_HANDLE | TVIF_PARAM | TVIF_IMAGE;
+	tvi.mask = TVIF_HANDLE | TVIF_PARAM | TVIF_STATE;
 	tvi.hItem = TreeView_GetRoot(hwndTree);
-	while(tvi.hItem) {
-		TreeView_GetItem(hwndTree,&tvi);
-		if (tvi.iImage)
+	while (tvi.hItem) {
+		TreeView_GetItem(hwndTree, &tvi);
+		if ((tvi.state & TVIS_STATEIMAGEMASK) >> 12 == 2)
 			flags |= tvi.lParam;
-		tvi.hItem = TreeView_GetNextSibling(hwndTree,tvi.hItem);
+		tvi.hItem = TreeView_GetNextSibling(hwndTree, tvi.hItem);
 	}
 	return flags;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
+
+static void CheckButtons(HWND hwndDlg)
+{
+	BYTE t = IsDlgButtonChecked(hwndDlg, IDC_METAEXPAND);
+	EnableWindow(GetDlgItem(hwndDlg, IDC_METADBLCLK), t);
+	EnableWindow(GetDlgItem(hwndDlg, IDC_METASUBEXTRA), t);
+	EnableWindow(GetDlgItem(hwndDlg, IDC_METASUB_HIDEOFFLINE), t);
+	EnableWindow(GetDlgItem(hwndDlg, IDC_SUBINDENTSPIN), t);
+	EnableWindow(GetDlgItem(hwndDlg, IDC_SUBINDENT), t);
+}
 
 static INT_PTR CALLBACK DlgProcClistAdditionalOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -338,38 +343,15 @@ static INT_PTR CALLBACK DlgProcClistAdditionalOpts(HWND hwndDlg, UINT msg, WPARA
 		SendDlgItemMessage(hwndDlg, IDC_SUBINDENTSPIN, UDM_SETBUDDY, (WPARAM)GetDlgItem(hwndDlg, IDC_SUBINDENT), 0);
 		SendDlgItemMessage(hwndDlg, IDC_SUBINDENTSPIN, UDM_SETRANGE, 0, MAKELONG(50, 0));
 		SendDlgItemMessage(hwndDlg, IDC_SUBINDENTSPIN, UDM_SETPOS, 0, MAKELONG(db_get_b(NULL, "CLC", "SubIndent", CLCDEFAULT_GROUPINDENT), 0));
-		{
-			BYTE t = IsDlgButtonChecked(hwndDlg, IDC_METAEXPAND);
-			EnableWindow(GetDlgItem(hwndDlg, IDC_METADBLCLK), t);
-			EnableWindow(GetDlgItem(hwndDlg, IDC_METASUBEXTRA), t);
-			EnableWindow(GetDlgItem(hwndDlg, IDC_METASUB_HIDEOFFLINE), t);
-			EnableWindow(GetDlgItem(hwndDlg, IDC_SUBINDENTSPIN), t);
-			EnableWindow(GetDlgItem(hwndDlg, IDC_SUBINDENT), t);
-
-			t = ServiceExists(MS_MC_GETMOSTONLINECONTACT);
-			CLUI_ShowWindowMod(GetDlgItem(hwndDlg, IDC_META), t);
-			CLUI_ShowWindowMod(GetDlgItem(hwndDlg, IDC_METADBLCLK), t);
-			CLUI_ShowWindowMod(GetDlgItem(hwndDlg, IDC_METASUB_HIDEOFFLINE), t);
-			CLUI_ShowWindowMod(GetDlgItem(hwndDlg, IDC_METAEXPAND), t);
-			CLUI_ShowWindowMod(GetDlgItem(hwndDlg, IDC_METASUBEXTRA), t);
-			CLUI_ShowWindowMod(GetDlgItem(hwndDlg, IDC_FRAME_META), t);
-			CLUI_ShowWindowMod(GetDlgItem(hwndDlg, IDC_FRAME_META_CAPT), !t);
-			CLUI_ShowWindowMod(GetDlgItem(hwndDlg, IDC_SUBINDENTSPIN), t);
-			CLUI_ShowWindowMod(GetDlgItem(hwndDlg, IDC_SUBINDENT), t);
-			CLUI_ShowWindowMod(GetDlgItem(hwndDlg, IDC_SUBIDENTCAPT), t);
-		}
+		CheckButtons(hwndDlg);
 		return TRUE;
 
 	case WM_COMMAND:
-		if (LOWORD(wParam) == IDC_METAEXPAND) {
-			BYTE t = IsDlgButtonChecked(hwndDlg, IDC_METAEXPAND);
-			EnableWindow(GetDlgItem(hwndDlg, IDC_METADBLCLK), t);
-			EnableWindow(GetDlgItem(hwndDlg, IDC_METASUBEXTRA), t);
-			EnableWindow(GetDlgItem(hwndDlg, IDC_METASUB_HIDEOFFLINE), t);
-			EnableWindow(GetDlgItem(hwndDlg, IDC_SUBINDENTSPIN), t);
-			EnableWindow(GetDlgItem(hwndDlg, IDC_SUBINDENT), t);
-		}
-		if ((LOWORD(wParam) == IDC_SUBINDENT) && (HIWORD(wParam) != EN_CHANGE || (HWND)lParam != GetFocus())) return 0;
+		if (LOWORD(wParam) == IDC_METAEXPAND)
+			CheckButtons(hwndDlg);
+
+		if ((LOWORD(wParam) == IDC_SUBINDENT) && (HIWORD(wParam) != EN_CHANGE || (HWND)lParam != GetFocus()))
+			return 0;
 		SendMessage(GetParent(hwndDlg), PSM_CHANGED, (WPARAM)hwndDlg, 0);
 		return TRUE;
 
@@ -378,20 +360,20 @@ static INT_PTR CALLBACK DlgProcClistAdditionalOpts(HWND hwndDlg, UINT msg, WPARA
 		case 0:
 			switch (((LPNMHDR)lParam)->code) {
 			case PSN_APPLY:
-				db_set_b(NULL,"CLC","Meta",(BYTE)IsDlgButtonChecked(hwndDlg,IDC_META)); // by FYR
-				db_set_b(NULL,"CLC","MetaDoubleClick",(BYTE)IsDlgButtonChecked(hwndDlg,IDC_METADBLCLK)); // by FYR
-				db_set_b(NULL,"CLC","MetaHideExtra",(BYTE)IsDlgButtonChecked(hwndDlg,IDC_METASUBEXTRA)); // by FYR
-				db_set_b(NULL,"CLC","MetaIgnoreEmptyExtra",(BYTE)IsDlgButtonChecked(hwndDlg,IDC_METASUBEXTRA_IGN)); // by FYR
-				db_set_b(NULL,"CLC","MetaHideOfflineSub",(BYTE)IsDlgButtonChecked(hwndDlg,IDC_METASUB_HIDEOFFLINE)); // by FYR
-				db_set_b(NULL,"CLC","MetaExpanding",(BYTE)IsDlgButtonChecked(hwndDlg,IDC_METAEXPAND));
-				db_set_b(NULL,"ModernData","InternalAwayMsgDiscovery",(BYTE)IsDlgButtonChecked(hwndDlg,IDC_DISCOVER_AWAYMSG));
-				db_set_b(NULL,"ModernData","RemoveAwayMessageForOffline",(BYTE)IsDlgButtonChecked(hwndDlg,IDC_REMOVE_OFFLINE_AWAYMSG));
-				db_set_b(NULL,"CLC","FilterSearch",(BYTE)IsDlgButtonChecked(hwndDlg,IDC_FILTER_SEARCH)); // by Robyer
+				db_set_b(NULL, "CLC", "Meta", (BYTE)IsDlgButtonChecked(hwndDlg, IDC_META));
+				db_set_b(NULL, "CLC", "MetaDoubleClick", (BYTE)IsDlgButtonChecked(hwndDlg, IDC_METADBLCLK));
+				db_set_b(NULL, "CLC", "MetaHideExtra", (BYTE)IsDlgButtonChecked(hwndDlg, IDC_METASUBEXTRA));
+				db_set_b(NULL, "CLC", "MetaIgnoreEmptyExtra", (BYTE)IsDlgButtonChecked(hwndDlg, IDC_METASUBEXTRA_IGN));
+				db_set_b(NULL, "CLC", "MetaHideOfflineSub", (BYTE)IsDlgButtonChecked(hwndDlg, IDC_METASUB_HIDEOFFLINE));
+				db_set_b(NULL, "CLC", "MetaExpanding", (BYTE)IsDlgButtonChecked(hwndDlg, IDC_METAEXPAND));
+				db_set_b(NULL, "ModernData", "InternalAwayMsgDiscovery", (BYTE)IsDlgButtonChecked(hwndDlg, IDC_DISCOVER_AWAYMSG));
+				db_set_b(NULL, "ModernData", "RemoveAwayMessageForOffline", (BYTE)IsDlgButtonChecked(hwndDlg, IDC_REMOVE_OFFLINE_AWAYMSG));
+				db_set_b(NULL, "CLC", "FilterSearch", (BYTE)IsDlgButtonChecked(hwndDlg, IDC_FILTER_SEARCH));
 
-				db_set_b(NULL,"CLC","SubIndent",(BYTE)SendDlgItemMessage(hwndDlg,IDC_SUBINDENTSPIN,UDM_GETPOS, 0, 0));
+				db_set_b(NULL, "CLC", "SubIndent", (BYTE)SendDlgItemMessage(hwndDlg, IDC_SUBINDENTSPIN, UDM_GETPOS, 0, 0));
 				ClcOptionsChanged();
 				CLUI_ReloadCLUIOptions();
-				PostMessage(pcli->hwndContactList,WM_SIZE, 0, 0);
+				PostMessage(pcli->hwndContactList, WM_SIZE, 0, 0);
 				return TRUE;
 			}
 		}
@@ -407,36 +389,29 @@ static INT_PTR CALLBACK DlgProcClistListOpts(HWND hwndDlg, UINT msg, WPARAM wPar
 	switch (msg) {
 	case WM_INITDIALOG:
 		TranslateDialogDefault(hwndDlg);
-		SetWindowLongPtr(GetDlgItem(hwndDlg,IDC_GREYOUTOPTS),GWL_STYLE,GetWindowLongPtr(GetDlgItem(hwndDlg,IDC_GREYOUTOPTS),GWL_STYLE)|TVS_NOHSCROLL);
-		SetWindowLongPtr(GetDlgItem(hwndDlg,IDC_HIDEOFFLINEOPTS),GWL_STYLE,GetWindowLongPtr(GetDlgItem(hwndDlg,IDC_HIDEOFFLINEOPTS),GWL_STYLE)|TVS_NOHSCROLL);
+		SetWindowLongPtr(GetDlgItem(hwndDlg, IDC_GREYOUTOPTS), GWL_STYLE, GetWindowLongPtr(GetDlgItem(hwndDlg, IDC_GREYOUTOPTS), GWL_STYLE) | TVS_NOHSCROLL | TVS_CHECKBOXES);
+		SetWindowLongPtr(GetDlgItem(hwndDlg, IDC_HIDEOFFLINEOPTS), GWL_STYLE, GetWindowLongPtr(GetDlgItem(hwndDlg, IDC_HIDEOFFLINEOPTS), GWL_STYLE) | TVS_NOHSCROLL | TVS_CHECKBOXES);
 		{
-			HIMAGELIST himlCheckBoxes;
-			himlCheckBoxes = ImageList_Create(GetSystemMetrics(SM_CXSMICON),GetSystemMetrics(SM_CYSMICON),ILC_COLOR32|ILC_MASK,2,2);
-			ImageList_AddIcon(himlCheckBoxes, LoadSkinnedIcon(SKINICON_OTHER_NOTICK));
-			ImageList_AddIcon(himlCheckBoxes, LoadSkinnedIcon(SKINICON_OTHER_TICK));
-			TreeView_SetImageList(GetDlgItem(hwndDlg,IDC_GREYOUTOPTS),himlCheckBoxes,TVSIL_NORMAL);
-			TreeView_SetImageList(GetDlgItem(hwndDlg,IDC_HIDEOFFLINEOPTS),himlCheckBoxes,TVSIL_NORMAL);
+			DWORD exStyle = db_get_dw(NULL, "CLC", "ExStyle", GetDefaultExStyle());
+			for (int i = 0; i < SIZEOF(checkBoxToStyleEx); i++)
+				CheckDlgButton(hwndDlg, checkBoxToStyleEx[i].id, (exStyle&checkBoxToStyleEx[i].flag) ^ (checkBoxToStyleEx[i].flag*checkBoxToStyleEx[i].neg) ? BST_CHECKED : BST_UNCHECKED);
 
-			DWORD exStyle = db_get_dw(NULL,"CLC","ExStyle",GetDefaultExStyle());
-			for (int i=0; i < SIZEOF(checkBoxToStyleEx); i++)
-				CheckDlgButton(hwndDlg,checkBoxToStyleEx[i].id,(exStyle&checkBoxToStyleEx[i].flag)^(checkBoxToStyleEx[i].flag*checkBoxToStyleEx[i].neg)?BST_CHECKED:BST_UNCHECKED);
-
-			UDACCEL accel[2] = {{0, 10},{2,50}};
-			SendDlgItemMessage(hwndDlg,IDC_SMOOTHTIMESPIN,UDM_SETRANGE, 0, MAKELONG(999,0));
-			SendDlgItemMessage(hwndDlg,IDC_SMOOTHTIMESPIN,UDM_SETACCEL,SIZEOF(accel),(LPARAM)&accel);
-			SendDlgItemMessage(hwndDlg,IDC_SMOOTHTIMESPIN,UDM_SETPOS, 0, MAKELONG(db_get_w(NULL,"CLC","ScrollTime",CLCDEFAULT_SCROLLTIME),0));
+			UDACCEL accel[2] = { { 0, 10 }, { 2, 50 } };
+			SendDlgItemMessage(hwndDlg, IDC_SMOOTHTIMESPIN, UDM_SETRANGE, 0, MAKELONG(999, 0));
+			SendDlgItemMessage(hwndDlg, IDC_SMOOTHTIMESPIN, UDM_SETACCEL, SIZEOF(accel), (LPARAM)&accel);
+			SendDlgItemMessage(hwndDlg, IDC_SMOOTHTIMESPIN, UDM_SETPOS, 0, MAKELONG(db_get_w(NULL, "CLC", "ScrollTime", CLCDEFAULT_SCROLLTIME), 0));
 		}
-		CheckDlgButton(hwndDlg,IDC_IDLE,db_get_b(NULL,"CLC","ShowIdle",CLCDEFAULT_SHOWIDLE)?BST_CHECKED:BST_UNCHECKED);
+		CheckDlgButton(hwndDlg, IDC_IDLE, db_get_b(NULL, "CLC", "ShowIdle", CLCDEFAULT_SHOWIDLE) ? BST_CHECKED : BST_UNCHECKED);
 
-		SendDlgItemMessage(hwndDlg,IDC_GROUPINDENTSPIN,UDM_SETRANGE, 0, MAKELONG(50, 0));
-		SendDlgItemMessage(hwndDlg,IDC_GROUPINDENTSPIN,UDM_SETPOS, 0, MAKELONG( db_get_b(NULL,"CLC","GroupIndent",CLCDEFAULT_GROUPINDENT),0));
-		CheckDlgButton(hwndDlg,IDC_GREYOUT,db_get_dw(NULL,"CLC","GreyoutFlags",CLCDEFAULT_GREYOUTFLAGS)?BST_CHECKED:BST_UNCHECKED);
+		SendDlgItemMessage(hwndDlg, IDC_GROUPINDENTSPIN, UDM_SETRANGE, 0, MAKELONG(50, 0));
+		SendDlgItemMessage(hwndDlg, IDC_GROUPINDENTSPIN, UDM_SETPOS, 0, MAKELONG(db_get_b(NULL, "CLC", "GroupIndent", CLCDEFAULT_GROUPINDENT), 0));
+		CheckDlgButton(hwndDlg, IDC_GREYOUT, db_get_dw(NULL, "CLC", "GreyoutFlags", CLCDEFAULT_GREYOUTFLAGS) ? BST_CHECKED : BST_UNCHECKED);
 
-		EnableWindow(GetDlgItem(hwndDlg,IDC_SMOOTHTIME),IsDlgButtonChecked(hwndDlg,IDC_NOTNOSMOOTHSCROLLING));
-		EnableWindow(GetDlgItem(hwndDlg,IDC_GREYOUTOPTS),IsDlgButtonChecked(hwndDlg,IDC_GREYOUT));
-		FillCheckBoxTree(GetDlgItem(hwndDlg,IDC_GREYOUTOPTS),greyoutValues,SIZEOF(greyoutValues),db_get_dw(NULL,"CLC","FullGreyoutFlags",CLCDEFAULT_FULLGREYOUTFLAGS));
-		FillCheckBoxTree(GetDlgItem(hwndDlg,IDC_HIDEOFFLINEOPTS),offlineValues,SIZEOF(offlineValues),db_get_dw(NULL,"CLC","OfflineModes",CLCDEFAULT_OFFLINEMODES));
-		CheckDlgButton(hwndDlg,IDC_NOSCROLLBAR,db_get_b(NULL,"CLC","NoVScrollBar",CLCDEFAULT_NOVSCROLL)?BST_CHECKED:BST_UNCHECKED);
+		EnableWindow(GetDlgItem(hwndDlg, IDC_SMOOTHTIME), IsDlgButtonChecked(hwndDlg, IDC_NOTNOSMOOTHSCROLLING));
+		EnableWindow(GetDlgItem(hwndDlg, IDC_GREYOUTOPTS), IsDlgButtonChecked(hwndDlg, IDC_GREYOUT));
+		FillCheckBoxTree(GetDlgItem(hwndDlg, IDC_GREYOUTOPTS), greyoutValues, SIZEOF(greyoutValues), db_get_dw(NULL, "CLC", "FullGreyoutFlags", CLCDEFAULT_FULLGREYOUTFLAGS));
+		FillCheckBoxTree(GetDlgItem(hwndDlg, IDC_HIDEOFFLINEOPTS), offlineValues, SIZEOF(offlineValues), db_get_dw(NULL, "CLC", "OfflineModes", CLCDEFAULT_OFFLINEMODES));
+		CheckDlgButton(hwndDlg, IDC_NOSCROLLBAR, db_get_b(NULL, "CLC", "NoVScrollBar", CLCDEFAULT_NOVSCROLL) ? BST_CHECKED : BST_UNCHECKED);
 		return TRUE;
 
 	case WM_VSCROLL:
@@ -445,9 +420,9 @@ static INT_PTR CALLBACK DlgProcClistListOpts(HWND hwndDlg, UINT msg, WPARAM wPar
 
 	case WM_COMMAND:
 		if (LOWORD(wParam) == IDC_NOTNOSMOOTHSCROLLING)
-			EnableWindow(GetDlgItem(hwndDlg,IDC_SMOOTHTIME),IsDlgButtonChecked(hwndDlg,IDC_NOTNOSMOOTHSCROLLING));
+			EnableWindow(GetDlgItem(hwndDlg, IDC_SMOOTHTIME), IsDlgButtonChecked(hwndDlg, IDC_NOTNOSMOOTHSCROLLING));
 		if (LOWORD(wParam) == IDC_GREYOUT)
-			EnableWindow(GetDlgItem(hwndDlg,IDC_GREYOUTOPTS),IsDlgButtonChecked(hwndDlg,IDC_GREYOUT));
+			EnableWindow(GetDlgItem(hwndDlg, IDC_GREYOUTOPTS), IsDlgButtonChecked(hwndDlg, IDC_GREYOUT));
 		if ((/*LOWORD(wParam) == IDC_LEFTMARGIN  || */ LOWORD(wParam) == IDC_SMOOTHTIME || LOWORD(wParam) == IDC_GROUPINDENT) && (HIWORD(wParam) != EN_CHANGE || (HWND)lParam != GetFocus())) return 0;
 		SendMessage(GetParent(hwndDlg), PSM_CHANGED, (WPARAM)hwndDlg, 0);
 		break;
@@ -500,10 +475,6 @@ static INT_PTR CALLBACK DlgProcClistListOpts(HWND hwndDlg, UINT msg, WPARAM wPar
 				return TRUE;
 			}
 		}
-		break;
-
-	case WM_DESTROY:
-		ImageList_Destroy(TreeView_GetImageList(GetDlgItem(hwndDlg, IDC_GREYOUTOPTS), TVSIL_NORMAL));
 		break;
 	}
 	return FALSE;
@@ -655,7 +626,7 @@ static int _GetNetVisibleProtoCount()
 	return netProtoCount;
 }
 
-TCHAR *sortby[] = { LPGENT("Name"), LPGENT("Name (use locale settings)"), LPGENT("Status"), LPGENT("Last message time"), LPGENT("Account Name"), LPGENT("Rate"), LPGENT("-Nothing-") };
+TCHAR *sortby[] = { LPGENT("Name"), LPGENT("Name (use locale settings)"), LPGENT("Status"), LPGENT("Last message time"), LPGENT("Account name"), LPGENT("Rate"), LPGENT("-Nothing-") };
 int sortbyValue[] = { SORTBY_NAME, SORTBY_NAME_LOCALE, SORTBY_STATUS, SORTBY_LASTMSG, SORTBY_PROTO, SORTBY_RATE, SORTBY_NOTHING };
 static INT_PTR CALLBACK DlgProcClistOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -704,6 +675,8 @@ static INT_PTR CALLBACK DlgProcClistOpts(HWND hwndDlg, UINT msg, WPARAM wParam, 
 		return TRUE;
 
 	case WM_COMMAND:
+		if ((LOWORD(wParam) == IDC_CLSORT1 || LOWORD(wParam) == IDC_CLSORT2 || LOWORD(wParam) == IDC_CLSORT3) && HIWORD(wParam) != CBN_SELCHANGE)
+			break;
 		SendMessage(GetParent(hwndDlg), PSM_CHANGED, (WPARAM)hwndDlg, 0);
 		break;
 
@@ -738,7 +711,7 @@ static INT_PTR CALLBACK DlgProcClistOpts(HWND hwndDlg, UINT msg, WPARAM wParam, 
 				db_set_b(NULL, "CList", "PlaceOfflineToRoot", (BYTE)IsDlgButtonChecked(hwndDlg, IDC_OFFLINETOROOT));
 
 				pcli->pfnLoadContactTree(); /* this won't do job properly since it only really works when changes happen */
-				SendMessage(pcli->hwndContactTree, CLM_AUTOREBUILD, 0, 0); /* force reshuffle */
+				pcli->pfnInitAutoRebuild(pcli->hwndContactTree); /* force reshuffle */
 				ClcOptionsChanged(); // Used to force loading avatar an list height related options
 				return TRUE;
 			}
@@ -850,8 +823,10 @@ static INT_PTR CALLBACK DlgProcTrayOpts(HWND hwndDlg, UINT msg, WPARAM wParam, L
 			EnableWindow(GetDlgItem(hwndDlg, IDC_ALWAYSMULTI), IsDlgButtonChecked(hwndDlg, IDC_MULTITRAY));
 			EnableWindow(GetDlgItem(hwndDlg, IDC_ALWAYSPRIMARY), IsDlgButtonChecked(hwndDlg, IDC_DONTCYCLE));
 		}
-		if (LOWORD(wParam) == IDC_PRIMARYSTATUS && HIWORD(wParam) != CBN_SELCHANGE) break;
-		if (LOWORD(wParam) == IDC_BLINKTIME && (HIWORD(wParam) != EN_CHANGE || (HWND)lParam != GetFocus())) return 0; // dont make apply enabled during buddy set crap
+		if (LOWORD(wParam) == IDC_PRIMARYSTATUS && HIWORD(wParam) != CBN_SELCHANGE)
+			return 0;
+		if ((LOWORD(wParam) == IDC_BLINKTIME || LOWORD(wParam) == IDC_CYCLETIME) && (HIWORD(wParam) != EN_CHANGE || (HWND)lParam != GetFocus()))
+			return 0;
 		SendMessage(GetParent(hwndDlg), PSM_CHANGED, (WPARAM)hwndDlg, 0);
 		break;
 
@@ -880,7 +855,7 @@ static INT_PTR CALLBACK DlgProcTrayOpts(HWND hwndDlg, UINT msg, WPARAM wParam, L
 				db_set_b(NULL, "CLUI", "XStatusTray", xOptions);
 
 				int cursel = SendDlgItemMessage(hwndDlg, IDC_PRIMARYSTATUS, CB_GETCURSEL, 0, 0);
-				PROTOACCOUNT* pa = (PROTOACCOUNT*)SendDlgItemMessage(hwndDlg, IDC_PRIMARYSTATUS, CB_GETITEMDATA, cursel, 0);
+				PROTOACCOUNT *pa = (PROTOACCOUNT *)SendDlgItemMessage(hwndDlg, IDC_PRIMARYSTATUS, CB_GETITEMDATA, cursel, 0);
 				if (!pa)
 					db_unset(NULL, "CList", "PrimaryStatus");
 				else
@@ -888,7 +863,7 @@ static INT_PTR CALLBACK DlgProcTrayOpts(HWND hwndDlg, UINT msg, WPARAM wParam, L
 
 				pcli->pfnTrayIconIconsChanged();
 				pcli->pfnLoadContactTree(); /* this won't do job properly since it only really works when changes happen */
-				SendMessage(pcli->hwndContactTree, CLM_AUTOREBUILD, 0, 0); /* force reshuffle */
+				pcli->pfnInitAutoRebuild(pcli->hwndContactTree); /* force reshuffle */
 				ClcOptionsChanged(); // Used to force loading avatar an list height related options
 				return TRUE;
 			}
@@ -1013,9 +988,12 @@ static INT_PTR CALLBACK DlgProcClistBehaviourOpts(HWND hwndDlg, UINT msg, WPARAM
 			EnableWindow(GetDlgItem(hwndDlg, IDC_STATIC8), mode != 0);
 			EnableWindow(GetDlgItem(hwndDlg, IDC_STATIC10), mode != 0);
 			EnableWindow(GetDlgItem(hwndDlg, IDC_STATIC13), mode != 0);
+			if (HIWORD(wParam) != CBN_SELCHANGE || (HWND)lParam != GetFocus())
+				return 0;
 		}
-		if ((LOWORD(wParam) == IDC_HIDETIME || LOWORD(wParam) == IDC_HIDEDELAY2 || LOWORD(wParam) == IDC_HIDEDELAY || LOWORD(wParam) == IDC_SHOWDELAY || LOWORD(wParam) == IDC_MAXSIZEHEIGHT || LOWORD(wParam) == IDC_MINSIZEHEIGHT) &&
-			(HIWORD(wParam) != EN_CHANGE || (HWND)lParam != GetFocus()))
+		if ((LOWORD(wParam) == IDC_HIDETIME || LOWORD(wParam) == IDC_HIDEDELAY2 || LOWORD(wParam) == IDC_HIDEDELAY
+			|| LOWORD(wParam) == IDC_SHOWDELAY || LOWORD(wParam) == IDC_MAXSIZEHEIGHT || LOWORD(wParam) == IDC_MINSIZEHEIGHT)
+			&& (HIWORD(wParam) != EN_CHANGE || (HWND)lParam != GetFocus()))
 			return 0;
 
 		// Enable apply button
@@ -1921,7 +1899,7 @@ int ModernOptInit(WPARAM wParam, LPARAM lParam)
 	obj.iBoldControls = iBoldControls;
 	obj.lptzSubsection = _T("Fonts");
 	obj.lpzClassicGroup = NULL;
-	obj.lpzClassicPage = "Contact List";
+	obj.lpzClassicPage = "Contact list";
 	obj.lpzHelpUrl = "http://wiki.miranda-ng.org/";
 
 	obj.lpzTemplate = MAKEINTRESOURCEA(IDD_MODERNOPTS);
@@ -1946,19 +1924,16 @@ static clist_opt_items[] =
 	{ LPGEN("List"), IDD_OPT_CLC, DlgProcClistListOpts, 0 },
 	{ LPGEN("Window"), IDD_OPT_CLUI, DlgProcClistWindowOpts, 0 },
 	{ LPGEN("Behavior"), IDD_OPT_CLUI_2, DlgProcClistBehaviourOpts, 0 },
-	{ LPGEN("Status Bar"), IDD_OPT_SBAR, DlgProcSBarOpts, 0 },
+	{ LPGEN("Status bar"), IDD_OPT_SBAR, DlgProcSBarOpts, 0 },
 	{ LPGEN("Additional stuff"), IDD_OPT_META_CLC, DlgProcClistAdditionalOpts, 0 }
 };
 
 int ClcOptInit(WPARAM wParam, LPARAM lParam)
 {
-	if (MirandaExiting())
-		return 0;
-
 	OPTIONSDIALOGPAGE odp = { sizeof(odp) };
 	odp.hInstance = g_hInst;
 	odp.pszTemplate = MAKEINTRESOURCEA(IDD_OPT_CLC);
-	odp.pszTitle = LPGEN("Contact List");
+	odp.pszTitle = LPGEN("Contact list");
 	odp.pfnDlgProc = DlgProcClistListOpts;
 	odp.flags = ODPF_BOLDGROUPS;
 
@@ -1973,7 +1948,7 @@ int ClcOptInit(WPARAM wParam, LPARAM lParam)
 	if (g_CluiData.fDisableSkinEngine) {
 		odp.pszTemplate = MAKEINTRESOURCEA(IDD_OPT_CLIST_LISTBKG);
 		odp.pszGroup = LPGEN("Skins");
-		odp.pszTitle = LPGEN("Contact List");
+		odp.pszTitle = LPGEN("Contact list");
 		odp.pszTab = LPGEN("List background");
 		odp.pfnDlgProc = DlgProcClcBkgOpts;
 		odp.flags = ODPF_BOLDGROUPS;

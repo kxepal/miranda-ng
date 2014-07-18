@@ -136,8 +136,6 @@ Contraseña
 
 [Execute task for specified contacts]
 
-[OK]
-Aceptar
 [Cancel]
 Cancelar
 ;file \plugins\BasicHistory\src\BasicHistory.cpp
@@ -333,7 +331,7 @@ Buscar
 
 [Outgoing events]
 
-[File do not exist. Enter correct file path.]
+[File does not exist. Enter correct file path.]
 
 [Invalid file]
 
@@ -441,7 +439,7 @@ Contactos
 
 [Path to file]
 
-[FTP path must contain '/' instead '\' and start with '/'.]
+[FTP path must contain '/' instead '\\' and start with '/'.]
 
 [FTP path cannot contain <date> in import task.]
 

@@ -81,13 +81,15 @@ static INT_PTR CALLBACK DlgProcOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 				break;
 			case IDC_BTN_LOGBROWSE:
 			{
+				TCHAR filter[MAX_PATH];
+				mir_sntprintf(filter, SIZEOF(filter), _T("%s%c*.txt%c%s%c*.*%c"), TranslateT("Text Files (*.txt)"), 0, 0, TranslateT("All Files"), 0, 0);
 				OPENFILENAME ofn = {0};
 				ofn.lStructSize = sizeof(ofn);
 				ofn.lpstrFile = options.log_filename;
 				ofn.hwndOwner = hwndDlg;
 				ofn.nMaxFile = SIZEOF(options.log_filename);
 				ofn.lpstrTitle = TranslateT("Open log file");
-				ofn.lpstrFilter = LPGENT("All\0*.*\0Text\0*.TXT\0");
+				ofn.lpstrFilter = filter;
 				ofn.nFilterIndex = 1;
 				ofn.lpstrFileTitle = NULL;
 				ofn.nMaxFileTitle = 0;
@@ -416,10 +418,10 @@ static INT_PTR CALLBACK DlgProcOpts2(HWND hwndDlg, UINT msg, WPARAM wParam, LPAR
 							item->index = index2;
 							item2->index = index;
 
-							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_DELETESTRING, (WPARAM)sel2, (LPARAM)0);
+							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_DELETESTRING, (WPARAM)sel2, 0);
 							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_INSERTSTRING, (WPARAM)sel2, (LPARAM)item->pszLabel);
 							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_SETITEMDATA, (WPARAM)sel2, (LPARAM)item);
-							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_DELETESTRING, (WPARAM)(sel2 + 1), (LPARAM)0);
+							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_DELETESTRING, (WPARAM)(sel2 + 1), 0);
 							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_INSERTSTRING, (WPARAM)(sel2 + 1), (LPARAM)item2->pszLabel);
 							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_SETITEMDATA, (WPARAM)(sel2 + 1), (LPARAM)item2);
 							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_SETCURSEL, (WPARAM)(sel2 + 1), 0);
@@ -451,11 +453,11 @@ static INT_PTR CALLBACK DlgProcOpts2(HWND hwndDlg, UINT msg, WPARAM wParam, LPAR
 							item->index = index2;
 							item2->index = index;
 
-							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_DELETESTRING, (WPARAM)sel2, (LPARAM)0);
+							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_DELETESTRING, (WPARAM)sel2, 0);
 							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_INSERTSTRING, (WPARAM)sel2, (LPARAM)item->pszLabel);
 							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_SETITEMDATA, (WPARAM)sel2, (LPARAM)item);
 
-							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_DELETESTRING, (WPARAM)(sel2 - 1), (LPARAM)0);
+							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_DELETESTRING, (WPARAM)(sel2 - 1), 0);
 							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_INSERTSTRING, (WPARAM)(sel2 - 1), (LPARAM)item2->pszLabel);
 							SendDlgItemMessage(hwndDlg, IDC_LST_DEST, LB_SETITEMDATA, (WPARAM)(sel2 - 1), (LPARAM)item2);
 

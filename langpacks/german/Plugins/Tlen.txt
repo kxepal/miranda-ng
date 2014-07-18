@@ -1,7 +1,7 @@
 ﻿#muuid {748f8934-781a-528d-5208-001265404ab3}
 ;============================================================
 ;  File: Tlen.dll
-;  Plugin: Tlen Protocol
+;  Plugin: Tlen protocol
 ;  Version: 2.1.0.0
 ;  Authors: Santithorn Bunchua, Adam Strzelecki, Piotr Piastucki
 ;============================================================
@@ -98,8 +98,6 @@ Dau&erhaft
 Vorschau
 [Tlen Password]
 Tlen-Passwort
-[OK]
-OK
 [Cancel]
 Abbrechen
 [Nickname:]
@@ -150,7 +148,7 @@ Persönliche Informationen
 Alter:
 [to]
 bis
-[Extra Search Criterias]
+[Extra Search Criteria]
 Extra Suchkriterien
 [Status:]
 Status:
@@ -195,8 +193,6 @@ Bild senden
 Eingehende E-Mail
 [Alert]
 Alarm
-[Tlen Chats]
-Tlen Chats
 [Multi-User Conference]
 Gruppenkonferenz
 [Tlen Mail]
@@ -230,33 +226,6 @@ Fehler beim Setzen eines Avatars in Tlen.
 Authentifizierung für %s@%s fehlgeschlagen.
 [Tlen Authentication]
 Tlen-Authentifizierung
-;file \protocols\Tlen\src\tlen_muc.cpp
-[You have been kicked. Reason: %s ]
-Sie wurden gekickt. Grund: %s
-[You cannot join this chat room, because you are banned.]
-Sie können diesen Chatraum nicht betreten, da Sie gebannt wurden.
-[Chat room not found.]
-Chatraum nicht gefunden.
-[This is a private chat room and you are not one of the members.]
-Dies ist ein privater Chatraum und Sie sind keines der Mitglieder.
-[You cannot send any message unless you join this chat room.]
-Sie können keine Nachricht senden, bevor Sie nicht den Chatraum betreten haben.
-[Chat room with already created.]
-Chatraum wurde bereits erstellt.
-[Nickname '%s' is already registered.]
-Nick '%s' ist bereits registriert.
-[Nickname already in use, please try another one. Hint: '%s' is free.]
-Der Nick wird bereits verwendet, bitte versuchen Sie einen anderen. Hinweis: '%s' ist frei.
-[You cannot register more than %s nicknames.]
-Sie können nicht mehr als %s Nicks registrieren.
-[You cannot create more than %s chat rooms.]
-Sie können nicht mehr als %s Chaträume erstellen.
-[You cannot join more than %s chat rooms.]
-Sie können nicht mehr als %s Chaträume betreten.
-[Anonymous nicknames are not allowed in this chat room.]
-Anonyme Nicks sind in diesem Chatraum nicht erlaubt.
-[Unknown error code: %d]
-Unbekannter Fehlercode: %d
 ;file \protocols\Tlen\src\tlen_opt.cpp
 [General]
 Allgemein
@@ -296,12 +265,8 @@ Alle Bilder ignorieren
 <Letzte Nachricht>
 [Forwarding]
 Weiterleiten
-[SOCKS4]
-SOCKS4
-[SOCKS5]
-SOCKS5
-[%s mail]
-%s Mail
+[%S mail]
+%S Mail
 ;file \protocols\Tlen\src\tlen_picture.cpp
 [Image sent file://%s]
 Gesendete Bilddatei://%s
@@ -317,22 +282,6 @@ Sie müssen mit Tlen verbunden sein um Ihr Avatar zu setzen.
 Passwort für %s eingeben
 [Tlen Connection Error]
 Tlen-Verbindungsfehler
-[Windows Server 2003]
-Windows Server 2003
-[Windows XP]
-Windows XP
-[Windows 2000]
-Windows 2000
-[Windows NT]
-Windows NT
-[Windows 95]
-Windows 95
-[Windows 98]
-Windows 98
-[Windows ME]
-Windows ME
-[Windows]
-Windows
 [%s Web Messages]
 %s Web-Nachrichten
 [Web message]
@@ -345,6 +294,8 @@ E-Mail
 Ein Alarm wurde empfangen.
 [Private conference]
 Private Konferenz
+[%s mail]
+%s Mail
 [Subject]
 Betreff
 ;file \protocols\Tlen\src\tlen_userinfo.cpp

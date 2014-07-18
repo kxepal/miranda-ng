@@ -38,7 +38,6 @@ INT_PTR InvalidateDisplayName(WPARAM wParam, LPARAM lParam);
 int InitGroupServices(void);
 void LoadCluiServices();
 INT_PTR Docking_IsDocked(WPARAM wParam, LPARAM lParam);
-void InitDisplayNameCache(void);
 void FreeDisplayNameCache(void);
 int LoadCLUIModule(void);
 int InitClistHotKeys(void);
@@ -188,7 +187,7 @@ static INT_PTR GetContactIcon(WPARAM wParam, LPARAM)
 	return cli.pfnGetContactIcon(wParam);
 }
 
-static void AddProtoIconIndex(PROTOACCOUNT* pa)
+static void AddProtoIconIndex(PROTOACCOUNT *pa)
 {
 	ProtoIconIndex *pii = new ProtoIconIndex;
 	pii->szProto = pa->szModuleName;
@@ -200,7 +199,7 @@ static void AddProtoIconIndex(PROTOACCOUNT* pa)
 	protoIconIndex.insert(pii);
 }
 
-static void RemoveProtoIconIndex(PROTOACCOUNT* pa)
+static void RemoveProtoIconIndex(PROTOACCOUNT *pa)
 {
 	for (int i=0; i < protoIconIndex.getCount(); i++)
 		if (strcmp(protoIconIndex[i].szProto, pa->szModuleName) == 0) {
@@ -506,7 +505,6 @@ int LoadContactListModule2(void)
 	CreateServiceFunction(MS_CLIST_HOTKEYSPROCESSMESSAGE, HotkeysProcessMessageStub);
 	CreateServiceFunction(MS_CLIST_GETCONTACTICON, GetContactIcon);
 
-	InitDisplayNameCache();
 	InitCListEvents();
 	InitGroupServices();
 	cli.pfnInitTray();
@@ -536,7 +534,7 @@ void UnloadContactListModule()
 	for (MCONTACT hContact = db_find_first(); hContact != NULL; ) {
 		MCONTACT hNext = db_find_next(hContact);
 		if (db_get_b(hContact, "CList", "NotOnList", 0))
-			CallService(MS_DB_CONTACT_DELETE, (WPARAM) hContact, 0);
+			CallService(MS_DB_CONTACT_DELETE, hContact, 0);
 		hContact = hNext;
 	}
 	ImageList_Destroy(hCListImages);

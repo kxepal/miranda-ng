@@ -34,12 +34,8 @@ Status zurücksetzen
 Hotkey
 [Password:]
 Passwort:
-[OK]
-OK
 [Cancel]
 Abbrechen
-[EN]
-EN
 [Workstation is locked]
 Arbeitsstation gesperrt ist
 [Screen Saver is running]

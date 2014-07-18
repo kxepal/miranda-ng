@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: StartupStatus.dll
 ;  Plugin: StartupStatus
-;  Version: 0.8.0.45
+;  Version: 0.8.0.47
 ;  Authors: P Boon
 ;============================================================
 [StartupStatus, allows you to define the status Miranda should set on startup, configurable per protocol.]
@@ -45,6 +45,7 @@ Cuenta
 [Set]
 Establecer
 [when full-screen mode is active]
+
 [when screen saver engages]
 Cuando el protector de pantalla cuando se acopla
 [when workstation is locked]
@@ -67,8 +68,6 @@ Confirmar el reajuste de estado
 Sólo establecer si el estado actual es
 [Command line]
 Línea de comandos
-[OK]
-Aceptar
 [Copy to clipboard]
 Copiar al portapapeles
 [Command line:]

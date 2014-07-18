@@ -2,26 +2,26 @@
 ;============================================================
 ;  File: PluginUpdater.dll
 ;  Plugin: Plugin updater
-;  Version: 0.1.1.7
+;  Version: 0.1.2.1
 ;  Authors: Mataes, George Hazan
 ;============================================================
 [Plugin updater for Miranda NG.]
-Aktualizator wtyczek dla Mirandy NG
+Aktualizator wtyczek dla Mirandy NG.
 ;file \plugins\PluginUpdater\res\Resource.rc
 [Updates found!]
 Znaleziono aktualizacje!
 [PluginUpdater has detected updated versions of some Miranda components. Click on Details button to view more information.]
 PluginUpdater wykrył aktualizacje komponentów. Kliknij w przycisk "Szczegóły" po więcej informacji.
 [Update]
-Aktualizacja
+Aktualizuj
 [Details >>]
 Szczegóły >>
 [Cancel]
 Anuluj
 [Select &all]
-Wszystkie
+&Wszystkie
 [Select &none]
-Żadne
+Ż&adne
 [Hotkey]
 Skrót
 [Go to Customize -> Hotkeys to change the hotkey]
@@ -34,6 +34,8 @@ Przy starcie
 (ale tylko raz dziennie)
 [Every]
 Co
+[Silent mode]
+Tryb cichy
 [Files source]
 Źródło plików
 [Stable version]
@@ -44,6 +46,8 @@ Wersja rozwojowa (mniej stabilna)
 Wersja rozwojowa z symbolami debugowania
 [Custom version]
 Niestandardowa wersja
+[Some component(s) was updated.\nYou need to restart your Miranda to apply installed updates.]
+Niektóre komponenty zostały zaktualizowane.\nMusisz zrestartować Mirande, aby zainstalować pobrane aktualizacje.
 [Notifications]
 Powiadomienia
 [Message boxes (*)]
@@ -55,17 +59,17 @@ Informacje
 [Progress dialogs]
 Postęp
 [Back]
-Wstecz
+Tło
 [Text]
 Tekst
 [Colors]
 Kolory
 [Use cus&tom colors]
-Użyj niestandardowych kolorów
+Użyj nie&standardowych kolorów
 [Use &Windows colors]
-Użyj kolorów Windows
+Użyj kolorów &Windows
 [Use Pop&up colors]
-Użyj kolorów Popup
+Użyj kolorów Pop&up
 [Preview]
 Podgląd
 [Click action]
@@ -77,9 +81,9 @@ PPM
 [Timeout]
 Wyświetlaj
 [0 = Default]
-0 = Domyślny
+0 - domyślnie
 [-1 = Infinite]
--1 = Nie chowaj
+-1 - nie chowaj
 [Sec]
 s
 [* Needs popup actions to be enabled]
@@ -87,7 +91,7 @@ s
 [Not sets for "Message boxes"]
 Nie określa dla "Komunikaty"
 [Boxes]
-Okienka
+Okna
 [Popups]
 Popupy
 [Component list]
@@ -119,6 +123,8 @@ Status
 Wtyczki
 [Icons]
 Ikony
+[Languages]
+Języki
 [Other]
 Inne
 [List is empty.]
@@ -134,10 +140,17 @@ Aktualizacja zakończona. Wciśnij "Tak", aby zrestartować Mirandę teraz lub "
 << Szczegóły
 [Update failed! One of the components wasn't downloaded correctly. Try it again later.]
 Aktualizacja nie powiodła się! Jeden z komponentów nie został prawidłowo pobrany. Spróbuj ponownie później.
+[You need to restart your Miranda to apply installed updates.]
+Musisz zrestartować Mirandę, aby zainstalować aktualizacje.
+[Would you like to restart it now?]
+Czy chcesz zrobić to teraz?
+[%d component(s) was updated]
+Zaktualizowano %d komponentów
 [No updates found.]
 Nie znaleziono aktualizacji.
 [Update checking already started!]
 Sprawdzanie aktualizacji już rozpoczęte!
+;file \plugins\PluginUpdater\src\Events.cpp
 ;file \plugins\PluginUpdater\src\Options.cpp
 [hours]
 godziny
@@ -152,11 +165,15 @@ Usługi
 Sprawdź aktualizacje
 [Available components list]
 Pobierz komponenty
+[Update completed]
+Aktualizacja zakończona
+[Update failed]
+Aktualizacja nie powiodła się
 ;file \plugins\PluginUpdater\src\Utils.cpp
 ['Yes' Button]
-Przycisk 'Tak'
+Przycisk "Tak"
 ['No' Button]
-Przycisk 'Nie'
+Przycisk "Nie"
 [Plugin info]
 Informacje o wtyczkach
 [Plugin list]

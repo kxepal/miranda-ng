@@ -27,7 +27,7 @@ INT_PTR SvcGetChatManager(WPARAM, LPARAM);
 #include "chat.h"
 
 HGENMENU hJoinMenuItem, hLeaveMenuItem;
-CRITICAL_SECTION cs;
+mir_cs cs;
 
 static HANDLE
    hServiceRegister = NULL,
@@ -39,38 +39,39 @@ static HANDLE
    hEventPrebuildMenu = NULL,
    hEventDoubleclicked = NULL,
    hEventJoinChat = NULL,
-   hEventLeaveChat = NULL;
+   hEventLeaveChat = NULL,
+   hHookEvent = NULL;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Post-load event hooks
 
 void LoadChatIcons(void)
 {
-	ci.hIcons[ICON_ACTION]     = LoadIconEx("log_action", FALSE);
-	ci.hIcons[ICON_ADDSTATUS]  = LoadIconEx("log_addstatus", FALSE);
-	ci.hIcons[ICON_HIGHLIGHT]  = LoadIconEx("log_highlight", FALSE);
-	ci.hIcons[ICON_INFO]       = LoadIconEx("log_info", FALSE);
-	ci.hIcons[ICON_JOIN]       = LoadIconEx("log_join", FALSE);
-	ci.hIcons[ICON_KICK]       = LoadIconEx("log_kick", FALSE);
-	ci.hIcons[ICON_MESSAGE]    = LoadIconEx("log_message_in", FALSE);
+	ci.hIcons[ICON_ACTION] = LoadIconEx("log_action", FALSE);
+	ci.hIcons[ICON_ADDSTATUS] = LoadIconEx("log_addstatus", FALSE);
+	ci.hIcons[ICON_HIGHLIGHT] = LoadIconEx("log_highlight", FALSE);
+	ci.hIcons[ICON_INFO] = LoadIconEx("log_info", FALSE);
+	ci.hIcons[ICON_JOIN] = LoadIconEx("log_join", FALSE);
+	ci.hIcons[ICON_KICK] = LoadIconEx("log_kick", FALSE);
+	ci.hIcons[ICON_MESSAGE] = LoadIconEx("log_message_in", FALSE);
 	ci.hIcons[ICON_MESSAGEOUT] = LoadIconEx("log_message_out", FALSE);
-	ci.hIcons[ICON_NICK]       = LoadIconEx("log_nick", FALSE);
-	ci.hIcons[ICON_NOTICE]     = LoadIconEx("log_notice", FALSE);
-	ci.hIcons[ICON_PART]       = LoadIconEx("log_part", FALSE);
-	ci.hIcons[ICON_QUIT]       = LoadIconEx("log_quit", FALSE);
-	ci.hIcons[ICON_REMSTATUS]  = LoadIconEx("log_removestatus", FALSE);
-	ci.hIcons[ICON_TOPIC]      = LoadIconEx("log_topic", FALSE);
-	ci.hIcons[ICON_STATUS0]    = LoadIconEx("status0", FALSE);
-	ci.hIcons[ICON_STATUS1]    = LoadIconEx("status1", FALSE);
-	ci.hIcons[ICON_STATUS2]    = LoadIconEx("status2", FALSE);
-	ci.hIcons[ICON_STATUS3]    = LoadIconEx("status3", FALSE);
-	ci.hIcons[ICON_STATUS4]    = LoadIconEx("status4", FALSE);
-	ci.hIcons[ICON_STATUS5]    = LoadIconEx("status5", FALSE);
+	ci.hIcons[ICON_NICK] = LoadIconEx("log_nick", FALSE);
+	ci.hIcons[ICON_NOTICE] = LoadIconEx("log_notice", FALSE);
+	ci.hIcons[ICON_PART] = LoadIconEx("log_part", FALSE);
+	ci.hIcons[ICON_QUIT] = LoadIconEx("log_quit", FALSE);
+	ci.hIcons[ICON_REMSTATUS] = LoadIconEx("log_removestatus", FALSE);
+	ci.hIcons[ICON_TOPIC] = LoadIconEx("log_topic", FALSE);
+	ci.hIcons[ICON_STATUS0] = LoadIconEx("status0", FALSE);
+	ci.hIcons[ICON_STATUS1] = LoadIconEx("status1", FALSE);
+	ci.hIcons[ICON_STATUS2] = LoadIconEx("status2", FALSE);
+	ci.hIcons[ICON_STATUS3] = LoadIconEx("status3", FALSE);
+	ci.hIcons[ICON_STATUS4] = LoadIconEx("status4", FALSE);
+	ci.hIcons[ICON_STATUS5] = LoadIconEx("status5", FALSE);
 
 	LoadMsgLogBitmaps();
 }
 
-static int FontsChanged(WPARAM wParam, LPARAM lParam)
+static int FontsChanged(WPARAM, LPARAM)
 {
 	LoadGlobalSettings();
 	LoadLogFonts();
@@ -87,7 +88,7 @@ static int FontsChanged(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-static int IconsChanged(WPARAM wParam, LPARAM lParam)
+static int IconsChanged(WPARAM, LPARAM)
 {
 	FreeMsgLogBitmaps();
 	LoadMsgLogBitmaps();
@@ -97,7 +98,7 @@ static int IconsChanged(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-static int PreShutdown(WPARAM wParam, LPARAM lParam)
+static int PreShutdown(WPARAM, LPARAM)
 {
 	ci.SM_BroadcastMessage(NULL, GC_CLOSEWINDOW, 0, 1, FALSE);
 
@@ -109,13 +110,13 @@ static int PreShutdown(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-static int SmileyOptionsChanged(WPARAM wParam, LPARAM lParam)
+static int SmileyOptionsChanged(WPARAM, LPARAM)
 {
 	ci.SM_BroadcastMessage(NULL, GC_REDRAWLOG, 0, 1, FALSE);
 	return 0;
 }
 
-static INT_PTR Service_GetCount(WPARAM wParam, LPARAM lParam)
+static INT_PTR Service_GetCount(WPARAM, LPARAM lParam)
 {
 	if (!lParam)
 		return -1;
@@ -124,7 +125,7 @@ static INT_PTR Service_GetCount(WPARAM wParam, LPARAM lParam)
 	return ci.SM_GetCount((char *)lParam);
 }
 
-static INT_PTR Service_GetInfo(WPARAM wParam, LPARAM lParam)
+static INT_PTR Service_GetInfo(WPARAM, LPARAM lParam)
 {
 	GC_INFO *gci = (GC_INFO *)lParam;
 	if (!gci || !gci->pszModule)
@@ -150,7 +151,7 @@ static INT_PTR Service_GetInfo(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-static INT_PTR Service_Register(WPARAM wParam, LPARAM lParam)
+static INT_PTR Service_Register(WPARAM, LPARAM lParam)
 {
 	GCREGISTER *gcr = (GCREGISTER *)lParam;
 	if (gcr == NULL)
@@ -188,7 +189,7 @@ static INT_PTR Service_Register(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-static INT_PTR Service_NewChat(WPARAM wParam, LPARAM lParam)
+static INT_PTR Service_NewChat(WPARAM, LPARAM lParam)
 {
 	GCSESSION *gcw = (GCSESSION *)lParam;
 	if (gcw == NULL)
@@ -231,7 +232,7 @@ static INT_PTR Service_NewChat(WPARAM wParam, LPARAM lParam)
 		if (si->iType == GCW_SERVER)
 			mir_sntprintf(szTemp, SIZEOF(szTemp), _T("Server: %s"), si->ptszName);
 		else
-			_tcsncpy_s(szTemp, SIZEOF(szTemp), si->ptszName, _TRUNCATE);
+			_tcsncpy_s(szTemp, si->ptszName, _TRUNCATE);
 		si->hContact = ci.AddRoom(gcw->pszModule, gcw->ptszID, szTemp, si->iType);
 		db_set_s(si->hContact, si->pszModule, "Topic", "");
 		db_unset(si->hContact, "CList", "StatusMsg");
@@ -261,7 +262,7 @@ static void SetInitDone(SESSION_INFO *si)
 {
 	if (si->bInitDone)
 		return;
-	
+
 	si->bInitDone = true;
 	for (STATUSINFO *p = si->pStatuses; p; p = p->next)
 		if ((UINT_PTR)p->hIcon < STATUSICONCOUNT)
@@ -352,9 +353,10 @@ static int DoControl(GCEVENT *gce, WPARAM wp)
 				db_set_ts(si->hContact, si->pszModule, "StatusBar", si->ptszStatusbarText);
 			else
 				db_set_s(si->hContact, si->pszModule, "StatusBar", "");
+
+			if (ci.OnSetStatusBar)
+				ci.OnSetStatusBar(si);
 		}
-		if (ci.OnSetStatusBar)
-			ci.OnSetStatusBar(si);
 	}
 	else if (gce->pDest->iType == GC_EVENT_ACK) {
 		ci.SM_SendMessage(gce->pDest->ptszID, gce->pDest->pszModule, GC_ACKMESSAGE, 0, 0);
@@ -392,14 +394,13 @@ static void AddUser(GCEVENT *gce)
 static INT_PTR Service_AddEvent(WPARAM wParam, LPARAM lParam)
 {
 	GCEVENT *gce = (GCEVENT*)lParam;
-	GCDEST *gcd = NULL;
 	BOOL bIsHighlighted = FALSE;
 	BOOL bRemoveFlag = FALSE;
 
 	if (gce == NULL)
 		return GC_EVENT_ERROR;
 
-	gcd = gce->pDest;
+	GCDEST *gcd = gce->pDest;
 	if (gcd == NULL)
 		return GC_EVENT_ERROR;
 
@@ -409,17 +410,19 @@ static INT_PTR Service_AddEvent(WPARAM wParam, LPARAM lParam)
 	if (!IsEventSupported(gcd->iType))
 		return GC_EVENT_ERROR;
 
+	NotifyEventHooks(hHookEvent, wParam, lParam);
+
 	SESSION_INFO *si;
 	mir_cslock lck(cs);
 
 	// Do different things according to type of event
 	switch (gcd->iType) {
 	case GC_EVENT_ADDGROUP:
-		{
-			STATUSINFO *si = ci.SM_AddStatus(gce->pDest->ptszID, gce->pDest->pszModule, gce->ptszStatus);
-			if (si && gce->dwItemData)
-				si->hIcon = CopyIcon((HICON)gce->dwItemData);
-		}
+	{
+		STATUSINFO *si = ci.SM_AddStatus(gce->pDest->ptszID, gce->pDest->pszModule, gce->ptszStatus);
+		if (si && gce->dwItemData)
+			si->hIcon = CopyIcon((HICON)gce->dwItemData);
+	}
 		return 0;
 
 	case GC_EVENT_CHUID:
@@ -448,7 +451,7 @@ static INT_PTR Service_AddEvent(WPARAM wParam, LPARAM lParam)
 			}
 		}
 		break;
-	
+
 	case GC_EVENT_ADDSTATUS:
 		ci.SM_GiveStatus(gce->pDest->ptszID, gce->pDest->pszModule, gce->ptszUID, gce->ptszStatus);
 		bIsHighlighted = ci.IsHighlighted(NULL, gce);
@@ -538,7 +541,7 @@ static INT_PTR Service_AddEvent(WPARAM wParam, LPARAM lParam)
 	return GC_EVENT_ERROR;
 }
 
-static INT_PTR Service_GetAddEventPtr(WPARAM wParam, LPARAM lParam)
+static INT_PTR Service_GetAddEventPtr(WPARAM, LPARAM lParam)
 {
 	GCPTRS *gp = (GCPTRS *)lParam;
 
@@ -547,15 +550,12 @@ static INT_PTR Service_GetAddEventPtr(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-static int ModulesLoaded(WPARAM wParam, LPARAM lParam)
+static int ModulesLoaded(WPARAM, LPARAM)
 {
 	LoadChatIcons();
 
 	HookEvent(ME_SMILEYADD_OPTIONSCHANGED, SmileyOptionsChanged);
 	HookEvent(ME_CLIST_PREBUILDCONTACTMENU, PrebuildContactMenu);
-
-	char* mods[3] = { CHAT_MODULE, CHATFONT_MODULE };
-	CallService("DBEditorpp/RegisterModule", (WPARAM)mods, 2);
 
 	CLISTMENUITEM mi = { sizeof(mi) };
 	mi.position = -2000090001;
@@ -579,10 +579,10 @@ static int ModulesLoaded(WPARAM wParam, LPARAM lParam)
 /////////////////////////////////////////////////////////////////////////////////////////
 // Service creation
 
+static bool bInited = false;
+
 int LoadChatModule(void)
 {
-	InitializeCriticalSection(&cs);
-
 	HookEvent(ME_SYSTEM_MODULESLOADED, ModulesLoaded);
 	HookEvent(ME_SYSTEM_PRESHUTDOWN, PreShutdown);
 	HookEvent(ME_SKIN_ICONSCHANGED, IconsChanged);
@@ -602,18 +602,24 @@ int LoadChatModule(void)
 
 	ci.hSendEvent = CreateHookableEvent(ME_GC_EVENT);
 	ci.hBuildMenuEvent = CreateHookableEvent(ME_GC_BUILDMENU);
+	hHookEvent = CreateHookableEvent(ME_GC_HOOK_EVENT);
 
 	HookEvent(ME_FONT_RELOAD, FontsChanged);
 	HookEvent(ME_SKIN2_ICONSCHANGED, IconsChanged);
+
+	bInited = true;
 	return 0;
 }
 
 void UnloadChatModule(void)
 {
+	if (!bInited)
+		return;
+	
 	FreeMsgLogBitmaps();
 	OptionsUnInit();
-	DeleteCriticalSection(&cs);
 
 	DestroyHookableEvent(ci.hSendEvent);
 	DestroyHookableEvent(ci.hBuildMenuEvent);
+	DestroyHookableEvent(hHookEvent);
 }

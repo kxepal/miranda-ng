@@ -1,8 +1,8 @@
 ﻿#muuid {73a9615c-7d4e-4555-badb-ee05dc928eff}
 ;============================================================
 ;  File: ICQ.dll
-;  Plugin: IcqOscarJ Protocol
-;  Version: 0.11.2.0
+;  Plugin: IcqOscarJ protocol
+;  Version: 0.11.2.5
 ;  Authors: Joe Kucera, Bio, Martin Öberg, Richard Hughes, Jon Keating, etc.
 ;============================================================
 [ICQ protocol support for Miranda NG.]
@@ -26,15 +26,11 @@ ICQ-Passwort eingeben
 Bitte Passwort für UIN %d eingeben:
 [Remember this session password]
 Dieses Sitzungspasswort merken
-[OK]
-OK
 [Cancel]
 Abbrechen
-[ICQ]
-ICQ
 [ICQ number:]
 ICQ-Nummer:
-[Hint: If you don't enter your password here, Miranda will ask for the password everytime you try to go online.]
+[Hint: If you don't enter your password here, Miranda will ask for the password every time you try to go online.]
 Tipp: Geben Sie hier kein Passwort ein, so wird immer beim Verbinden danach gefragt.
 [Retrieve a lost password or ICQ number]
 ICQ-Nummer oder Passwort vergessen? Hier klicken
@@ -65,7 +61,7 @@ Zeige Verbindungsfehler-Meldungen:
 [ICQ contacts stored on server]
 Serverseitige Kontaktliste
 [Manage server's list...]
-Serverliste verwalten
+Serverliste verwalten...
 [Enable server-side contact lists *]
 Serverseitige Kontaktliste aktivieren (*)
 [Add contacts to the server's list when I add them to mine]
@@ -98,10 +94,8 @@ Alle Nachrichten in Unicode senden, wenn möglich
 Verwende diese Codetabelle für ANSI <-> Unicode:
 [Make me temporarily visible to contacts I send message to]
 Temporär für Kontakte sichtbar machen beim Nachrichtenversand
-[Notify me when a message delivery has failed (recommended)]
-Teile mir mit, wenn eine Nachricht nicht gesendet werden konnte (empfohlen)
-[Never use legacy messaging (server acknowledgements)]
-Niemals Bestätigung alter Nachrichten einholen (Server Empfangsbestätigungen)
+[Notify me when a message delivery has failed]
+Teile mir mit, wenn eine Nachricht nicht gesendet werden konnte
 [Peer-to-peer Messaging]
 Direktverbindung Nachrichten
 [Enable peer-to-peer message connections]
@@ -271,7 +265,7 @@ Titel:
 [Message:]
 Nachricht:
 [Retrieving custom status details...]
-Empfange Custom-Status-Details ...
+Empfange Custom-Status-Details...
 [&Save changes]
 Änderungen &speichern
 [Confirm Password Change]
@@ -402,7 +396,6 @@ Bestätigung
 Fehler beim Upload des Avatars auf den Server, der Server ist vorübergehend nicht verfügbar.
 [Error uploading avatar to server, server refused to accept the image.]
 Fehler beim Avatarupload zum Server, der Server akzeptiert das Bild nicht.
-;file \protocols\IcqOscarJ\src\icq_constants.h
 ;file \protocols\IcqOscarJ\src\icq_fieldnames.cpp
 [Afghanistan]
 Afghanistan
@@ -1424,7 +1417,7 @@ Server sendet Warnung -> wir bremsen den Prozess.
 [Adding group "%s"...]
 Füge Gruppe "%s" hinzu...
 [Uploading %s...]
-Upload von %s...
+Lade %s hoch...
 [No upload group available]
 Keine Upload-Gruppen vorhanden
 [Deleting %s...]
@@ -1442,14 +1435,14 @@ Lösche %s von der Unsichtbarkeitsliste...
 [Cleaning groups]
 Säubere Gruppen
 [Updating group "%s"...]
-Gruppe "%s" hinzufügen...
+Gruppe "%s" aktualisieren...
 [Deleting group "%s"...]
 Gruppe "%s" löschen...
 [All operations complete]
 Alle Operationen beendet
 [Close]
 Schließen
-[You have to be online to sychronize the server-list!]
+[You have to be online to synchronize the server-list!]
 Sie müssen für das Synchronisieren der Serverliste online sein!
 [** All contacts **]
 ** Alle Kontakte **
@@ -1678,6 +1671,8 @@ Verbindung ist während der Dateiübertragung abgebrochen.
 Datenübertragung aus unbekannten Gründen fehlgeschlagen.
 [The checksum of file "%s" does not match, the file is probably damaged.]
 Die Prüfsumme von Datei "%s" stimmt nicht, die Datei ist vermutlich beschädigt.
+[Your file transfer has been aborted (error=%d), because one of the files that you selected to send is no longer readable from the disk. You may have deleted or moved it.]
+
 ;file \protocols\IcqOscarJ\src\utilities.cpp
 [<invalid>]
 <ungültig>

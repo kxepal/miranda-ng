@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: DbChecker.dll
 ;  Plugin: Database checker
-;  Version: 0.11.0.1
+;  Version: 0.95.0.3
 ;  Authors: George Hazan
 ;============================================================
 [Miranda NG Database Checker.]
@@ -13,7 +13,7 @@
 Використовуючи цей майстер, ви можете зменшити розмір профілю видаленням "мертвого" простору.
 [To continue, click Next.]
 Натисніть "Далі" для продовження.
-[This program is licenced under the terms of the GNU General Public License.]
+[This program is licensed under the terms of the GNU General Public License.]
 Програма ліцензована під умовами GNU General Public License.
 [Miranda Database Tool]
 Інструмент бази Miranda NG
@@ -107,8 +107,6 @@
 Профіль
 [Total size]
 Размір
-[Wasted]
-Мертво
 [Miranda Databases (*.dat)]
 Бази Miranda NG (*.dat)
 [All Files]
@@ -129,6 +127,8 @@
 Активовано відновлення працездатності бази
 [<check only>]
 <тільки перевірити>
+[ (Output).dat]
+ (Вихідний).dat
 [Can't create output file (%u)]
 Неможливо створити файл на виході (%u)
 [Processing aborted by user]

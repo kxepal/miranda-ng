@@ -1,7 +1,7 @@
 ﻿#muuid {9c448c61-fc3f-42f9-b9f0-4a30e1cf8671}
 ;============================================================
 ;  File: Skype.dll
-;  Plugin: Skype Protocol
+;  Plugin: Skype protocol
 ;  Version: 0.11.0.2
 ;  Authors: unsane, mataes, ghazan
 ;============================================================
@@ -13,15 +13,15 @@ Zaproś kontakt do konferencji
 [Skype name:]
 Użytkownik:
 [&Invite]
-Zaproś
+&Zaproś
 [&Cancel]
-Anuluj
+&Anuluj
 [Add]
 Dodaj
 [Create conference]
 Utwórz konferencję
 [&Create]
-Utwórz
+&Utwórz
 [Topic:]
 Temat:
 [Guideline:]
@@ -40,20 +40,16 @@ Potwierdzenie:
 Wskazówka dotycząca hasła:
 [Configure conference]
 Konfiguruj konferencję
-[&OK]
-&OK
 [Join role:]
 Dołącz w roli:
 [Set password]
-Ustaw/zmień hasło
+Ustaw/Zmień hasło
 [Hint:]
 Info:
 [Enter password]
 Wprowadź hasło
 [Remember this session password]
 Zapamiętaj hasło dla tej sesji
-[OK]
-OK
 [Cancel]
 Anuluj
 [Status text:]
@@ -173,7 +169,7 @@ Baza danych SkypeKit już w użyciu
 [Invalid Skype name]
 Nieprawidłowa nazwa użytkownika Skype
 [Invalid email]
-Nieprawidłowy adres E-mail
+Nieprawidłowy adres e-mail
 [Unacceptable password]
 Nieakceptowane hasło
 [Skype name is taken]
@@ -230,7 +226,7 @@ Zaloguj się aby zmienić hasło
 Nie podałeś nazwy użytkownika Skype.\nSkonfiguruj ją w Opcje -> Protokoły, i spróbuj jeszcze raz.
 ;file \protocols\Skype\src\skype_blocked.cpp
 [Are you sure you want to block "%s" (%s)? They won't be able to contact you and won't appear in your Contact List.]
-Czy na pewno chcesz zablokować "%s" (%s)? Nie będzie on/ona w stanie zadzwonić do Ciebie, ani pokazywać się na twojej liście kontaktów.
+Czy na pewno chcesz zablokować "%s" (%s)? Nie będzie on/ona w stanie zadzwonić do ciebie, ani pokazywać się na twojej liście kontaktów.
 [Name]
 Nazwa
 ;file \protocols\Skype\src\skype_bookmarks.cpp
@@ -238,13 +234,13 @@ Nazwa
 Czaty
 ;file \protocols\Skype\src\skype_chat.cpp
 [&User details]
-Dane kontaktu
+Dane &kontaktu
 [&Request auth]
-Poproś o szczegółowe dane
+&Poproś o szczegółowe dane
 [Invite to conference]
 Zaproś do czatu
 [Set &role]
-Wybierz rolę
+Wybierz &rolę
 [&Master]
 &Pan
 [&Helper]
@@ -254,15 +250,15 @@ Wybierz rolę
 [&Listener]
 &Słuchacz
 [&Add]
-Dodaj
+&Dodaj
 [&Kick]
-Wyrzuć
+&Wyrzuć
 [Outlaw (&ban)]
 Przestępca (&ban)
-[Copy &skypename]
-Skopiuj &nazwę użytkownika Skype
-[Copy room &uri]
-Skopiuj &URI pokoju
+[Copy &Skype name]
+Kopiuj nazwę &Skype
+[Copy room &URI]
+Kopiuj &URI pokoju
 [Creator]
 Twórca
 [Master]
@@ -294,7 +290,7 @@ Rozpoczęto przychodzącą rozmowę grupową
 [You did not select any contact]
 Nie wybrałeś żadnych kontaktów
 [Hi! I'd like to add you to my contact list]
-Cześć! Chciałbym dodać Cię do mojej listy kontaktów
+Cześć! Chciałbym dodać cię do mojej listy kontaktów
 ;file \protocols\Skype\src\skype_contacts.cpp
 [Contact already in your contact list]
 Kontakt jest już na liście kontaktów
@@ -353,8 +349,8 @@ Usuń
 Protokoły
 ;file \protocols\Skype\src\skype_ignore_list.cpp
 ;file \protocols\Skype\src\skype_instances.cpp
-[Skype protocol plugin only permits you to login to one account at a time. Adding multiple accounts is prohibited in the licence agreement and standard distribution terms of SkypeKit.]
-Wtyczka protokołu Skype pozwala na zalogowanie się tylko do jednego konta. Dodawanie wielu kont jest zabronione w licencji oraz warunkach standardowej dystrybucji SkypeKit.
+[Skype protocol plugin only permits you to login to one account at a time. Adding multiple accounts is prohibited in the license agreement and standard distribution terms of SkypeKit.]
+Wtyczka protokołu Skype pozwala na zalogowanie się tylko do jednego konta naraz. Dodawanie wielu kont jest zabronione przez licencję użytkownika wtyczki oraz warunkach standardowej dystrybucji SkypeKit.
 [Initialization key corrupted or not valid.]
 Klucz inicjalizacji uszkodzony lub niepoprawny.
 [SkypeKit did not initialize (%d).]

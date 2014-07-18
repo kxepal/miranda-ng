@@ -44,7 +44,7 @@ UTF8 у нових файлах
 [History file for %s (%s format %s)]
 Файл історії для %s (%s формат %s)
 [&Find...]
-&Знайти
+&Знайти...
 [&External]
 &Зовнішнє
 [&Close]
@@ -78,7 +78,7 @@ UTF8 у нових файлах
 [Color...]
 Колір...
 [Font...]
-Шрифт
+Шрифт...
 [Syntax highlight]
 Підсвічування синтаксису
 [Failed to create file]
@@ -154,7 +154,7 @@ UTF8 у нових файлах
 [Failed to write URL/File to the file :\n]
 Не вдалося записати передачу файлу або URL у файл:\n
 [Nick      :]
-Псевдонім :
+Нік       :
 [FirstName :]
 Ім'я      :
 [LastName  :]

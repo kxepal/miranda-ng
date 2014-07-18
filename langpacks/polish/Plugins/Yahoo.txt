@@ -1,11 +1,11 @@
 ﻿#muuid {0aa7bfea-1fc7-45f0-906e-2a46b6e119cf}
 ;============================================================
 ;  File: Yahoo.dll
-;  Plugin: Yahoo Protocol
+;  Plugin: Yahoo protocol
 ;  Version: 0.11.0.1
 ;  Authors: Gennady Feldman
 ;============================================================
-[Yahoo Protocol support for Miranda NG.]
+[Yahoo protocol support for Miranda NG.]
 Zapewnia obsługę protokołu Yahoo.
 ;file \protocols\Yahoo\res\Yahoo.rc
 [Yahoo]
@@ -24,8 +24,8 @@ Zaawansowane
 Użyj książki adresowej Yahoo (YAB)
 [Show Avatars]
 Pokaż awatary
-[AutoLogin to Yahoo Website(s)]
-Automatycznie loguj do Yahoo w przeglądarce
+[Auto login to Yahoo Website(s)]
+Automatycznie zaloguj się do stron Yahoo
 [Display Yahoo notifications]
 Pokaż powiadomienia Yahoo
 [Show Errors]
@@ -49,15 +49,13 @@ Ignoruj wszystkich spoza listy kontaktów
 [Ignore only the people below:]
 Ignoruj tylko osoby z listy poniżej:
 [&Add]
-Dodaj
+&Dodaj
 [&Remove]
-Usuń
+&Usuń
 [Set Custom Status]
 Ustaw niestandardowy status
 [Show as busy]
 Pokaż jako zajęty
-[OK]
-OK
 [Cancel]
 Anuluj
 [Protocol:]
@@ -67,9 +65,9 @@ Klient:
 [Chat Room Invitation Request]
 Prośba o dołączenie do pokoju
 [&Join]
-Dołącz
+&Dołącz
 [&Deny]
-Odrzuć
+&Odrzuć
 [Denial Message]
 Wiadomość Odmowna
 [Invitation Message]
@@ -81,16 +79,16 @@ Zaproś znajomego do czatu
 [Screen Name]
 Wyświetlana nazwa
 [&Invite]
-Zaproś
+&Zaproś
 [&Cancel]
-Anuluj
+&Anuluj
 [Invitation reason]
 Powód zaproszenia
 [Add]
 Dodaj
 ;file \protocols\Yahoo\src\chat.cpp
 [[miranda] Got conference invite to room: %s with msg: %s]
-[Miranda] Masz zaproszenie do pokoju: %s wiadomością: %s
+\[Miranda] zostałeś zaproszony do pokoju: %s z wiadomością: %s
 [%s denied invitation with message: %s]
 %s odrzucił zaproszenie z wiadomością: %s
 [Me]
@@ -98,13 +96,13 @@ Ja
 [Others]
 Inne
 [&Invite user...]
-Zaproś użytkownika...
+&Zaproś użytkownika...
 [&Leave chat session]
-Opuść pokój
+&Opuść pokój
 [User &details]
-Dane kontaktu
+&Dane kontaktu
 [User &history]
-Historia użytkownika
+&Historia użytkownika
 [Join My Conference...]
 Dołącz Do Mojej Konferencji
 [No, thank you...]
@@ -181,24 +179,24 @@ Musisz być połączony, aby ustawić niestandardowy status
 [You need to be connected to refresh your buddy list]
 Musisz być połączony aby odświeżyć listę znajomych
 [Set &Custom Status]
-Ustaw niestandardowy status
+Ustaw &niestandardowy status
 [&Edit My Profile]
-Edytuj profil
+&Edytuj profil
 [&My Profile]
-Mój profil
+&Mój profil
 [&Yahoo Mail]
-Mail Yahoo
+Mail &Yahoo
 [&Address Book]
-Książka adresowa
+Książka &adresowa
 [&Calendar]
-Kalendarz
+&Kalendarz
 [Create Conference]
 Utwórz konferencję
 [&Show Profile]
-Pokaż profil
+&Pokaż profil
 ;file \protocols\Yahoo\src\webcam.cpp
 [[miranda] Got webcam invite. (not currently supported)]
- [Miranda] Masz zaproszenie do wideorozmowy. (obecnie nie obsługiwane)
+\[Miranda] otrzymałeś zaproszenie do videokonferencji. (Ta funkcja obecnie jest niewspierana)
 ;file \protocols\Yahoo\src\yahoo.cpp
 [Calendar Reminder]
 Przypomnienie o wydarzeniach
@@ -212,10 +210,10 @@ ID, które próbowałeś dodać jest niepoprawne.
 Nieznany błąd.
 [New Mail]
 Nowy mail
-[You have %i unread msgs]
-Masz %s nieprzeczytanych wiad.
-[New Mail (%i msgs)]
-Nowy mail (%i wiad.)
+[You have %i unread messages]
+Masz %i nieczytanych wiadomości
+[New Mail (%i messages)]
+Nowa poczta (%i nowych wiadomości)
 [From: %s\nSubject: %s]
 Od: %s\nTemat: %s
 [Yahoo System Message]

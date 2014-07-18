@@ -37,7 +37,7 @@ const
 
 type
 
-    HCONTACT                = Integer;
+    MCONTACT                = Integer;
     HDBEVENT                = Integer;
 
     PDBVARIANT = ^TDBVARIANT;
@@ -310,7 +310,6 @@ const
                  DBEVENTINFO.timestamp is in GMT, as returned by time()
     }
 
-    DBEF_FIRST = 1;     // internally only, do not use
     DBEF_SENT  = 2;     // if set, the event was sent by the user, otherwise it was received
     DBEF_READ  = 4;     // event has been read by the user -- only needed for history
 
@@ -383,7 +382,7 @@ const
     MS_DB_EVENT_GET                 = 'DB/Event/Get';
 
     {
-        wParam : HCONTACT
+        wParam : MCONTACT
         lParam : HDBEVENT
         affect : Changes the flag for an event to mark it as read
         Returns: Returns the entire flag DWORD for the event after the change, or -1
@@ -405,21 +404,21 @@ const
     MS_DB_EVENT_GETCONTACT          = 'DB/Event/GetContact';
 
     {
-        wParam : HCONTACT
+        wParam : MCONTACT
         lParam : 0
         Affect : Retrieves a handlee to the first event in the chain
-                 for a HCONTACT
-        returns: Returns a handle, or NULL(0) if HCONTACT is invalid or has
+                 for a MCONTACT
+        returns: Returns a handle, or NULL(0) if MCONTACT is invalid or has
                  no events, events in a chain are sorted chronologically automatically
     }
     MS_DB_EVENT_FINDFIRST           = 'DB/Event/FindFirst';
 
     {
-        wParam : HCONTACT
+        wParam : MCONTACT
         lParam : 0
-        Affect : Retrieves a handle to the first unreead event in a chain for a HCONTACT
+        Affect : Retrieves a handle to the first unreead event in a chain for a MCONTACT
                  see notes
-        Returns: Returns a HDBEVENT handle or NULL(0) if the HCONTACT is invalid
+        Returns: Returns a HDBEVENT handle or NULL(0) if the MCONTACT is invalid
                  or all it's events have beeen read.
         Notes  : Events in a chain are sorted chronologically automatically,
                  but this does not necessarily mean that all events after
@@ -431,10 +430,10 @@ const
     MS_DB_EVENT_FINDFIRSTUNREAD     = 'DB/Event/FindFirstUnread';
 
     {
-        wParam : HCONTACT
+        wParam : MCONTACT
         lParam : 0;
-        Affects: Retrieves a handle to the lasts event in the chain for a HCONTACT
-        Returns: Returns a handle or NULL(0) if HCONTACT is invalid or has no events
+        Affects: Retrieves a handle to the lasts event in the chain for a MCONTACT
+        Returns: Returns a handle or NULL(0) if MCONTACT is invalid or has no events
     }
     MS_DB_EVENT_FINDLAST            = 'DB/Event/FindLast';
 
@@ -577,10 +576,10 @@ const
 
 
     {
-        wParam : HCONTACT
+        wParam : MCONTACT
         lParam : HDBCONTACT
         Affect : Called when a new event has been added to the event chain
-                 for a contact, HCONTACT contains the contact who added the event,
+                 for a contact, MCONTACT contains the contact who added the event,
                  HDBCONTACT a handle to what was added.
                  see notes
         notes  : since events are sorted chronologically, you can not guarantee
@@ -606,7 +605,7 @@ const
 	ME_DB_EVENT_FILTER_ADD 			= 'DB/Event/FilterAdd';
 
     {
-        wParam : HCONTACT
+        wParam : MCONTACT
         lParam : HDBEVENT
         Affect : Called when an event is about to be deleted from the event chain
                  for a contact, see notes
@@ -618,15 +617,15 @@ const
 
 
     {
-        wParam : HCONTACT
+        wParam : MCONTACT
         lParam : 0
         Affect : Called when a new contact has been added to the database,
-                 HCONTACT contains a handle to the new contact.
+                 MCONTACT contains a handle to the new contact.
     }
     ME_DB_CONTACT_ADDED             = 'DB/Contact/Added';
 
     {
-        wParam : HCONTACT
+        wParam : MCONTACT
         lParam : 0
         Affect : Called when a contact is about to be deleted
         Returns: Returning nonzero from your hook will not stop the deletion
@@ -635,7 +634,7 @@ const
     ME_DB_CONTACT_DELETED           = 'DB/Contact/Deleted';
 
     {
-        wParam : HCONTACT
+        wParam : MCONTACT
         lParam : Pointer to a TDBCONTACTWRITESETTING
         Affect : Calleed when a contact has one of it's settings changed
                  hContact is a valid handle to the contact that has changed,

@@ -1,8 +1,8 @@
 ﻿#muuid {eebc474c-b0ad-470f-99a8-9dd9210ce233}
 ;============================================================
 ;  File: mRadio.dll
-;  Module: mRadio
-;  Version: 0.0.2.3
+;  Plugin: mRadio Mod
+;  Version: 0.0.2.4
 ;  Authors: Awkward
 ;============================================================
 [This plugin plays and records Internet radio streams. Also local media files can be played.]

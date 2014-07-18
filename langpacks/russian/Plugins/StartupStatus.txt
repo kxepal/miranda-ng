@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: StartupStatus.dll
 ;  Plugin: StartupStatus
-;  Version: 0.8.0.45
+;  Version: 0.8.0.47
 ;  Authors: P Boon
 ;============================================================
 [StartupStatus, allows you to define the status Miranda should set on startup, configurable per protocol.]
@@ -259,6 +259,10 @@ Cтатус-профиль
 Справа
 [None]
 Нет
+[size: %d x %d]
+размер: %d x %d
+[loc: %d x %d]
+поз.: %d x %d 
 [Hidden]
 Скрытый
 [Minimized]
@@ -286,7 +290,7 @@ Cтатус-профиль
 [I've been away since %time%.]
 Отошел в %time%.
 [Give it up, I'm not in!]
-Меня нет.
+Ну нет меня сейчас, нет...
 [Not right now.]
 Не сейчас.
 [Give a guy some peace, would ya?]

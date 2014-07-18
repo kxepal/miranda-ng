@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: CryptoPP.dll
 ;  Plugin: Crypto++
-;  Version: 1.0.4.7
+;  Version: 1.0.4.8
 ;  Authors: Baloo
 ;============================================================
 [Crypto++ library for SecureIM plugin.]
@@ -14,8 +14,6 @@ GnuPG-Plugin - Passphrase
 Passwort des geheimen Schlüssels des Benutzers eingeben:
 [User ID]
 Nutzer-ID
-[OK]
-OK
 [Cancel]
 Abbrechen
 [GnuPG Plugin - Select public key]

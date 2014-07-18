@@ -2,18 +2,18 @@
 ;============================================================
 ;  File: SeenPlugin.dll
 ;  Plugin: Last seen
-;  Version: 5.0.4.8
+;  Version: 5.0.4.9
 ;  Authors: Heiko Schillinger, YB
 ;============================================================
 [Logs when a user was last seen online and which users were online while you were away.]
 Запам'ятовує, коли користувач останній раз з'являвся в мережі і хто був в мережі, поки ви були відсутні.
 [Last seen options]
 Параметри останньої появи
-[Last seen menuitem]
+[Last seen menu item]
 Пункт меню останньої появи
 [Show icon]
 Показати значок
-[Userinfo tab]
+[User info tab]
 Вкладка в інформації про контакт
 [Log to file]
 Запис у файл

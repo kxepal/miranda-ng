@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: TabSRMM.dll
 ;  Plugin: TabSRMM
-;  Version: 3.3.0.3
+;  Version: 3.3.1.4
 ;  Authors: The Miranda developers team and contributors
 ;============================================================
 [IM and group chat module for Miranda NG.]
@@ -10,8 +10,6 @@
 ;file \plugins\TabSRMM\res\chat.rc
 [You can add the user by user name or his ID. Wildcards are allowed and recommended.]
 
-[OK]
-ОК
 [Cancel]
 Отказ
 [Show these events]
@@ -118,8 +116,6 @@
 Копиране на всичко
 [Word lookup]
 Търсене на дума
-[Google]
-Google
 [Wikipedia]
 Wikipedia
 [Link]
@@ -154,6 +150,17 @@ Wikipedia
 Затваряне на другите табове
 [&Open at this position]
 Отваряне на тази позиция
+;file \plugins\TabSRMM\res\msgwindow.rc
+[&Retry]
+
+[&Cancel]
+Отказ
+[&Send]
+Изпращане
+[&Add]
+Добавяне
+[&Remove]
+Премахване
 ;file \plugins\TabSRMM\res\resource.rc
 [Customize the panel]
 Персонализиране на панела
@@ -397,7 +404,7 @@ ID на потребителя в лентата за състояние
 Общо изобразяване на дневника чрез
 [Typing Notification]
 Уведомявания при писане
-[Send typing notifications to the following users when you are typing a message to the them:]
+[Send typing notifications to the following users when you are typing a message to them:]
 Изпращане на уведомяване за писане на съобщение до следните потребители, когато им пишете съобщение:
 [        Show typing notifications in the message window]
           Уведомяване при писане в прозореца за съобщения
@@ -437,6 +444,8 @@ ID на потребителя в лентата за състояние
 Създаване на нов контейнер (въведете име)
 [Create new]
 Създаване
+[Reset]
+Анулиране
 [Show in IM chats]
 Показване в обикновени прозорци
 [Show in chat rooms]
@@ -445,8 +454,6 @@ ID на потребителя в лентата за състояние
 Пролука м/у бутоните:
 [Hide if there isn't enough space]
 Скриване, ако няма достатъчно място
-[Reset]
-Анулиране
 [Insert Separator]
 Вмъкване на разделител
 [To set container options, please use the container settings dialog. It is available by:\n1. choosing "container settings" from the system menu of a container.\n2. right clicking the tab or the button bar in any message window.]
@@ -475,7 +482,7 @@ ID на потребителя в лентата за състояние
 Помощ за контейнерите
 [Windows Aero settings]
 Windows Aero - настройки
-[Use Aero UI elements(only when not using a custom skin)]
+[Use Aero UI elements (only when not using a custom skin)]
 Ползване на Aero UI елементи (само когато не се ползва персонален облик)
 [Use Windows 7 task bar enhancements (restart required)]
 Ползване функциите на лентата за задачи в Windwos 7 за табовете (изисква рестарт)
@@ -953,16 +960,6 @@ Popups за събития
 Стандартен контейнер
 [Attach to]
 Прикрепване към
-[Meta Contact]
-Метаконтакт
-[(Forced)]
-(Принудително)
-[Autoselect]
-Автоизбиране
-[Use Protocol]
-
-[Set Default Protocol]
-Задаване на стандартен протокол
 ;file \plugins\TabSRMM\src\containeroptions.cpp
 [General options]
 Основни настройки
@@ -1032,11 +1029,13 @@ Popups за събития
 ;file \plugins\TabSRMM\src\eventpopups.cpp
 [One of your popup actions is set to DISMISS EVENT.\nNote that this options may have unwanted side effects as it REMOVES the event from the unread queue.\nThis may lead to events not showing up as "new". If you don't want this behavior, please review the Event Notifications settings page.]
 Едно от зададените popup действия е затваряне на събитието.\nТази настройка може да има нежелан ефект - събитието се премахва от опашката непрочетени.\nВъзможно последствие е непоказване на новите събития като такива. Ако не желаете подобно действие, можете да го промените от таб Уведомявания.
+[TabSRMM warning message]
+TabSRMM предупреждение
 [Incoming file]
 Входящи файлове
 [No description given]
 Няма описание
-[Incoming file (invalid format]
+[Incoming file (invalid format)]
 
 [Unknown event]
 Неизвестно събитие
@@ -1051,15 +1050,19 @@ Popups за събития
 Проблем с настройките|Функцията за автоматично изпращане е изключена.\\b1 Изпращането след време\\b0  и \\b1 до няколко потребителя\\b0  зависят от нея.\n\nМожете да я включите от \\b1Настройки>Разговори>Допълнителни настройки\\b0. Промяната изисква рестартиране.
 [You cannot edit user notes when there are unsent messages]
 Редактирането на бележките за потребителя е невъзможно докато има неизпратени съобщения
-[%s is typing a message.]
-%s пише съобщение.
+[Version]
+Версия
+[%s is typing a message...]
+%s пише съобщение...
 [Last received: %s at %s]
 Последно получено: %s в %s
 [%s has entered text.]
 %s въведе текст.
-[Autoscrolling is disabled, %d message(s) queued (press F12 to enable it)]
+[%s is typing a message]
+%s пише съобщение
+[Auto scrolling is disabled, %d message(s) queued (press F12 to enable it)]
 Автоматичното придвижване е изключено, %d непрегледани съобщения (за включване натиснете клавиш F12)
-[UID: %s (SHIFT click -> copy to clipboard)\nClick for User's Details\nRight click for MetaContact control\nClick dropdown to add or remove user from your favorites.]
+[UID: %s (SHIFT click -> copy to clipboard)\nClick for User's Details\nRight click for metacontact control\nClick dropdown to add or remove user from your favorites.]
 UID: %s (SHIFT+Ляв бутон = копиране в клипборда)\nЛяв бутон = Подробности за контакта\nДесен бутон = контрол на метаконтакт\nНатиснете падащия триъгълник за добавяне/премахване към любимите контакти.
 [No UID]
 Няма UID
@@ -1235,7 +1238,7 @@ TabSRMM
 Съобщението, което се опитвате да поставите надвишава позволения размер от протокола. Ще бъдат изпратени само първите %d знака.
 [Save and close session]
 Запис и затваряне
-[Autoscrolling is disabled (press F12 to enable it)]
+[Auto scrolling is disabled (press F12 to enable it)]
 Автоматичното придвижване е изключено (за включване натиснете клавиш F12)
 [Click for contact menu\nClick dropdown for window settings]
 Натиснете за меню на контакта\nНатиснете падащия триъгълник за настройки на прозореца
@@ -1251,12 +1254,6 @@ TabSRMM
 
 [You are editing the user notes. Click the button again or use the hotkey (default: Alt-N) to save the notes and return to normal messaging mode]
 Редактирате бележките за потребителя.\nЗа запаметяване на промените и връщане към нормалния режим\nза писане/изпращане на съобщения натиснете отново бутона\nили клавишната комбинация, обикновено: Alt+N
-[Unforce failed]
-
-[The selected protocol cannot be forced at this time]
-
-[Warning: you have selected a subprotocol for sending the following messages which is currently offline]
-Внимание: Избрали сте подпротокол, за изпращане на текущото съобщение, който в момента е "Извън линия"
 [Contact is offline and this protocol does not support sending files to offline users.]
 Контактът е извън линия, а протоколът не поддържа изпращане на съобщения до контакти извън линия.
 ;file \plugins\TabSRMM\src\msgdlgutils.cpp
@@ -1614,6 +1611,8 @@ TabSRMM съобщение (%s)
 ;file \plugins\TabSRMM\src\translator.cpp
 [Message window tweaks]
 
+[Display metacontact icons]
+
 [Error feedback]
 При грешка
 [Show skinnable tooltip in chat (Tipper plugin required)]
@@ -1624,14 +1623,18 @@ TabSRMM съобщение (%s)
 Изключване на анимираните .GIF аварати (няма да се отрази на вече отворените прозорци)
 [Close current tab on send]
 Затваряне на таба след изпращане
-[Disable error popups on sending failures]
-Без popups при неуспешно изпращане на съобщение
 [Automatic keyboard layout: Do not load the system default for new contacts]
 Автоматично избиране на клавиатурна подредба: Без зареждане на стандартната системна подредба за нови контакти
 [Enable unattended send (experimental feature, required for multisend and send later) (*)]
 Автоматично изпращане (експериментално, изисква се за изпращане след време и многократно изпращане на съобщения)*
 [Show client description in info panel]
 
+[On tab control]
+
+[On the button bar]
+
+[Disable error popups on sending failures]
+Без popups при неуспешно изпращане на съобщение
 [Show a preview of the event]
 Представяне на образец на събитието
 [Don't announce event when message dialog is open]
@@ -1700,7 +1703,7 @@ TabSRMM съобщение (%s)
 Външен вид на дневника за съобщения
 [Support for external plugins]
 Поддръжка на външни приставки
-[Timestamp settings (note: timstamps also depend on your templates)]
+[Timestamp settings (note: timestamps also depend on your templates)]
 Настройки на времевата марка (бележка: те зависят и от шаблона)
 [Message log icons]
 Икони в дневника за съобщения
@@ -1796,7 +1799,7 @@ TabSRMM съобщение (%s)
 
 [Aero peek warning|You have enabled Aero Peek features and loaded a custom container window skin\n\nThis can result in minor visual anomalies in the live preview feature.]
 
-[Filetransfer problem|Sending the image by file transfer failed.\n\nPossible reasons: File transfers not supported, either you or the target contact is offline, or you are invisible and the target contact is not on your visibilty list.]
+[File transfer problem|Sending the image by file transfer failed.\n\nPossible reasons: File transfers not supported, either you or the target contact is offline, or you are invisible and the target contact is not on your visibilty list.]
 
 [Settings problem|The option \\b1 History->Imitate IEView API\\b0  is enabled and the History++ plugin is active. This can cause problems when using IEView as message log viewer.\n\nShould I correct the option (a restart is required)?]
 Проблем с настройките|Опцията \\b1 История>"Имитиране на IEView API"\\b0  е включена и приставката History++ е активна. Това може да е причина за проблеми при използване на IEView за за изобразяване на историята.\n\nЖелаете ли тава да бъде поправено (изисква рестарт)?
@@ -1806,8 +1809,6 @@ TabSRMM съобщение (%s)
 
 [Loading a theme|Loading a color and font theme can overwrite the settings defined by your skin.\n\nDo you want to continue?]
 
-[TabSRMM warning message]
-TabSRMM предупреждение
 ;file \plugins\TabSRMM\src\chat\colorchooser.cpp
 [Text color]
 Цвят на текста
@@ -1937,7 +1938,7 @@ TabSRMM предупреждение
 * Промяна на състояние
 [* Dividers]
 * Разделители
-[* Error and warning Messages]
+[* Error and warning messages]
 * Съобщение за грешки и предупреждения
 [* Symbols (incoming)]
 * Входящи символи
@@ -1997,7 +1998,7 @@ TabSRMM предупреждение
 Ограничаване на потребителските имена в дневника за съобщения до 20 знака
 [Add a colon (:) to auto-completed user names]
 Добавяне на ":" след автодовършените потребителски имена
-[Start private conversation on doubleclick in nick list (insert nick if unchecked)]
+[Start private conversation on double click in nick list (insert nick if unchecked)]
 Стартиране на разговор при двукратно натискане (вмъкване на прякора, ако не е отметнато)
 [Strip colors from messages in the log]
 Премахване на цветовете от съобщенията в дневника
@@ -2087,9 +2088,11 @@ TabSRMM предупреждение
 
 [nick of current contact (if defined)]
 прякор на текущия контакт (ако е зададен)
-[protocol name of current contact (if defined). Account name is used when protocol supports multiaccounts]
+[protocol name of current contact (if defined). Account name is used when protocol supports multiple accounts]
 протокол на текущия акаунт (ако е зададен). Името на акаунта се използва, когато протоколът поддържа акаунти.
-[User ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
+[user-defined account name of current contact (if defined).]
+
+[user ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
 
 [path to Miranda root folder]
 път до главната папка на Miranda
@@ -2183,7 +2186,7 @@ TabSRMM предупреждение
 минута
 [, %d %s idle]
 , %d %s бездействие
-[The filter canoot be enabled, because there are no event types selected either global or for this chat room]
+[The filter cannot be enabled, because there are no event types selected either global or for this chat room]
 Филтърът не може да бъде зареден, защото няма избрани събития за показване общо или само чат стаята
 [Event filter error]
 Филтър на събития: грешка

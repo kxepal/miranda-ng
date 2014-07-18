@@ -1,12 +1,15 @@
-﻿;file \src\resource.rc
+﻿;============================================================
+;  File: miranda32/64.exe
+;  Module: Miranda Core
+;  Version: 0.95.2
+;============================================================
+;file \src\resource.rc
 [Enter account name (for example, My Google)]
 Въведете име на акаунта
 [Choose the protocol type]
 Изберете тип на протокола
 [Specify the internal account name (optional)]
 Въведете вътрешно име (не е задължително)
-[OK]
-ОК
 [Cancel]
 Отказ
 [Add %s]
@@ -47,15 +50,15 @@
 Изобразяване на контактите
 [Instead of displaying contacts by their nickname,\ndrag to choose another order:]
 Ако не желаете контактите Ви да бъдат изобразявани с прякора им можете да изберете друг тип име. Влачете за да промените подредбата:
-[Miranda NG Profile Manager]
+[Miranda NG profile manager]
 Miranda NG диспечер на профили
 [&Run]
 Изпълнение
 [&Exit]
 Изход
-[Start in Service Mode with]
+[Start in service mode with]
 Стартиране в сервизен режим с:
-[Find/Add contacts]
+[Find/add contacts]
 Търсене/Добавяне на контакти
 [Search:]
 Търсене:
@@ -81,7 +84,7 @@ Miranda NG диспечер на профили
 Добавяне в списъка
 [Custom]
 Избор
-[Find/Add contacts\nHere you can add contacts to your contact list]
+[Find/add contacts\nHere you can add contacts to your contact list]
 Търсене/Добавяне на контакти\nОт тук можете да добавите нови контакти в списъка
 [Options\nConfigure your Miranda NG options]
 Настройки\nКонфигурирайте настройките на Miranda NG
@@ -159,7 +162,7 @@ SSL трафик
 OutputDebugString()
 [File]
 Файл
-[Run program when Miranda NG starts (eg tail -f, dbgview, etc.):]
+[Run program when Miranda NG starts (e.g., tail -f, dbgview, etc.):]
 
 [Run now]
 Стартиране
@@ -279,7 +282,7 @@ URL адреси
 напр. raboten
 [You can select a different profile driver from the default, it may offer more features or abilities, if in doubt use the default.]
 Можете да изберете драйвер за профила, който да предлага повече функции. Ако имате съмнения използвайте стандартния.
-[e.g., Miranda Database]
+[e.g., dbx mmap]
 напр. db3x mmap driver
 [Driver]
 Драйвер
@@ -409,8 +412,6 @@ Copyright:
 Надграждане
 [&Remove...]
 Премахване...
-[Miranda NG]
-Miranda NG
 [Miranda NG is being restarted.\nPlease wait...]
 Miranda NG се рестартира.\nМоля, изчакайте...
 [Error console]
@@ -423,11 +424,11 @@ Miranda NG се рестартира.\nМоля, изчакайте...
 Шрифт за изобразяване етикети на секции или текстови елементи.
 [Normal text:]
 Нормален текст:
-[This font is used to display most text element or section bodies.]
+[This font is used to display most text elements or section bodies.]
 Шрифт за повечето текстови елементи или съдържанието на секциите.
 [Minor notes:]
 Малки бележки:
-[This font is used to display various addtional notes.]
+[This font is used to display various additional notes.]
 Шрифта за изобразяване на различни допълнителни бележки.
 [Welcome to Miranda NG's account manager!\nHere you can set up your IM accounts.\n\nSelect an account from the list on the left to see the available options. Alternatively, just click on the Plus sign underneath the list to set up a new IM account.]
 Добре дошли в диспечера на акаунти в Miranda NG!\nОт тук можете да настроите вашите акаунти.\n\nЗа да видите наличните опции, изберете акаунт от списъка вляво. Ако желаете да създадете нов акаунт, натиснете знака "плюс" под списъка.
@@ -451,6 +452,64 @@ Miranda NG се рестартира.\nМоля, изчакайте...
 *ще бъдат показани само първите %d икони
 [You can group/ungroup icons by selecting them (CTRL+left click) and using the popup menu (right click)]
 Можете да групирате/дегрупирате иконите като ги избирате чрез ляв бутон+CTRL и popup менюто (десен бутон)
+[Add to existing metacontact]
+
+[Please select a metacontact:]
+
+[Sort alphabetically]
+
+[Editing]
+
+[Information]
+Информация
+[Contacts]
+Контакти
+[&Remove]
+Премахване
+[&Set as default]
+
+[Move &up]
+
+[Move &down]
+
+[Send &offline]
+
+[Context menu]
+Контекстно меню
+[Use contact's unique ID]
+
+[Use contact's display name]
+
+[Contact labels]
+
+[When I click on a sub in the popup menu...]
+
+[Set default and open message window]
+
+[Show subcontact context menu]
+
+[Show user information]
+
+[Contact list]
+Списък с контакти
+[Display subcontact nickname]
+
+[Display subcontact display name]
+
+[Lock name to first contact]
+
+[Current language:]
+
+[Last modified using:]
+Посл. промяна с:
+[Date:]
+Дата:
+[Locale:]
+Език:
+[Reload langpack]
+Презареждане на пакета
+[Download more language packs]
+Сваляне на още езикови пакети
 [Tray]
 Трей
 [&Hide/Show]
@@ -554,6 +613,24 @@ Miranda NG се рестартира.\nМоля, изчакайте...
 ;file \src\core\stdchat\res\chat.rc
 [&Send]
 Изпращане
+[&Emoticons]
+
+[&Bold]
+
+[&Italic]
+
+[&Color]
+
+[&Background color]
+
+[&History]
+
+[&Filter]
+
+[&Room settings]
+
+[&Show/Hide nick list]
+
 [Show these events only:]
 Показване само на следните събития:
 [Actions]
@@ -568,8 +645,6 @@ Miranda NG се рестартира.\nМоля, изчакайте...
 Промяна на темата
 [Status changes]
 Промяна на състояние
-[Information]
-Информация
 [Disconnects]
 Излизания от мрежата
 [User kicks]
@@ -628,8 +703,6 @@ Popup за приставката Chat
 Изчистване на дневника
 [Word lookup]
 Търсене на дума
-[Google]
-Google
 [Wikipedia]
 Wikipedia
 [Link]
@@ -693,8 +766,6 @@ Wikipedia
 Всички икони
 [Only when statuses differ]
 Само при различни състояния
-[Contact list]
-Списък с контакти
 [System tray icon]
 Икона в трея
 [System tray icon when using multiple protocols]
@@ -851,6 +922,8 @@ Wikipedia
 Прозорец:
 [Contact list background:]
 Фон на списъка с контакти:
+[&Main menu]
+Главно меню
 [&Status]
 Състояние
 [&Offline\tCtrl+0]
@@ -884,6 +957,8 @@ Wikipedia
 Изберете отново...
 [Total size:]
 Общ размер:
+[&User menu]
+
 [Incoming file transfer]
 Входящ файл
 [A&ccept]
@@ -892,8 +967,6 @@ Wikipedia
 Отказ
 [From:]
 От:
-[Date:]
-Дата:
 [Files:]
 Файлове:
 [Save to:]
@@ -934,6 +1007,8 @@ Wikipedia
 Последна промяна:
 [Open file]
 Отвари файла
+[Open folder]
+
 [File properties]
 Инф. за файла
 [File being received]
@@ -985,17 +1060,11 @@ Wikipedia
 ;file \src\core\stdhelp\resource.rc
 [About Miranda NG]
 Относно Miranda NG
-[Miranda NG\n%s]
-Miranda NG\n%s
 [Credits >]
 Заслуги >
 ;file \src\core\stdidle\resource.rc
 [Become idle if the following is left unattended:]
 Бездействащ при липса на активност в:
-[Windows]
-Windows
-[Miranda]
-Miranda
 [Become idle if the screen saver is active]
 Бездействащ при активен screen saver
 [Become idle if the computer is locked]
@@ -1071,14 +1140,22 @@ Miranda
 Опитай отново
 [Message session]
 Разговор
+[&Details]
+
 [Message window event log]
 Дневник на събитията в прозореца за съобщения
 [Show names]
 Показване на имена
 [Show timestamp]
 Показване на времева марка
+[Show seconds]
+Показване на секунди
 [Show dates]
 Показване на дати
+[Show formatting]
+
+[Load history events]
+Допълнително зареждани събития
 [Load unread events only]
 Само непрочетените събития
 [Load number of previous events]
@@ -1087,14 +1164,6 @@ Miranda
 Събития от преди
 [minutes old]
 минути
-[Show status changes]
-Промяна на състояние
-[Show seconds]
-Показване на секунди
-[Load history events]
-Допълнително зареждани събития
-[Show formatting]
-
 [Send typing notifications to the following users when you are typing a message to them:]
 Изпращане на уведомяване при писане до следните потребители, когато им пишете съобщение:
 [Show typing notifications when a user is typing a message]
@@ -1217,7 +1286,7 @@ Miranda
 ;file \src\core\stdauth\authdialogs.cpp
 [View user's details]
 Подробности за потребителя
-[Add Contact Permanently to List]
+[Add contact permanently to list]
 Добавяне на контакта за постоянно в списъка
 [<Unknown>]
 <Неизвестно>
@@ -1531,7 +1600,7 @@ Popups за изобразяване
 [Chat log]
 Чат дневник
 [Popups]
-РopUps
+Рopups
 ;file \src\core\stdchat\src\tools.cpp
 [Look up '%s':]
 Търсене за "%s":
@@ -1624,6 +1693,9 @@ Popups за изобразяване
 [Global]
 Общо
 ;file \src\core\stdclist\src\cluiopts.cpp
+;file \src\core\stdcrypt\encrypt.cpp
+[Standard crypto provider]
+
 ;file \src\core\stdemail\email.cpp
 [User has not registered an e-mail address]
 Потребителят не е задал имейл
@@ -1654,7 +1726,7 @@ Popups за изобразяване
 [All files]
 Всички файлове
 ;file \src\core\stdfile\fileopts.cpp
-[Executable Files]
+[Executable files]
 Изпълними файлове
 [Events]
 Събития
@@ -1687,6 +1759,8 @@ Popups за изобразяване
 Стартирането на прехвърляне е невъзможно.
 [Contact menu]
 Меню на контактите
+[Open...]
+
 [sec]
 сек
 [remaining]
@@ -2037,8 +2111,6 @@ URL
 [(Unknown contact)]
 (Непознат контакт)
 ;file \src\modules\clist\clisttray.cpp
-[&Main menu]
-Главно меню
 ;file \src\modules\clist\clui.cpp
 [This contact is on an instant messaging system which stores its contact list on a central server. The contact will be removed from the server and from your contact list when you next connect to that network.]
 Контактът е от система за съобщения, която съхранява списъка с контакти на централен сървър. Контактът ще бъде премахнат от сървъра и вашия списък с контакти следващия път, когато се свържете към мрежата.
@@ -2063,6 +2135,8 @@ URL
 Потребител
 [FirstName LastName]
 Име Фамилия
+[LastName FirstName]
+
 ['(Unknown contact)' (not movable)]
 "Непознат контакт" (неподвижно)
 ['(Unknown contact)']
@@ -2204,7 +2278,7 @@ URL
 Всички мрежи
 [Handle]
 
-[&Find/Add contacts...]
+[&Find/add contacts...]
 Търсене/Добавяне на контакти
 ;file \src\modules\findadd\searchresults.cpp
 [Could not start a search on '%s', there was a problem - is %s connected?]
@@ -2263,9 +2337,118 @@ URL
 ;file \src\modules\ignore\ignore.cpp
 [** All contacts **]
 ** Всички контакти **
-[Contacts]
-Контакти
+;file \src\modules\langpack\lpopts.cpp
+[(incompatible)]
+(несъвместимо)
+[Unknown]
+Неизвестно
+[built-in]
+Вграден
+[Languages]
+Езици
+;file \src\modules\metacontacts\metacontacts.h
+[You are going to remove all the contacts associated with this metacontact.\nThis will delete the metacontact.\n\nProceed anyway?]
+
+;file \src\modules\metacontacts\meta_addto.cpp
+[Either there is no metacontact in the database (in this case you should first convert a contact into one)\nor there is none that can host this contact.\nAnother solution could be to convert this contact into a new metacontact.\n\nConvert this contact into a new metacontact?]
+
+[This contact is a metacontact.\nYou can't add a metacontact to another metacontact.\n\nPlease choose another.]
+
+[Metacontact conflict]
+
+[This contact is already associated to a metacontact.\nYou cannot add a contact to multiple metacontacts.]
+
+[Multiple metacontacts]
+
+[No suitable metacontact found]
+
+[a contact]
+
+[Adding %s...]
+
+[Please select a metacontact]
+
+[No metacontact selected]
+
+[Assignment to the metacontact failed.]
+
+[Assignment failure]
+
+;file \src\modules\metacontacts\meta_edit.cpp
+[ID]
+
+[Protocol]
+Протокол
+[Send offline]
+
+[Send &online]
+
+[Delete metacontact?]
+
+;file \src\modules\metacontacts\meta_main.cpp
+[Toggle off]
+
+[Toggle on]
+
+[Convert to metacontact]
+
+[Add to existing]
+
+[Edit]
+Редактиране
+[Set to default]
+
+;file \src\modules\metacontacts\meta_menu.cpp
+[There was a problem in assigning the contact to the metacontact]
+
+[This will remove the metacontact permanently.\n\nProceed anyway?]
+
+[Are you sure?]
+Сигурни ли сте?
+[Remove from metacontact]
+
+[Toggle metacontacts off]
+
+[Toggle metacontacts on]
+
+[Add to existing metacontact...]
+
+[Edit metacontact...]
+
+[Set as metacontact default]
+
+[Delete metacontact]
+
+[Subcontacts]
+Подконтактите
+;file \src\modules\metacontacts\meta_options.cpp
+[Metacontacts]
+Метаконтакти
+;file \src\modules\metacontacts\meta_services.cpp
+[No online contacts found.]
+
+;file \src\modules\metacontacts\meta_utils.cpp
+[Sender]
+
+[Could not retrieve contact protocol]
+
+[Assignment error]
+
+[Could not get unique ID of contact]
+
+[Contact is 'not on list' - please add the contact to your contact list before assigning.]
+
+[Metacontact is full]
+
+[Could not write contact protocol to metacontact]
+
+[Could not write unique ID of contact to metacontact]
+
+[Could not write nickname of contact to metacontact]
+
 ;file \src\modules\netlib\netliblog.cpp
+[Standard netlib log]
+
 [No times]
 Без час
 [Standard hh:mm:ss times]
@@ -2280,9 +2463,9 @@ URL
 Изберете къде да бъде създаден дневника
 [Select program to be run]
 Изберете програма за изпълнение
-[Standard netlib log]
-
 ;file \src\modules\netlib\netlibopts.cpp
+[<mixed>]
+
 [<All connections>]
 <Всички връзки>
 [Network]
@@ -2316,12 +2499,12 @@ Miranda NG настройки
 "%s" е изключена, желаете да бъде включена?
 [Re-enable Miranda plugin?]
 
-[Unable to load plugin in Service Mode!]
+[Unable to load plugin in service mode!]
 Зареждането на приставката в сервизен режим е невъзможно!
 [Unable to start any of the installed contact list plugins, I even ignored your preferences for which contact list couldn't load any.]
 Нито една от инсталираните приставки за списъка с контакти не може да бъде заредена.
 [Can't find a contact list plugin! You need StdClist or any other contact list plugin.]
-Не е намерена приставка за списъка с контакти! Необходима е StdClist или всяка друга clist приставка. 
+Не е намерена приставка за списъка с контакти! Необходима е StdClist или всяка друга clist приставка.
 ;file \src\modules\plugins\pluginopts.cpp
 [Plugin]
 Приставка
@@ -2354,16 +2537,12 @@ Miranda NG настройки
 Акаунтът е изключен. За достъп до настройките е необходимо да бъде включен.
 [New account]
 Нов акаунт
-[Edit]
-Редактиране
 [Remove account]
 Премахване на акаунта
 [Configure...]
 Настройване...
 [Upgrade account]
 Надграждане на акаунт
-[Protocol]
-Протокол
 [Account ID]
 ID на акаунта
 [<unknown>]
@@ -2430,8 +2609,6 @@ Win +\s
 Стрелка надолу
 [Find user]
 Търсене на потребител
-[SMS]
-SMS
 [Search all]
 Търсене на всичко
 [Tick]
@@ -2512,9 +2689,6 @@ JPEG изображения
 GIF изображения
 [PNG bitmaps]
 PNG изображения
-;file \src\modules\utils\enterstring.cpp
-[OK (%d)]
-
 ;file \src\modules\utils\path.cpp
 [Avatars]
 Аватари
@@ -2526,8 +2700,6 @@ PNG изображения
 ;file \src\modules\utils\utils.cpp
 [Unspecified]
 Неуточнено
-[Unknown]
-Неизвестно
 [Afghanistan]
 Афганистан
 [Aland Islands]

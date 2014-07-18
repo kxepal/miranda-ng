@@ -51,7 +51,7 @@ type
   end;
   pQSFRec = ^tQSFRec;
   tQSFRec = record // row (contact)
-    contact:HCONTACT;
+    contact:TMCONTACT;
     proto  :uint_ptr;
     flags  :dword;
     status :dword;
@@ -115,7 +115,7 @@ begin
   end;
 end;
 
-procedure AddContactToList(hContact:HCONTACT;num:integer);
+procedure AddContactToList(hContact:TMCONTACT;num:integer);
 var
   li:LV_ITEMW;
   i:integer;
@@ -337,7 +337,7 @@ end;
 
 //----- contacts actions -----
 
-function GetFocusedhContact:HCONTACT;
+function GetFocusedhContact:TMCONTACT;
 var
   i:integer;
 begin
@@ -348,7 +348,7 @@ begin
     result:=FlagBuf[i].contact;
 end;
 
-procedure ShowContactMsgDlg(hContact:HCONTACT);
+procedure ShowContactMsgDlg(hContact:TMCONTACT);
 begin
   if hContact<>0 then
   begin
@@ -357,7 +357,7 @@ begin
   end;
 end;
 
-procedure DeleteOneContact(hContact:HCONTACT);
+procedure DeleteOneContact(hContact:TMCONTACT);
 begin
   if ServiceExists(strCListDel)>0 then
     CallService(strCListDel,hContact,0)
@@ -388,8 +388,8 @@ end;
 
 procedure ConvertToMeta;
 var
-  hMeta:HCONTACT;
-  tmp:HCONTACT;
+  hMeta:TMCONTACT;
+  tmp:TMCONTACT;
   i,j:integer;
 begin
   j:=ListView_GetItemCount(grid)-1;
@@ -399,7 +399,7 @@ begin
   begin
     if ListView_GetItemState(grid,i,LVIS_SELECTED)<>0 then
     begin
-      tmp:=CallService(MS_MC_GETMETACONTACT,FlagBuf[LV_GetLParam(grid,i)].contact,0);
+      tmp:=db_mc_getMeta(FlagBuf[LV_GetLParam(grid,i)].contact);
       if tmp<>0 then
         if hMeta=0 then
           hMeta:=tmp
@@ -438,7 +438,7 @@ end;
 procedure UpdateLVCell(item,column:integer;text:pWideChar=pWideChar(-1));
 var
   li:LV_ITEMW;
-  contact:HCONTACT;
+  contact:TMCONTACT;
   row:integer;
 begin
   contact:=FlagBuf[LV_GetLParam(grid,item)].contact;
@@ -469,7 +469,7 @@ end;
 
 procedure MoveToGroup(group:PWideChar);
 var
-  contact:HCONTACT;
+  contact:TMCONTACT;
   i,j,grcol,row:integer;
 begin
   j:=ListView_GetItemCount(grid)-1;
@@ -512,7 +512,7 @@ end;
 
 procedure MoveToContainer(container:PWideChar);
 var
-  contact:HCONTACT;
+  contact:TMCONTACT;
   i,j,grcol,row:integer;
 begin
   j:=ListView_GetItemCount(grid)-1;
@@ -773,6 +773,7 @@ begin
           DBWriteUTF8(wParam,lmodule,col.setting,p);
           mFreeMem(p);
         end;
+        DBVT_DELETED,
         DBVT_WCHAR: begin
           DBWriteUnicode(wParam,lmodule,
               col.setting,qsr.text);
@@ -784,7 +785,7 @@ begin
   UpdateLVCell(SendMessage(grid,LVM_GETNEXTITEM,-1,LVNI_FOCUSED),cmcolumn,qsr.text);
 end;
 
-function ShowContactMenu(wnd:HWND;hContact:HCONTACT;col:integer=-1):HMENU;
+function ShowContactMenu(wnd:HWND;hContact:TMCONTACT;col:integer=-1):HMENU;
 var
   mi:TCListMenuItem;
   pt:tpoint;
@@ -974,7 +975,7 @@ begin
 
   // set new sort mark
   SendMessage(header,HDM_GETITEM,qsopt.columnsort,lparam(@hdi));
-  if (qsopt.flags and QSO_SORTASC)<>0 then
+  if (qsopt.flags and QSO_SORTASC)=0 then
     hdi.fmt:=hdi.fmt or HDF_SORTDOWN
   else
     hdi.fmt:=hdi.fmt or HDF_SORTUP;
@@ -1096,7 +1097,7 @@ begin
   end;
 end;
 
-function NewLVHProc(Dialog:HWnd;hMessage:UINT;wParam:WPARAM;lParam:LPARAM):lresult; stdcall;
+function NewLVHProc(Dialog:HWND;hMessage:uint;wParam:WPARAM;lParam:LPARAM):LRESULT; stdcall;
 begin
   case hMessage of
     WM_RBUTTONUP: begin
@@ -1114,7 +1115,7 @@ end;
 var
   HintWnd:HWND;
 
-function NewLVProc(Dialog:HWnd;hMessage:UINT;wParam:WPARAM;lParam:LPARAM):lresult; stdcall;
+function NewLVProc(Dialog:HWND;hMessage:uint;wParam:WPARAM;lParam:LPARAM):LRESULT; stdcall;
 const
   OldHItem   :integer=0;
   OldHSubItem:integer=0;
@@ -1354,7 +1355,7 @@ end;
           if ((PHDNotify(lParam)^.pitem^.mask and HDI_FORMAT  )<>0) and
              ((PHDNotify(lParam)^.pitem^.fmt  and HDF_CHECKBOX)<>0) then
           begin
-            i:=ListViewToColumn(PHDNotify(lParam)^.Item);
+            i:=ListViewToColumn(PHDNotify(lParam)^.{$IFDEF FPC}iItem{$ELSE}Item{$ENDIF});
 
             if (PHDNotify(lParam)^.pitem^.fmt and HDF_CHECKED)=0 then // OLD state
             begin
@@ -1368,7 +1369,7 @@ end;
             end;
             SendMessage(
               PHDNotify(lParam)^.hdr.hWndFrom,HDM_SETITEM,
-              PHDNotify(lParam)^.Item,tlparam(PHDNotify(lParam)^.pitem));
+              PHDNotify(lParam)^.{$IFDEF FPC}iItem{$ELSE}Item{$ENDIF},tlparam(PHDNotify(lParam)^.pitem));
 //            result:=1;
             FillGrid;
             exit;
@@ -1526,7 +1527,7 @@ begin
 end;
 
 
-function NewEditProc(Dialog:HWnd;hMessage:UINT;wParam:WPARAM;lParam:LPARAM):lresult; stdcall;
+function NewEditProc(Dialog:HWND;hMessage:uint;wParam:WPARAM;lParam:LPARAM):LRESULT; stdcall;
 var
   li:LV_ITEM;
   count,current,next,perpage:integer;
@@ -1881,7 +1882,7 @@ begin
   end;
 end;
 
-function QSMainWndProc(Dialog:HWnd;hMessage:UINT;wParam:WPARAM;lParam:LPARAM):lresult; stdcall;
+function QSMainWndProc(Dialog:HWND;hMessage:uint;wParam:WPARAM;lParam:LPARAM):LRESULT; stdcall;
 var
   smenu:HMENU;
   header:HWND;
@@ -2019,7 +2020,7 @@ begin
       zeromemory(@hdi,sizeof(hdi));
       hdi.mask:=HDI_FORMAT;
       SendMessageW(header,HDM_GETITEM,qsopt.columnsort,tlparam(@hdi));
-      if (qsopt.flags and QSO_SORTASC)<>0 then
+      if (qsopt.flags and QSO_SORTASC)=0 then
         hdi.fmt:=hdi.fmt or HDF_SORTDOWN
       else
         hdi.fmt:=hdi.fmt or HDF_SORTUP;

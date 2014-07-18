@@ -353,13 +353,13 @@ LRESULT CALLBACK ContactListWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 
 LRESULT CALLBACK ContactListControlWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	ClcData *dat = (ClcData*)GetWindowLong(hwnd, 0);
+	ClcData *dat = (ClcData*)GetWindowLongPtr(hwnd, 0);
 	RECT r;
 
 	switch (msg) {
 	case WM_CREATE:
 		dat = (ClcData*)mir_calloc( sizeof(ClcData));
-		SetWindowLong(hwnd, 0, (LONG) dat);
+		SetWindowLongPtr(hwnd, 0, (LONG_PTR) dat);
 
 		dat->hwnd_list = CreateWindow(_T("LISTBOX"), _T(""),
 			(WS_VISIBLE | WS_CHILD | LBS_NOINTEGRALHEIGHT | LBS_NOTIFY | LBS_WANTKEYBOARDINPUT | WS_VSCROLL),

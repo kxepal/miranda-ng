@@ -1,19 +1,17 @@
 ﻿#muuid {144e80a2-d198-428b-acbe-9d55dacc7fde}
 ;============================================================
 ;  File: Jabber.dll
-;  Plugin: Jabber Protocol
+;  Plugin: Jabber protocol
 ;  Version: 0.11.0.4
 ;  Authors: George Hazan, Maxim Mluhov, Victor Pavlychko, Artem Shpynov, Michael Stepura
 ;============================================================
-[Jabber protocol support for Miranda NG.]
+[Jabber (XMPP) protocol support for Miranda NG.]
 Jabber-Protokollunterstützung für Miranda NG.
 ;file \protocols\JabberG\res\jabber.rc
 [Edit Note]
 Notiz bearbeiten
 [Tags:]
 Schlagwörter:
-[OK]
-OK
 [Cancel]
 Abbrechen
 [Type:]
@@ -50,8 +48,6 @@ Hochladen
 Importieren
 [Export to file]
 Exportieren
-[Jabber]
-Jabber
 [Username:]
 Benutzername:
 [Change password]
@@ -203,7 +199,7 @@ Speichern
 [Delete]
 Löschen
 [Description:]
-Übersicht:
+Beschreibung:
 [Change Password]
 Passwort ändern
 [Current Password:]
@@ -434,11 +430,11 @@ Wird nicht unterstützt
 [Done]
 Fertig
 [In progress. Please Wait...]
-Vorgang läuft. Bitte warten Sie...
+Vorgang läuft. Bitte warten...
 [Execute]
 Ausführen
 [Requesting command list. Please wait...]
-Liste der verfügbaren Befehle wird abgefragt. Bitte warten Sie...
+Liste der verfügbaren Befehle wird abgefragt. Bitte warten...
 [Jabber Ad-Hoc commands at %s]
 Jabber-Ad-Hoc-Befehl an %s
 [Sending Ad-Hoc command to %s]
@@ -473,7 +469,7 @@ Unterstützt Diensterkennung Info
 Unterstützt Diensterkennung Liste der Einträge
 [Can inform about its Jabber capabilities]
 Kann über seine Jabberfähigkeiten informieren
-[Supports stream initiation (for filetransfers for ex.)]
+[Supports stream initiation (e.g., for filetransfers)]
 Unterstützt Streaminitiierung (z.B. für Dateiübertragungen)
 [Supports stream initiation for file transfers]
 Unterstützt Streaminitiierung für Dateiübertragungen
@@ -535,7 +531,7 @@ Unterstützt Lesebestätigungen
 Kann Informationen über die Musik, die ein Nutzer hört, veröffentlichen
 [Receives information about the music to which a user is listening]
 Empfängt Informationen über die Musik, die ein Nutzer hört
-[Supports private XML Storage (for bookmakrs and other)]
+[Supports private XML Storage (for bookmarks and other)]
 Unterstützt private XML-Speicherung (Lesezeichen und anderes)
 [Supports attention requests ('nudge')]
 Unterstützt Aufmerksamkeitsanfragen ('nudge')
@@ -626,9 +622,9 @@ Außgestoßene-Liste (&Bann)
 [Add to &bookmarks]
 Als Lesezeichen speichern
 [&Configure...]
-Einstellungen...
+&Einstellungen...
 [&Destroy room]
-Raum zerstören
+Raum &zerstören
 [Lin&ks]
 Lin&ks
 [Copy room &JID]
@@ -873,39 +869,39 @@ Ihr URL
 E-Mail-Adresse
 [FAQ Entry]
 FAQ-Eintrag
-[Whether to Allow Occupants to Invite Others]
+[Whether to allow occupants to invite others]
 
-[Whether to Allow Occupants to Change Subject]
+[Whether to allow occupants to change subject]
 
-[Whether to Enable Logging of Room Conversations]
+[Whether to enable logging of room conversations]
 
-[Natural Language for Room Discussions]
+[Natural language for room discussions]
 
-[Maximum Number of Room Occupants]
+[Maximum number of room occupants]
 
-[Whether an Make Room Members-Only]
+[Whether to make room members-only]
 
-[Whether to Make Room Moderated]
+[Whether to make room moderated]
 
-[Whether a Password is Required to Enter]
+[Whether a password is required to enter]
 
-[Whether to Make Room Persistent]
+[Whether to make room persistent]
 
-[Roles for which Presence is Broadcast]
+[Roles for which presence is broadcast]
 
-[Whether to Allow Public Searching for Room]
+[Whether to allow public searching for room]
 Ob öffentliche Suche in diesem Raum erlaubt ist
-[Full List of Room Admins]
+[Full list of room admins]
 Volle Liste aller Raum-Admins
-[Short Description of Room]
+[Short description of room]
 Kurze Beschreibung des Raums
-[Natural-Language Room Name]
+[Natural-language room name]
 Raumname in natürlicher Sprache
-[Full List of Room Owners]
+[Full list of room owners]
 Vollständige Liste der Raumbesitzer
-[The Room Password]
+[The room password]
 Das Passwort für den Raum
-[Affiliations that May Discover Real JIDs of Occupants]
+[Affiliations that may discover real JIDs of occupants]
 
 [Precondition: node configuration with the specified access model]
 
@@ -923,7 +919,7 @@ Das Passwort für den Raum
 
 [The minimum number of milliseconds between sending any two notification digests]
 
-[The DateTime at which a leased subscription will end or has ended]
+[The date and time at which a leased subscription will end or has ended]
 
 [Whether an entity wants to receive an XMPP message body in addition to the payload format]
 
@@ -983,7 +979,7 @@ Ein freundlicher Name für den Knoten
 
 [The JIDs of those to contact with questions]
 
-[The datetime when the node was created]
+[The date and time when the node was created]
 Datum und Uhrzeit der Knotenerzeugung
 [The JID of the node creator]
 Die JID des Knotenerzeugers
@@ -1069,7 +1065,7 @@ Ob die Sitzung terminiert werden soll
 Ob Nachrichtenbestätigungen gemäß XEP-0184 aktiviert sind
 ;file \protocols\JabberG\src\jabber_groupchat.cpp
 [Failed to retrieve room list from server.]
-Fehler beim abrufen der Raumliste vom Server.
+Fehler beim Abrufen der Raumliste vom Server.
 [No rooms available on server.]
 Auf dem Server sind keine Räume verfügbar.
 [Room list request timed out.]
@@ -1079,7 +1075,7 @@ Raumlistenanforderung überschritt das Timeout.
 [Loading...]
 Wird geladen...
 [Please wait for room list to download.]
-Bitte warten Sie bis die Raumliste gedownloaded ist.
+Bitte warten Sie bis die Raumliste heruntergeladen ist.
 [Please specify group chat directory first.]
 Geben Sie zuerst einen Konferenzserver an.
 [Bookmarks...]
@@ -1104,7 +1100,7 @@ Transporte
 [Personal vCard]
 Persönliche vCard
 [Convert to room]
-in Konferenzraum umwandeln
+In Konferenzraum umwandeln
 [Login/logout]
 Anmelden/Abmelden
 [Resolve nicks]
@@ -1858,18 +1854,18 @@ Regel nach oben
 [Move rule down]
 Regel nach unten
 [Add list...]
-Neue Liste
+Neue Liste...
 [Remove list]
 Liste löschen
 [** Default **]
 ** Standard **
-[** Subsription: both **]
+[** Subscription: both **]
 ** Autorisierung: Beide **
-[** Subsription: to **]
+[** Subscription: to **]
 ** Autorisierung: Nach **
-[** Subsription: from **]
+[** Subscription: from **]
 ** Autorisierung: Von **
-[** Subsription: none **]
+[** Subscription: none **]
 ** Autorisierung: keine **
 [<none>]
 <keine>
@@ -1938,7 +1934,7 @@ Liste kann nicht gespeichert werden, weil Sie zurzeit offline sind.
 [List Editor...]
 Liste bearbeiten...
 ;file \protocols\JabberG\src\jabber_proto.cpp
-[No compatible file transfer machanism exist]
+[No compatible file transfer mechanism exists]
 Kein kompatibler Dateiübertragungsmechanismus vorhanden
 [Protocol is offline or no JID]
 Protokoll ist offline oder keine JID
@@ -2023,7 +2019,7 @@ Suchfehler
 [Select/type search service URL above and press <Go>]
 Bitte die Suchdienst-URL eingeben oder auswählen!
 [Please wait...\r\nConnecting search server...]
-Bitte warten...\r\nVerbinde mit Suchserver
+Bitte warten...\r\nVerbinde mit Suchserver...
 [You have to be connected to server]
 Hinweis: Sie müssen mit dem Server verbunden sein!
 ;file \protocols\JabberG\src\jabber_svc.cpp
@@ -2197,8 +2193,6 @@ Hinweis
 [%s connection]
 %s-Verbindung
 ;file \protocols\JabberG\src\jabber_xstatus.cpp
-[OK (%d)]
-OK (%d)
 [Afraid]
 Ängstlich
 [Amazed]

@@ -1,8 +1,8 @@
 ﻿#muuid {bc09a71b-b86e-4d33-b18d-82d30451dd3c}
 ;============================================================
 ;  File: Twitter.dll
-;  Plugin: Twitter
-;  Version: 1.1.0.1
+;  Plugin: Twitter protocol
+;  Version: 1.1.0.3
 ;  Authors: dentist, omniwolf, Thief
 ;============================================================
 [Twitter protocol support for Miranda NG.]
@@ -18,7 +18,7 @@
 [<Sign in to link your Twitter account>]
 <Войдите, чтобы подключить учётную запись Twitter>
 [Send Tweet]
-Послать Tweet
+Отправить твит
 [Send]
 Отправить
 [Cancel]
@@ -72,7 +72,7 @@ URL:
 [OAuth variables are out of sequence, they have been reset. Please reconnect and reauthorize Miranda to Twitter.com (do the PIN stuff again)]
 Переменные OAuth потеряли последовательность и были обнулены. Пожалуйста, подсоединитесь снова и авторизуйте Miranda на Twitter.com (еще раз с PIN-кодом)
 [Send Tweet...]
-Послать твит...
+Отправить твит...
 [Network]
 Сеть
 [Basic]
@@ -80,7 +80,7 @@ URL:
 [Popups]
 Всплывающие окна
 [%s server connection]
-%s подключение к серверу 
+%s подключение к серверу
 [%s avatar connection]
 %s подключение аватаров
 [Twitter Icon]

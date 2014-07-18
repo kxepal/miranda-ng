@@ -53,19 +53,11 @@ int SkinOptInit(WPARAM wParam, LPARAM lParam)
 		odp.position = -200000000;
 		odp.hInstance = g_hInst;
 		odp.pfnDlgProc = DlgSkinOpts;
-		odp.pszTemplate = MAKEINTRESOURCEA( IDD_OPT_SKIN );
+		odp.pszTemplate = MAKEINTRESOURCEA(IDD_OPT_SKIN);
 		odp.ptszGroup = LPGENT("Skins");
-		odp.ptszTitle = LPGENT("Contact List");
+		odp.ptszTitle = LPGENT("Contact list");
 		odp.flags = ODPF_BOLDGROUPS | ODPF_TCHAR;
-		odp.ptszTab = LPGENT("Load/Save");
 		Options_AddPage(wParam, &odp);
-
-		if ( db_get_b( NULL, "ModernData", "EnableSkinEditor", SETTING_ENABLESKINEDITOR_DEFAULT )) {
-			odp.pfnDlgProc = DlgSkinEditorOpts;
-			odp.pszTemplate = MAKEINTRESOURCEA( IDD_OPT_SKINEDITOR );
-			odp.ptszTab = LPGENT("Object Editor");
-			Options_AddPage(wParam, &odp);
-		}
 	}
 	return 0;
 }
@@ -79,7 +71,7 @@ int ModernSkinOptInit(WPARAM wParam, LPARAM lParam)
 	obj.hInstance = g_hInst;
 	obj.iSection = MODERNOPT_PAGE_SKINS;
 	obj.iType = MODERNOPT_TYPE_SELECTORPAGE;
-	obj.lptzSubsection = _T("Contact List");
+	obj.lptzSubsection = _T("Contact list");
 	obj.lpzThemeExtension = ".msf";
 	obj.lpzThemeModuleName = "ModernSkinSel";
 	CallService(MS_MODERNOPT_ADDOBJECT, wParam, (LPARAM)&obj);
@@ -97,10 +89,11 @@ INT_PTR CALLBACK DlgSkinOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPara
 
 	case WM_INITDIALOG:
 		{
-			TranslateDialogDefault( hwndDlg );
-			HTREEITEM it = FillAvailableSkinList( hwndDlg );
-			HWND wnd = GetDlgItem( hwndDlg, IDC_TREE1 );
-			TreeView_SelectItem( wnd, it );
+			TranslateDialogDefault(hwndDlg);
+			SetWindowText(GetDlgItem(hwndDlg, IDC_SKINFOLDERLABEL), SkinsFolder);
+			HTREEITEM it = FillAvailableSkinList(hwndDlg);
+			HWND wnd = GetDlgItem(hwndDlg, IDC_TREE1);
+			TreeView_SelectItem(wnd, it);
 		}
 		return 0;
 	case WM_COMMAND:
@@ -164,19 +157,9 @@ INT_PTR CALLBACK DlgSkinOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPara
 						sd = ( SkinListData* )( tvi.lParam);
 					}
 					if (!sd ) return 0;
-					if ( glSkinWasModified>0 )
-					{
-						int res = 0;
-						if ( glSkinWasModified == 1 )
-							res = MessageBox( hwndDlg, TranslateT("Skin editor contains not stored changes.\n\nAll changes will be lost.\n\n Continue to load new skin?"), TranslateT("Warning!"), MB_OKCANCEL|MB_ICONWARNING|MB_DEFBUTTON2|MB_TOPMOST );
-						else
-							res = MessageBox( hwndDlg, TranslateT("Current skin was not saved to file.\n\nAll changes will be lost.\n\n Continue to load new skin?"), TranslateT("Warning!"), MB_OKCANCEL|MB_ICONWARNING|MB_DEFBUTTON2|MB_TOPMOST );
-						if ( res != IDOK ) return 0;
-					}
 					ske_LoadSkinFromIniFile( sd->File, FALSE );
 					ske_LoadSkinFromDB();
-					glOtherSkinWasLoaded = TRUE;
-					pcli->pfnClcBroadcast( INTM_RELOADOPTIONS, 0, 0 );
+					pcli->pfnClcBroadcast(INTM_RELOADOPTIONS, 0, 0 );
 					Sync( CLUIFrames_OnClistResize_mod, 0, 0 );
 					ske_RedrawCompleteWindow( );
 					Sync( CLUIFrames_OnClistResize_mod, 0, 0 );
@@ -341,9 +324,9 @@ INT_PTR CALLBACK DlgSkinOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPara
 		case 0:
 			switch (((LPNMHDR)lParam)->code) {
 			case PSN_APPLY:
-				pcli->pfnClcBroadcast( INTM_RELOADOPTIONS, 0, 0 );
+				pcli->pfnClcBroadcast(INTM_RELOADOPTIONS, 0, 0 );
 				NotifyEventHooks( g_CluiData.hEventBkgrChanged, 0, 0 );
-				pcli->pfnClcBroadcast( INTM_INVALIDATE, 0, 0 );
+				pcli->pfnClcBroadcast(INTM_INVALIDATE, 0, 0 );
 				RedrawWindow( GetParent( pcli->hwndContactTree ), NULL, NULL, RDW_INVALIDATE|RDW_FRAME|RDW_ALLCHILDREN );
 			}
 			break;
@@ -518,8 +501,7 @@ INT_PTR SvcApplySkin(WPARAM wParam, LPARAM lParam)
 {
 	ske_LoadSkinFromIniFile((TCHAR *)lParam, FALSE);
 	ske_LoadSkinFromDB( );
-	glOtherSkinWasLoaded = TRUE;
-	pcli->pfnClcBroadcast( INTM_RELOADOPTIONS, 0, 0 );
+	pcli->pfnClcBroadcast(INTM_RELOADOPTIONS, 0, 0 );
 	Sync( CLUIFrames_OnClistResize_mod, 0, 0 );
 	ske_RedrawCompleteWindow( );
 	Sync( CLUIFrames_OnClistResize_mod, 0, 0 );

@@ -1,19 +1,17 @@
 ﻿#muuid {144e80a2-d198-428b-acbe-9d55dacc7fde}
 ;============================================================
 ;  File: Jabber.dll
-;  Plugin: Jabber Protocol
+;  Plugin: Jabber protocol
 ;  Version: 0.11.0.4
 ;  Authors: George Hazan, Maxim Mluhov, Victor Pavlychko, Artem Shpynov, Michael Stepura
 ;============================================================
-[Jabber protocol support for Miranda NG.]
-Zapewnia obsługę protokołu Jabber.
+[Jabber (XMPP) protocol support for Miranda NG.]
+Zapewnia obsługę protokołu Jabber (XMPP).
 ;file \protocols\JabberG\res\jabber.rc
 [Edit Note]
 Edytuj notatkę
 [Tags:]
 Tagi:
-[OK]
-OK
 [Cancel]
 Anuluj
 [Type:]
@@ -50,8 +48,6 @@ Wyślij
 Importuj z pliku
 [Export to file]
 Eksportuj do pliku
-[Jabber]
-Jabber
 [Username:]
 Użytkownik:
 [Change password]
@@ -125,9 +121,9 @@ Adres 2:
 [City:]
 Miasto:
 [State:]
-Status:
+Stan:
 [ZIP:]
-ZIP:
+Kod pocztowy:
 [Country:]
 Kraj:
 [Full name:]
@@ -139,7 +135,7 @@ Imię:
 [Middle:]
 Drugie:
 [Last name:]
-Nazwisko: 
+Nazwisko:
 [Date of birth:]
 Urodziny:
 [YYYY-MM-DD]
@@ -241,7 +237,7 @@ Dodaj
 [Invitation reason:]
 Powód zaproszenia:
 [&Invite]
-Zaproś
+&Zaproś
 [Group chat invitation]
 Zaproszenie czatowe
 [<room jid>\nIncoming group chat invitation.]
@@ -251,7 +247,7 @@ Jesteś zaproszony do pokoju konferencyjnego przez
 [with following reason:]
 Powód:
 [&Accept]
-Akceptuj
+&Akceptuj
 [Jabber Bookmarks]
 Zakładki Jabbera
 [Server side bookmarks\nStore conference rooms and web links on server.]
@@ -271,11 +267,11 @@ Konferencja
 [Transport]
 Transport
 [URL]
-URL
+Link
 [Auto-join (Automatically join Bookmarks must be enabled in Miranda options)]
 Auto-dołączenie (Automatyczne dołączanie do zakładek musi być włączone w opcjach)
 [Room JID/ URL:]
-URL / JID pokoju:
+Adres/JID pokoju:
 [Bookmark Name:]
 Nazwa zakładki:
 [Privacy Lists]
@@ -456,7 +452,7 @@ Proszę czekać...
 [Bookmark Name]
 Nazwa zakładki
 [Address (JID or URL)]
-Adres (JID lub URL)
+Adres (JID lub link)
 [Nickname]
 Nick
 [Conferences]
@@ -468,13 +464,13 @@ Linki
 Proxy Bytestream nie jest dostępne
 ;file \protocols\JabberG\src\jabber_caps.cpp
 [Supports Service Discovery info]
-Wsparcie dla 'przeglądarki usług'
+Wsparcie dla "przeglądarki usług"
 [Supports Service Discovery items list]
-Wsparcie dla listy elementów w 'przeglądarce usług'
+Wsparcie dla listy elementów "przeglądarki usług"
 [Can inform about its Jabber capabilities]
 Informowanie o możliwościach Jabbera
-[Supports stream initiation (for filetransfers for ex.)]
-Wsparcie dla inicjacji strumienia (dla transferu plików na ex.)
+[Supports stream initiation (e.g., for filetransfers)]
+Wsparcie dla inicjacji strumienia (np. dla transferu plików)
 [Supports stream initiation for file transfers]
 Wsparcie dla strumienia dla przesyłania plików
 [Supports file transfers via SOCKS5 Bytestreams]
@@ -524,9 +520,9 @@ Wsparcie dla funkcji publikowania autoryzacji
 [Supports SecureIM plugin for Miranda NG]
 Wsparcie dla wtyczki SecureIM w Mirandzie NG
 [Supports OTR (Off-the-Record Messaging)]
-Wspiera wtyczkę MirOtr dla Miranda NG
+Wsparcie dla wtyczki MirOtr w Mirandzie NG
 [Supports New_GPG plugin for Miranda NG]
-Wspiera wtyczkę New_GPG dla Miranda NG
+Wsparcie dla wtyczki New_GPG w Mirandzie NG
 [Blocks packets from another users/groupchats using Privacy lists]
 Możliwość blokowania komunikacji z innymi użytkownikami za pomocą list prywatności
 [Supports Message Receipts]
@@ -535,10 +531,10 @@ Wsparcie dla potwierdzenia dostarczenia wiadomości
 Możliwość raportowania informacji o odtwarzanych mediach
 [Receives information about the music to which a user is listening]
 Odbiera informacje o mediach, które odtwarza użytkownik
-[Supports private XML Storage (for bookmakrs and other)]
-Wsparcie dla przechowywania prywatnego XML (dla zakładek i innych)
+[Supports private XML Storage (for bookmarks and other)]
+Wsparcie dla prywatnej przestrzeni XML (zakładki i inne)
 [Supports attention requests ('nudge')]
-Wsparcie dla proszenia o uwagę ('nudge')
+Wsparcie dla proszenia o uwagę ("nudge")
 [Supports chat history retrieving]
 Wsparcie dla pobierania historii czatu
 [Supports chat history management]
@@ -548,13 +544,13 @@ Możliwość przekazywania informacji na temat aktywności użytkowników
 [Receives information about user activity]
 Odbiera informacje o aktywności użytkowników
 [Supports Miranda NG notes extension]
-Wsparcie 'notatek' w Mirandzie NG
+Wsparcie "notatek" w Mirandzie NG
 [Supports Jingle]
 Wsparcie dla rozmów audio i wideo (Jingle)
 [Supports Roster Exchange]
 Wsparcie dla zarządzania listą kontaktów (Roster Exchange)
 [Supports direct chat invitations (XEP-0249)]
-Wspiera bezpośrednie zapraszenia do czatu (XEP-0249)
+Wsparcie dla bezpośrednich zaproszeń do czatu (XEP-0249)
 ;file \protocols\JabberG\src\jabber_captcha.cpp
 [Enter the text you see]
 Wprowadź tekst, który widzisz
@@ -592,51 +588,51 @@ Konfiguracja pokoju została zmieniona.
 [Outcast]
 Wygnaniec
 [Affiliation of %s was changed to '%s'.]
-Powiązanie %s zmieniono na '%s'.
+Powiązanie %s zmieniono na "%s".
 [Role of %s was changed to '%s'.]
-Rolę %s zmieniono na '%s'.
+Rolę %s zmieniono na "%s".
 [because room is now members-only]
 ponieważ pokój jest teraz dostępny tylko dla członków
 [user banned]
 użytkownik zbanowany
 [Change &nickname]
-Zmień nick
+Zmień &nick
 [&Invite a user]
-Zaproś
+&Zaproś
 [&Roles]
-Rola
+&Rola
 [&Participant list]
-Lista uczestników
+Lista &uczestników
 [&Moderator list]
-Lista moderatorów
+Lista &moderatorów
 [&Affiliations]
-Powiązanie
+&Powiązanie
 [&Member list]
-Lista członków
+Lista &członków
 [&Admin list]
-Lista adminów
+Lista &adminów
 [&Owner list]
-Lista właścicieli
+Lista &właścicieli
 [Outcast list (&ban)]
-Lista zbanowanych
+Lista z&banowanych
 [&Room options]
-Opcje pokoju
+Opcje &pokoju
 [View/change &topic]
-Pokaż/zmień temat
+Pokaż/Zmień &temat
 [Add to &bookmarks]
-Dodaj do zakładek
+Dodaj do &zakładek
 [&Configure...]
-Konfiguruj
+&Konfiguruj
 [&Destroy room]
-Zniszcz pokój
+&Zniszcz pokój
 [Lin&ks]
-Linki
+Lin&ki
 [Copy room &JID]
-Kopiuj JID pokoju
+Kopiuj &JID pokoju
 [Copy room topic]
 Kopiuj temat pokoju
 [&Send presence]
-Wyślij status
+&Wyślij status
 [Online]
 Dostępny
 [Away]
@@ -648,51 +644,51 @@ Nie przeszkadzać
 [Free for chat]
 Porozmawiajmy
 [&Leave chat session]
-Opuść pokój
+&Opuść pokój
 [&Slap]
 &Klepnij
 [&User details]
-Dane kontaktu
+Dane &kontaktu
 [Member &info]
-Informacje o użytkowniku
+&Informacje o użytkowniku
 [User &details]
-Dane kontaktu
+Dane &kontaktu
 [&Add to roster]
-Dodaj do listy
+&Dodaj do listy
 [&Copy to clipboard]
-Kopiuj do schowka
+&Kopiuj do schowka
 [Invite to room]
 Zaproś do pokoju
 [Set &role]
-Wybierz rolę
+Wybierz &rolę
 [&Visitor]
-Gość
+&Gość
 [&Participant]
-Uczestnik
+&Uczestnik
 [&Moderator]
-Moderator
+&Moderator
 [Set &affiliation]
-Wybierz powiązanie
+Wybierz &powiązanie
 [&None]
-Żadna
+&Żadne
 [&Member]
-Członek
+&Członek
 [&Admin]
-Admin
+&Admin
 [&Owner]
-Właściciel
+&Właściciel
 [Outcast (&ban)]
-Zbanowany
+Z&banowany
 [&Kick]
-Wyrzuć
+&Wyrzuć
 [Copy &nickname]
-Kopiuj nick
+Kopiuj &nick
 [Copy real &JID]
-Kopiuj prawdziwy JID
+Kopiuj prawdziwy &JID
 [Copy in-room JID]
 Kopiuj JID z pokoju
 [Real &JID: %s]
-Prawdziwy JID: %s
+Prawdziwy &JID: %s
 [%s\nSend group chat invitation.]
 %s\nWyślij zaproszenie do czatu.
 [%s (not on roster)]
@@ -704,7 +700,7 @@ Info użytkownika\n%s z %s
 [Real JID not available]
 Prawdziwy JID niedostępny
 [Reason to kick %s]
-Powód wykopania %s
+Powód wyrzucenia %s
 [Reason to ban %s]
 Powód bana %s
 [Invite %s to %s]
@@ -758,7 +754,7 @@ Dodaj do rostera
 [Bookmark chatroom]
 Zakładki czatów
 [Add search directory]
-Dodaj do 'wyszukiwarki kontaktów'
+Dodaj do "wyszukiwarki kontaktów"
 [Use this proxy]
 Użyj proxy
 [Commands...]
@@ -870,42 +866,42 @@ Nazwisko
 [Your URL]
 Twój link
 [Email Address]
-Adres email
+Adres e-mail
 [FAQ Entry]
 Wpis FAQ
-[Whether to Allow Occupants to Invite Others]
+[Whether to allow occupants to invite others]
 Pozwolić użytkownikom na zapraszanie innych
-[Whether to Allow Occupants to Change Subject]
+[Whether to allow occupants to change subject]
 Pozwolić użytkownikom na zmianę tematu
-[Whether to Enable Logging of Room Conversations]
+[Whether to enable logging of room conversations]
 Włączyć logowanie rozmów
-[Natural Language for Room Discussions]
+[Natural language for room discussions]
 Naturalny język dyskusji w pokoju
-[Maximum Number of Room Occupants]
+[Maximum number of room occupants]
 Maksymalna liczba użytkowników w pokoju
-[Whether an Make Room Members-Only]
-Sprawić, by pokój był tylko dla członków
-[Whether to Make Room Moderated]
+[Whether to make room members-only]
+Czy uczynić pokój dostępnym tylko dla zaproszonych członków
+[Whether to make room moderated]
 Sprawić, by pokój był moderowany
-[Whether a Password is Required to Enter]
+[Whether a password is required to enter]
 Hasło jest wymagane
-[Whether to Make Room Persistent]
+[Whether to make room persistent]
 Sprawić, by pokój był stały
-[Roles for which Presence is Broadcast]
+[Roles for which presence is broadcast]
 Role, dla których obecność jest transmitowana
-[Whether to Allow Public Searching for Room]
+[Whether to allow public searching for room]
 Zezwolić na publiczne wyszukiwanie pokoju
-[Full List of Room Admins]
+[Full list of room admins]
 Pełna lista administratorów pokoju
-[Short Description of Room]
+[Short description of room]
 Krótki opis pokoju
-[Natural-Language Room Name]
+[Natural-language room name]
 Nazwa pokoju w języku naturalnym
-[Full List of Room Owners]
+[Full list of room owners]
 Pełna lista właścicieli pokoju
-[The Room Password]
+[The room password]
 Hasło pokoju
-[Affiliations that May Discover Real JIDs of Occupants]
+[Affiliations that may discover real JIDs of occupants]
 Powiązania zezwalające na odkrywanie prawdziwych JIDów
 [Precondition: node configuration with the specified access model]
 Warunek wstępny: konfiguracja węzła z ustalonym modelem dostępu
@@ -923,7 +919,7 @@ Jednostka chce otrzymywać lub wyłączyć powiadomienia
 Jednostka chce otrzymywać paczki powiadomień lub wszystkie powiadomienia indywidualnie
 [The minimum number of milliseconds between sending any two notification digests]
 Minimalna liczba milisekund pomiędzy wysyłkami paczek powiadomień
-[The DateTime at which a leased subscription will end or has ended]
+[The date and time at which a leased subscription will end or has ended]
 Data i czas wygaśnięcia subskrypcji
 [Whether an entity wants to receive an XMPP message body in addition to the payload format]
 Jednostka chce otrzymywać treść wiadomości XMPP oprócz formatu bloku danych
@@ -936,7 +932,7 @@ Link transformacji XLS, która może zostać zastosowana do bloków danych w cel
 [The collection with which a node is affiliated]
 Kolekcja, z którą jest powiązany węzeł
 [The URL of an XSL transformation which can be applied to the payload format in order to generate a valid Data Forms result that the client could display using a generic Data Forms rendering engine]
-Link transformacji XLS, która może zostać zastosowana  do bloków danych w celu wygenerowania poprawnego wyniku formularzy danych, który klient może wyświetlić używając ogólnego silnika renderowania formularzy danych
+Link transformacji XLS, która może zostać zastosowana do bloków danych w celu wygenerowania poprawnego wyniku formularzy danych, który klient może wyświetlić używając ogólnego silnika renderowania formularzy danych
 [Whether to deliver payloads with event notifications]
 Dostarczać bloki danych wraz z powiadomieniami o zdarzeniach
 [Whether owners or publisher should receive replies to items]
@@ -983,8 +979,8 @@ Przyjazna nazwa węzła
 Typ danych węzła, zazwyczaj określany przez przestrzeń nazw jeśli w ogóle; może być pojedynczą listą, a nie pojedynczym tekstem
 [The JIDs of those to contact with questions]
 JIDy tych, z którymi należy się kontaktować w razie pytań
-[The datetime when the node was created]
-Data i czas stworzenia węzła
+[The date and time when the node was created]
+Data i czas utworzenia węzła
 [The JID of the node creator]
 JID twórcy węzła
 [A description of the node]
@@ -994,7 +990,7 @@ Domyślny język węzła
 [The number of subscribers to the node]
 Liczba subskrybentów węzła
 [The JIDs of those with an affiliation of owner]
-JIDy z przynależnością  właściciela
+JIDy z przynależnością właściciela
 [The JIDs of those with an affiliation of publisher]
 JIDy osób z przynależnością osoby publikującej
 [The name of the node]
@@ -1034,7 +1030,7 @@ Imię lub podana nazwa użytkownika
 [Last name, surname, or family name of the user]
 Nazwisko użytkownika
 [Email address of the user]
-Adres email użytkownika
+Adres e-mail użytkownika
 [Street portion of a physical or mailing address]
 Ulica w adresie fizycznym lub pocztowym
 [Locality portion of a physical or mailing address]
@@ -1106,7 +1102,7 @@ Osobista wizytówka
 [Convert to room]
 Skonwertuj na pokój
 [Login/logout]
-Zaloguj/wyloguj
+Zaloguj/Wyloguj
 [Resolve nicks]
 Ustal nicki
 [Send note]
@@ -1218,13 +1214,13 @@ Udziel autoryzacji
 [Revoke authorization]
 Cofnij autoryzację
 [Convert]
-Konwerter
+Konwertuj
 [Add to Bookmarks]
 Dodaj do zakładek
 [Commands]
 Polecenia
 [Send Note]
-Wyślij notatke
+Wyślij notatkę
 [Send Presence]
 Wyślij status
 [Jabber Resource]
@@ -1234,9 +1230,9 @@ Ostatnio aktywny
 [Server's Choice]
 Wybór serwera
 [&Convert to Contact]
-Skonwertuj do kontaktu
+&Skonwertuj do kontaktu
 [&Convert to Chat Room]
-Skonwertuj na pokój
+S&konwertuj na pokój
 [Options...]
 Opcje...
 [Services...]
@@ -1260,11 +1256,11 @@ Priorytet zasobów [%d]
 [Join conference]
 Dołączenie do czatu
 [Open bookmarks]
-Otwarcie zakładki
+Otwórz zakładki
 [Privacy lists]
 Lista prywatności
 [Service discovery]
-Usługa informacyjna
+Przeglądarka usług
 [Last active (%s)]
 Ostatnio aktywny (%s)
 [No activity yet, use server's choice]
@@ -1289,7 +1285,7 @@ Błędy
 [Incoming note from %s]
 Przychodząca notatka od %s
 [Send note to %s]
-Wyślij notatke do %s
+Wyślij notatkę do %s
 [From: %s]
 Od: %s
 [All tags]
@@ -1680,7 +1676,7 @@ Powtórz hasło
 [Passwords do not match.]
 Hasła różnią się od siebie.
 [This operation will kill your account, roster and all other information stored at the server. Are you ready to do that?]
-To polecenie usunie Twoje konto, listę kontaktów i wszystkie inne informacje z serwera. Jesteś pewien, że chcesz to zrobić?
+To polecenie usunie twoje konto, listę kontaktów i wszystkie inne informacje z serwera. Jesteś pewien, że chcesz to zrobić?
 [Account removal warning]
 Ostrzeżenie o usuwaniu konta
 [You can change your password only when you are online]
@@ -1730,7 +1726,7 @@ Automatycznie akceptuj prośby o autoryzację
 [Fix incorrect timestamps in incoming messages]
 Naprawiaj błędne czasy przychodzących wiadomości
 [Disable frame]
-Wyłącz ramke
+Wyłącz ramkę
 [Enable XMPP link processing (requires Association Manager)]
 Włącz powiązanie XMPP (wymagany wtyczka AssocMgr.dll)
 [Keep contacts assigned to local groups (ignore roster group)]
@@ -1863,13 +1859,13 @@ Dodaj listę...
 Usuń listę
 [** Default **]
 ** Domyślnie **
-[** Subsription: both **]
+[** Subscription: both **]
 ** Autoryzacja: w obie strony **
-[** Subsription: to **]
+[** Subscription: to **]
 ** Autoryzacja: do **
-[** Subsription: from **]
+[** Subscription: from **]
 ** Autoryzacja: od **
-[** Subsription: none **]
+[** Subscription: none **]
 ** Autoryzacja: brak **
 [<none>]
 <brak>
@@ -1902,7 +1898,7 @@ zapytania
 [Else ]
 W przeciwnym razie\s
 [If Jabber ID is ']
-Jeżeli ID Jabber'a to '
+Jeśli ID Jabber'a to '
 [ (nickname: ]
  (pseudonim:\s
 [If group is ']
@@ -1938,7 +1934,7 @@ Nie można zapisać listy, ponieważ jesteś rozłączony.
 [List Editor...]
 Edytuj listy...
 ;file \protocols\JabberG\src\jabber_proto.cpp
-[No compatible file transfer machanism exist]
+[No compatible file transfer mechanism exists]
 Nie istnieje żaden kompatybilny mechanizm transferu plików
 [Protocol is offline or no JID]
 Protokół jest Rozłączony lub brak JID
@@ -1966,7 +1962,7 @@ Zmień status i opis
 [Status]
 Status
 [Extended Away (N/A)]
-Niedostępny
+Wrócę później
 [Do Not Disturb]
 Nie przeszkadzać
 [Invisible]
@@ -2008,7 +2004,7 @@ Potrzebne zatwierdzenie
 [Please confirm Miranda NG shutdown]
 Proszę zatwierdzić wyłączenie Mirandy NG
 [There is no group chats to leave]
-Nie ma pokoii do opuszczenia
+Nie ma pokoi do opuszczenia
 [Choose the group chats you want to leave]
 Wybierz czat który chcesz opuścić
 ;file \protocols\JabberG\src\jabber_search.cpp
@@ -2021,7 +2017,7 @@ Błąd %s %s\r\nSpróbuj podać więcej szczegółów
 [Search error]
 Błąd wyszukiwania
 [Select/type search service URL above and press <Go>]
-Wybierz/wpisz link usługi, której szukasz i wciśnij <Idź>
+Wybierz/Wpisz link usługi, której szukasz i wciśnij <Idź>
 [Please wait...\r\nConnecting search server...]
 Proszę czekać...\r\nTrwa wyszukiwanie serwera...
 [You have to be connected to server]
@@ -2186,7 +2182,7 @@ Wspierane są tylko obrazki JPG, GIF i BMP mniejsze niż 40 KB.
 [Jabber vCard]
 Jabber vCard
 [Jabber vCard: Edit Email Address]
-Jabber vCard: Edytuj adres email
+Jabber vCard: Edytuj adres e-mail
 [Jabber vCard: Edit Phone Number]
 Jabber vCard: Edytuj numer telefonu
 [Contacts]
@@ -2197,8 +2193,6 @@ Uwagi
 [%s connection]
 Połączenie %s
 ;file \protocols\JabberG\src\jabber_xstatus.cpp
-[OK (%d)]
-OK (%d)
 [Afraid]
 Przestraszony
 [Amazed]
@@ -2510,7 +2504,7 @@ autobusem
 [on a plane]
 samolotem
 [on a train]
-pociagiem
+pociągiem
 [on a trip]
 wycieczka
 [walking]

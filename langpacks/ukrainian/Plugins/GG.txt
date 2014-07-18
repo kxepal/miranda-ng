@@ -1,7 +1,7 @@
 ﻿#muuid {f3ff65f3-250e-416a-bee9-58c93f85ab33}
 ;============================================================
 ;  File: GG.dll
-;  Plugin: Gadu-Gadu Protocol
+;  Plugin: Gadu-Gadu protocol
 ;  Version: 0.11.0.3
 ;  Authors: Bartosz Bialek, Adam Strzelecki
 ;============================================================
@@ -30,7 +30,7 @@
 [Show offline users with status message as invisible in contact list]
 Відключені зі статусним повідомленням = невидимі
 [After disconnection leave away message of status:]
-Після від'єднання залишити статусне повідомлення:
+Після відключення залишити статусне повідомлення:
 [Receive image and after image is received use:]
 Після отримання зображення:
 [Show links from unknown contacts]
@@ -116,7 +116,7 @@
 [Remove Gadu-Gadu account]
 Видалити номер Gadu-Gadu
 [Remove Gadu-Gadu account\nThis will remove your Gadu-Gadu account]
-Видалити номер Gadu-Gadu \nЦе видалить ваш обліковий запис Gadu-Gadu
+Обліковий запис Gadu-Gadu\nВидалення облікового запису Gadu-Gadu
 [Yes, I want to remove my account]
 Так, видаліть мій обліковий запис
 [Remove]
@@ -254,7 +254,7 @@ HTTP невідома помилка
 [Contact list]
 Список контактів
 [%s connection]
-%s з'єднання 
+%s з'єднання
 [Images]
 Зображення
 [Gadu-Gadu Number]

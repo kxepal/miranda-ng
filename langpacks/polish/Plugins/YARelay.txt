@@ -49,9 +49,9 @@ Maksymalny rozmiar części (znaki)
 [Mark received messages as 'read']
 Oznaczaj otrzymane wiadomości jako przeczytane
 [Save sent messages in recipient's history]
-Zachowuj  wysłane wiadomości w historii adresata
+Zachowuj wysłane wiadomości w historii adresata
 [split parts (0 = all)]
-części wysyłki (0 = wszystkie)
+części wysyłki (0 - wszystkie)
 [Note: Max size - it's a size of %m parameter]
 Uwaga: maksymalny rozmiar - to rozmiar parametru %m
 [Note: messages from this contact will not be forwarded]
@@ -61,7 +61,7 @@ Uwaga: wiadomości od tego kontaktu nie będą przekierowywane
 Wszyscy
 [!DON'T FORWARD!]
 Nie przekazuj
-[Plugins]
-Wtyczki
-[yaRelay]
-yaRelay
+[Message Sessions]
+Sesje rozmowy
+[Messages forwarding]
+Przekazywanie wiadomości

@@ -10,13 +10,13 @@
 [Boltun]
 Базіка
 [Boltun Autochat everybody]
-Базіка говорить зі усіма
+Базіка говорить з усіма
 [Boltun Autochat everybody not in contact list]
 Базіка говорить з усіма, хто не в списку контактів
 [Boltun Autochat everybody while away]
 Базіка говорить з усіма, коли мене немає
 [Warn contacts Boltun is chatting]
-Попереджати про розмові з Базікою
+Попереджати про розмову з Базікою
 [Mark replied messages as read]
 Позначати повідомлення як прочитані
 [sec]
@@ -62,9 +62,9 @@ Mind файли
 [Boltun Error]
 Помилка Базіки
 [Failed to load base of remarks. Error at line %d of %s. (Or few lines before).]
-Не вдалося завантажити базу реплік. Помилка в рядку %d %s. (Або кілька рядків).
+Не вдалося завантажити базу реплік. Помилка в рядку %d файлу %s (або кількома рядками вище).
 [Failed to save base of remarks to %s]
-Не вдалося зберегти базу реплік: %s
+Не вдалося зберегти базу реплік у файл %s
 [General Settings]
 Основні налаштування
 [Engine Settings]

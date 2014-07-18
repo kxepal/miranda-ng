@@ -71,23 +71,22 @@ static int OnModulesLoaded(WPARAM wParam, LPARAM lParam)
 {
 	myGlobals.PopupActionsExist = ServiceExists(MS_POPUP_REGISTERACTIONS);
 
-	// init meta contacts
-	INT_PTR ptr = CallService(MS_MC_GETPROTOCOLNAME, 0, 0);
-	myGlobals.szMetaProto = (ptr != CALLSERVICE_NOTFOUND) ? (LPCSTR)ptr : NULL;
-
 	// options
 	OptionsLoadModule();
+
 	// create services to receive string lists of languages and timezones
 	SvcConstantsLoadModule();
+
 	// load module to remind user about birthday and a anniversary
 	SvcReminderOnModulesLoaded();
+
 	// load extended intagration services
 	SvcHomepageLoadModule();
 	SvcFlagsOnModulesLoaded();
 
 	// build contact's menuitems
 	RebuildMenu();
-	HookEvent( ME_CLIST_PREBUILDSTATUSMENU, (MIRANDAHOOK)RebuildAccount);
+	HookEvent(ME_CLIST_PREBUILDSTATUSMENU, (MIRANDAHOOK)RebuildAccount);
 	return 0;
 }
 
@@ -133,7 +132,6 @@ extern "C" __declspec(dllexport) PLUGININFOEX *MirandaPluginInfoEx(DWORD miranda
  *
  * @return	array of interfaces
  **/
-
 extern "C" __declspec(dllexport) const MUUID MirandaInterfaces[] = {
 	MIID_UIUSERINFO,		// replace the default userinfo module
 	MIID_SREMAIL,			// Send/Receive E-Mail service is provided
@@ -162,7 +160,7 @@ extern "C" int __declspec(dllexport) Load(void)
 	// init common controls
 	INITCOMMONCONTROLSEX ccEx;
 	ccEx.dwSize = sizeof(ccEx);
-	ccEx.dwICC = ICC_WIN95_CLASSES|ICC_DATE_CLASSES;
+	ccEx.dwICC = ICC_WIN95_CLASSES | ICC_DATE_CLASSES;
 	InitCommonControlsEx(&ccEx);
 
 	ZeroMemory(&myGlobals, sizeof(MGLOBAL));
@@ -179,14 +177,14 @@ extern "C" int __declspec(dllexport) Load(void)
 		result = CallService(MS_IMG_GETINTERFACE, FI_IF_VERSION, (LPARAM)&FIP);
 
 	if (FIP == NULL || result != S_OK) {
-		MessageBoxEx(NULL, TranslateT("Fatal error, image services not found. Flags Module will be disabled."), _T("Error"), MB_OK | MB_ICONERROR | MB_APPLMODAL, 0);
+		MessageBoxEx(NULL, TranslateT("Fatal error, image services not found. Flags module will be disabled."), _T("Error"), MB_OK | MB_ICONERROR | MB_APPLMODAL, 0);
 		return 1;
 	}
 
 	if (IsWinVerVistaPlus()) {
 		HMODULE hDwmApi = LoadLibraryA("dwmapi.dll");
 		if (hDwmApi)
-			dwmIsCompositionEnabled = (pfnDwmIsCompositionEnabled)GetProcAddress(hDwmApi,"DwmIsCompositionEnabled");
+			dwmIsCompositionEnabled = (pfnDwmIsCompositionEnabled)GetProcAddress(hDwmApi, "DwmIsCompositionEnabled");
 	}
 
 	// check for dbx_tree

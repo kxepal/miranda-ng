@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: SendSS.dll
 ;  Plugin: Send ScreenShot+
-;  Version: 0.8.3.1
+;  Version: 0.8.7.0
 ;  Authors: Merlin
 ;============================================================
 [Take a screenshot and send it to a contact.]
@@ -46,26 +46,35 @@
 &Зачыніць
 [Edit]
 Змяніць
-[C&lient Area]
-Змесціва
 [Caption:]
 Загаловак:
 [Size (HxW):]
 Памер (HxW):
+[C&lient Area]
+Змесціва
 [Target Tool]
 Прыцэл
+[Description:]
+Апісанне:
+[&Copy]
+&Капіяваць
+[Close]
+Зачыніць
 ;file \plugins\SendScreenshotPlus\src\CSend.cpp
+[Copy]
+Капіяваць
+[Error]
+Памылка
 [GCHAT error]
 Памылка GCHAT
 [An unknown error has occurred.]
 Невядомая памылка.
-[Error]
-Памылка
 ;file \plugins\SendScreenshotPlus\src\CSend.h
 [Unable to initiate %s.]
 Не ўдалося ініцыяваць %s.
 [MAPI error (%i):\n%s.]
 Памылка MAPI (%i):\n%s.
+;file \plugins\SendScreenshotPlus\src\CSendDropbox.cpp
 ;file \plugins\SendScreenshotPlus\src\CSendEmail.cpp
 [The specified attachment was not found]
 Укладанне не знойдзена
@@ -73,11 +82,16 @@
 Укладанне немагчыма адчыніць
 [Unknown Error]
 Невядомая памылка
+;file \plugins\SendScreenshotPlus\src\CSendFile.cpp
+[File transfer]
+Перадача файла
 ;file \plugins\SendScreenshotPlus\src\CSendFTPFile.cpp
+;file \plugins\SendScreenshotPlus\src\CSendHost_ImageShack.cpp
+;file \plugins\SendScreenshotPlus\src\CSendHost_imgur.cpp
+;file \plugins\SendScreenshotPlus\src\CSendHost_uploadpie.cpp
 ;file \plugins\SendScreenshotPlus\src\CSendHTTPServer.cpp
 [Could not start the HTTP Server plugin.]
 Не магу запусціць плагін HTTP Server.
-;file \plugins\SendScreenshotPlus\src\CSendImageShack.cpp
 ;file \plugins\SendScreenshotPlus\src\dlg_msgbox.cpp
 [Retry]
 Яшчэ раз
@@ -114,12 +128,6 @@ HTTP далучэнне SendSS
 Абразок здымка 1
 [Screenshot Icon2]
 Абразок здымка 2
-[Default]
-Змаўчанні
-[Overlay on]
-Адбітак укл.
-[Overlay off]
-Адбітак вык.
 [Help]
 Даведка
 [Open Folder]
@@ -138,8 +146,6 @@ HTTP далучэнне SendSS
 Наперад
 [Update]
 Абнавіць
-[Apply]
-Ужыць
 [Down arrow]
 Стрэлка ўніз
 ;file \plugins\SendScreenshotPlus\src\mir_icolib.h
@@ -169,6 +175,8 @@ HTTP далучэнне SendSS
 Манітор
 [ (primary)]
  (галоўны)
+[File]
+Файл
 [<Only save>]
 <Толькі захаваць>
 [File Transfer]
@@ -186,7 +194,7 @@ HTTP далучэнне SendSS
 [Select a target window.]
 Абярыце вакно для адпраўкі.
 [Screenshot ]
-Здымак экрану
+Здымак экрану\s
 [of "]
 з "
 [" Window]

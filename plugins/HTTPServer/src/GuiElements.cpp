@@ -257,7 +257,7 @@ UINT_PTR CALLBACK ShareNewFileDialogHook(
 	switch (uiMsg) {
 		case WM_INITDIALOG: {
 			pstShare = (STFileShareInfo *)((OPENFILENAME *)lParam)->lCustData;
-			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LPARAM)pstShare);
+			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)pstShare);
 
 			SetDlgItemInt(hDlg, IDC_MAX_DOWNLOADS, pstShare->nMaxDownloads, true);
 			SendMessage(GetDlgItem(hDlg, IDC_ALLOWED_IPADDRESS), IPM_SETADDRESS,  0, pstShare->dwAllowedIP);
@@ -926,13 +926,13 @@ static INT_PTR CALLBACK DlgProcStatsticView(HWND hwndDlg, UINT msg, WPARAM wPara
 
 								// Place the handle on the clipboard.
 
-								HANDLE hMyData = SetClipboardData(CF_TEXT, hglbCopy);
+								HANDLE hMyData = SetClipboardData(CF_UNICODETEXT, hglbCopy);
 								if (! hMyData)
 									MessageBox(hwndDlg, TranslateT("Failed to set clipboard data"), MSG_BOX_TITEL, MB_OK);
 
 								CloseClipboard();
 							} else {
-								CallService(MS_UTILS_OPENURL, 0, (LPARAM)(const char*)sLink.c_str());
+								CallService(MS_UTILS_OPENURL, OUF_TCHAR, (LPARAM)sLink.c_str());
 							}
 						} else {
 							MessageBox(hwndDlg, TranslateT("ListView_GetItem failed"), MSG_BOX_TITEL, MB_OK);
@@ -982,7 +982,7 @@ static INT_PTR CALLBACK DlgProcStatsticView(HWND hwndDlg, UINT msg, WPARAM wPara
 /////////////////////////////////////////////////////////////////////
 // Member Function : SendLinkToUser
 // Type            : Global
-// Parameters      : wParam - (WPARAM)(HANDLE)hContact
+// Parameters      : wParam - (MCONTACT)hContact
 //                   lParam - ?
 // Returns         : static int
 // Description     : Send the link to the given contact
@@ -995,13 +995,13 @@ static INT_PTR CALLBACK DlgProcStatsticView(HWND hwndDlg, UINT msg, WPARAM wPara
 
 void SendLinkToUser(WPARAM wParam, char *pszSrvPath) {
 	string sLink = sCreateLink(pszSrvPath);
-	CallService(MS_MSG_SENDMESSAGE, (WPARAM)wParam, (LPARAM)sLink.c_str());
+	CallService(MS_MSG_SENDMESSAGET, wParam, (LPARAM)sLink.c_str());
 }
 
 /////////////////////////////////////////////////////////////////////
 // Member Function : nShareNewFile
 // Type            : Global
-// Parameters      : wParam - (WPARAM)(HANDLE)hContact
+// Parameters      : wParam - (MCONTACT)hContact
 //                   lParam - ?
 // Returns         : static int
 
@@ -1219,7 +1219,7 @@ static INT_PTR CALLBACK OptionsDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LP
 							GetDlgItemText(hwndDlg, IDC_PAGE_KEYWORD, szKeyWord, sizeof(szKeyWord));
 							DWORD dwExternalIP = GetExternIP(szUrl, szKeyWord);
 
-							mir_snprintf(szKeyWord, sizeof(szKeyWord), Translate("You external ip was detected as %d.%d.%d.%d\r\nby: %s") ,
+							mir_snprintf(szKeyWord, sizeof(szKeyWord), Translate("Your external IP was detected as %d.%d.%d.%d\r\nby: %s") ,
 							    SplitIpAddress(dwExternalIP) ,
 							    szUrl);
 							MessageBox(hwndDlg, szKeyWord, MSG_BOX_TITEL, MB_OK);

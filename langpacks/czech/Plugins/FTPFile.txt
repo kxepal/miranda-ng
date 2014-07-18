@@ -39,7 +39,7 @@ Odkaz na soubor
 [Copy download link to message log]
 Zkopírovat odkaz na soubor do historie
 [Autosend download link to contact]
-Automaticky poslat odkaz na soubor
+Automaticky odeslat odkaz kontaktu
 [Menu items]
 Položky menu
 [Use submenu (restart required)]
@@ -59,7 +59,7 @@ Automaticky smazat soubor z FTP po (experimentální):
 [Upload File Manager]
 
 [File:]
-
+Soubor:
 [Completed:]
 
 [Speed:]
@@ -102,8 +102,6 @@ Vybrat vše
 
 [Enter file name]
 
-[OK]
-OK
 [Cancel]
 Zrušit
 [File exists]

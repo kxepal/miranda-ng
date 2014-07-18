@@ -83,7 +83,7 @@ tstring CContactList::GetContactGroupPath(MCONTACT hContact)
 	tstring strGroup = _T("");
 	if(db_get_b(0, "MetaContacts", "Enabled", 1) && CAppletManager::IsSubContact(hContact))
 	{
-		MCONTACT hMetaContact = (MCONTACT)CallService(MS_MC_GETMETACONTACT, hContact, NULL);
+		MCONTACT hMetaContact = db_mc_getMeta(hContact);
 		if(CConfig::GetBoolSetting(CLIST_USEGROUPS))
 			strGroup = CAppletManager::GetContactGroup(hMetaContact);
 
@@ -103,7 +103,7 @@ void CContactList::AddContact(MCONTACT hContact)
 	CListContainer<CContactListEntry*,CContactListGroup*> *pGroup = NULL;
 
 	tstring strName = CAppletManager::GetContactDisplayname(hContact);
-	char *szProto = (char*)CallService(MS_PROTO_GETCONTACTBASEPROTO,(UINT)hContact,0);
+	char *szProto = GetContactProto(hContact);
 	
 	tstring strGroup = GetContactGroupPath(hContact);
 	// ignore contacts without a valid protocoll
@@ -150,21 +150,20 @@ void CContactList::AddContact(MCONTACT hContact)
 		pGroup->sort(CContactList::CompareEntries);
 
 		// check that all subcontacts exist
-		int numContacts = CallService(MS_MC_GETNUMCONTACTS,hContact,0);
+		int numContacts = db_mc_getSubCount(hContact);
 		MCONTACT hSubContact = NULL;
 		for(int i=0;i<numContacts;i++) {
-			hSubContact = (MCONTACT)CallService(MS_MC_GETSUBCONTACT, hContact, (LPARAM)i);
+			hSubContact = db_mc_getSub(hContact, i);
 			RemoveContact(hSubContact);
 			AddContact(hSubContact);
 		}
 		return;
 	}
 	else if(CAppletManager::IsSubContact(hContact)) {
-		MCONTACT hMetaContact = (MCONTACT)CallService(MS_MC_GETMETACONTACT, hContact, 0);
+		MCONTACT hMetaContact = db_mc_getMeta(hContact);
 		// check that the metacontact exists
-		if(!FindContact(hMetaContact)) {
+		if(!FindContact(hMetaContact))
 			AddContact(hMetaContact);
-		}
 	}
 
 	CListItem<CContactListEntry*,CContactListGroup*> *pItem = NULL;
@@ -204,13 +203,12 @@ bool CContactList::IsVisible(CContactListEntry *pEntry) {
 		}
 	} else {
 		if(pEntry->iStatus == ID_STATUS_OFFLINE) {
-			DWORD dwNumContacts = (DWORD)CallService(MS_MC_GETNUMCONTACTS,(WPARAM)pEntry->hHandle,0);
-			for(DWORD i = 0; i < dwNumContacts; i++) {
-				MCONTACT hSubContact = (MCONTACT)CallService(MS_MC_GETSUBCONTACT,(WPARAM)pEntry->hHandle,i);
-				char *szProto = (char*)CallService(MS_PROTO_GETCONTACTBASEPROTO,(UINT)hSubContact,0);
-				if(db_get_w(hSubContact,szProto,"Status",ID_STATUS_OFFLINE) != ID_STATUS_OFFLINE) {
+			int dwNumContacts = db_mc_getSubCount(pEntry->hHandle);
+			for(int i = 0; i < dwNumContacts; i++) {
+				MCONTACT hSubContact = db_mc_getSub(pEntry->hHandle,i);
+				char *szProto = GetContactProto(hSubContact);
+				if(db_get_w(hSubContact,szProto,"Status",ID_STATUS_OFFLINE) != ID_STATUS_OFFLINE)
 					return true;
-				}
 			}
 		}
 	}
@@ -221,8 +219,9 @@ bool CContactList::IsVisible(CContactListEntry *pEntry) {
 	if(CConfig::GetBoolSetting(CLIST_USEIGNORE)) {	
 		if(db_get_b(pEntry->hHandle,"CList","Hidden",0))
 			return false;
-		else if(CAppletManager::IsSubContact(pEntry->hHandle)) {
-			MCONTACT hMetaContact = (MCONTACT)CallService(MS_MC_GETMETACONTACT, (WPARAM)pEntry->hHandle, 0);
+		
+		if(CAppletManager::IsSubContact(pEntry->hHandle)) {
+			MCONTACT hMetaContact = db_mc_getMeta(pEntry->hHandle);
 			if(db_get_b(hMetaContact,"CList","Hidden",0))
 				return false;
 		}
@@ -279,9 +278,9 @@ void CContactList::RemoveContact(MCONTACT hContact) {
 		else {
 			pGroup->RemoveGroup(((CListContainer<CContactListEntry*,CContactListGroup*>*)pContactEntry)->GetGroupData());
 			// Reenumerate all subcontacts (maybe MetaContacts was disabled
-			int numContacts = CallService(MS_MC_GETNUMCONTACTS,hContact,0);
+			int numContacts = db_mc_getSubCount(hContact);
 			for(int i=0;i<numContacts;i++) {
-				MCONTACT hSubContact = (MCONTACT)CallService(MS_MC_GETSUBCONTACT,hContact, (LPARAM)i);
+				MCONTACT hSubContact = db_mc_getSub(hContact, i);
 				if(!FindContact(hSubContact))
 					AddContact(hSubContact);
 			}
@@ -540,14 +539,14 @@ bool CContactList::CompareEntries(CListEntry<CContactListEntry*,CContactListGrou
 //************************************************************************
 void CContactList::RefreshList()
 {
-	if(db_get_b(NULL,"MetaContacts","Enabled",1) != m_bUseMetaContacts ||
+	if((db_get_b(NULL,"MetaContacts","Enabled",1) != 0) != m_bUseMetaContacts ||
 		CConfig::GetBoolSetting(CLIST_USEGROUPS) != m_bUseGroups)
 	{
 		InitializeGroupObjects();
 		Clear();
 	}
 	m_bUseGroups = CConfig::GetBoolSetting(CLIST_USEGROUPS);
-	m_bUseMetaContacts = db_get_b(NULL,"MetaContacts","Enabled",1);
+	m_bUseMetaContacts = db_get_b(NULL,"MetaContacts","Enabled",1) != 0;
 
 	CListEntry<CContactListEntry*,CContactListGroup*> *pContactEntry = NULL;
 	MCONTACT hContact = db_find_first();
@@ -930,7 +929,7 @@ void CContactList::UpdateMessageCounter(CListEntry<CContactListEntry*,CContactLi
 			pEntry->iMessages++;
 			if(hLastEvent == hEvent)
 				break;
-			hLastEvent = db_event_prev(hLastEvent);
+			hLastEvent = db_event_prev(pEntry->hHandle, hLastEvent);
 		}
 	}
 	if(pEntry->iMessages >= 100)
@@ -1019,7 +1018,7 @@ void CContactList::InitializeGroupObjects()
 	while(hContact != NULL)
 	{
 		tstring strGroup = GetContactGroupPath(hContact);
-		szProto = (char*)CallService(MS_PROTO_GETCONTACTBASEPROTO,(UINT)hContact,0);
+		szProto = GetContactProto(hContact);
 		if(szProto && db_get_b(NULL,"MetaContacts","Enabled",1) && !stricmp(szProto,"MetaContacts"))
 		{
 			tstring strName = CAppletManager::GetContactDisplayname(hContact);

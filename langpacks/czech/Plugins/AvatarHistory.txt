@@ -28,13 +28,11 @@ Ukládat avatary kontaktu na disk
 Zapisovat změny avataru do historie
 [Show popups for this user]
 Zobrazit oznámení pro tento kontakt
-[OK]
-OK
 [Protocols]
 Protokoly
 [Enable tracking for these protocols:]
 Povolit sledování pro tyto protokoly:
-[MetaContacts have special handling: the info is always copied from subcontacts (notifications from a meta are ignored)]
+[Metacontacts have special handling: the info is always copied from subcontacts (notifications from a meta are ignored)]
 Upozornění pro metakontakty: Informace o změně avataru pocházejí od jednotlivých kontaktů.
 [Show popup when a contact change his avatar]
 Zobrazit oznámení, když kontakt změní svůj avatar
@@ -124,7 +122,7 @@ Zobrazit historii avatarů
 ;file \plugins\AvatarHistory\src\AvatarHistory.cpp
 [AVH Debug]
 
-[Removed avatar, no avatar before...skipping]
+[Removed avatar, no avatar before... skipping]
 
 [Hashes are the same... skipping]
 

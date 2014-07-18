@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Facebook.dll
 ;  Plugin: Facebook RM
-;  Version: 0.2.2.1
+;  Version: 0.2.7.0
 ;  Authors: Michal Zelinka, Robert Pösel
 ;============================================================
 [Facebook protocol support for Miranda NG.]
@@ -41,7 +41,7 @@ Standardgruppe:
 [Automatically set 'Ignore status change' flag]
 Automatisch 'Ignoriere Statusänderung-Flag' setzen
 [Contacts Settings]
-Kontakte Einstellungen
+Kontakteinstellungen
 [Use bigger avatars]
 Größere Avatare nutzen
 [Event notifications]
@@ -50,8 +50,10 @@ Ereignisbenachrichtigungen
 Benachrichtigung
 [News feeds]
 News-Feeds
-[News Feed types to notify:]
+[News feed types to notify:]
 Newsfeed-Ereignisse melden:
+[Don't show advertising posts]
+Werbebeiträge nicht anzeigen
 [Other events]
 Sonstige Ereignisse
 [Client notifications]
@@ -65,13 +67,13 @@ Erweiterte Einstellungen
 [Force secure (HTTPS) connection]
 Sichere Verbindung (HTTPS) erzwingen
 [Post Miranda statuses to Wall]
-Miranda Status auf die Pinnwand setzen
+Miranda-Status auf die Pinnwand setzen
 [Use secure connection also for channel requests]
 Sichere Verbindung auch für Channel-Zugriffe verwenden
 [Also disconnect chat when going to offline]
 Chatverbindung im 'Offline' Status trennen
 [Map non-standard statuses to Invisible (instead of Online)]
-Nicht-Standard Status auf 'Unsichtbar' setzen (anstatt 'Online')
+Nicht-Standard-Status auf 'Unsichtbar' setzen (anstatt 'Online')
 [Allow posting statuses to my pages (may slow down login)]
 Posten von Status auf meinen Seiten erlauben (kann Anmeldung verlangsamen)
 [Use this server for opening links:]
@@ -86,9 +88,21 @@ Nachrichtensitzungen
 Nachrichten auf dem Server als ungelesen belassen ("Gesehen"-Info nicht senden)
 [Receive messages from "inbox" folder only]
 Nur Nachrichten aus "Postfach"-Verzeichnis abrufen
+[Load last messages on opening message window (EXPERIMENTAL)]
+Letzte Nachrichten beim Öffnen des Nachrichtenfensters laden (EXPERIMENTELL)
+[Number of messages to load:]
+Lade Anzahl Nachrichten:
+[Do not open chat windows on creation]
+
 ;file \protocols\FacebookRM\src\chat.cpp
+[Myself]
+
+[User]
+Benutzer
+[Friend]
+
 [&Invite user...]
-Kontakt e&inladen
+Kontakt e&inladen...
 [&Leave chat session]
 Chatsitzung ver&lassen
 [User &details]
@@ -124,18 +138,12 @@ Bitte geben Sie einen Benutzernamen ein.
 [Please enter a password.]
 Bitte geben Sie das Kennwort ein.
 ;file \protocols\FacebookRM\src\constants.h
-[Most Recent]
-Jüngste Nachrichten
-[Wall Posts]
-Pinnwand-Einträge
 [Top News]
 Aktuelle Nachrichten
-[Photos]
-Fotos
-[Links]
-Links
-[Apps and Games]
-Apps und Spiele
+[Most Recent]
+Jüngste Nachrichten
+[Pages]
+Seiten
 [Classic website]
 Klassische Webseite
 [Mobile website]
@@ -153,6 +161,8 @@ Freunde ohne Bekannte
 [Only me]
 Nur ich
 ;file \protocols\FacebookRM\src\contacts.cpp
+[%s and more (%d)]
+
 [Contact was removed from your server list.]
 Kontakt wurde aus Ihrer Server-Liste entfernt.
 [Error occurred when removing contact from server.]
@@ -193,16 +203,16 @@ eine Datei
 Fotos
 [a photo]
 ein Foto
-[User sent you %s:]
+[User sent %s:]
 Benutzer hat Ihnen %s gesendet:
+[User sent an unsupported attachment. Open your browser to see it.]
+Benutzer hat Ihnen einen nicht unterstützten Anhang gesendet. Öffnen Sie Ihren Browser, um ihn anzusehen.
 [Message read: %s by %s]
 Nachricht gelesen: %s von %s
-[Message read: %s]
-Nachricht gelesen: %s
 [This message is no longer available, because it was marked as abusive or spam.]
 Diese Nachricht ist nicht mehr verfügbar, da sie als Missbrauch oder Spam markiert wurde.
-[%s and more (%d)]
-%s und mehr (%d)
+[%s is typing a message...]
+%s tippt eine Nachricht...
 ;file \protocols\FacebookRM\src\messages.cpp
 [You cannot send messages when you are offline.]
 Nachrichten senden ist nicht möglich, wenn Sie offline sind.
@@ -235,9 +245,13 @@ Newsfeeds laden...
 [Checking friend requests...]
 Freundschaftsanfragen überprüfen...
 [Refreshing buddy list...]
-Freundesliste aktuallisieren...
+Freundesliste aktualisieren...
 [Do you want to cancel your friendship with '%s'?]
 Möchten Sie Ihre Freundschaft mit "%s" beenden?
+[Visit profile]
+Profil besuchen
+[Visit notifications]
+Benachrichtigungen besuchen
 [Show 'Share status' window]
 'Status teilen'-Fenster anzeigen
 [Notification]
@@ -246,6 +260,8 @@ Benachrichtigung
 Newsfeed
 [Other Event]
 Andere Ereignisse
+[Message read: %s]
+Nachricht gelesen: %s
 ;file \protocols\FacebookRM\src\theme.cpp
 [Facebook icon]
 Facebook-Icon
@@ -257,10 +273,14 @@ Anstupsen
 Newsfeed
 [Friendship details]
 Freundschaft-Details
-[Visit profile]
-Profil besuchen
+[Conversation]
+Unterhaltung
+[Message read]
+Nachricht gelesen
 [Visit friendship details]
 Freundschaft-Details besuchen
+[Visit conversation]
+Unterhaltung besuchen
 [Cancel friendship]
 Freundschaft beenden
 [Cancel friendship request]

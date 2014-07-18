@@ -35,12 +35,14 @@ INT_PTR Popup_AddPopup(WPARAM wParam, LPARAM lParam)
 	if (!ppd)
 		return -1;
 
+	ptrW wszText(mir_a2u(ppd->lpzText)), wszTitle(mir_a2u(ppd->lpzContactName));
+
 	POPUPDATA2 ppd2 = { sizeof(ppd2) };
-	ppd2.flags = PU2_ANSI;
+	ppd2.flags = PU2_UNICODE;
 	ppd2.lchContact = ppd->lchContact;
 	ppd2.lchIcon = ppd->lchIcon;
-	ppd2.lpzTitle = ppd->lpzContactName;
-	ppd2.lpzText = ppd->lpzText;
+	ppd2.lpwzTitle = wszTitle;
+	ppd2.lpwzText = wszText;
 	ppd2.colorBack = ppd->colorBack;
 	ppd2.colorText = ppd->colorText;
 	ppd2.PluginWindowProc = ppd->PluginWindowProc;
@@ -187,12 +189,6 @@ INT_PTR Popup_GetPluginData(WPARAM wParam, LPARAM lParam)
 	return (INT_PTR)(-1);
 }
 
-//===== Popup/IsSecondLineShown
-INT_PTR Popup_IsSecondLineShown(WPARAM wParam, LPARAM lParam)
-{
-	return 1;
-}
-
 //===== Popup/ChangeTextW
 INT_PTR Popup_ChangeTextW(WPARAM wParam, LPARAM lParam)
 {
@@ -203,7 +199,7 @@ INT_PTR Popup_ChangeTextW(WPARAM wParam, LPARAM lParam)
 	if (!wnd || !IsValidPopupObject(wnd))
 		return -1;
 
-	wnd->callMethodSync(&PopupWnd2::m_updateTextW, lParam);
+	wnd->callMethodSync(&PopupWnd2::m_updateText, lParam);
 	return 0;
 }
 
@@ -233,72 +229,36 @@ INT_PTR Popup_Change2(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-//===== Popup/ShowMessage
-INT_PTR Popup_ShowMessage(WPARAM wParam, LPARAM lParam) {
-	if (!gbPopupLoaded || !wParam || !lParam) return -1;
-	if (closing) return 0;
-
-	POPUPDATA2 ppd2 = {0};
-	ppd2.cbSize		= sizeof(ppd2);
-	ppd2.flags		= PU2_ANSI;
-	ppd2.lpzText	= (char*)wParam;
-	switch (lParam & 0x7fffffff) {
-	case SM_ERROR:
-		ppd2.lchIcon			= IcoLib_GetIcon(ICO_MISC_ERROR,0);
-		ppd2.colorBack			= RGB(191,0,0);
-		ppd2.colorText			= RGB(255,245,225);
-		ppd2.lchNotification	= g_hntfError;
-		ppd2.lpzTitle			= Translate("Error");
-		break;
-	case SM_WARNING:
-		ppd2.lchIcon			= IcoLib_GetIcon(ICO_MISC_WARNING,0);
-		ppd2.colorBack			= RGB(210,210,150);
-		ppd2.colorText			= RGB(0,0,0);
-		ppd2.lchNotification	= g_hntfWarning;
-		ppd2.lpzTitle			= Translate("Warning");
-		break;
-	case SM_NOTIFY:
-		ppd2.lchIcon			= IcoLib_GetIcon(ICO_MISC_NOTIFY,0);
-		ppd2.colorBack			= RGB(230,230,230);
-		ppd2.colorText			= RGB(0,0,0);
-		ppd2.lchNotification	= g_hntfNotification;
-		ppd2.lpzTitle			= Translate("Notify");
-		break;
-	default: //No no no... you must give me a good value.
-		return -1;
-	}
-	return Popup_AddPopup2((WPARAM)&ppd2, (LPARAM)((lParam & 0x80000000)?APF_NO_HISTORY:0));
-}
-
-INT_PTR Popup_ShowMessageW(WPARAM wParam, LPARAM lParam) {
+INT_PTR Popup_ShowMessageW(WPARAM wParam, LPARAM lParam)
+{
 	if (!gbPopupLoaded || !wParam || !lParam) return -1;
 	if (closing) return 0;
 
 	POPUPDATA2 ppd2 = {0};
 	ppd2.cbSize		= sizeof(ppd2);
 	ppd2.flags		= PU2_UNICODE;
-	ppd2.lpwzText	= (WCHAR*)wParam;
+	ppd2.lptzText	= (TCHAR*)wParam;
 	switch (lParam&0x7fffffff) {
 	case SM_ERROR:
 		ppd2.lchIcon			= IcoLib_GetIcon(ICO_MISC_ERROR,0);
 		ppd2.colorBack			= RGB(191,0,0);
 		ppd2.colorText			= RGB(255,245,225);
 		ppd2.lchNotification	= g_hntfError;
-		ppd2.lpwzTitle			= TranslateW(L"Error");
+		ppd2.lptzTitle			= TranslateT("Error");
 		break;
 	case SM_WARNING:
 		ppd2.lchIcon			= IcoLib_GetIcon(ICO_MISC_WARNING,0);
 		ppd2.colorBack			= RGB(210,210,150);
 		ppd2.colorText			= RGB(0,0,0);
 		ppd2.lchNotification	= g_hntfWarning;
-		ppd2.lpwzTitle			= TranslateW(L"Warning");
+		ppd2.lptzTitle			= TranslateT("Warning");
 		break;
 	case SM_NOTIFY:
 		ppd2.lchIcon			= IcoLib_GetIcon(ICO_MISC_NOTIFY,0);
 		ppd2.colorBack			= RGB(230,230,230);
 		ppd2.colorText			= RGB(0,0,0);
 		ppd2.lchNotification	= g_hntfNotification;
-		ppd2.lpwzTitle			= TranslateW(L"Notify");
+		ppd2.lptzTitle			= TranslateT("Notify");
 		break;
 	default: //No no no... you must give me a good value.
 		return -1;
@@ -306,8 +266,17 @@ INT_PTR Popup_ShowMessageW(WPARAM wParam, LPARAM lParam) {
 	return Popup_AddPopup2((WPARAM)&ppd2, (LPARAM)((lParam & 0x80000000)?APF_NO_HISTORY:0));
 }
 
+INT_PTR Popup_ShowMessage(WPARAM wParam, LPARAM lParam)
+{
+	if (!gbPopupLoaded || !wParam || !lParam) return -1;
+	if (closing) return 0;
+
+	ptrW wszMsg(mir_a2u((char*)wParam));
+	return Popup_ShowMessageW(wszMsg, lParam);
+}
+
 //===== Popup/Query
-INT_PTR Popup_Query(WPARAM wParam, LPARAM lParam)
+INT_PTR Popup_Query(WPARAM wParam, LPARAM)
 {
 	if (!gbPopupLoaded) return -1;
 
@@ -348,7 +317,7 @@ INT_PTR Popup_RegisterActions(WPARAM wParam, LPARAM lParam)
 }
 
 
-INT_PTR Popup_RegisterNotification(WPARAM wParam, LPARAM lParam)
+INT_PTR Popup_RegisterNotification(WPARAM wParam, LPARAM)
 {
 	return (INT_PTR)RegisterNotification((LPPOPUPNOTIFICATION)wParam);
 }
@@ -386,7 +355,7 @@ INT_PTR Popup_RegisterVfx(WPARAM wParam, LPARAM lParam)
 }
 
 //===== Popup/RegisterClass		(for core class api support)
-INT_PTR Popup_RegisterPopupClass(WPARAM wParam, LPARAM lParam)
+INT_PTR Popup_RegisterPopupClass(WPARAM, LPARAM lParam)
 {
 	char setting[256];
 	POPUPCLASS *pc	= (POPUPCLASS *)lParam;
@@ -410,39 +379,39 @@ INT_PTR Popup_RegisterPopupClass(WPARAM wParam, LPARAM lParam)
 	//we ignore pc->colorText and use fonts.text as default (if no setting found in DB)
 	mir_snprintf(setting, 256, "%s/TextCol", ptd->pupClass.pszName);
 	ptd->pupClass.colorText = (COLORREF)db_get_dw(NULL, PU_MODULCLASS, setting, fonts.clText/*pc->colorText*/);
-	FontID fid = {0};
-	fid.cbSize = sizeof(FontID);
-	mir_snprintf(fid.group, sizeof(fid.group), "%s/%s", PU_FNT_AND_COLOR, ptd->pupClass.pszName);
-	strcpy(fid.dbSettingsGroup, PU_MODULCLASS);
+	FontIDT fid = {0};
+	fid.cbSize = sizeof(FontIDT);
+	mir_sntprintf(fid.group, SIZEOF(fid.group), _T(PU_FNT_AND_COLOR)_T("/%S"), ptd->pupClass.pszName);
+	strncpy(fid.dbSettingsGroup, PU_MODULCLASS, SIZEOF(fid.dbSettingsGroup));
 	fid.flags = FIDF_DEFAULTVALID;
 	fid.deffontsettings.charset = DEFAULT_CHARSET;
 	fid.deffontsettings.size = -11;
-	strcpy(fid.deffontsettings.szFace, "Verdana");
-	strcpy(fid.name, PU_FNT_NAME_TEXT);
-	strcpy(fid.prefix, setting);
+	_tcsncpy(fid.deffontsettings.szFace, _T("Verdana"), SIZEOF(fid.deffontsettings.szFace));
+	_tcsncpy(fid.name, _T(PU_FNT_NAME_TEXT), SIZEOF(fid.name));
+	strncpy(fid.prefix, setting, SIZEOF(fid.prefix));
 	mir_snprintf(fid.prefix, sizeof(fid.prefix), "%s/Text", ptd->pupClass.pszName);  // result is "%s/TextCol"
 	fid.deffontsettings.style  = 0;
 	fid.deffontsettings.colour = fonts.clText;
-	FontRegister(&fid);
+	FontRegisterT(&fid);
 
 	//we ignore pc->colorBack and use fonts.clBack as default (if no setting found in DB)
 	mir_snprintf(setting, 256, "%s/BgCol", ptd->pupClass.pszName);
-	ptd->pupClass.colorBack				= (COLORREF)db_get_dw(NULL, PU_MODULCLASS, setting, (DWORD)fonts.clBack/*pc->colorBack*/);
-	ColourID cid = {0};
-	cid.cbSize = sizeof(ColourID);
-	mir_snprintf(cid.group, sizeof(cid.group), "%s/%s", PU_FNT_AND_COLOR, ptd->pupClass.pszName);
-	strcpy(cid.dbSettingsGroup, PU_MODULCLASS);
-	strcpy(cid.name, PU_COL_BACK_NAME);
+	ptd->pupClass.colorBack = (COLORREF)db_get_dw(NULL, PU_MODULCLASS, setting, (DWORD)fonts.clBack/*pc->colorBack*/);
+	ColourIDT cid = {0};
+	cid.cbSize = sizeof(ColourIDT);
+	mir_sntprintf(cid.group, SIZEOF(cid.group), _T(PU_FNT_AND_COLOR)_T("/%S"), ptd->pupClass.pszName);
+	strncpy(cid.dbSettingsGroup, PU_MODULCLASS, SIZEOF(fid.dbSettingsGroup));
+	_tcsncpy(cid.name, PU_COL_BACK_NAME, SIZEOF(cid.name));
 	mir_snprintf(cid.setting, sizeof(cid.setting), "%s/BgCol", ptd->pupClass.pszName);
 	cid.defcolour = fonts.clBack;
-	ColourRegister(&cid);
+	ColourRegisterT(&cid);
 
 	gTreeData.insert(ptd);
 	num_classes++;
 	return (INT_PTR)ptd;
 }
 
-INT_PTR Popup_UnregisterPopupClass(WPARAM wParam, LPARAM lParam)
+INT_PTR Popup_UnregisterPopupClass(WPARAM, LPARAM lParam)
 {
 	POPUPTREEDATA *ptd = (POPUPTREEDATA*)lParam;
 	if (ptd == NULL)
@@ -460,18 +429,19 @@ INT_PTR Popup_UnregisterPopupClass(WPARAM wParam, LPARAM lParam)
 
 //===== Popup/AddPopupClass		(for core class api support)
 INT_PTR Popup_CreateClassPopup(WPARAM wParam, LPARAM lParam) {
-	int ret = 1;
+	INT_PTR ret = 1;
 	POPUPDATACLASS *pdc = (POPUPDATACLASS *)lParam;
 	if (pdc->cbSize != sizeof(POPUPDATACLASS)) return ret;
 
-	POPUPCLASS		*pc  = NULL;
-	POPUPTREEDATA	*ptd = NULL;
+	POPUPCLASS *pc  = NULL;
 
-	if (wParam) pc = (POPUPCLASS*)wParam;
+	if (wParam)
+		pc = (POPUPCLASS*)wParam;
 	else {
 		LPTSTR group = mir_a2t(pdc->pszClassName);
-		ptd = (POPUPTREEDATA *)FindTreeData(group, NULL, 2);
-		if (ptd) pc = &ptd->pupClass;
+		POPUPTREEDATA *ptd = (POPUPTREEDATA *)FindTreeData(group, NULL, 2);
+		if (ptd)
+			pc = &ptd->pupClass;
 	}
 	if (pc) {
 		POPUPDATA2 ppd2 = { sizeof(ppd2) };
@@ -482,8 +452,8 @@ INT_PTR Popup_CreateClassPopup(WPARAM wParam, LPARAM lParam) {
 		ppd2.PluginWindowProc= pc->PluginWindowProc;
 		if (pc->flags & PCF_UNICODE) {
 			ppd2.flags = PU2_UNICODE;
-			ppd2.lpwzTitle = (WCHAR*)pdc->pwszTitle;
-			ppd2.lpwzText = (WCHAR*)pdc->pwszText;
+			ppd2.lptzTitle = (TCHAR*)pdc->ptszTitle;
+			ppd2.lptzText = (TCHAR*)pdc->ptszText;
 		}
 		else {
 			ppd2.flags = PU2_ANSI;
@@ -493,7 +463,7 @@ INT_PTR Popup_CreateClassPopup(WPARAM wParam, LPARAM lParam) {
 		ppd2.lchContact = pdc->hContact;
 		ppd2.PluginData = pdc->PluginData;
 
-		ret = Popup_AddPopup2((WPARAM)&ppd2, 0);
+		return Popup_AddPopup2((WPARAM)&ppd2, pc->lParam);
 	}
 	return ret!=0 ? 1 : 0;
 }

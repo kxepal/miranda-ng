@@ -20,8 +20,8 @@ Stała szerokość
 px
 [Hide all contacts]
 Ukryj wszystkie
-[Hide when a fulscreen app is active]
-Ukryj kiedy jest aktywna aplikacja pełnoekranowa
+[Hide when a fullscreen app is active]
+Ukryj, gdy aplikacja pełnoekranowa jest aktywna
 [Show tooltips*]
 Pokaż podpowiedzi*
 [ms]
@@ -31,19 +31,19 @@ Podpowiedzi
 [Miscellaneous]
 Różne
 [0 = Default]
-0 = Domyślny
+0 - domyślnie
 [*requires Tipper plugin]
 *wymagana wtyczka Tipper
 [Bring to front]
 Umieszczenie
 [Bring to front every]
-Do przodu każde
+Do przodu co każde
 [seconds]
 s
 [Hide when contact list is shown]
 Ukryj, gdy lista kontaktów jest wyświetlana
 [Single click interface]
-Pokaż/ukryj listę po pojedynczym kliknięciu
+Pokaż/Ukryj listę po pojedynczym kliknięciu
 [Dim idle contacts]
 Przygaś bezczynne kontakty
 [Idle contacts]
@@ -98,7 +98,7 @@ Pokaż/Ukryj wszystkie kontakty
 ;file \plugins\FloatingContacts\src\options.cpp
 [Floating Contacts]
 Pływające kontakty
-[Contact List]
+[Contact list]
 Lista kontaktów
 [Main Features]
 Główne funkcje

@@ -1,10 +1,12 @@
 ﻿#muuid {e7c48bab-8ace-4cb3-8446-d4b73481f497}
 ;============================================================
 ;  File: MRA.dll
-;  Plugin: MRA
+;  Plugin: MRA protocol
 ;  Version: 2.1.0.8
-;  Authors: Ivan Rozhuk
+;  Authors: Rozhuk Ivan
 ;============================================================
+[Miranda Mail.ru Agent protocol plugin.]
+
 ;file \protocols\MRA\res\resource.rc
 [E-mail:]
 Имейл:
@@ -27,6 +29,8 @@
 [Automatically grant authorization to users in contact list]
 
 [Automatically grant authorization to new users]
+
+[Automatic authorization on Mail.ru web services]
 
 [Notify me when a message delivery has failed]
 
@@ -57,12 +61,12 @@
 [Age:]
 Възраст:
 [from:]
-
+от:
 [to:]
-
+за:
 [Birthday:]
 Рожден ден:
-[Zodiak:]
+[Zodiac:]
 
 [Location]
 Местоположение
@@ -146,8 +150,6 @@ E-поща:
 Титла:
 [Message:]
 Съобщение:
-[OK]
-ОК
 [Cancel]
 Отказ
 [Notify]
@@ -156,11 +158,62 @@ E-поща:
 
 [Select e-mail]
 
+;file \protocols\MRA\src\MraAdvancedSearch.cpp
+[Male]
+Мъж
+[Female]
+Жена
+[January]
+
+[February]
+
+[March]
+
+[April]
+
+[May]
+
+[June]
+
+[July]
+
+[August]
+
+[September]
+
+[October]
+
+[November]
+
+[December]
+
+[Aries]
+
+[Taurus]
+
+[Gemini]
+
+[Cancer]
+
+[Leo]
+
+[Virgo]
+
+[Libra]
+
+[Scorpio]
+
+[Sagittarius]
+
+[Capricorn]
+
+[Aquarius]
+
+[Pisces]
+
 ;file \protocols\MRA\src\MraAvatars.cpp
 [Avatars' plugin connections]
 
-[Avatars]
-Аватари
 [Avatars: server return HTTP code: %lu]
 
 [Avatars: can't open file %s, error]
@@ -183,8 +236,6 @@ E-поща:
 
 [My Album]
 
-[My Blog]
-
 [My Blog Status]
 
 [My Video]
@@ -205,11 +256,11 @@ E-поща:
 Молба за упълномощаване
 [Grant authorization]
 Даване на пълномощно
+[&Send E-Mail]
+
 [&Send postcard]
 
 [&View Album]
-
-[&Read Blog]
 
 [Reply Blog Status]
 
@@ -247,6 +298,10 @@ E-поща:
 [Send files: requested file: %S - not found in send files list.]
 
 ;file \protocols\MRA\src\MraIcons.cpp
+[Protocols]
+
+[MRA]
+
 [Main Menu]
 Главно меню
 [Contact Menu]
@@ -254,7 +309,7 @@ E-поща:
 [Extra status]
 Допълнително състояние
 [Custom Status]
-
+Персонално състояние
 ;file \protocols\MRA\src\MraPopUp.cpp
 [None]
 Няма
@@ -310,10 +365,14 @@ Popups
 
 [Files]
 Файлове
+[Avatars]
+Аватари
 ;file \protocols\MRA\src\Mra_proto.cpp
 [Please, setup e-mail in options]
 
 [Please, setup password in options]
+
+[Thread creation failure]
 
 [Logon error: invalid login/password]
 
@@ -436,3 +495,5 @@ Popups
 
 [Music]
 Музика
+[Dating]
+

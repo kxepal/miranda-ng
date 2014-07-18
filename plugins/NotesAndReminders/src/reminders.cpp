@@ -2007,7 +2007,7 @@ INT_PTR CALLBACK DlgProcNewReminder(HWND Dialog,UINT Message,WPARAM wParam,LPARA
 				int n = SendDlgItemMessage(Dialog, IDC_COMBO_SOUND, CB_ADDSTRING, 0, (LPARAM)Translate("Default"));
 				SendDlgItemMessage(Dialog, IDC_COMBO_SOUND, CB_SETITEMDATA, n, 0);
 				n = SendDlgItemMessage(Dialog, IDC_COMBO_SOUND, CB_ADDSTRING, 0, (LPARAM)Translate("Alternative 1"));
-				SendDlgItemMessage(Dialog, IDC_COMBO_SOUND, CB_SETITEMDATA, n, (LPARAM)1);
+				SendDlgItemMessage(Dialog, IDC_COMBO_SOUND, CB_SETITEMDATA, n, 1);
 				n = SendDlgItemMessage(Dialog, IDC_COMBO_SOUND, CB_ADDSTRING, 0, (LPARAM)Translate("Alternative 2"));
 				SendDlgItemMessage(Dialog, IDC_COMBO_SOUND, CB_SETITEMDATA, n, (LPARAM)2);
 				n = SendDlgItemMessage(Dialog, IDC_COMBO_SOUND, CB_ADDSTRING, 0, (LPARAM)Translate("None"));
@@ -2435,7 +2435,7 @@ INT_PTR CALLBACK DlgProcViewReminders(HWND Dialog,UINT Message,WPARAM wParam,LPA
 			lvCol.cx = g_reminderListColGeom[0];
 			ListView_InsertColumn(H,0,&lvCol);
 			InitListView(H);
-			SetWindowLong(GetDlgItem(H, 0), GWL_ID, IDC_LISTREMINDERS_HEADER);
+			SetWindowLongPtr(GetDlgItem(H, 0), GWL_ID, IDC_LISTREMINDERS_HEADER);
 			LV = Dialog;
 
 			if (g_reminderListGeom[1] && g_reminderListGeom[2])

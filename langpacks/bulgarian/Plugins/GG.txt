@@ -1,7 +1,7 @@
 ﻿#muuid {f3ff65f3-250e-416a-bee9-58c93f85ab33}
 ;============================================================
 ;  File: GG.dll
-;  Plugin: Gadu-Gadu Protocol
+;  Plugin: Gadu-Gadu protocol
 ;  Version: 0.11.0.3
 ;  Authors: Bartosz Bialek, Adam Strzelecki
 ;============================================================
@@ -100,8 +100,6 @@ Gadu-Gadu номер:
 Запис на промените
 [Enter token to continue]
 
-[OK]
-ОК
 [Cancel]
 Отказ
 [Create Gadu-Gadu account]
@@ -135,7 +133,7 @@ Gadu-Gadu номер:
 [Age from:]
 Възраст от:
 [to:]
-
+за:
 [Search online users only]
 Търси само потребители "На линия"
 [&Close]

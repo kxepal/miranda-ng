@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: StartupStatus.dll
 ;  Plugin: StartupStatus
-;  Version: 0.8.0.45
+;  Version: 0.8.0.47
 ;  Authors: P Boon
 ;============================================================
 [StartupStatus, allows you to define the status Miranda should set on startup, configurable per protocol.]
@@ -55,6 +55,7 @@
 [minutes of inactivity]
 минути бездействие
 [minutes of level 1 mode]
+
 [only set when inactive]
 задаване само при липса на активност
 [Monitor Miranda's activity only]
@@ -67,8 +68,6 @@
 Само при състояние:
 [Command line]
 Команден ред
-[OK]
-ОК
 [Copy to clipboard]
 Запис в клипборда
 [Command line:]
@@ -271,7 +270,7 @@ Dial-up (експериментално)
 [<current>]
 <текущо>
 [<unknown>]
-
+<неизвестно>
 [Left]
 Ляво
 [Right]

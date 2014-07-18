@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: CryptoPP.dll
 ;  Plugin: Crypto++
-;  Version: 1.0.4.7
+;  Version: 1.0.4.8
 ;  Authors: Baloo
 ;============================================================
 [Crypto++ library for SecureIM plugin.]
@@ -14,8 +14,6 @@ Wtyczka GnuPG - tekst szyfrujący
 Wprowadź tekst szyfrujący sekretnego klucza użytkownika:
 [User ID]
 ID użytkownika
-[OK]
-OK
 [Cancel]
 Anuluj
 [GnuPG Plugin - Select public key]

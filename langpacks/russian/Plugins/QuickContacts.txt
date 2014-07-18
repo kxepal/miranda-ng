@@ -39,13 +39,11 @@
 Быстрые контакты
 [Open dialog]
 Открыть диалог
-[Make a voice call]
-Позвонить
 [Send file]
 Передать файл
 [Send URL]
-Послать URL
-[Open userinfo]
+Отправить URL
+[Open user info]
 Открыть информацию о пользователе
 [Open history]
 История

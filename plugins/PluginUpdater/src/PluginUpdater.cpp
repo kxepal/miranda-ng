@@ -19,6 +19,8 @@ Boston, MA 02111-1307, USA.
 
 #include "common.h"
 
+PlugOptions opts;
+
 #if MIRANDA_VER < 0x0A00
 	#define MIID_UPDATER	{0x4a47b19b, 0xde5a, 0x4436, { 0xab, 0x4b, 0xe1, 0xf3, 0xa0, 0x22, 0x5d, 0xe7}}
 
@@ -29,7 +31,6 @@ Boston, MA 02111-1307, USA.
 	UTF8_INTERFACE utfi;
 #endif
 
-HANDLE hPluginUpdaterFolder = NULL, hEmptyFolder = NULL;
 HINSTANCE hInst = NULL;
 TCHAR tszRoot[MAX_PATH] = {0}, tszTempPath[MAX_PATH];
 int hLangpack;
@@ -87,13 +88,10 @@ extern "C" __declspec(dllexport) int Load(void)
 {
 	mir_getLP(&pluginInfoEx);
 
-	ServiceInit();
+	InitServices();
 #endif
-	hPluginUpdaterFolder = FoldersRegisterCustomPathT(MODULEA, LPGEN("Plugin Updater"), MIRANDA_PATHT _T("\\")DEFAULT_UPDATES_FOLDER);
-	if (hPluginUpdaterFolder)
-		OnFoldersChanged(0, 0);
-	else
-		lstrcpyn(tszRoot, VARST( _T("%miranda_path%\\"DEFAULT_UPDATES_FOLDER)), SIZEOF(tszRoot));
+
+	db_set_b(NULL, MODNAME, "NeedRestart", 0);
 
 	DWORD dwLen = GetTempPath( SIZEOF(tszTempPath), tszTempPath);
 	if (tszTempPath[dwLen-1] == '\\')
@@ -101,11 +99,11 @@ extern "C" __declspec(dllexport) int Load(void)
 
 	LoadOptions();
 	InitPopupList();
-	NetlibInit();
-	IcoLibInit();
+	InitNetlib();
+	InitIcoLib();
 
 	// Add cheking update menu item
-	CreateServiceFunction(MODNAME"/CheckUpdates", MenuCommand);
+	InitCheck();
 	CLISTMENUITEM mi = { sizeof(mi) };
 	mi.position = 400010000;
 	mi.icolibItem = Skin_GetIconHandle("check_update");
@@ -113,15 +111,17 @@ extern "C" __declspec(dllexport) int Load(void)
 	mi.pszService = MODNAME"/CheckUpdates";
 	Menu_AddMainMenuItem(&mi);
 
-	#if MIRANDA_VER >= 0x0A00
-		CreateServiceFunction(MODNAME"/ShowList", ShowListCommand);
+#if MIRANDA_VER >= 0x0A00
+	InitListNew();
 
-		mi.position++;
-		mi.icolibItem = Skin_GetIconHandle("plg_list");
-		mi.pszName = LPGEN("Available components list");
-		mi.pszService = MODNAME"/ShowList";
-		Menu_AddMainMenuItem(&mi);
-	#endif
+	mi.position++;
+	mi.icolibItem = Skin_GetIconHandle("plg_list");
+	mi.pszName = LPGEN("Available components list");
+	mi.pszService = MODNAME"/ShowList";
+	Menu_AddMainMenuItem(&mi);
+
+	InitOptions();
+#endif
 
 	// Add hotkey
 	HOTKEYDESC hkd = { sizeof(hkd) };
@@ -133,21 +133,20 @@ extern "C" __declspec(dllexport) int Load(void)
 	hkd.lParam = FALSE;
 	Hotkey_Register(&hkd);
 
-	// Add options hook
-	HookEvent(ME_OPT_INITIALISE, OptInit);
-	HookEvent(ME_SYSTEM_MODULESLOADED, ModulesLoaded);
-	HookEvent(ME_SYSTEM_PRESHUTDOWN, OnPreShutdown);
+	InitEvents();
+
+	//add sounds
+	SkinAddNewSoundEx("updatecompleted",LPGEN("Plugin Updater"),LPGEN("Update completed"));
+	SkinAddNewSoundEx("updatefailed",LPGEN("Plugin Updater"),LPGEN("Update failed"));
 	return 0;
 }
 
 extern "C" __declspec(dllexport) int Unload(void)
 {
-	if (hCheckThread)
-		hCheckThread = NULL;
-
-	if (hListThread)
-		hListThread = NULL;
-
-	NetlibUnInit();
+	UnloadCheck();
+#if MIRANDA_VER >= 0x0A00
+	UnloadListNew();
+#endif
+	UnloadNetlib();
 	return 0;
 }

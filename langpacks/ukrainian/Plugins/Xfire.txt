@@ -1,7 +1,7 @@
 ﻿#muuid {9b8e1735-970d-4ce0-930c-a561956bdca2}
 ;============================================================
 ;  File: Xfire.dll
-;  Plugin: Xfire Protocol
+;  Plugin: Xfire protocol
 ;  Version: 0.1.9.0
 ;  Authors: dufte
 ;============================================================
@@ -28,7 +28,7 @@
 [Game Status]
 Статуси ігор
 [Show on my profile and miniprofile]
-Показувати мій профіль і мініпрофиль
+Показувати мій профіль і мініпрофіль
 [Show my game server data]
 Показувати дані сервера моєї гри
 [Other Activity]
@@ -45,7 +45,7 @@
 Налаштування
 [More options]
 Додатково
-[Display Error and Infomessage:]
+[Display Error and Info message:]
 Помилка та інформація:
 [Main group for clan groups:]
 Група для групи клану:
@@ -58,7 +58,7 @@
 [Blocked User List]
 Список заблокованих користувачів
 [This list contains all your blocked Xfire users. You can remove one, if you wanna allow him to send you a friend request.]
-Цей список містить заблокованих користувачів. Ви можете видалити одного, що дозволить йому посилати вам повідомлення.
+Цей список містить заблокованих користувачів. Ви можете видалити одного, що дозволить йому надсилати вам повідомлення.
 [You can simply block someone, if you right click on his friend request in contact list and choose Block User...]
 Ви можете заблокувати кого-небудь просто клацнувши правою кнопкою по користувачеві у списку контактів.
 [This file is used for the game search, game detection and game ID resolving. It contains all Xfire supported games.]
@@ -71,7 +71,7 @@
 Статусне повідомлення:
 [Enable]
 Увімкнути
-[With this feature, following status message will be set on your other protocol plugins, if you are ingame. So your other buddies can also see what you play. It will also change the status to occupied, if this option is enabled.]
+[With this feature, following status message will be set on your other protocol plugins, if you are in game. So your other buddies can also see what you play. It will also change the status to occupied, if this option is enabled.]
 З цією можливістю наступне статусне повідомлення буде встановлено на інший протокол, якщо ви в грі. Так ваші друзі будуть бачити, що ви граєте. Якщо ця функція увімкнена, ваш статус зміниться на "Зайнятий".
 [Following Variables are available: %myxfiregame%, %myxfirevoice%, %myxfireserverip%, %myxfirevoiceip%]
 Доступні змінні: %myxfiregame%, %myxfirevoice%, %myxfireserverip%, %myxfirevoiceip%
@@ -99,11 +99,13 @@
 Видалити
 [Don't show in start menu]
 Вимкнути пункт у головному меню
+[Edit...]
+Правка...
 [Username:]
 Користувач:
 [Game]
 Гра
-[Voicechat]
+[Voice chat]
 Голосовий чат
 [Name:]
 Ім'я:
@@ -173,6 +175,8 @@ ID гри має бути більше 1.
 Та дайте ж людині поговорити по телефону...
 [Mmm... food.]
 Ммм... поїсти б...
+[XFire Protocol]
+Протокол XFire
 [The xfire_games.ini was updated.]
 Xfire_games.ini оновлено.
 [Protocol icon]
@@ -183,6 +187,8 @@ Xfire_games.ini оновлено.
 Поточна гра
 [ServerIP]
 IP сервера
+[Voice]
+Голос
 [Xfire Link Protocol]
 Протокол Xfire
 [Buddy start a game]
@@ -210,7 +216,7 @@ IP сервера
 [&Rescan my games...]
 &Пересканувати мої ігри...
 [Set &Nickname]
-&Псевдонім...
+&Нік...
 [Protocols]
 Протоколи
 [XFire game icon]
@@ -275,11 +281,11 @@ XFire не підтримує надсилання офлайн-повідомл
 Не створювати автоматично групи кланів
 [Enable MBot support]
 Підтримка MBot
-[Gamedetection]
+[Game detection]
 Виявлення ігор
 [Disable game detection]
 Вимкнути виявлення ігор
-[Use TSRemote.dll to get teamspeak server info]
+[Use TSRemote.dll to get TeamSpeak server info]
 Використовувати TSRemote.dll для отримання інф. з сервера
 [Disable popups when ingame]
 Вимкнути спливаючі вікна під час гри
@@ -301,7 +307,7 @@ XFire не підтримує надсилання офлайн-повідомл
 Необхідно перепідключились до мережі XFire, щоб зроблені вами зміни вступили в силу.
 [Hidden]
 Прихований
-[Messagebox]
+[Message box]
 Діалогове вікно
 [Popup]
 Сплив. вікно
@@ -328,7 +334,7 @@ XFire не підтримує надсилання офлайн-повідомл
 [Features]
 Можливості
 [Blocklist / Games]
-Блоковані / Ігри
+Заблоковані / Ігри
 [StatusMsg]
 Статусні повідомлення
 [Please enter server password...]

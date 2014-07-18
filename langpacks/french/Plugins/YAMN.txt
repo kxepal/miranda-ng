@@ -8,8 +8,6 @@
 [Mail notifier and browser for Miranda NG. Included POP3 protocol.]
 
 ;file \plugins\YAMN\res\YAMN.rc
-[OK]
-OK
 [Installed plugins]
 Plugins installés
 [Version:]
@@ -45,7 +43,7 @@ Défaut
 [Disable STLS]
 Désactiver STLS
 [Status:]
-
+État :
 [Options]
 Paramètres
 [Check this account]
@@ -128,7 +126,7 @@ Afficher YAMN comme un protocole (redémarrage nécessaire)
 
 [Enable Close on Delete Button]
 Fermer la fenêtre si clic sur effacer
-[Show long localised date]
+[Show long localized date]
 Montrer la date au format long
 [Don't show today's date]
 Ne pas montrer la date d'aujourd'hui
@@ -150,7 +148,7 @@ Popups multiples
 Notification, aucun nouveau message
 [Popup if no mail]
 Popup si aucun message
-[Persistant message]
+[Persistent message]
 Message persistant
 [Connection failure notifications]
 Notifications, erreur de connexion
@@ -181,9 +179,9 @@ Vérif. des messages
 Échec de la connexion
 ;file \plugins\YAMN\src\main.h
 [YAMN: new mail message]
-YAMN: nouvel e-mail
+YAMN : nouvel e-mail
 [YAMN: connect failed]
-YAMN: échec connexion
+YAMN : échec connexion
 ;file \plugins\YAMN\src\services.cpp
 [Nick]
 Pseudo
@@ -195,7 +193,7 @@ Pas de nouveaux e-mail
 [An error occurred. Error code: %d]
 
 [Unknown error]
-
+Erreur inconnue
 [ - connection error]
  - échec de connexion
 ;file \plugins\YAMN\src\browser\mailbrowser.cpp
@@ -226,7 +224,7 @@ Supprimer la sélection
 [Select All]
 Tout sélectionner
 [From]
-
+De
 [Subject]
 
 [Size]
@@ -336,7 +334,7 @@ Popups
 [No account selected]
 Aucun compte sélectionné
 [Time left to next check [s]: %d]
-Prochaine vérification: [s]: %d
+Prochaine vérification [s] : %d
 [New Account]
 Nouveau compte
 [Executables]

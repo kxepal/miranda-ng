@@ -2,33 +2,27 @@
 ;============================================================
 ;  File: Tipper.dll
 ;  Plugin: Tipper
-;  Version: 2.1.0.4
+;  Version: 2.1.0.5
 ;  Authors: Scott Ellis, yaho
 ;============================================================
 [Tool Tip notification windows.]
 
 ;file \plugins\TipperYM\res\resource.rc
-[Options]
-Opciones
 [Layout]
 
 [Text indent:]
 
-[Window]
-Ventana
-[Max width:]
+[Title indent:]
 
-[Max height:]
-
-[Avatar size:]
-
-[Show if list not focused]
+[Value indent:]
 
 [General padding:]
 
-[Hover time:]
+[Text padding:]
 
-[Status bar tips]
+[Outer avatar padding:]
+
+[Inner avatar padding:]
 
 [Alignment]
 
@@ -36,57 +30,63 @@ Ventana
 
 [Values:]
 
+[Window]
+Ventana
+[Max width:]
+
 [Min width:]
+
+[Max height:]
 
 [Min height:]
 
+[Avatar size:]
+
 [Sidebar width:]
 
-[Text padding:]
+[Hover time:]
 
-[Outer avatar padding:]
+[Show if list not focused]
+
+[Options]
+Opciones
+[Show title]
+
+[Status bar tips]
+
+[Avatar border]
 
 [Round corners (avatar)]
 
 [Keep original avatar size]
 
-[Avatar border]
-
-[Title indent:]
-
-[Value indent:]
-
-[Inner avatar padding:]
-
 [Substitution]
 
 [Label:]
 
-[Contact protocol module]
-
 [Module:]
+
+[Contact protocol module]
 
 [Setting or prefix:]
 
 [Translation:]
 
-[OK]
-Aceptar
 [Cancel]
 Cancelar
 [Item]
 
 [Value:]
 
+[Variables]
+Variables
 [Draw a line above]
 
 [Value on a new line]
 
-[Preset items:]
-
-[Variables]
-Variables
 [Parse Tipper variables first]
+
+[Preset items:]
 
 [Items]
 Elementos
@@ -104,25 +104,27 @@ Eliminar
 Editar
 [Separator]
 
-[Advanced options]
-
-[Retrieve XStatus details if auto-retrieve is disabled]
-
 [Extra icons]
 Iconos adicionales
 [Smileys support]
 
 [Enable SmileyAdd support]
 
-[Resize smileys]
-
 [Use protocol smileys]
+
+[Resize smileys]
 
 [Replace only isolated smileys]
 
-[Retrieve new status message]
+[Advanced options]
 
 [Show tooltip after all content is ready (avatar && status message)]
+
+[Retrieve new status message]
+
+[Disable in invisible status]
+
+[Retrieve XStatus details if auto-retrieve is disabled]
 
 [Status bar and tray tooltip]
 
@@ -130,49 +132,47 @@ Iconos adicionales
 
 [characters]
 
-[Disable in invisible status]
-
 [Skins]
 Pieles
-[Opacity (%):]
+[Reload skin list]
 
-[Transparency]
+[Apply skin]
 
-[Effects]
-Efectos
-[Border]
-
-[Shadow]
-
-[Round corners (window)]
-
-[Aero Glass (Vista+)]
-
-[Animation speed:]
+[Get more skins]
 
 [Preview]
 Previsualizar
 [No preview]
 
-[Skin option]
+[Effects]
+Efectos
+[Animation speed:]
 
-[Load fonts and colors]
+[Shadow]
+
+[Border]
+
+[Round corners (window)]
+
+[Skin option]
 
 [Enable skin coloring]
 
-[Reload skin list]
-
-[Apply skin]
-
 [Load tooltip proportions]
 
-[Get more skins]
+[Load fonts and colors]
+
+[Transparency]
+
+[Opacity (%):]
+
+[Aero Glass (Vista+)]
 
 [Enable tray tooltips]
 
 [Handle tray tooltips by Tipper]
 
-[Favorite contacts]
+[Hide offline protocols]
 
 [Expand to second level after:]
 
@@ -182,7 +182,7 @@ ms
 
 [Second level tooltip]
 
-[Hide offline protocols]
+[Favorite contacts]
 
 [Hide offline]
 
@@ -206,13 +206,11 @@ ms
 
 [Move down]
 
+[No icon]
+
 [Icon on left]
 
 [Icon on right]
-
-[No icon]
-
-[No title]
 
 [Bottom right]
 
@@ -259,6 +257,12 @@ Personalizar
 [Extra]
 
 ;file \plugins\TipperYM\src\options.h
+[Show for all contact types]
+
+[Show only for contacts]
+
+[Show only for chatrooms]
+
 [Number of contacts]
 
 [Protocol lock status]
@@ -325,6 +329,10 @@ Otro
 [Miranda uptime:]
 
 ;file \plugins\TipperYM\src\preset_items.cpp
+[Account]
+Cuenta
+[Account:]
+Cuenta:
 [Birthday]
 
 [Birthday:]
@@ -346,10 +354,6 @@ Sitio web:
 [Idle]
 Inactivo
 [Idle:]
-
-[IP]
-
-[IP:]
 
 [IP internal]
 
@@ -450,6 +454,13 @@ Visibilidad:
 ;file \plugins\TipperYM\src\skin_parser.cpp
 [# Solid color fill]
 
+;file \plugins\TipperYM\src\subst.cpp
+[%dd %dh %dm]
+
+[%dh %dm]
+
+[%dm]
+
 ;file \plugins\TipperYM\src\tipper.cpp
 [Background]
 Fondo
@@ -472,6 +483,10 @@ Divisores
 Femenino
 [Male]
 Masculino
+[%dy %dd %dh %dm]
+
+[%dd]
+
 [[No translation]]
 
 [WORD to status description]
@@ -486,7 +501,7 @@ Masculino
 
 [WORD to country name]
 
-[DWORD to ip address]
+[DWORD to IP address]
 
 [<prefix>Day|Month|Year to date]
 

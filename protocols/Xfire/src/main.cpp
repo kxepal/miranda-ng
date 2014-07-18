@@ -420,7 +420,7 @@ void XFireClient::sendmsg(char*usr,char*cmsg) {
 			  for(int i=0;i<claninv->numberOfInv;i++)
 			  {
 				  char msg[XFIRE_MAX_STATIC_STRING_LEN];
-				  mir_snprintf(msg, SIZEOF(msg), Translate("%s (Nickname: %s) has invited you to join the %s clan. Message: %s%sPlease go to the XFireclan-Site to accept the Invitation."),claninv->invitefromusername[i].c_str(),
+				  mir_snprintf(msg, SIZEOF(msg), Translate("%s (Nickname: %s) has invited you to join the %s clan. Message: %s%sPlease go to the XFire clan site to accept the Invitation."),claninv->invitefromusername[i].c_str(),
 																								claninv->invitefrom[i].c_str(),
 																								claninv->clanname[i].c_str(),
 																								claninv->invitemsg[i].c_str(),"\n");
@@ -1604,7 +1604,7 @@ MCONTACT CList_AddContact(XFireContact xfc, bool InList, bool SetOnline,int clan
 	// here we create a new one since no one is to be found
 	hContact = (MCONTACT) CallService(MS_DB_CONTACT_ADD, 0, 0);
 	if ( hContact ) {
-		CallService(MS_PROTO_ADDTOCONTACT, (WPARAM) hContact, (LPARAM)protocolname );
+		CallService(MS_PROTO_ADDTOCONTACT, hContact, (LPARAM)protocolname);
 
 		if ( InList )
 			db_unset(hContact, "CList", "NotOnList");
@@ -2380,10 +2380,6 @@ void gamedetectiont(LPVOID lparam)
 								{
 									CallService("Popup/EnableDisableMenuCommand",NULL,NULL);
 								}
-								else if (ServiceExists("Popup/ToggleEnabled"))
-								{
-									CallService("Popup/ToggleEnabled",NULL,NULL);
-								}
 								disabledpopups=FALSE;
 							}
 						//sound wieder aktivieren, nur wenn es vorher abgestellt wurde
@@ -2520,11 +2516,6 @@ void gamedetectiont(LPVOID lparam)
 											{
 												disabledpopups=TRUE;
 												CallService("Popup/EnableDisableMenuCommand",NULL,NULL);
-											}
-											else if (ServiceExists("Popup/ToggleEnabled")&&db_get_b(NULL,"YAPP","Enabled",0)==1)
-											{
-												disabledpopups=TRUE;
-												CallService("Popup/ToggleEnabled",NULL,NULL);
 											}
 										}
 										//sound abschalten
@@ -3307,7 +3298,7 @@ INT_PTR BlockFriend(WPARAM hContact, LPARAM lParam)
 				}
 			}
 		}
-		CallService(MS_DB_CONTACT_DELETE, (WPARAM) hContact, 1);
+		CallService(MS_DB_CONTACT_DELETE, hContact, 1);
 		db_free(&dbv);
 	}
 	return 0;

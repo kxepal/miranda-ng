@@ -1,4 +1,1 @@
-﻿[OK]
-[invited ]
-[Connection to Skype lost]
-[Skype ID]
+﻿[Skype ID]

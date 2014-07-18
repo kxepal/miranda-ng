@@ -148,7 +148,7 @@ DWORD CMraProto::MraMessage(BOOL bAddToQueue, MCONTACT hContact, DWORD dwAckType
 		buf.SetLPS(CMStringA((LPSTR)lpbMultiChatData, dwMultiChatDataSize));
 
 	if (bAddToQueue)
-		dwRet = MraSendQueueCMD(hSendQueueHandle, 0, hContact, dwAckType, (LPBYTE)(LPCWSTR)lpwszMessage, lpwszMessage.GetLength()*sizeof(WCHAR), MRIM_CS_MESSAGE, buf.Data(), buf.Len());
+		dwRet = MraSendQueueCMD(hSendQueueHandle, 0, hContact, dwAckType, NULL, 0, MRIM_CS_MESSAGE, buf.Data(), buf.Len());
 	else
 		dwRet = MraSendCMD(MRIM_CS_MESSAGE, buf.Data(), buf.Len());
 
@@ -317,11 +317,11 @@ HANDLE CMraProto::MraWPRequestW(MCONTACT hContact, DWORD dwAckType, DWORD dwRequ
 	OutBuffer buf;
 	CMStringA tmp;
 
-	if (GetBit(dwRequestFlags, MRIM_CS_WP_REQUEST_PARAM_USER))      { buf.SetUL(MRIM_CS_WP_REQUEST_PARAM_USER);buf.SetLPSLowerCase(szUser); }
-	if (GetBit(dwRequestFlags, MRIM_CS_WP_REQUEST_PARAM_DOMAIN))    { buf.SetUL(MRIM_CS_WP_REQUEST_PARAM_DOMAIN);buf.SetLPSLowerCase(szDomain); }
-	if (GetBit(dwRequestFlags, MRIM_CS_WP_REQUEST_PARAM_NICKNAME))  { buf.SetUL(MRIM_CS_WP_REQUEST_PARAM_NICKNAME);buf.SetLPSW(wszNickName); }
-	if (GetBit(dwRequestFlags, MRIM_CS_WP_REQUEST_PARAM_FIRSTNAME)) { buf.SetUL(MRIM_CS_WP_REQUEST_PARAM_FIRSTNAME);buf.SetLPSW(wszFirstName); }
-	if (GetBit(dwRequestFlags, MRIM_CS_WP_REQUEST_PARAM_LASTNAME))  { buf.SetUL(MRIM_CS_WP_REQUEST_PARAM_LASTNAME);buf.SetLPSW(wszLastName); }
+	if (GetBit(dwRequestFlags, MRIM_CS_WP_REQUEST_PARAM_USER))      { buf.SetUL(MRIM_CS_WP_REQUEST_PARAM_USER); buf.SetLPSLowerCase(szUser); }
+	if (GetBit(dwRequestFlags, MRIM_CS_WP_REQUEST_PARAM_DOMAIN))    { buf.SetUL(MRIM_CS_WP_REQUEST_PARAM_DOMAIN); buf.SetLPSLowerCase(szDomain); }
+	if (GetBit(dwRequestFlags, MRIM_CS_WP_REQUEST_PARAM_NICKNAME))  { buf.SetUL(MRIM_CS_WP_REQUEST_PARAM_NICKNAME); buf.SetLPSW(wszNickName); }
+	if (GetBit(dwRequestFlags, MRIM_CS_WP_REQUEST_PARAM_FIRSTNAME)) { buf.SetUL(MRIM_CS_WP_REQUEST_PARAM_FIRSTNAME); buf.SetLPSW(wszFirstName); }
+	if (GetBit(dwRequestFlags, MRIM_CS_WP_REQUEST_PARAM_LASTNAME))  { buf.SetUL(MRIM_CS_WP_REQUEST_PARAM_LASTNAME); buf.SetLPSW(wszLastName); }
 
 	if (GetBit(dwRequestFlags, MRIM_CS_WP_REQUEST_PARAM_SEX)) {
 		tmp.Format("%lu", dwSex);
@@ -443,14 +443,17 @@ DWORD CMraProto::MraSMSW(MCONTACT hContact, const CMStringA &lpszPhone, const CM
 {
 	CMStringA szPhoneLocal = "+" + CopyNumber(lpszPhone);
 
-	OutBuffer buf, buf2;
+	OutBuffer buf;
 	buf.SetUL(0);
 	buf.SetLPS(szPhoneLocal);
 	buf.SetLPSW(lpwszMessage);
 
-	buf2.SetLPS(szPhoneLocal);
-	buf.SetLPSW(lpwszMessage);
-	return MraSendQueueCMD(hSendQueueHandle, 0, hContact, ICQACKTYPE_SMS, buf2.Data(), buf2.Len(), MRIM_CS_SMS, buf.Data(), buf.Len());
+	/* Save phone number for ack notify after send. */
+	LPBYTE lpbData = (LPBYTE)mir_calloc(lpszPhone.GetLength() + sizeof(size_t));
+	if (NULL == lpbData)
+		return (0);
+	memcpy(lpbData, lpszPhone, lpszPhone.GetLength());
+	return MraSendQueueCMD(hSendQueueHandle, 0, hContact, ICQACKTYPE_SMS, lpbData, lpszPhone.GetLength(), MRIM_CS_SMS, buf.Data(), buf.Len());
 }
 
 // Соединение с прокси
@@ -496,22 +499,22 @@ DWORD CMraProto::MraChangeUserBlogStatus(DWORD dwFlags, const CMStringW &wszText
 	return MraSendCMD(MRIM_CS_CHANGE_USER_BLOG_STATUS, buf.Data(), buf.Len());
 }
 
-DWORD CMraProto::MraSendPacket(HANDLE m_hConnection, DWORD dwCMDNum, DWORD dwType, LPVOID lpData, size_t dwDataSize)
+DWORD CMraProto::MraSendPacket(HANDLE hConnection, DWORD dwCMDNum, DWORD dwType, LPVOID lpData, size_t dwDataSize)
 {
-	LPBYTE lpbData = (LPBYTE)_alloca(dwDataSize+sizeof(mrim_packet_header_t));
+	LPBYTE lpbData = (LPBYTE)_alloca(dwDataSize + sizeof(mrim_packet_header_t));
 
 	mrim_packet_header_t *pmaHeader = (mrim_packet_header_t*)lpbData;
 	memset(pmaHeader, 0, sizeof(mrim_packet_header_t));
 	pmaHeader->magic = CS_MAGIC;
-	pmaHeader->proto = (PROTO_VERSION_MAJOR<<16) + PROTO_VERSION_MINOR; // Версия протокола
+	pmaHeader->proto = (PROTO_VERSION_MAJOR << 16) + PROTO_VERSION_MINOR; // Версия протокола
 	pmaHeader->seq = dwCMDNum;// Sequence
 	pmaHeader->msg = dwType;// Тип пакета
 	pmaHeader->dlen = dwDataSize;// Длина данных
 	
 	debugLogA("Sending packet %08x\n", dwType);
 
-	memcpy(lpbData+sizeof(mrim_packet_header_t), lpData, dwDataSize);
-	return Netlib_Send(m_hConnection, (LPSTR)lpbData, (dwDataSize+sizeof(mrim_packet_header_t)), 0);
+	memcpy((lpbData + sizeof(mrim_packet_header_t)), lpData, dwDataSize);
+	return Netlib_Send(hConnection, (LPSTR)lpbData, (dwDataSize + sizeof(mrim_packet_header_t)), 0);
 }
 
 DWORD CMraProto::MraSendCMD(DWORD dwType, LPVOID lpData, size_t dwDataSize)

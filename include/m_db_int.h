@@ -50,6 +50,15 @@ struct DBCachedContact
 	DWORD dwDriverData;
 	char *szProto;
 	DBCachedContactValue *first, *last;
+
+	// metacontacts
+	int       nSubs;    // == -1 -> not a metacontact
+	MCONTACT *pSubs;
+	MCONTACT  parentID; // == 0 -> not a subcontact
+	int       nDefault; // default sub number
+
+	__forceinline bool IsMeta() const { return nSubs != -1; }
+	__forceinline bool IsSub() const { return parentID != 0; }
 };
 
 interface MIDatabaseCache : public MZeroedObject
@@ -70,41 +79,46 @@ interface MIDatabase
 {
 	MIDatabaseCache* m_cache;
 
-	STDMETHOD_(void,SetCacheSafetyMode)(BOOL) PURE;
+	STDMETHOD_(void, SetCacheSafetyMode)(BOOL) PURE;
 
-	STDMETHOD_(LONG,GetContactCount)(void) PURE;
-	STDMETHOD_(MCONTACT,FindFirstContact)(const char *szProto = NULL) PURE;
+	STDMETHOD_(LONG, GetContactCount)(void) PURE;
+	STDMETHOD_(MCONTACT, FindFirstContact)(const char *szProto = NULL) PURE;
 	STDMETHOD_(MCONTACT, FindNextContact)(MCONTACT contactID, const char *szProto = NULL) PURE;
 
-	STDMETHOD_(LONG,DeleteContact)(MCONTACT contactID) PURE;
-	STDMETHOD_(HANDLE,AddContact)(void) PURE;
-	STDMETHOD_(BOOL,IsDbContact)(MCONTACT contactID) PURE;
+	STDMETHOD_(LONG, DeleteContact)(MCONTACT contactID) PURE;
+	STDMETHOD_(MCONTACT, AddContact)(void)PURE;
+	STDMETHOD_(BOOL, IsDbContact)(MCONTACT contactID) PURE;
 
-	STDMETHOD_(LONG,GetEventCount)(MCONTACT contactID) PURE;
-	STDMETHOD_(HANDLE,AddEvent)(MCONTACT contactID, DBEVENTINFO *dbe) PURE;
-	STDMETHOD_(BOOL,DeleteEvent)(MCONTACT contactID, HANDLE hDbEvent) PURE;
-	STDMETHOD_(LONG,GetBlobSize)(HANDLE hDbEvent) PURE;
-	STDMETHOD_(BOOL,GetEvent)(HANDLE hDbEvent, DBEVENTINFO *dbe) PURE;
-	STDMETHOD_(BOOL,MarkEventRead)(MCONTACT contactID, HANDLE hDbEvent) PURE;
-	STDMETHOD_(MCONTACT,GetEventContact)(HANDLE hDbEvent) PURE;
-	STDMETHOD_(HANDLE,FindFirstEvent)(MCONTACT contactID) PURE;
-	STDMETHOD_(HANDLE,FindFirstUnreadEvent)(MCONTACT contactID) PURE;
-	STDMETHOD_(HANDLE,FindLastEvent)(MCONTACT contactID) PURE;
-	STDMETHOD_(HANDLE,FindNextEvent)(HANDLE hDbEvent) PURE;
-	STDMETHOD_(HANDLE,FindPrevEvent)(HANDLE hDbEvent) PURE;
+	STDMETHOD_(LONG, GetEventCount)(MCONTACT contactID) PURE;
+	STDMETHOD_(HANDLE, AddEvent)(MCONTACT contactID, DBEVENTINFO *dbe) PURE;
+	STDMETHOD_(BOOL, DeleteEvent)(MCONTACT contactID, HANDLE hDbEvent) PURE;
+	STDMETHOD_(LONG, GetBlobSize)(HANDLE hDbEvent) PURE;
+	STDMETHOD_(BOOL, GetEvent)(HANDLE hDbEvent, DBEVENTINFO *dbe) PURE;
+	STDMETHOD_(BOOL, MarkEventRead)(MCONTACT contactID, HANDLE hDbEvent) PURE;
+	STDMETHOD_(MCONTACT, GetEventContact)(HANDLE hDbEvent) PURE;
+	STDMETHOD_(HANDLE, FindFirstEvent)(MCONTACT contactID) PURE;
+	STDMETHOD_(HANDLE, FindFirstUnreadEvent)(MCONTACT contactID) PURE;
+	STDMETHOD_(HANDLE, FindLastEvent)(MCONTACT contactID) PURE;
+	STDMETHOD_(HANDLE, FindNextEvent)(MCONTACT contactID, HANDLE hDbEvent) PURE;
+	STDMETHOD_(HANDLE, FindPrevEvent)(MCONTACT contactID, HANDLE hDbEvent) PURE;
 
-	STDMETHOD_(BOOL,EnumModuleNames)(DBMODULEENUMPROC pFunc, void *pParam) PURE;
+	STDMETHOD_(BOOL, EnumModuleNames)(DBMODULEENUMPROC pFunc, void *pParam) PURE;
 
-	STDMETHOD_(BOOL,GetContactSetting)(MCONTACT contactID, LPCSTR szModule, LPCSTR szSetting, DBVARIANT *dbv) PURE;
-	STDMETHOD_(BOOL,GetContactSettingStr)(MCONTACT contactID, LPCSTR szModule, LPCSTR szSetting, DBVARIANT *dbv) PURE;
-	STDMETHOD_(BOOL,GetContactSettingStatic)(MCONTACT contactID, LPCSTR szModule, LPCSTR szSetting, DBVARIANT *dbv) PURE;
-	STDMETHOD_(BOOL,FreeVariant)(DBVARIANT *dbv) PURE;
-	STDMETHOD_(BOOL,WriteContactSetting)(MCONTACT contactID, DBCONTACTWRITESETTING *dbcws) PURE;
-	STDMETHOD_(BOOL,DeleteContactSetting)(MCONTACT contactID, LPCSTR szModule, LPCSTR szSetting) PURE;
-	STDMETHOD_(BOOL,EnumContactSettings)(MCONTACT contactID, DBCONTACTENUMSETTINGS* dbces) PURE;
-	STDMETHOD_(BOOL,SetSettingResident)(BOOL bIsResident, const char *pszSettingName) PURE;
-	STDMETHOD_(BOOL,EnumResidentSettings)(DBMODULEENUMPROC pFunc, void *pParam) PURE;
-	STDMETHOD_(BOOL,IsSettingEncrypted)(LPCSTR szModule, LPCSTR szSetting) PURE;
+	STDMETHOD_(BOOL, GetContactSetting)(MCONTACT contactID, LPCSTR szModule, LPCSTR szSetting, DBVARIANT *dbv) PURE;
+	STDMETHOD_(BOOL, GetContactSettingStr)(MCONTACT contactID, LPCSTR szModule, LPCSTR szSetting, DBVARIANT *dbv) PURE;
+	STDMETHOD_(BOOL, GetContactSettingStatic)(MCONTACT contactID, LPCSTR szModule, LPCSTR szSetting, DBVARIANT *dbv) PURE;
+	STDMETHOD_(BOOL, FreeVariant)(DBVARIANT *dbv) PURE;
+	STDMETHOD_(BOOL, WriteContactSetting)(MCONTACT contactID, DBCONTACTWRITESETTING *dbcws) PURE;
+	STDMETHOD_(BOOL, DeleteContactSetting)(MCONTACT contactID, LPCSTR szModule, LPCSTR szSetting) PURE;
+	STDMETHOD_(BOOL, EnumContactSettings)(MCONTACT contactID, DBCONTACTENUMSETTINGS* dbces) PURE;
+	STDMETHOD_(BOOL, SetSettingResident)(BOOL bIsResident, const char *pszSettingName) PURE;
+	STDMETHOD_(BOOL, EnumResidentSettings)(DBMODULEENUMPROC pFunc, void *pParam) PURE;
+	STDMETHOD_(BOOL, IsSettingEncrypted)(LPCSTR szModule, LPCSTR szSetting) PURE;
+
+	STDMETHOD_(BOOL, MetaDetouchSub)(DBCachedContact*, int nSub) PURE;
+	STDMETHOD_(BOOL, MetaSetDefault)(DBCachedContact*) PURE;
+	STDMETHOD_(BOOL, MetaMergeHistory)(DBCachedContact *ccMeta, DBCachedContact *ccSub) PURE;
+	STDMETHOD_(BOOL, MetaSplitHistory)(DBCachedContact *ccMeta, DBCachedContact *ccSub) PURE;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -196,6 +210,20 @@ struct DATABASELINK
 	*/
 	MIDatabaseChecker* (*CheckDB)(const TCHAR *profile, int *error);
 };
+
+///////////////////////////////////////////////////////////////////////////////
+// cache access function
+
+#if defined(__cplusplus)
+extern "C"
+{
+#endif
+
+MIR_CORE_DLL(DBCachedContact*) db_get_contact(MCONTACT);
+
+#if defined(__cplusplus)
+}
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 // Database list's services

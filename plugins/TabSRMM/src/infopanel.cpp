@@ -509,12 +509,11 @@ void CInfoPanel::RenderIPUIN(const HDC hdc, RECT& rcItem)
 
 		if (M.GetByte("ShowClientDescription", 1)) {
 			TCHAR	temp[256];
-			DBVARIANT dbv = { 0 };
-			if (!db_get_ts(m_dat->cache->getActiveContact(), m_dat->cache->getActiveProto(), "MirVer", &dbv)) {
-				mir_sntprintf(temp, SIZEOF(temp), TranslateT("  Client: %s"), dbv.ptszVal);
-				::db_free(&dbv);
-			}
-			else mir_sntprintf(temp, SIZEOF(temp), TranslateT("  Client not cached yet"));
+			ptrT szVersion(db_get_tsa(m_dat->cache->getActiveContact(), m_dat->cache->getActiveProto(), "MirVer"));
+			if (szVersion)
+				mir_sntprintf(temp, SIZEOF(temp), TranslateT("  Client: %s"), szVersion);
+			else
+				mir_sntprintf(temp, SIZEOF(temp), TranslateT("  Client not cached yet"));
 			_tcscat_s(szBuf, 256, temp);
 		}
 
@@ -955,7 +954,7 @@ void CInfoPanel::showTip(UINT ctrlId, const LPARAM lParam)
 		}
 
 		POINT pt;
-		RECT  rc = {0, 0, 400, 600};
+		RECT rc = {0, 0, 400, 600};
 		GetCursorPos(&pt);
 		m_tip = new CTip(m_dat->hwnd, m_dat->hContact, str->c_str(), this);
 		delete str;
@@ -963,12 +962,10 @@ void CInfoPanel::showTip(UINT ctrlId, const LPARAM lParam)
 		return;
 	}
 
-	TCHAR szTitle[256];
-	mir_sntprintf(szTitle, SIZEOF(szTitle), TranslateT("TabSRMM Information"));
 	::SendMessage(m_dat->hwndTip, TTM_UPDATETIPTEXT, 0, (LPARAM)&m_dat->ti);
 	::SendMessage(m_dat->hwndTip, TTM_SETMAXTIPWIDTH, 0, 350);
 
-	::SendMessage(m_dat->hwndTip, TTM_SETTITLE, 1, (LPARAM)szTitle);
+	::SendMessage(m_dat->hwndTip, TTM_SETTITLE, 1, (LPARAM)TranslateT("TabSRMM Information"));
 	::SendMessage(m_dat->hwndTip, TTM_TRACKACTIVATE, TRUE, (LPARAM)&m_dat->ti);
 	::GetCursorPos(&m_dat->ptTipActivation);
 }
@@ -1280,7 +1277,7 @@ INT_PTR CALLBACK CInfoPanel::ConfigDlgProc(HWND hwnd, UINT msg, WPARAM wParam, L
 		::DeleteObject(m_configDlgFont);
 
 		m_configDlgBoldFont = m_configDlgFont = 0;
-		::SetWindowLongPtr(hwnd, GWLP_USERDATA, 0L);
+		::SetWindowLongPtr(hwnd, GWLP_USERDATA, 0);
 		break;
 	}
 	return FALSE;
@@ -1372,7 +1369,7 @@ CTip::CTip(const HWND hwndParent, const MCONTACT hContact, const TCHAR *pszText,
 	m_hRich = ::CreateWindowEx(0, RICHEDIT_CLASS, _T(""), WS_CHILD | ES_MULTILINE | ES_AUTOVSCROLL | ES_NOHIDESEL | ES_READONLY | WS_VSCROLL | WS_TABSTOP,
 		0, 0, 40, 40, m_hwnd, reinterpret_cast<HMENU>(1000), g_hInst, NULL);
 
-	::SendMessage(m_hRich, EM_AUTOURLDETECT, (WPARAM)TRUE, 0);
+	::SendMessage(m_hRich, EM_AUTOURLDETECT, TRUE, 0);
 	::SendMessage(m_hRich, EM_SETEVENTMASK, 0, ENM_LINK);
 	::SendMessage(m_hRich, WM_SETFONT, (WPARAM)CInfoPanel::m_ipConfig.hFonts[IPFONTID_STATUS], 0);
 
@@ -1477,7 +1474,7 @@ void CTip::registerClass()
 	WNDCLASSEX wc = { 0 };
 	wc.cbSize = sizeof(wc);
 	wc.lpszClassName = _T("RichEditTipClass");
-	wc.lpfnWndProc = (WNDPROC)CTip::WndProcStub;
+	wc.lpfnWndProc = CTip::WndProcStub;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.cbWndExtra = sizeof(CTip *);
 	wc.style = CS_GLOBALCLASS | CS_DBLCLKS | CS_PARENTDC;
@@ -1516,7 +1513,7 @@ LRESULT CALLBACK CTip::RichEditProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 * this pointer.
 */
 
-INT_PTR CALLBACK CTip::WndProcStub(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK CTip::WndProcStub(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	CTip *tip = reinterpret_cast<CTip *>(::GetWindowLongPtr(hwnd, GWLP_USERDATA));
 	if (tip)

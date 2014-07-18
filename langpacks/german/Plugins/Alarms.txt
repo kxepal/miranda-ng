@@ -50,14 +50,12 @@ Fokus nur stehlen, wenn IDLE
 Vorschau
 [Alarm]
 Alarm
-[OK]
-OK
 [Cancel]
 Abbrechen
 [Title:]
 Titel:
 [Description:]
-Übersicht:
+Beschreibung:
 [Actions]
 Aktionen
 [Popup window]
@@ -146,6 +144,10 @@ Hintergrund
 [Window]
 Fenster
 ;file \plugins\Alarms\src\frame.cpp
+[%dh %dm]
+%dS %dM
+[%dm]
+%dM
 [Hide reminders]
 Termine verstecken
 [Show reminders]

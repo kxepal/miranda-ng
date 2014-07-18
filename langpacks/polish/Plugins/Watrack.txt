@@ -5,14 +5,14 @@
 ;  Version: 0.0.6.12
 ;  Authors: Awkward
 ;============================================================
+[Paste played music info into message window or status text]
+Wkleja informacje o odtwarzanych multimediach w oknie rozmowy lub statusie.
 [Clear xStatus before set new one]
 Czyść xStatus przed ustawieniem kolejnego
 [Emulate Multimedia keys]
 Emuluj klawisze multimedialne
-[xStatus will cleared before text changing and restored with new text later.]
+[xStatus will be cleared before text changing and restored with new text later.]
 xStatus zostanie wyczyszczony przed zmianą tekstu i ustawiony na nowo później.
-[Paste played music info into message window or status text]
-Wklej informacje o odtwarzanych multimediach w oknie rozmowy lub statusie
 [Use XStatus]
 Użyj xStatusu
 [If this option is "ON", XStatus doesn't depend on protocol status.]
@@ -144,7 +144,7 @@ czas/długość * 100%
 ["mono"/"stereo"]
 "mono"/"stereo"
 [height, video only]
-wyskość, tylko wideo
+wysokość, tylko wideo
 [FPS (frames per second), video only]
 FPS (klatek na sekundę), tylko wideo
 [media file name]
@@ -278,7 +278,7 @@ Tylko jeśli wiadomość nie jest użyta
 [Don't use]
 Nie używaj
 [Refresh time (sec) is time to refresh music info, statistic and status messages. If zero, automatic refresh is disabled.]
-Czas odświeżania (w sekundach) to czas co jaki odświeżane są informacje o muzyce, statystyki oraz opisy. Jeżeli 0, automatyczne odświeżanie jest wyłączone.
+Czas odświeżania (w sekundach) to czas co jaki odświeżane są informacje o muzyce, statystyki oraz opisy. Jeśli 0, automatyczne odświeżanie jest wyłączone.
 [All uppercase]
 Wszystkie dużymi
 [Do not change]
@@ -299,11 +299,11 @@ Jeśli ta opcja jest włączona, wtyczka będzie próbowała pobrać info z odtw
 Gdy ta opcja jest włączona, xStatus zmieni się tylko wtedy, gdy xStatus z muzyką jest już ustawiony.
 [If this option is "ON", XStatus doesn't depend of ICQ's status.]
 Jeśli ta opcja jest włączona, xStatus nie zależy od statusu ICQ.
-[If this option is "ON", XStatus not changed when player shutdowned.]
+[If this option is "ON", XStatus won't be changed when player is shut down.]
 Jeśli ta opcja jest włączona, xStatus nie zmieni się kiedy odtwarzacz będzie wyłączony.
 [If this option is "ON", XStatus will be changed to "Music" and status text will be replaced by music info.]
 Jeśli ta opcja jest włączona, xStatus ulegnie zmianie na "Muzyka" i tekst statusu będzie zamieniony na informacje o odtwarzanych multimediach.
-[If this option is "ON", one templates will be used with all protocols, protocol and player (media) statuses. Template option page will be changed next time.]
+[If this option is "ON", one template will be used with all protocols, protocol and player (media) statuses. Template option page will be changed next time.]
 Jeśli ta opcja jest włączona, jeden szablon będzie używany we wszystkich protokołach, statusy protokołów i odtwarzaczy. Opcje szablony zostaną zmienione następnym razem.
 [Use player process injection to obtain info easier. Can provoke antivirus or firewall alarm.]
 Użyj procesu implacji do łatwiejszego przechwytywania info. Może prowokować antywirus lub firewall do alarmu.
@@ -370,13 +370,13 @@ Status odtwarzacza (stop, gra, pauza)
 [player]
 odtwarzacz
 [Independed Xstatus]
-Niezależny XStatus
+Niezależny xStatus
 ["Variables" ANSI output]
 "Variables" wyjście ANSI
 [FPS (Frames per second)]
 FPS (klatek na sekundę)
 [If Variables service used, returned value will be in ANSI encoding (default is UTF8)]
-Jeżeli używana jest usługa zmiennych, zwrócona wartość zostanie podana w kodowaniu ANSI (domyślnie w UTF8)
+Jeśli używana jest usługa zmiennych, zwrócona wartość zostanie podana w kodowaniu ANSI (domyślnie w UTF8)
 [Save settings in INI-file]
 Zapisz ustawienia w INI
 [VBR or not]
@@ -412,11 +412,11 @@ Głośność odtwarzacza (0-15)
 [Player homepage URL]
 Strona domowa odtwarzacza
 [player status (not translated)]
-staus odtwarzacza (nie tłumaczona)
+status odtwarzacza (nie tłumaczona)
 [Format text Info]
 Info formatu tekstu
 [Controls]
-Reglulator
+Regulator
 [Frame Controls]
 Ramka WATrack
 [Plugin Enabled]
@@ -436,7 +436,7 @@ Szablon statusu
 [XStatus Title]
 Nazwa xStatus
 ['mono' / 'stereo']
-'mono'/'stereo'
+"mono"/"stereo"
 [- "mono" / "stereo"]
 - "mono"/"stereo"
 [- artist]
@@ -456,7 +456,7 @@ Nazwa xStatus
 [- track number]
 - numer ścieżki
 [  Refresh time (sec) is time to refresh music info and status messages. If zero, automatic refresh is disabled.\n  Only if 'Music' status was set - change your status if Music XStatus sets already.\n  Keep 'Music' XStatus - if player stopped or shutdowned, save or not 'Music' XStatus (changes to empty).\n  If text after processing is empty, the status message does not changes.\n  If settings saved in ini-file, its will be deleted from Miranda DB. Else ini-file will be deleted.]
-Czas odświeżania (w sekundach) to czas, co jaki odświeżane są informacje o muzyce oraz opisy. Gdy 0, automatyczne odświeżanie jest wyłączone.\nTylko jeżeli ustawiony status "Muzyka" - zmień status, gdy ustawiony jest już XStatus.\nUtrzymuj XStatus "Muzyka" - jeżeli odtwarzanie zostanie zatrzymane lub odtwarzacz zamknięty, utrzymaj lub nie XStatus "Muzyka" (w przeciwnym razie zmień na pusty).
+Czas odświeżania (w sekundach) to czas, co jaki odświeżane są informacje o muzyce oraz opisy. Gdy 0, automatyczne odświeżanie jest wyłączone.\nTylko jeśli ustawiony status "Muzyka" - zmień status, gdy ustawiony jest już xStatus.\nUtrzymuj xStatus "Muzyka" - jeśli odtwarzanie zostanie zatrzymane lub odtwarzacz zamknięty, utrzymaj lub nie xStatus "Muzyka" (w przeciwnym razie zmień na pusty).
 ["Variables" module use]
 Użyto moduł "Variables"
 [Acoustic]
@@ -544,9 +544,9 @@ Status (szablon)
 [Set XStatus when...]
 Użyj xStatus kiedy...
 [XStatus is empty or 'Music']
-xStatus jest pusty lub 'Muzyka'
+xStatus jest pusty lub "Muzyka"
 ['Music' status is set]
-status to 'Muzyka'
+status to "Muzyka"
 [any XStatus is set]
 jakikolwiek xStatus
 [Players list\n(F1 for note)]
@@ -628,7 +628,7 @@ Pobierz informacje o serii
 Odcinek
 ;file \plugins\Watrack\lastfm\i_last_api.inc
 [Last.fm error: ]
-Błąd Last.fm: 
+Błąd Last.fm:\s
 [Client is banned]
 Klient jest zbanowany
 [Bad Auth. Check login and password]
@@ -640,15 +640,19 @@ Błędny znacznik czasu
 Podobni artyści
 ;file \plugins\Watrack\proto\proto.pas
 [Music Info from ]
-Info muzyczne z 
+Info muzyczne z\s
 [You Get Error]
 Otrzymujesz błąd
 ;other strings
 [Slider]
-Sówak
+Suwak
 [Slider Hovered]
 Suwak - po najechaniu
 [Slider Pushed]
 Suwak - po naciśnięciu
 [WATrack status]
 Status WATrack
+[Enable WATrack]
+Włącz WATrack
+[Disable WATrack]
+Wyłącz WATrack

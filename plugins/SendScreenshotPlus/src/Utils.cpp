@@ -73,43 +73,66 @@ BOOL CALLBACK MonitorInfoEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprc
 
 //---------------------------------------------------------------------------
 // capture window as FIBITMAP - caller must FIP->FI_Unload(dib)
-FIBITMAP* CaptureWindow  (HWND hCapture, BOOL ClientArea) {
+FIBITMAP* CaptureWindow  (HWND hCapture, BOOL bClientArea, BOOL bIndirectCapture) {
 	FIBITMAP *dib;
 	HWND	hForegroundWin;
 	HDC		hScrDC;						// screen DC
-	RECT	rect;					// screen RECT
+	RECT	rect;						// screen RECT
 	SIZE	size;						// DIB width and height = window resolution
 
 	if (!hCapture || !IsWindow(hCapture)) return 0;
 	hForegroundWin = GetForegroundWindow();	//Saving foreground window
 	SetForegroundWindow(hCapture);			// Make sure the target window is the foreground one
 	BringWindowToTop(hCapture);				// bring it to top as well
-	// redraw window to prevent runtime artifacts in picture
+	/// redraw window to prevent runtime artifacts in picture
 	UpdateWindow(hCapture);
 
-	GetWindowRect(hCapture,&rect);
-	if(GetParent(hCapture))
-		hScrDC=GetDC(hCapture);//hCapture is part of a window, capture that
-	else
-		hScrDC=GetWindowDC(hCapture);//entire window w/ title bar
-	size.cx=ABS(rect.right-rect.left);
-	size.cy=ABS(rect.bottom-rect.top);
-	//capture window and get FIBITMAP
-	dib = CaptureScreen(hScrDC,size,hCapture);
-	ReleaseDC(hCapture,hScrDC);
-	if(ClientArea){//we could capture directly, but doing so breaks GetWindowRgn() and also includes artifacts...
-		RECT rectCA	= {0};
-		POINT pt	= {0};
-		GetClientRect (hCapture, &rectCA);
-		ClientToScreen(hCapture, &pt);
-		//crop the window to ClientArea
-		FIBITMAP* dibClient	= FIP->FI_Copy(dib,
-					pt.x - rect.left,
-					pt.y - rect.top,
-					pt.x - rect.left + rectCA.right,
-					pt.y - rect.top + rectCA.bottom);
+	if(bIndirectCapture){
+		intptr_t wastopmost=GetWindowLongPtr(hCapture,GWL_EXSTYLE)&WS_EX_TOPMOST;
+		if(!wastopmost)
+			SetWindowPos(hCapture,HWND_TOPMOST,0,0,0,0,SWP_NOMOVE|SWP_NOSIZE);
+		hScrDC	= GetDC(NULL);	/*Get full virtualscreen*/
+		size.cx	= GetSystemMetrics(SM_CXVIRTUALSCREEN);
+		size.cy	= GetSystemMetrics(SM_CYVIRTUALSCREEN);
+		dib = CaptureScreen(hScrDC,size);
+		ReleaseDC(hCapture,hScrDC);
+		if(bClientArea){
+			GetClientRect(hCapture,&rect);
+			ClientToScreen(hCapture,(POINT*)&rect);
+			rect.right+=rect.left; rect.bottom+=rect.top;
+		}else
+			GetWindowRect(hCapture,&rect);
+		if(rect.left<0) rect.left=0;
+		if(rect.top<0) rect.top=0;
+		if(rect.right>(long)FIP->FI_GetWidth(dib)) rect.right=FIP->FI_GetWidth(dib);
+		if(rect.bottom>(long)FIP->FI_GetHeight(dib)) rect.bottom=FIP->FI_GetHeight(dib);
+		/// crop the window to ClientArea
+		FIBITMAP* dibClient = FIP->FI_Copy(dib,rect.left,rect.top,rect.right,rect.bottom);
 		FIP->FI_Unload(dib);
 		dib = dibClient;
+		if(!wastopmost)
+			SetWindowPos(hCapture,HWND_NOTOPMOST,0,0,0,0,SWP_NOMOVE|SWP_NOSIZE);
+	}else{
+		GetWindowRect(hCapture,&rect);
+		if(GetAncestor(hCapture,GA_PARENT))
+			hScrDC=GetDC(hCapture);//hCapture is part of a window, capture that
+		else
+			hScrDC=GetWindowDC(hCapture);//entire window w/ title bar
+		size.cx=ABS(rect.right-rect.left);
+		size.cy=ABS(rect.bottom-rect.top);
+		/// capture window and get FIBITMAP
+		dib = CaptureScreen(hScrDC,size,hCapture);
+		ReleaseDC(hCapture,hScrDC);
+		if(bClientArea){//we could capture directly, but doing so breaks GetWindowRgn() and also includes artifacts...
+			RECT rectCA; GetClientRect(hCapture,&rectCA);
+			ClientToScreen(hCapture,(POINT*)&rectCA);
+			rectCA.left-=rect.left; rectCA.top-=rect.top;
+			rectCA.right+=rectCA.left; rectCA.bottom+=rectCA.top;
+			/// crop the window to ClientArea
+			FIBITMAP* dibClient = FIP->FI_Copy(dib,rectCA.left,rectCA.top,rectCA.right,rectCA.bottom);
+			FIP->FI_Unload(dib);
+			dib = dibClient;
+		}
 	}
 	if(hForegroundWin){//restore previous foreground window
 		SetForegroundWindow(hForegroundWin);
@@ -118,7 +141,7 @@ FIBITMAP* CaptureWindow  (HWND hCapture, BOOL ClientArea) {
 	return dib;
 }
 
-FIBITMAP* CaptureMonitor (LPTSTR szDevice) {
+FIBITMAP* CaptureMonitor (TCHAR* szDevice) {
 	SIZE size;
 	HDC hScrDC;
 	FIBITMAP *dib = NULL;
@@ -162,56 +185,54 @@ FIBITMAP* CaptureScreen  (HDC hDC,SIZE size,HWND hCapture){
 	}
 	dib = FIP->FI_CreateDIBFromHBITMAP(hBitmap);
 
-	if(hCapture){
-		//alpha channel from window is always wrong,
-		//coz GDI do not draw all in alpha mode.
-		//we have to create our own new alpha channel.
-		bool bFixAlpha=true;
-		bool bInvert=false;
-		HBRUSH hBr=CreateSolidBrush(RGB(255,255,255));//Create a SolidBrush object for non transparent area
-		HBITMAP hMask=CreateBitmap(size.cx,size.cy,1,1,NULL);// Create monochrome (1 bit) B+W mask bitmap.
-		HDC hMaskDC=CreateCompatibleDC(0);
-		SelectBitmap(hMaskDC,hMask);
-		HRGN hRgn=CreateRectRgn(0,0,0,0);
-		if(GetWindowRgn(hCapture,hRgn)==ERROR){
-			if((GetWindowLong(hCapture,GWL_EXSTYLE)&WS_EX_LAYERED)){
-				BYTE bAlpha=0;
-				COLORREF crKey=0;//0x00bbggrr
-				DWORD dwFlags=0;
-				if(GetLayeredWindowAttributes(hCapture,&crKey,&bAlpha,&dwFlags)) {
-					//per window transparency (like fading in a whole window).
-					if((dwFlags&LWA_COLORKEY)){
-						SetBkColor(hMemDC,crKey);
-						BitBlt(hMaskDC,0,0,size.cx,size.cy,hMemDC,0,0,SRCCOPY);
-						bInvert=true;
-					}else if((dwFlags&LWA_ALPHA)){
-						bFixAlpha=false;
-					}
-				}else{//per-pixel transparency (won't use the WM_PAINT)
+	//alpha channel from window is always wrong and sometimes even for desktop (Win7, no aero)
+	//coz GDI do not draw all in alpha mode.
+	//we have to create our own new alpha channel.
+	bool bFixAlpha=true;
+	bool bInvert=false;
+	HBRUSH hBr=CreateSolidBrush(RGB(255,255,255));//Create a SolidBrush object for non transparent area
+	HBITMAP hMask=CreateBitmap(size.cx,size.cy,1,1,NULL);// Create monochrome (1 bit) B+W mask bitmap.
+	HDC hMaskDC=CreateCompatibleDC(0);
+	SelectBitmap(hMaskDC,hMask);
+	HRGN hRgn=CreateRectRgn(0,0,0,0);
+	if(hCapture && GetWindowRgn(hCapture,hRgn)==ERROR){
+		if((GetWindowLongPtr(hCapture,GWL_EXSTYLE)&WS_EX_LAYERED)){
+			BYTE bAlpha=0;
+			COLORREF crKey=0;//0x00bbggrr
+			DWORD dwFlags=0;
+			if(GetLayeredWindowAttributes(hCapture,&crKey,&bAlpha,&dwFlags)) {
+				//per window transparency (like fading in a whole window).
+				if((dwFlags&LWA_COLORKEY)){
+					SetBkColor(hMemDC,crKey);
+					BitBlt(hMaskDC,0,0,size.cx,size.cy,hMemDC,0,0,SRCCOPY);
+					bInvert=true;
+				}else if((dwFlags&LWA_ALPHA)){
 					bFixAlpha=false;
 				}
-			}else{//not layered - fill the window region
-				SetRectRgn(hRgn,0,0,size.cx,size.cy);
-				FillRgn(hMaskDC,hRgn,hBr);
+			}else{//per-pixel transparency (won't use the WM_PAINT)
+				bFixAlpha=false;
 			}
-		}else{
-//			if(!hDC) SetRectRgn(hRgn,0,0,size.cx,size.cy);//client area only, no transparency
+		}else{//not layered - fill the window region
+			SetRectRgn(hRgn,0,0,size.cx,size.cy);
 			FillRgn(hMaskDC,hRgn,hBr);
 		}
-		DeleteObject(hRgn);
-		if(bFixAlpha){
-			FIBITMAP* dibMask = FIP->FI_CreateDIBFromHBITMAP(hMask);
-			if(bInvert) FIP->FI_Invert(dibMask);
-			FIBITMAP* dib8 = FIP->FI_ConvertTo8Bits(dibMask);
-			//copy the dib8 alpha mask to dib32 main bitmap
-			FIP->FI_SetChannel(dib,dib8,FICC_ALPHA);
-			FIP->FI_Unload(dibMask);
-			FIP->FI_Unload(dib8);
-		}
-		DeleteDC(hMaskDC);
-		DeleteObject(hMask);
-		DeleteObject(hBr);
+	}else{
+		if(!hCapture) SetRectRgn(hRgn,0,0,size.cx,size.cy);//client area only, no transparency
+		FillRgn(hMaskDC,hRgn,hBr);
 	}
+	DeleteObject(hRgn);
+	if(bFixAlpha){
+		FIBITMAP* dibMask = FIP->FI_CreateDIBFromHBITMAP(hMask);
+		if(bInvert) FIP->FI_Invert(dibMask);
+		FIBITMAP* dib8 = FIP->FI_ConvertTo8Bits(dibMask);
+		//copy the dib8 alpha mask to dib32 main bitmap
+		FIP->FI_SetChannel(dib,dib8,FICC_ALPHA);
+		FIP->FI_Unload(dibMask);
+		FIP->FI_Unload(dib8);
+	}
+	DeleteDC(hMaskDC);
+	DeleteObject(hMask);
+	DeleteObject(hBr);
 	//clean up
 	DeleteDC(hMemDC);
 	DeleteObject(hBitmap);
@@ -283,7 +304,7 @@ FIBITMAP* CaptureDesktop()  {//emulate print screen
 	} while (!bBitmap);
 	#ifdef _DEBUG
 		char mess[120] = {0};
-		LPSTR pszMess = mess;
+		char* pszMess = mess;
 		mir_snprintf(pszMess,120,"SS Bitmap counter: %i\r\n",i);
 		OutputDebugStringA( pszMess );
 	#endif
@@ -299,10 +320,10 @@ FIBITMAP* CaptureDesktop()  {//emulate print screen
 	return dib;
 }*/
 
-LPTSTR SaveImage(FREE_IMAGE_FORMAT fif, FIBITMAP* dib, LPTSTR pszFilename, LPTSTR pszExt, int flag) {
+TCHAR* SaveImage(FREE_IMAGE_FORMAT fif, FIBITMAP* dib, TCHAR* pszFilename, TCHAR* pszExt, int flag) {
 	int ret=0;
-	LPTSTR pszFile = NULL;
-	LPTSTR FileExt = (LPTSTR)GetFileExt (pszFilename, DBVT_TCHAR);
+	TCHAR* pszFile = NULL;
+	TCHAR* FileExt = GetFileExt(pszFilename);
 	if(!FileExt) {
 		if(!pszExt) return NULL;
 		mir_tcsadd(pszFile, pszFilename);
@@ -328,47 +349,34 @@ LPTSTR SaveImage(FREE_IMAGE_FORMAT fif, FIBITMAP* dib, LPTSTR pszFilename, LPTST
 }
 
 //---------------------------------------------------------------------------
-INT_PTR GetFileName(LPTSTR pszPath, UINT typ) {
-	/*DBVT_ASCIIZ, DBVT_WCHAR, DBVT_TCHAR*/
-	LPTSTR slash = _tcsrchr(pszPath,_T('\\'));
-	if (slash) {
-		switch (typ) {
-			case DBVT_ASCIIZ:
-				return (INT_PTR)mir_t2a(slash+1);
-			case DBVT_WCHAR:
-				return (INT_PTR)mir_t2u(slash+1);
-			default:
-				return 0;
-		}
-	}
-	else {
-		switch (typ) {
-			case DBVT_ASCIIZ:
-				return (INT_PTR)mir_t2a(pszPath);
-			case DBVT_WCHAR:
-				return (INT_PTR)mir_t2u(pszPath);
-			default:
-				return 0;
-		}
-	}
+TCHAR* GetFileNameW(TCHAR* pszPath) {
+	TCHAR* slash=_tcsrchr(pszPath,_T('\\'));
+	if(!slash) slash=_tcsrchr(pszPath,_T('/'));
+	if(slash)
+		return mir_t2u(slash+1);
+	else
+		return mir_t2u(pszPath);
+}
+TCHAR* GetFileExtW(TCHAR* pszPath) {
+	TCHAR* slash=_tcsrchr(pszPath,_T('.'));
+	if(slash)
+		return mir_t2u(slash);
+	return NULL;
 }
 
-INT_PTR GetFileExt (LPTSTR pszPath, UINT typ) {
-	/*DBVT_ASCIIZ, DBVT_WCHAR, DBVT_TCHAR*/
-	LPTSTR slash = _tcsrchr(pszPath,_T('.'));
-	if (slash) {
-		switch (typ) {
-			case DBVT_ASCIIZ:
-				return (INT_PTR)mir_t2a(slash);
-			case DBVT_WCHAR:
-				return (INT_PTR)mir_t2u(slash);
-			default:
-				return 0;
-		}
-	}
-	else {
-		return NULL;
-	}
+char* GetFileNameA(TCHAR* pszPath) {
+	TCHAR* slash=_tcsrchr(pszPath,_T('\\'));
+	if(!slash) slash=_tcsrchr(pszPath,_T('/'));
+	if(slash)
+		return mir_t2a(slash+1);
+	else
+		return mir_t2a(pszPath);
+}
+char* GetFileExtA(TCHAR* pszPath) {
+	TCHAR* slash=_tcsrchr(pszPath,_T('.'));
+	if(slash)
+		return mir_t2a(slash);
+	return NULL;
 }
 
 //---------------------------------------------------------------------------
@@ -393,7 +401,7 @@ BOOL GetEncoderClsid(wchar_t *wchMimeType, CLSID& clsidEncoder) {
 	return bOk;
 }
 /*
-INT_PTR SavePNG(HBITMAP hBmp, LPTSTR szFilename) {
+void SavePNG(HBITMAP hBmp, TCHAR* szFilename) {
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR                    gdiplusToken;
 	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
@@ -410,10 +418,9 @@ INT_PTR SavePNG(HBITMAP hBmp, LPTSTR szFilename) {
 		delete pBitmap;
 	}
 	Gdiplus::GdiplusShutdown(gdiplusToken);
-	return 0;
 }*/
 
-INT_PTR SaveGIF(HBITMAP hBmp, LPTSTR szFilename) {
+void SaveGIF(HBITMAP hBmp, TCHAR* szFilename) {
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR                    gdiplusToken;
 	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
@@ -430,10 +437,9 @@ INT_PTR SaveGIF(HBITMAP hBmp, LPTSTR szFilename) {
 		delete pBitmap;
 	}
 	Gdiplus::GdiplusShutdown(gdiplusToken);
-	return 0;
 }
 
-INT_PTR SaveTIF(HBITMAP hBmp, LPTSTR szFilename) {
+void SaveTIF(HBITMAP hBmp, TCHAR* szFilename) {
 //http://www.codeproject.com/Messages/1406708/How-to-reduce-the-size-of-an-Image-using-GDIplus.aspx
 	ULONG_PTR						gdiplusToken;
 	Gdiplus::GdiplusStartupInput	gdiplusStartupInput;
@@ -470,5 +476,4 @@ INT_PTR SaveTIF(HBITMAP hBmp, LPTSTR szFilename) {
 		delete pBitmap;
 	}
 	Gdiplus::GdiplusShutdown(gdiplusToken);
-	return 0;
 }

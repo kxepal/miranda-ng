@@ -6,6 +6,7 @@
 // Copyright © 2001-2002 Jon Keating, Richard Hughes
 // Copyright © 2002-2004 Martin Öberg, Sam Kothari, Robert Rainwater
 // Copyright © 2004-2010 Joe Kucera
+// Copyright © 2012-2014 Miranda NG Team
 // 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,12 +21,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-//
 // -----------------------------------------------------------------------------
 //  DESCRIPTION:
 //
 //  Background thread for automatic update of user details
-//
 // -----------------------------------------------------------------------------
 
 #include "icqoscar.h"
@@ -40,7 +39,7 @@ void CIcqProto::icq_InitInfoUpdate(void)
 		infoUpdateMutex = new icq_critical_section();
 
 		// Init list
-		for (int i = 0; i<LISTSIZE; i++) {
+		for (int i = 0; i < LISTSIZE; i++) {
 			m_infoUpdateList[i].dwUin = 0;
 			m_infoUpdateList[i].hContact = NULL;
 			m_infoUpdateList[i].queued = 0;
@@ -57,83 +56,66 @@ void CIcqProto::icq_InitInfoUpdate(void)
 // Returns FALSE if the list was full
 BOOL CIcqProto::icq_QueueUser(MCONTACT hContact)
 {
-	if ( !infoUpdateMutex )
+	if (!infoUpdateMutex)
 		return FALSE;
 
-	if (nInfoUserCount < LISTSIZE)
-	{
-		int i, nChecked = 0, nFirstFree = -1;
-		BOOL bFound = FALSE;
+	if (nInfoUserCount >= LISTSIZE)
+		return FALSE;
 
-		infoUpdateMutex->Enter();
+	int i, nChecked = 0, nFirstFree = -1;
+	BOOL bFound = FALSE;
 
-		// Check if in list
-		for (i = 0; (i<LISTSIZE && nChecked < nInfoUserCount); i++)
-		{
-			if (m_infoUpdateList[i].hContact)
-			{
-				nChecked++;
-				if (m_infoUpdateList[i].hContact == hContact)
-				{
-					bFound = TRUE;
-					break;
-				}
-			}
-			else if (nFirstFree == -1)
-			{
-				nFirstFree = i;
+	infoUpdateMutex->Enter();
+
+	// Check if in list
+	for (i = 0; (i < LISTSIZE && nChecked < nInfoUserCount); i++) {
+		if (m_infoUpdateList[i].hContact) {
+			nChecked++;
+			if (m_infoUpdateList[i].hContact == hContact) {
+				bFound = TRUE;
+				break;
 			}
 		}
-		if (nFirstFree == -1)
+		else if (nFirstFree == -1)
 			nFirstFree = i;
+	}
+	if (nFirstFree == -1)
+		nFirstFree = i;
 
-		// Add to list
-		if (!bFound)
-		{
-			DWORD dwUin = getContactUin(hContact);
+	// Add to list
+	if (!bFound) {
+		DWORD dwUin = getContactUin(hContact);
+		if (dwUin) {
+			m_infoUpdateList[nFirstFree].dwUin = dwUin;
+			m_infoUpdateList[nFirstFree].hContact = hContact;
+			m_infoUpdateList[nFirstFree].queued = time(NULL);
+			nInfoUserCount++;
 
-			if (dwUin)
-			{
-				m_infoUpdateList[nFirstFree].dwUin = dwUin;
-				m_infoUpdateList[nFirstFree].hContact = hContact;
-				m_infoUpdateList[nFirstFree].queued = time(NULL);
-				nInfoUserCount++;
-#ifdef _DEBUG
-				debugLogA("Queued user %u, place %u, count %u", dwUin, nFirstFree, nInfoUserCount);
-#endif
-				// Notify worker thread
-				if (hInfoQueueEvent && bInfoUpdateEnabled)
-					SetEvent(hInfoQueueEvent);
-			}
+			debugLogA("Queued user %u, place %u, count %u", dwUin, nFirstFree, nInfoUserCount);
+
+			// Notify worker thread
+			if (hInfoQueueEvent && bInfoUpdateEnabled)
+				SetEvent(hInfoQueueEvent);
 		}
-
-		infoUpdateMutex->Leave();
-
-		return TRUE;
 	}
 
-	return FALSE;
+	infoUpdateMutex->Leave();
+	return TRUE;
 }
-
 
 void CIcqProto::icq_DequeueUser(DWORD dwUin)
 {
-	if (nInfoUserCount > 0) 
-	{
+	if (nInfoUserCount > 0) {
 		int nChecked = 0;
 		// Check if in list
 		infoUpdateMutex->Enter();
-		for (int i = 0; (i < LISTSIZE && nChecked < nInfoUserCount); i++) 
-		{
-			if (m_infoUpdateList[i].dwUin) 
-			{
+		for (int i = 0; (i < LISTSIZE && nChecked < nInfoUserCount); i++) {
+			if (m_infoUpdateList[i].dwUin) {
 				nChecked++;
 				// Remove from list
-				if (m_infoUpdateList[i].dwUin == dwUin) 
-				{
-#ifdef _DEBUG
+				if (m_infoUpdateList[i].dwUin == dwUin) {
 					debugLogA("Dequeued user %u", m_infoUpdateList[i].dwUin);
-#endif
+
 					m_infoUpdateList[i].dwUin = 0;
 					m_infoUpdateList[i].hContact = NULL;
 					m_infoUpdateList[i].queued = 0;
@@ -146,7 +128,6 @@ void CIcqProto::icq_DequeueUser(DWORD dwUin)
 	}
 }
 
-
 void CIcqProto::icq_RescanInfoUpdate()
 {
 	bInfoPendingUsers = 0;
@@ -155,23 +136,15 @@ void CIcqProto::icq_RescanInfoUpdate()
 	bInfoUpdateEnabled = 0; // freeze thread
 
 	// Queue all outdated users
-	MCONTACT hContact = db_find_first(m_szModuleName);
-	while (hContact != NULL)
-	{
-		if (IsMetaInfoChanged(hContact))
-		{ // Queue user
-			if (!icq_QueueUser(hContact))
-			{ // The queue is full, pause queuing contacts
+	for (MCONTACT hContact = db_find_first(m_szModuleName); hContact; hContact = db_find_next(hContact, m_szModuleName))
+		if (IsMetaInfoChanged(hContact)) // Queue user
+			if (!icq_QueueUser(hContact)) { // The queue is full, pause queuing contacts
 				bInfoPendingUsers = 1;
-				break; 
+				break;
 			}
-		}
-		hContact = db_find_next(hContact, m_szModuleName);
-	}
 
 	bInfoUpdateEnabled = TRUE;
 }
-
 
 void CIcqProto::icq_EnableUserLookup(BOOL bEnable)
 {
@@ -182,7 +155,6 @@ void CIcqProto::icq_EnableUserLookup(BOOL bEnable)
 		SetEvent(hInfoQueueEvent);
 }
 
-
 void __cdecl CIcqProto::InfoUpdateThread( void* )
 {
 	int i;
@@ -192,20 +164,17 @@ void __cdecl CIcqProto::InfoUpdateThread( void* )
 
 	bInfoUpdateRunning = TRUE;
 
-	while (bInfoUpdateRunning)
-	{
+	while (bInfoUpdateRunning) {
 		if (!nInfoUserCount && bInfoPendingUsers) // whole queue processed, check if more users needs updating
 			icq_RescanInfoUpdate();
 
-		if (!nInfoUserCount || !bInfoUpdateEnabled || !icqOnline())
-		{
+		if (!nInfoUserCount || !bInfoUpdateEnabled || !icqOnline()) {
 			dwWait = WAIT_TIMEOUT;
-			while (bInfoUpdateRunning && dwWait == WAIT_TIMEOUT)
-			{ // wait for new work or until we should end
+			while (bInfoUpdateRunning && dwWait == WAIT_TIMEOUT) // wait for new work or until we should end
 				dwWait = ICQWaitForSingleObject(hInfoQueueEvent, 10000);
-			}
 		}
-		if (!bInfoUpdateRunning) break;
+		if (!bInfoUpdateRunning)
+			break;
 
 		switch (dwWait) {
 		case WAIT_IO_COMPLETION:
@@ -215,78 +184,68 @@ void __cdecl CIcqProto::InfoUpdateThread( void* )
 		case WAIT_OBJECT_0:
 		case WAIT_TIMEOUT:
 			// Time to check for new users
-			if (!bInfoUpdateEnabled) continue; // we can't send requests now      
+			if (!bInfoUpdateEnabled)
+				continue; // we can't send requests now      
 
-			if (nInfoUserCount && icqOnline())
-			{
+			if (nInfoUserCount && icqOnline()) {
 				time_t now = time(NULL);
 				BOOL bNotReady = FALSE, bTimeOuted = FALSE;
 
 				// Check the list, take only users that were there for at least 5sec
 				// wait if any user is there shorter than 5sec and not a single user is there longer than 20sec
 				infoUpdateMutex->Enter();
-				for (i = 0; i<LISTSIZE; i++)
-				{
-					if (m_infoUpdateList[i].hContact)
-					{
-						if (m_infoUpdateList[i].queued + 20 < now)
-						{
+				for (i = 0; i < LISTSIZE; i++) {
+					if (m_infoUpdateList[i].hContact) {
+						if (m_infoUpdateList[i].queued + 20 < now) {
 							bTimeOuted = TRUE;
 							break;
 						}
-						else if (m_infoUpdateList[i].queued + 5 >= now)
+						if (m_infoUpdateList[i].queued + 5 >= now)
 							bNotReady = TRUE;
 					}
 				}
 				infoUpdateMutex->Leave();
 
-				if (!bTimeOuted && bNotReady)
-				{
+				if (!bTimeOuted && bNotReady) {
 					SleepEx(1000, TRUE);
-					if (!bInfoUpdateRunning)
-					{ // need to end as fast as possible
+					if (!bInfoUpdateRunning) { // need to end as fast as possible
 						debugLogA("%s thread ended.", "Info-Update");
 						goto LBL_Exit;
 					}
 					continue;
 				}
 
-				if (FindCookie(dwInfoActiveRequest, NULL, NULL))
-				{ // only send another request, when the previous is completed
-#ifdef _DEBUG
+				// only send another request, when the previous is completed
+				if (FindCookie(dwInfoActiveRequest, NULL, NULL)) {
 					debugLogA("Info-Update: Request 0x%x still in progress.", dwInfoActiveRequest);
-#endif
+
 					SleepEx(1000, TRUE);
-					if (!bInfoUpdateRunning)
-					{ // need to end as fast as possible
+					if (!bInfoUpdateRunning) { // need to end as fast as possible
 						debugLogA("%s thread ended.", "Info-Update");
 						goto LBL_Exit;
 					}
 					continue;
 				}
 
-#ifdef _DEBUG
 				debugLogA("Info-Update: Users %u in queue.", nInfoUserCount);
-#endif
+
 				// Either some user is waiting long enough, or all users are ready (waited at least the minimum time)
 				m_ratesMutex->Enter();
-				if (!m_rates)
-				{ // we cannot send info request - icq is offline
+				if (!m_rates) { // we cannot send info request - icq is offline
 					m_ratesMutex->Leave();
 					break;
 				}
+
 				WORD wGroup = m_rates->getGroupFromSNAC(ICQ_EXTENSIONS_FAMILY, ICQ_META_CLI_REQUEST);
-				while (m_rates->getNextRateLevel(wGroup) < m_rates->getLimitLevel(wGroup, RML_IDLE_30))
-				{ // we are over rate, need to wait before sending
+				while (m_rates->getNextRateLevel(wGroup) < m_rates->getLimitLevel(wGroup, RML_IDLE_30)) { // we are over rate, need to wait before sending
 					int nDelay = m_rates->getDelayToLimitLevel(wGroup, RML_IDLE_50);
 
 					m_ratesMutex->Leave();
-#ifdef _DEBUG
+
 					debugLogA("Rates: InfoUpdate delayed %dms", nDelay);
-#endif
+
 					SleepEx(nDelay, TRUE); // do not keep things locked during sleep
-					if (!bInfoUpdateRunning)
-					{ // need to end as fast as possible
+					if (!bInfoUpdateRunning) { // need to end as fast as possible
 						debugLogA("%s thread ended.", "Info-Update");
 						goto LBL_Exit;
 					}
@@ -294,8 +253,7 @@ void __cdecl CIcqProto::InfoUpdateThread( void* )
 					if (!m_rates) // we lost connection when we slept, go away
 						break;
 				}
-				if (!m_rates)
-				{ // we cannot send info request - icq is offline
+				if (!m_rates) { // we cannot send info request - icq is offline
 					m_ratesMutex->Leave();
 					break;
 				}
@@ -307,21 +265,16 @@ void __cdecl CIcqProto::InfoUpdateThread( void* )
 				int nRequestSize = 0;
 
 				infoUpdateMutex->Enter();
-				for (i = 0; i<LISTSIZE; i++)
-				{
-					if (m_infoUpdateList[i].hContact)
-					{
+				for (i = 0; i < LISTSIZE; i++) {
+					if (m_infoUpdateList[i].hContact) {
 						// check TS again, maybe it has been updated while we slept
-						if (IsMetaInfoChanged(m_infoUpdateList[i].hContact))
-						{
-							if (m_infoUpdateList[i].queued + 5 < now)
-							{
+						if (IsMetaInfoChanged(m_infoUpdateList[i].hContact)) {
+							if (m_infoUpdateList[i].queued + 5 < now) {
 								BYTE *pItem = NULL;
 								int nItemSize = 0;
-								DBVARIANT dbv = {DBVT_DELETED};
+								DBVARIANT dbv = { DBVT_DELETED };
 
-								if (!getSetting(m_infoUpdateList[i].hContact, DBSETTING_METAINFO_TOKEN, &dbv))
-								{ // retrieve user details using privacy token
+								if (!getSetting(m_infoUpdateList[i].hContact, DBSETTING_METAINFO_TOKEN, &dbv)) { // retrieve user details using privacy token
 									ppackTLV(&pItem, &nItemSize, 0x96, dbv.cpbVal, dbv.pbVal);
 									db_free(&dbv);
 								}
@@ -336,11 +289,9 @@ void __cdecl CIcqProto::InfoUpdateThread( void* )
 								hContactList[nListIndex++] = &m_infoUpdateList[i];
 							}
 						}
-						else
-						{
-#ifdef _DEBUG
+						else {
 							debugLogA("Dequeued absolete user %u", m_infoUpdateList[i].dwUin);
-#endif
+
 							// Dequeue user and find another one
 							m_infoUpdateList[i].dwUin = 0;
 							m_infoUpdateList[i].hContact = NULL;
@@ -350,24 +301,21 @@ void __cdecl CIcqProto::InfoUpdateThread( void* )
 					}
 				}
 
-#ifdef _DEBUG
 				debugLogA("Request info for %u user(s).", nListIndex);
-#endif
-				if (!nListIndex)
-				{ // no users to request info for
+
+				if (!nListIndex) { // no users to request info for
 					infoUpdateMutex->Leave();
 					break;
 				}
-				if (!(dwInfoActiveRequest = sendUserInfoMultiRequest(pRequestData, nRequestSize, nListIndex)))
-				{ // sending data packet failed
+
+				if (!(dwInfoActiveRequest = sendUserInfoMultiRequest(pRequestData, nRequestSize, nListIndex))) { // sending data packet failed
 					SAFE_FREE((void**)&pRequestData);
 					infoUpdateMutex->Leave();
 					break;
 				}
 				SAFE_FREE((void**)&pRequestData);
 
-				for (i = 0; i<nListIndex; i++)
-				{ // Dequeue users and go back to sleep
+				for (i = 0; i < nListIndex; i++) { // Dequeue users and go back to sleep
 					hContactList[i]->dwUin = 0;
 					hContactList[i]->hContact = NULL;
 					hContactList[i]->queued = 0;

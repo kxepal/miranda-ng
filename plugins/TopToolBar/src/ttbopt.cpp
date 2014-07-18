@@ -192,7 +192,7 @@ static INT_PTR CALLBACK ButOrderOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LPAR
 	case WM_INITDIALOG:
 		TranslateDialogDefault(hwndDlg);
 		dat = (OrderData*)malloc( sizeof(OrderData));
-		SetWindowLongPtr(hTree, GWLP_USERDATA, (LONG)dat);
+		SetWindowLongPtr(hTree, GWLP_USERDATA, (LONG_PTR)dat);
 		dat->dragging = 0;
 
 		SetWindowLongPtr(hTree, GWL_STYLE, GetWindowLongPtr(hTree, GWL_STYLE)|TVS_NOHSCROLL);
@@ -548,7 +548,7 @@ int TTBOptInit(WPARAM wParam, LPARAM lParam)
 {
 	OPTIONSDIALOGPAGE odp = { sizeof(odp) };
 	odp.hInstance = hInst;
-	odp.pszGroup = LPGEN("Contact List");
+	odp.pszGroup = LPGEN("Contact list");
 	odp.position = -1000000000;
 	odp.pszTemplate = MAKEINTRESOURCEA(IDD_OPT_BUTORDER);
 	odp.pszTitle = LPGEN("Toolbar");

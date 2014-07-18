@@ -118,7 +118,7 @@ Options::~Options()
 {
 }
 
-int Options::InitOptions(WPARAM wParam, LPARAM lParam)
+int Options::InitOptions(WPARAM wParam, LPARAM)
 {
 	OPTIONSDIALOGPAGE odp = { sizeof(odp) };
 	odp.position = 100000000;
@@ -244,27 +244,27 @@ void Options::Load(void)
 	fid.cbSize = sizeof(FontIDT);
 	cid.cbSize = sizeof(ColourIDT);
 	hid.cbSize = sizeof(HOTKEYDESC);
-	strncpy_s(fid.dbSettingsGroup, "BasicHistory_Fonts", SIZEOF(fid.dbSettingsGroup));
-	_tcsncpy_s(fid.backgroundGroup, _T("History"), SIZEOF(fid.backgroundGroup));
-	_tcsncpy_s(fid.group, LPGENT("History"), SIZEOF(fid.group));
+	strncpy_s(fid.dbSettingsGroup, "BasicHistory_Fonts", _TRUNCATE);
+	_tcsncpy_s(fid.backgroundGroup, _T("History"), _TRUNCATE);
+	_tcsncpy_s(fid.group, LPGENT("History"), _TRUNCATE);
 	for (int i = 0; i < g_fontsSize; ++i) {
 		fid.order = i;
-		_tcsncpy_s(fid.deffontsettings.szFace, g_FontOptionsList[i].szDefFace, LF_FACESIZE);
+		_tcsncpy_s(fid.deffontsettings.szFace, g_FontOptionsList[i].szDefFace, _TRUNCATE);
 		fid.deffontsettings.size = g_FontOptionsList[i].defSize; 
 		fid.deffontsettings.colour = g_FontOptionsList[i].defColour;
 		fid.deffontsettings.style = g_FontOptionsList[i].defStyle;
 		fid.deffontsettings.charset = DEFAULT_CHARSET;
 		mir_snprintf(fid.prefix, SIZEOF(fid.prefix), "Font%d", i);
-		_tcsncpy_s(fid.name, g_FontOptionsList[i].szDescr, SIZEOF(fid.name));
-		_tcsncpy_s(fid.backgroundName, g_FontOptionsList[i].szBackgroundName, SIZEOF(fid.name));
+		_tcsncpy_s(fid.name, g_FontOptionsList[i].szDescr, _TRUNCATE);
+		_tcsncpy_s(fid.backgroundName, g_FontOptionsList[i].szBackgroundName, _TRUNCATE);
 		fid.flags = FIDF_DEFAULTVALID | FIDF_CLASSGENERAL | g_FontOptionsList[i].flags;
 		FontRegisterT(&fid);
 	}
 	
-	strncpy_s(cid.dbSettingsGroup, "BasicHistory_Fonts", SIZEOF(fid.dbSettingsGroup));
-	_tcsncpy_s(cid.group, LPGENT("History"), SIZEOF(fid.group));
+	strncpy_s(cid.dbSettingsGroup, "BasicHistory_Fonts", _TRUNCATE);
+	_tcsncpy_s(cid.group, LPGENT("History"), _TRUNCATE);
 	for (int i = 0; i < g_colorsSize; ++i) {
-		_tcsncpy_s(cid.name, g_ColorOptionsList[i].tszName, SIZEOF(cid.name));
+		_tcsncpy_s(cid.name, g_ColorOptionsList[i].tszName, _TRUNCATE);
 		mir_snprintf(cid.setting, SIZEOF(cid.setting), "Color%d", i);
 		cid.order = i;
 		cid.defcolour = g_ColorOptionsList[i].def;
@@ -417,8 +417,8 @@ COLORREF Options::GetFont(Fonts fontId, PLOGFONT font)
 {
 	FontIDT fid = {0};
 	fid.cbSize = sizeof(FontIDT);
-	_tcsncpy_s(fid.group, LPGENT("History"), SIZEOF(fid.group));
-	_tcsncpy_s(fid.name, g_FontOptionsList[fontId].szDescr, SIZEOF(fid.name));
+	_tcsncpy_s(fid.group, LPGENT("History"), _TRUNCATE);
+	_tcsncpy_s(fid.name, g_FontOptionsList[fontId].szDescr, _TRUNCATE);
 	return (COLORREF)CallService(MS_FONT_GETT, (WPARAM)&fid, (LPARAM)font);
 }
 
@@ -426,8 +426,8 @@ COLORREF Options::GetColor(Colors colorId)
 {
 	ColourIDT cid = {0};
 	cid.cbSize = sizeof(ColourIDT);
-	_tcsncpy_s(cid.group, LPGENT("History"), SIZEOF(cid.group));
-	_tcsncpy_s(cid.name, g_ColorOptionsList[colorId].tszName, SIZEOF(cid.name));
+	_tcsncpy_s(cid.group, LPGENT("History"), _TRUNCATE);
+	_tcsncpy_s(cid.name, g_ColorOptionsList[colorId].tszName, _TRUNCATE);
 	return (COLORREF)CallService(MS_COLOUR_GETT, (WPARAM)&cid, NULL);
 }
 
@@ -799,7 +799,7 @@ bool CheckFile(HWND hwndEdit)
 	Edit_GetText(hwndEdit, buf, MAX_PATH);
 	DWORD atr = GetFileAttributes(buf);
 	if (atr == INVALID_FILE_ATTRIBUTES || atr & FILE_ATTRIBUTE_DIRECTORY) {
-		MessageBox(GetParent(hwndEdit), TranslateT("File do not exist. Enter correct file path."), TranslateT("Invalid file"), MB_OK | MB_ICONERROR);
+		MessageBox(GetParent(hwndEdit), TranslateT("File does not exist. Enter correct file path."), TranslateT("Invalid file"), MB_OK | MB_ICONERROR);
 		SetFocus(hwndEdit);
 		return false;
 	}
@@ -1550,7 +1550,7 @@ INT_PTR CALLBACK Options::DlgProcOptsScheduler(HWND hwndDlg, UINT msg, WPARAM wP
 
 	case WM_DESTROY:
 		delete tasks;
-		SetWindowLongPtr(hwndDlg, GWLP_USERDATA, NULL);
+		SetWindowLongPtr(hwndDlg, GWLP_USERDATA, 0);
 		break;
 	}
 
@@ -1588,7 +1588,7 @@ void SaveList(HWND hwnd, MCONTACT hSystem, TaskOptions* to)
 		to->isSystem = SendMessage(hwnd, CLM_GETCHECKMARK, (WPARAM)hSystem, 0) != 0;
 
 	for (MCONTACT hContact = db_find_first(); hContact; hContact = db_find_next(hContact)) {
-		HANDLE hItem = (HANDLE) SendMessage(hwnd, CLM_FINDCONTACT, (WPARAM) hContact, 0);
+		HANDLE hItem = (HANDLE) SendMessage(hwnd, CLM_FINDCONTACT, hContact, 0);
 		if (hItem && SendMessage(hwnd, CLM_GETCHECKMARK, (WPARAM) hItem, 0))
 			to->contacts.push_back(hContact);
 	} 

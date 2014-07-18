@@ -1,17 +1,17 @@
 ﻿#muuid {9c448c61-fc3f-42f9-b9f0-4a30e1cf8671}
 ;============================================================
 ;  File: Skype.dll
-;  Plugin: Skype Protocol
+;  Plugin: Skype protocol
 ;  Version: 0.11.0.2
 ;  Authors: unsane, mataes, ghazan
 ;============================================================
 [Skype protocol support for Miranda NG.]
-
+Support du protocole Skype pour Miranda NG.
 ;file \protocols\Skype\res\Resource.rc
 [Invite contacts to conference]
 
 [Skype name:]
-Pseudo:
+Pseudo :
 [&Invite]
 &Inviter
 [&Cancel]
@@ -19,7 +19,7 @@ Pseudo:
 [Add]
 Ajouter
 [Create conference]
-
+&Créer une conférence
 [&Create]
 &Créer
 [Topic:]
@@ -33,33 +33,29 @@ Ajouter
 [Create with password]
 
 [Password:]
-Passe:
+Passe :
 [Confirmation:]
-
+Confirmation :
 [Password hint:]
 
 [Configure conference]
 
-[&OK]
-OK
 [Join role:]
 
 [Set password]
 Mot de passe du profil
 [Hint:]
-Info:
+Info :
 [Enter password]
 Entrez le passe
 [Remember this session password]
 
-[OK]
-OK
 [Cancel]
 Annuler
 [Status text:]
 
 [Online since:]
-
+En ligne depuis :
 [Last event date:]
 
 [Last profile change:]
@@ -67,23 +63,23 @@ Annuler
 [Full name:]
 Nom complet :
 [Date of birth:]
-Anniversaire:
+Anniversaire :
 [Gender:]
-Sexe:
+Sexe :
 [Homepage:]
-Page web:
+Page web :
 [Language:]
 Langage :
 [About:]
-À propos:
+À propos :
 [Mood:]
-
+Humeur :
 [E-mail 1:]
-
+Courriel 1 :
 [E-mail 2:]
-
+Courriel 2 :
 [E-mail 3:]
-
+Courriel 3 :
 [Mobile phone:]
 
 [Home phone:]
@@ -91,13 +87,13 @@ Langage :
 [Office phone:]
 
 [City:]
-Ville:
+Ville :
 [State:]
-État:
+État :
 [Country:]
-Pays:
+Pays :
 [Timezone:]
-Fuseau horaire:
+Fuseau horaire :
 [Skype credit:]
 
 [Change password]
@@ -105,7 +101,7 @@ Changer le mot de passe
 [Old password:]
 
 [New password:]
-Nouveau mot de passe:
+Nouveau mot de passe :
 [Register new account]
 
 [Account]
@@ -119,9 +115,9 @@ Compte
 [Use ports 80 and 443 as alternative incoming]
 
 [Default group:]
-Groupes:
+Groupes :
 [Block]
-
+Bloquer
 [Allow IMs from...]
 
 [Anyone]
@@ -259,9 +255,9 @@ Conférences
 
 [Outlaw (&ban)]
 
-[Copy &skypename]
+[Copy &Skype name]
 
-[Copy room &uri]
+[Copy room &URI]
 
 [Creator]
 
@@ -346,14 +342,14 @@ Chat
 [Send contact]
 
 [Contact]
-
+Contact
 [Delete]
 Effacer
 [Protocols]
 Protocoles
 ;file \protocols\Skype\src\skype_ignore_list.cpp
 ;file \protocols\Skype\src\skype_instances.cpp
-[Skype protocol plugin only permits you to login to one account at a time. Adding multiple accounts is prohibited in the licence agreement and standard distribution terms of SkypeKit.]
+[Skype protocol plugin only permits you to login to one account at a time. Adding multiple accounts is prohibited in the license agreement and standard distribution terms of SkypeKit.]
 
 [Initialization key corrupted or not valid.]
 

@@ -6,7 +6,7 @@
 ;  Authors: Cristian Libotean
 ;============================================================
 [Notifies you of upcoming birthdays.]
-Powiadamia Cię o nadchodzących urodzinach.
+Powiadomienia o nadchodzących urodzinach.
 ;file \plugins\WhenWasIt\res\WhenWasIt.rc
 [Notify of birthdays:]
 Powiadamiaj o urodzinach:
@@ -17,21 +17,21 @@ Czas wyświetlania:
 [Preview]
 Podgląd
 [Don't show popups for subcontacts]
-Nie pokazuj popupów dla podkontaktów
+Nie pokazuj popupów dla subkontaktów
 [Show popup when no birthdays are near]
 Pokaż popup kiedy nadchodzi rocznica
 [Popup mouse click]
-Kliknięcie myszą w popup
+Kliknięcie w popup
 [Left]
-Lewa
+LPM
 [Right]
-Prawa
+PPM
 [Sounds]
 Dźwięki
 [Play sounds when there are]
 Odgrywaj dźwięk, gdy jest
 [days or less to birthday.]
-dni lub mniej do urodzin
+dni lub mniej do urodzin.
 [Start notifying]
 Zacznij powiadamiać
 [days in advance and]
@@ -70,8 +70,6 @@ Zamknij
 Pokaż wszystkie kontakty
 [Set birthday:]
 Ustaw urodziny:
-[OK]
-OK
 [Manage anniversaries]
 Zarządzaj rocznicami
 [Title:]
@@ -96,11 +94,11 @@ Moduł UserInfo
 [Protocol module]
 Moduł protokołu
 [mBirthday module]
-moduł mBirthday
+Moduł mBirthday
 [Nothing]
 -Nic-
 [Dismiss]
-Zamknij
+Odrzuć
 [Message window]
 Okno rozmowy
 [All contacts]
@@ -163,14 +161,14 @@ Importuj urodziny
 [Export birthdays]
 Eksportuj urodziny
 [Add/change user &birthday]
-Dodaj/zmień datę urodzin
+Dodaj/Zmień datę &urodzin
 ;file \plugins\WhenWasIt\src\icons.cpp
 [Check birthdays menu item]
-Element 'Sprawdź urodziny' w menu
+Element "Sprawdź urodziny" w menu
 [List birthdays menu item]
 Element menu pokaż listę urodzin
 [Add/change birthday]
-Dodaj/zmień urodziny
+Dodaj/Zmień urodziny
 [1 day to birthday]
 1 dzień do urodzin
 [%d days to birthday]
@@ -181,7 +179,7 @@ Więcej niż %d dni do urodzin
 Przypominacz o urodzinach WhenWasIt
 ;file \plugins\WhenWasIt\src\notifiers.cpp
 [No upcoming birthdays.]
-Brak zbliżających się urodzin
+Brak zbliżających się urodzin.
 [%s has birthday in %d days.]
 %s ma urodziny w przeciągu %d dni.
 [%s has birthday tomorrow.]
@@ -212,7 +210,7 @@ Rozpoczęcie odświeżania danych kontaktu
 [Done refreshing user details]
 Ukończono odświeżanie danych kontaktu
 [Could not create worker thread. Error#%d - threadID %d]
-Nie udało się stworzyć wątku roboczego. Error#%d - threadID %d
+Nie udało się utworzyć wątku roboczego. Error#%d - threadID %d
 [Error]
 Błąd
 [Birthdays files]
@@ -245,4 +243,4 @@ Ostrzeżenie! Proszę nie mieszać wyeksportowanych plików urodzin o kodowaniu 
 Ten plik został wyeksportowany przy użyciu wersji Unicode WhenWasIt. Proszę używać tylko wersji Unicode do importu urodzin.
 ;file \plugins\WhenWasIt\src\services.h
 [Could not find UID '%s [%S]' in current database, skipping]
-Nie można odnaleźć UID '%s [%S]' w aktualnej bazie danych, pomijanie
+Nie można odnaleźć UID "%s [%S]" w aktualnej bazie danych, pomijanie

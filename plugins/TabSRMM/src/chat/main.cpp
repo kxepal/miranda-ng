@@ -49,7 +49,7 @@ static void OnAddLog(SESSION_INFO *si, int isOk)
 
 static void OnGetLogName(SESSION_INFO *si, LPCTSTR ptszParsedName)
 {
-	if (!M.pathIsAbsolute(ptszParsedName))
+	if (!PathIsAbsoluteT(ptszParsedName))
 		mir_sntprintf(si->pszLogFileName, MAX_PATH, _T("%s%s"), M.getChatLogPath(), ptszParsedName);
 	else
 		mir_sntprintf(si->pszLogFileName, MAX_PATH, _T("%s"), ptszParsedName);
@@ -272,6 +272,7 @@ static void CheckUpdate()
 	db_set_b(NULL, "Compatibility", "TabChatFonts", 3);
 }
 
+// load the module
 int Chat_Load()
 {
 	CheckUpdate();
@@ -315,12 +316,12 @@ int Chat_Load()
 	return 0;
 }
 
-/*
- * unload the module. final cleanup
- */
-
+// unload the module. final cleanup
 int Chat_Unload(void)
 {
+	db_set_w(NULL, CHAT_MODULE, "SplitterX", (WORD)g_Settings.iSplitterX);
+	db_set_w(NULL, CHAT_MODULE, "splitY", (WORD)g_Settings.iSplitterY);
+
 	DestroyMenu(g_hMenu);
 	return 0;
 }

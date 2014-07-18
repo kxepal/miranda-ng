@@ -101,11 +101,11 @@ int AddContactToGroup(struct ClcData *dat, ClcGroup *group, MCONTACT hContact)
 	p->xStatus = cfg::getByte(hContact, p->proto, "XStatusId", 0);
 
 	if (p->proto)
-		p->bIsMeta = !strcmp(p->proto, cfg::dat.szMetaName);
+		p->bIsMeta = !strcmp(p->proto, META_PROTO);
 	else
 		p->bIsMeta = FALSE;
-	if (p->bIsMeta && cfg::dat.bMetaAvail && !(cfg::dat.dwFlags & CLUI_USEMETAICONS)) {
-		p->hSubContact = (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, hContact, 0);
+	if (p->bIsMeta && !(cfg::dat.dwFlags & CLUI_USEMETAICONS)) {
+		p->hSubContact = db_mc_getMostOnline(hContact);
 		p->metaProto = GetContactProto(p->hSubContact);
 		p->iImage = pcli->pfnGetContactIcon(p->hSubContact);
 	}
@@ -222,16 +222,15 @@ void RebuildEntireList(HWND hwnd, struct ClcData *dat)
 
 BYTE GetCachedStatusMsg(TExtraCache *p, char *szProto)
 {
-	DBVARIANT dbv = {0};
-
 	if (p == NULL)
 		return 0;
 
 	p->bStatusMsgValid = STATUSMSG_NOTFOUND;
 	MCONTACT hContact = p->hContact;
 
-	int result = cfg::getTString(hContact, "CList", "StatusMsg", &dbv);
-	if ( !result && lstrlen(dbv.ptszVal) > 1)
+	DBVARIANT dbv = {0};
+	INT_PTR result = cfg::getTString(hContact, "CList", "StatusMsg", &dbv);
+	if ( !result && lstrlen(dbv.ptszVal) > 0)
 		p->bStatusMsgValid = STATUSMSG_CLIST;
 	else {
 		if ( !szProto)
@@ -239,11 +238,11 @@ BYTE GetCachedStatusMsg(TExtraCache *p, char *szProto)
 		if (szProto) {
 			if ( !result )
 				db_free( &dbv );
-			if ( !( result = cfg::getTString(hContact, szProto, "YMsg", &dbv)) && lstrlen(dbv.ptszVal) > 1)
+			if ( !( result = cfg::getTString(hContact, szProto, "YMsg", &dbv)) && lstrlen(dbv.ptszVal) > 0)
 				p->bStatusMsgValid = STATUSMSG_YIM;
-			else if ( !(result = cfg::getTString(hContact, szProto, "StatusDescr", &dbv)) && lstrlen(dbv.ptszVal) > 1)
+			else if ( !(result = cfg::getTString(hContact, szProto, "StatusDescr", &dbv)) && lstrlen(dbv.ptszVal) > 0)
 				p->bStatusMsgValid = STATUSMSG_GG;
-			else if ( !(result = cfg::getTString(hContact, szProto, "XStatusMsg", &dbv)) && lstrlen(dbv.ptszVal) > 1)
+			else if ( !(result = cfg::getTString(hContact, szProto, "XStatusMsg", &dbv)) && lstrlen(dbv.ptszVal) > 0)
 				p->bStatusMsgValid = STATUSMSG_XSTATUS;
 		}
 	}
@@ -281,15 +280,15 @@ BYTE GetCachedStatusMsg(TExtraCache *p, char *szProto)
 	}
 
 	if (p->bStatusMsgValid > STATUSMSG_XSTATUSNAME) {
-		int j = 0, i;
+		int j = 0;
 		p->statusMsg = (TCHAR *)realloc(p->statusMsg, (lstrlen(dbv.ptszVal) + 2) * sizeof(TCHAR));
-		for (i = 0; dbv.ptszVal[i]; i++) {
+		for (int i = 0; dbv.ptszVal[i]; i++) {
 			if (dbv.ptszVal[i] == (TCHAR)0x0d)
 				continue;
 			p->statusMsg[j] = dbv.ptszVal[i] == (wchar_t)0x0a ? (wchar_t)' ' : dbv.ptszVal[i];
 			j++;
 		}
-		p->statusMsg[j] = (TCHAR)0;
+		p->statusMsg[j] = 0;
 	}
 	if ( !result )
 		db_free( &dbv );
@@ -474,7 +473,7 @@ int __fastcall CLVM_GetContactHiddenStatus(MCONTACT hContact, char *szProto, str
 
 	// always hide subcontacts (but show them on embedded contact lists)
 
-	if (cfg::dat.bMetaAvail && dat != NULL && dat->bHideSubcontacts && cfg::dat.bMetaEnabled && cfg::getByte(hContact, cfg::dat.szMetaName, "IsSubcontact", 0))
+	if (dat != NULL && dat->bHideSubcontacts && cfg::dat.bMetaEnabled && db_mc_isSub(hContact))
 		return 1;
 
 	if ( !cfg::dat.bFilterEffective)

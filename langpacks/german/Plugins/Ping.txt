@@ -60,8 +60,6 @@ Auf
 Ab
 [Edit Host]
 Host bearbeiten
-[OK]
-OK
 [Cancel]
 Abbrechen
 [Address:]
@@ -104,10 +102,12 @@ Hosts...
 [Ping]
 Ping
 ;file \plugins\Ping\src\options.cpp
+[Text Files (*.txt)]
+Textdokumente (*.txt)
+[All Files]
+Alle Dateien
 [Open log file]
 Logdatei öffnen
-[All\0*.*\0Text\0*.TXT\0]
-Alle\0*.*\0Text\0*.txt\0
 [<none>]
 <keine>
 [<all>]

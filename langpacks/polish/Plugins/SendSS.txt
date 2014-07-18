@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: SendSS.dll
 ;  Plugin: Send ScreenShot+
-;  Version: 0.8.3.1
+;  Version: 0.8.7.0
 ;  Authors: Merlin
 ;============================================================
 [Take a screenshot and send it to a contact.]
@@ -10,8 +10,6 @@ Robi zrzut ekranu i wysyła go do kontaktu.
 ;file \plugins\SendScreenshotPlus\res\resource.rc
 [Dialog]
 Okno
-[OK]
-OK
 [All]
 Wszystko
 [None]
@@ -23,23 +21,25 @@ Wyślij zrzut ekranu
 [Send screenshot to\n<unknown>]
 Wyślij zrzut ekranu do\n<nieznany>
 [Ti&med capture]
-Czas uchwycenia
+Cza&s uchwycenia
 [Time (secs):]
 Czas (s):
 [&Format:]
-Format:
+&Format:
 [Send B&y:]
-Wyślij przez:
+Wyślij p&rzez:
 [E&xplore]
-Przeglądaj
+P&rzeglądaj
 [&Fill description textbox.]
-Wypełnij pole opisu.
+&Wypełnij pole opisu
 [Delete &after send]
-Usuń po wysłaniu
+Usuń &po wysłaniu
+[Open editor before sending]
+Otwórz edytor przed wysłaniem
 [Open again]
 Otwórz ponownie
 [&Capture]
-Uchwyć
+&Uchwyć
 [About]
 O kontakcie
 [%s\nv%s]
@@ -47,30 +47,65 @@ O kontakcie
 [Credits >]
 Autorzy >
 [&Close]
-Zamknij
+&Zamknij
 [Edit]
 Edytuj
-[C&lient Area]
-Obszar klienta
 [Caption:]
 Uchwyć:
 [Size (HxW):]
 Rozmiar (HxW):
+[C&lient Area]
+O&bszar klienta
+[indirect capture]
+Przechwytywanie pośrednie
 [Target Tool]
 Celownik
+[File:]
+Plik:
+[Description:]
+Opis:
+[Result]
+Wynik
+[Thumbnail]
+Miniatura
+[&Copy]
+&Kopiuj
+[Close]
+Zamknij
 ;file \plugins\SendScreenshotPlus\src\CSend.cpp
+[Resulting URL from\n]
+Otrzymany link z\n
+[Copy]
+Kopiuj
+[Copy BBCode]
+Kopiuj BBCode
+[Copy BBCode w/ link]
+Kopiuj BBcode w/ link
+[%s requires a valid contact!]
+%s wymaga poprawnego kontaktu!
+[Error]
+Błąd
 [GCHAT error]
 Błąd GCHAT
 [An unknown error has occurred.]
 Nieznany błąd.
-[Error]
-Błąd
 ;file \plugins\SendScreenshotPlus\src\CSend.h
 [Unable to initiate %s.]
 Nie można zainicjować %s.
 [MAPI error (%i):\n%s.]
 Błąd MAPI (%i):\n%s.
+[Unknown response from %s (%i)]
+Nieznana odpowiedź %s (%i)
+[Got no response from %s (%i)]
+Brak odpowiedzi od %s (%i)
+;file \plugins\SendScreenshotPlus\src\CSendDropbox.cpp
+[Dropbox transfer]
+Wyślij do Dropbox'a
+[%s (%i):\nCould not add a share to the Dropbox plugin.]
+%s (%i):\nNie można udostępnić przez wtyczkę Dropbox.
 ;file \plugins\SendScreenshotPlus\src\CSendEmail.cpp
+[Email transfer]
+Wyślij przez e-mail
 [A recipient matched more than one of the recipient descriptor structures and MAPI_DIALOG was not set]
 Odbiorca odpowiada więcej niż jednej strukturze opisującej odbiorców, przez co nie ustawiono MAPI_DIALOG
 [The specified attachment was not found]
@@ -99,19 +134,26 @@ Odbiorca nie pojawił się na liście adresów
 Użytkownik zamknął jedno z okien
 [Unknown Error]
 Nieznany błąd
+;file \plugins\SendScreenshotPlus\src\CSendFile.cpp
+[File transfer]
+Transfer plików
 ;file \plugins\SendScreenshotPlus\src\CSendFTPFile.cpp
 [FTPFile transfer]
 Transfer FTP
 [%s (%i):\nCould not add a share to the FTP File plugin.]
 %s (%i):\nNie można dodać zasobu do wtyczki FTP File.
+;file \plugins\SendScreenshotPlus\src\CSendHost_ImageShack.cpp
+[Image upload]
+Wyślij jako obrazek
+;file \plugins\SendScreenshotPlus\src\CSendHost_imgur.cpp
+;file \plugins\SendScreenshotPlus\src\CSendHost_uploadpie.cpp
 ;file \plugins\SendScreenshotPlus\src\CSendHTTPServer.cpp
+[HTTPServer transfer]
+Transfer HTTPServer
 [Could not start the HTTP Server plugin.]
 Nie można uruchomić wtyczki serwera HTTP.
 [%s (%i):\nCould not add a share to the HTTP Server plugin.]
 %s (%i):\nNie można dodać zasobu do wtyczki serwera HTTP.
-;file \plugins\SendScreenshotPlus\src\CSendImageShack.cpp
-[Upload server did not respond timely.]
-Serwer nie odpowiada.
 ;file \plugins\SendScreenshotPlus\src\dlg_msgbox.cpp
 [Retry]
 Gotowy
@@ -148,7 +190,7 @@ Zrób zrzut ekranu
 [Could not register Miranda service.]
 Nie można zarejestrować usługi Mirandy.
 [Could not create Screenshot folder (error code: %d):\n%s\nDo you have write permissions?]
-Nie udało się stworzyć folderu zrzutów ekranu (kod błędu: %d):\n%s\nCzy posiadasz prawa do zapisu?
+Nie udało się utworzyć folderu zrzutów ekranu (kod błędu: %d):\n%s\nCzy posiadasz prawa do zapisu?
 ;file \plugins\SendScreenshotPlus\src\mir_icolib.cpp
 [Screenshot Icon1]
 Zrzut ekranu - ikona 1
@@ -158,12 +200,6 @@ Zrzut ekranu - ikona 2
 Celownik
 [Target Desktop]
 Pulpit
-[Default]
-Domyślny
-[Overlay on]
-Nakładka włączona
-[Overlay off]
-Nakładka wyłączona
 [Help]
 Pomoc
 [Open Folder]
@@ -182,8 +218,12 @@ Poprzedni
 Dalej
 [Update]
 Aktualizacja
-[Apply]
-Zastosuj
+[Edit on]
+Edycja włączona
+[BBC]
+BBC
+[BBC link]
+BBC link
 [Down arrow]
 Strzałka w dół
 ;file \plugins\SendScreenshotPlus\src\mir_icolib.h
@@ -206,13 +246,15 @@ Wyślij zrzut do\n
 [Window]
 Okno
 [Desktop]
-Pulipit
+Pulpit
 [<Entire Desktop>]
 <cały pulpit>
 [Monitor]
 Monitoruj
 [ (primary)]
  (podstawowy)
+[File]
+Plik
 [<Only save>]
 <Tylko zapisz>
 [File Transfer]
@@ -221,8 +263,12 @@ Transfer plików
 E-mail
 [FTP File]
 Menedżer FTP
-[ImageShack]
-ImageShack
+[Upload Pie (30m)]
+Upload Pie (30m)
+[Upload Pie (1d)]
+Upload Pie (1d)
+[Upload Pie (1w)]
+Upload Pie (1t)
 [Information]
 Informacje
 [Fill description textbox.]
@@ -233,6 +279,8 @@ Usuń po wysłaniu
 Uchwyć
 [Can't create a Screenshot]
 Nie można utworzyć zrzutu ekranu
+[Select a file]
+Wybierz plik
 [Select a target window.]
 Wybierz okno.
 [Screenshot ]

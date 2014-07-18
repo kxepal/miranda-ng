@@ -29,12 +29,14 @@
 Читати повідомлення:
 [Web Search:]
 Знайти:
+[URL:]
+Посилання:
 [Open in new browser window]
 Відкрити у новому вікні
 [Show Options]
 Налаштування
 [Hide offline users]
-Сховати від'єднаних
+Сховати відключених
 [Hide empty groups]
 Сховати порожні групи
 [Disable groups]
@@ -52,7 +54,7 @@
 [Always show status in tooltip]
 Завжди показувати статус у підказці
 [Disable icon blinking]
-Вимкнути миготіння
+Вимкнути блимання
 [ms delay]
 Затримка (мс)
 [Show]
@@ -67,13 +69,13 @@
 Декілька значків
 [Only when statuses differ]
 при різних статусах
-[Contact List]
+[Contact list]
 Список контактів
 [System tray icon]
 Значок у треї
 [System tray icon when using multiple protocols]
 Значки протоколів у треї
-[Contact List Sorting]
+[Contact list sorting]
 Впорядкування списку
 [Window]
 Вікно
@@ -84,7 +86,7 @@
 [Minimize to tray]
 Згортати до трею
 [Hide contact list after it has been idle for]
-Сховати список після неактивності:
+Ховати список після неактивності:
 [seconds]
 секунд
 [Automatically resize window to height of list]
@@ -121,8 +123,8 @@
 Прикріпити до столу
 [Items]
 Елементи
-['Hide Offline' means to hide:]
-Сховати від'єднаних = сховати:
+['Hide offline' means to hide:]
+Сховати відключених - сховати:
 [Groups]
 Групи
 [Show counts of number of contacts in a group]
@@ -143,10 +145,10 @@
 Роздільник:
 [Info:]
 Інфо:
-[Status Bar]
-Панель статусу
+[Status bar]
+Панель статусів
 [Show status bar]
-Показувати панель статусу
+Показувати панель статусів
 [Show icons]
 Показувати значки
 [Show protocol names]
@@ -170,55 +172,55 @@
 [&Status]
 Статус
 [&Offline\tCtrl+0]
-Не в мережі\tCtrl+0
+Не в м&ережі\tCtrl+0
 [On&line\tCtrl+1]
-В мережі\tCtrl+1
+В &мережі\tCtrl+1
 [&Away\tCtrl+2]
-Відсутній\tCtrl+2
+&Відсутній\tCtrl+2
 [&NA\tCtrl+3]
-Недос&тупний\tCtrl+3
+Не&доступний\tCtrl+3
 [Occ&upied\tCtrl+4]
-Зайн&ятий\tCtrl+4
+&Зайнятий\tCtrl+4
 [&DND\tCtrl+5]
-Не турбу&вати\tCtrl+5
+Не т&урбувати\tCtrl+5
 [&Free for chat\tCtrl+6]
-Готовий до ч&ату\tCtrl+6
+&Готовий до чату\tCtrl+6
 [&Invisible\tCtrl+7]
-Невидимий\tCtrl+7
-[On the &Phone\tCtrl+8]
+&Невидимий\tCtrl+7
+[On the &phone\tCtrl+8]
 &Телефоную\tCtrl+8
-[Out to &Lunch\tCtrl+9]
-Обі&даю\tCtrl+9
+[Out to &lunch\tCtrl+9]
+Обід&аю\tCtrl+9
 [Tray]
 Трей
 [&Hide/Show]
 С&ховати/Показати
 [Nowhere]
 Ніде
-[&New Group]
+[&New group]
 &Створити групу
-[&Hide Offline Users]
-С&ховати від'єднаних
-[Hide &Offline Users out here]
-Сховати &від'єднаних поза групою
-[Hide &Empty Groups]
+[&Hide offline users]
+С&ховати відключених
+[Hide &offline users out here]
+Сховати &відключених поза групою
+[Hide &empty groups]
 Сховати порожні групи
-[Disable &Groups]
+[Disable &groups]
 Вимкнути &групи
 [Hide Miranda]
 Сховати список контактів
 [Group]
 Група
-[&New Subgroup]
+[&New subgroup]
 С&творити підгрупу
-[&Hide Offline Users in here]
-Сховати &від'єднаних у групі
-[&Rename Group]
+[&Hide offline users in here]
+Сховати &відключених у групі
+[&Rename group]
 &Перейменувати групу
-[&Delete Group]
+[&Delete group]
 &Видалити групу
 [Not focused]
-Cписок неактивний
+Список неактивний
 [Offline]
 Не в мережі
 [Online]
@@ -255,5 +257,3 @@ Cписок неактивний
 розгорнута
 [Collapsed]
 згорнута
-[URL:]
-Посилання:

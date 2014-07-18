@@ -59,7 +59,7 @@ History++ для истории окон
 непрозрачность:
 [Opaque popups under cursor]
 Непрозрачно под курсором
-[Slide Popup]
+[Slide popup]
 Скольжение
 [Effect:]
 Эффект:
@@ -85,7 +85,7 @@ History++ для истории окон
 История вспл.окон
 [Desktop]
 Рабочий стол
-[Popup Area]
+[Popup area]
 Зона
 [pixel(s)]
 пикс.
@@ -99,9 +99,9 @@ History++ для истории окон
 Общее
 [Enable popup actions]
 Включить действия
-[Popup Actions are those tiny buttons below notification text.]
+[Popup actions are those tiny buttons below notification text.]
 Действия - это маленькие кнопки под текстом окна.
-[Common Actions]
+[Common actions]
 Общие действия
 [Please choose in what cases default actions should be added:]
 Выберите, в каких случаях добавлять общие действия:
@@ -111,6 +111,8 @@ History++ для истории окон
 Общ. действия только у контактов
 [Don't close popups on default actions]
 Не закрывать окна общих действий
+[Size and position]
+Размер и положение
 [Use large icons]
 Большие значки
 [Popup actions will be displayed as:]
@@ -121,15 +123,15 @@ History++ для истории окон
 Значки слева
 [Icons aligned to the right]
 Значки справа
-[Show Actions: (requires apply)]
+[Show actions: (requires apply)]
 Действия: (требует "Применить")
-[Mouse Actions Overwrite]
+[Mouse actions overwrite]
 Действия по нажатию мышки
-[Left Button]
+[Left button]
 Левая кнопка
-[Middle Button]
+[Middle button]
 Средняя кнопка
-[Right Button]
+[Right button]
 Правая кнопка
 [Notifications]
 Уведомления
@@ -147,10 +149,12 @@ History++ для истории окон
 Отключить, когда глобальный статус...
 [Disable when relevant protocol's status is...]
 Отключить, когда статус соотв. протокола...
-[Colors can be configured in\r\nCustomize > Fonts && Colors]
+[Colors can be configured in\r\nCustomize > Fonts and colors]
 Цвета настраиваются в\r\nТонкая настройка > Шрифты и цвета
 [More...]
 Ещё...
+[Disable if message window is open]
+Отключить, если открыто окно сообщений
 [Sec]
 сек.
 [0 = Default]
@@ -167,7 +171,7 @@ History++ для истории окон
 Никогда
 [Show default]
 По умолчанию
-[Default Timeout]
+[Default timeout]
 Длительность по умолчанию
 [Infinite popup delay]
 Не закрывать окна
@@ -187,7 +191,7 @@ History++ для истории окон
 Позиция:
 [Layout:]
 Порядок:
-[Reorder Popups]
+[Reorder popups]
 Упорядочивать (сдвигать) окна
 [Disable when:]
 Выключить, когда
@@ -197,7 +201,7 @@ History++ для истории окон
 Полный экран
 [Debug]
 Отладка
-[no overwrite]
+[No overwrite]
 нет действия
 [Send message]
 Отправить
@@ -231,10 +235,26 @@ History++ для истории окон
 Это сообщение об ошибке
 [Square fading]
 Шахматика
-[Hovered Action]
-Наведённое действие
+[Popups]
+Всплывающие окна
+[Title]
+Заголовок
 [Clock]
 Время
+[Text]
+Текст
+[Hovered action]
+Наведённое действие
+[Background]
+Фон
+[Border]
+Рамка
+[Sidebar]
+Врезка
+[Title underline]
+Подчеркивание заголовка
+[Avatar border]
+Рамка аватара
 [Popup History is disabled]
 История всплывающих окон отключена
 [Popup History message]
@@ -249,32 +269,22 @@ History++ для истории окон
 С наложением "Полный экран"
 [Refresh skin list]
 Обновить список
-[Popup Placement]
+[Popup placement]
 Положение
 [Cancel]
 Отмена
-[Popup Group]
+[Popup group]
 Группа окон
-[Favorite Contact]
+[Favorite contact]
 Избранный контакт
-[Show in Fullscreen]
+[Show in fullscreen]
 Показать в полный экран
-[Blocked Contact]
+[Blocked contact]
 Заблокированный контакт
-[Quick Reply]
-Быстрый ответ
-[Pin Popup]
-Закрепить
-[Pinned Popup]
+[Pinned popup]
 Закреплённое
-[Send Message]
-Отправить
-[Contact Menu]
-Меню контакта
-[Add Contact Permanently]
+[Add contact permanently]
 Добавить контакт постоянно
-[Dismiss Popup]
-Закрыть
 [Classes]
 Классы
 [Actions]
@@ -291,8 +301,8 @@ History++ для истории окон
 Отключить всплывающие окна
 [Popup Plus]
 Всплывающие окна
-[%s (colors only)]
-%s (только цвета)
+[Error: I could not register the Popup Window class.\r\nThe plugin will not operate.]
+Ошибка: Не удалось зарегистрировать класс Popup Window.\r\nПлагин не будет работать.
 [No effect]
 Без эффекта
 [Fade in/out]
@@ -323,17 +333,17 @@ History++ для истории окон
 На телефоне
 [Width]
 Ширина
-[upper left corner]
+[Upper left corner]
 слева сверху
-[lower left corner]
+[Lower left corner]
 слева снизу
-[lower right corner]
+[Lower right corner]
 справа снизу
-[upper right corner]
+[Upper right corner]
 справа сверху
-[horizontal]
+[Horizontal]
 горизонталь
-[vertical]
+[Vertical]
 вертикаль
 [Global Status]
 Общий статус
@@ -341,10 +351,12 @@ History++ для истории окон
 Статус протокола
 [You cannot specify a value lower than %d and higher than %d.]
 Значение меньшее %d или большее %d не допускается.
-['Reorder Popups' option is currently diabled.\r\nThis may cause misaligned popups when used with\r\navatars and text replacement (mainly NewXstatusNotify).\r\n\r\nDo you want to enable popup reordering now?\r\n]
+['Reorder popups' option is currently disabled.\r\nThis may cause misaligned popups when used with\r\navatars and text replacement (mainly NewXstatusNotify).\r\n\r\nDo you want to enable popup reordering now?\r\n]
 Настройка 'Упорядочивать (сдвигать) окна' отключена.\r\nЭто может привести к перекосу при использовании с\r\nаватарами и заменой текста (с плагином NewXstatusNotify).\r\n\r\nВключить упорядочивание (сдвигание) окон?\r\n
 [Popup Plus Warning]
 Предупреждение Popup Plus
+[Failed to register %s class.]
+Не удалось зарегистрировать класс %s.
 [Skin preview]
 Просмотр скина
 [Just take a look at this skin... ;)]
@@ -365,12 +377,18 @@ History++ для истории окон
 Глобальные настройки
 [Refresh List]
 Обновить список
+[Failed to GetClassInfoExW from EDIT class.]
+Не удалось выполнить GetClassInfoExW из класса EDIT.
+[Failed to register custom edit box window class.\r\n\r\ncbSize: %i\r\nstyle: %p\r\nlpfnWndProc: %i\r\ncbClsExtra: %i\r\ncbWndExtra: %i\r\nhInstance: %i\r\nhIcon: %i\r\nhCursor: %i\r\nhbrBackground: %i\r\nlpszMenuName: %s\r\nlpszClassName: %s\r\nhIconSm: %i\r\n]
+Не удалось зарегистрировать класс custom edit box window.\r\n\r\ncbSize: %i\r\nstyle: %p\r\nlpfnWndProc: %i\r\ncbClsExtra: %i\r\ncbWndExtra: %i\r\nhInstance: %i\r\nhIcon: %i\r\nhCursor: %i\r\nhbrBackground: %i\r\nlpszMenuName: %s\r\nlpszClassName: %s\r\nhIconSm: %i\r\n
 [Error]
 Ошибка
 [Warning]
 Предупреждение
 [Notify]
 Уведомление
+[The skin you are trying to load is designed\r\nfor newer version of Popup Plus. And will not\r\ndisplay properly.\r\n\r\nPlease choose another skin.]
+Скин, который вы пытаетесь загрузить, разработан\r\nдля более новой версии плагина Popup Plus. И не будет\r\nотображаться корректно.\r\n\r\nПожалуйста, выберите другой скин.
 [Auto]
 Авто
 [Favorite]
@@ -379,6 +397,8 @@ History++ для истории окон
 Заблокировать
 [Popup Mode: Auto]
 Режим всплывающих окон: по умолчанию
+[Popup Mode: Favorite]
+Режим всплывающих окон: избранные
 [Popup Mode: Ignore fullscreen]
 Режим всплывающих окон: игнорировать полноэкранные приложения
 [Popup Mode: Block contact]

@@ -142,7 +142,7 @@ Ich
 [Others]
 Sonstiges
 [&Invite user...]
-Kontakt e&inladen
+Kontakt e&inladen...
 [&Leave chat session]
 Chat ver&lassen
 [User &details]
@@ -292,7 +292,7 @@ Mailkonto öffnen?
 %s Client-to-Client-Verbindung
 ;file \protocols\AimOscar\src\server.cpp
 [[Auto-Response]:]
-[Automatische Antwort]:
+\[Automatische Antwort]:
 [Contact tried to open an audio/video conference (not currently supported)]
 Kontakt versucht, eine Audio-/Video-Konferenz zu öffnen (momentan nicht unterstützt).
 [No information has been provided by the server.]
@@ -338,8 +338,6 @@ Ihr Account wurde bereits bestätigt.
 [Can't start the confirmation procedure.]
 Kann die Verbindungsprozedur nicht starten.
 ;file \protocols\AimOscar\src\theme.cpp
-[ICQ]
-ICQ
 [Block]
 Blockieren
 [Profile]

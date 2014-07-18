@@ -2,50 +2,52 @@
 ;============================================================
 ;  File: MyDetails.dll
 ;  Plugin: My details
-;  Version: 0.0.1.11
+;  Version: 0.0.1.12
 ;  Authors: Ricardo Pescuma Domenecci, Drugwash
 ;============================================================
 [Shows and allows you to edit your details for all protocols.]
 Zeigt Ihre Details in der Kontaktliste an und bietet eine Möglichkeit, diese zu verändern.
 ;file \plugins\MyDetails\res\resource.rc
-[Set My Nickname]
+[Set my nickname]
 Mein Nicknamen setzen
 [Nickname:]
 Nickname:
-[OK]
-OK
 [Cancel]
 Abbrechen
 [General]
 Allgemein
-[...avatar]
-...Avatar
 [RTL]
 RTL
 [Align text to right]
 Text rechtsbündig
-[...nickname]
-...Nickname
 [Auto-resize frame]
 Autom. Höhe anpassen
 [Use contact list smileys]
 Kontaktlistensmileys nutzen
+[Replace smileys]
+Smileys ersetzen
+[Resize smileys]
+Smileygröße anpassen
+[Global on...]
+Global bei...
+[...avatar]
+...Avatar
+[...nickname]
+...Nickname
 [...status]
 ...Status
-[Replace Smileys]
-Smileys ersetzen
-[Resize Smileys]
-Smileygröße anpassen
 [...status message]
 ...Statusnachricht
-[Top:]
-Oben:
-[Bottom:]
-Unten:
-[Left:]
-Links:
-[Right:]
-Rechts:
+[Account]
+Konto
+[Show account name]
+Kontennamen anzeigen
+[Show account cycle button]
+Kontenwechselbuttons anzeigen
+[Cycle through accounts every:]
+Konten wechseln alle
+[seconds]
+Sekunden
 [Avatar]
 Avatar
 [Custom size:]
@@ -62,23 +64,19 @@ Runde Ecken
 Eigene Eckengröße:
 [Use free space (under avatar) to other texts]
 Freien Platz (unter Avataren) für andere Texte nutzen
-[Global On...]
-Global bei...
-[Frame Options]
+[Frame options]
 Frame-Einstellungen
-[Cycle through accounts every:]
-Accounts wechseln alle
-[seconds]
-Sekunden
-[Account]
-Account
-[Show account name]
-Accountnamen anzeigen
-[Show account cycle button]
-Accountwechselbuttons anzeigen
-[Set My Status Message for All Status]
+[Top:]
+Oben:
+[Bottom:]
+Unten:
+[Left:]
+Links:
+[Right:]
+Rechts:
+[Set my status message for all status]
 Meine Statusnachricht für jeden Status setzen
-[Status Message:]
+[Status message:]
 Statusnachricht:
 [&Offline]
 &Offline
@@ -96,26 +94,26 @@ Bitte nicht stören
 &Für Chat bereit
 [&Invisible]
 Uns&ichtbar
-[On the &Phone]
+[On the &phone]
 Am Telefon
-[Out to &Lunch]
+[Out to &lunch]
 Zum Essen
-[Set My Avatar...]
-Mein Avatar setzen
-[Set My Nickname...]
-Mein Nicknamen setzen
-[Set My Status Message...]
-Meine Statusnachicht setzen
-[Enable Listening To]
-Listening To aktivieren
+[Set my avatar...]
+Meinen Avatar setzen...
+[Set my nickname...]
+Meinen Nicknamen setzen...
+[Set my status message...]
+Meine Statusnachicht setzen...
+[Enable listening to]
+'Höre gerade' aktivieren
 [Show next account]
-Nächsten Account anzeigen
+Nächstes Konto anzeigen
 [Show previous account]
-Vorherigen Account anzeigen
+Vorheriges Konto anzeigen
 [Cycle through accounts]
-Wechsel der Accounts
+Wechsel der Konten
 [Don't cycle through accounts]
-Kein Wechsel der Accounts
+Kein Wechsel der Konten
 ;file \plugins\MyDetails\src\data.cpp
 [<no status name>]
 <kein Statusname>
@@ -124,39 +122,37 @@ Kein Wechsel der Accounts
 Nick
 [Status]
 Status
-[Status Message]
+[Status message]
 Statusnachricht
-[Listening To]
-Hört gerade
-[My Details]
+[Listening to]
+Höre gerade
+[My details]
 Meine Details
 [Background]
 Hintergrund
-[Avatar Border]
+[Avatar border]
 Avatar-Rahmen
-[Show My Details]
+[Show my details]
 Meine Details anzeigen
-[Enable Listening To for %s]
-Musikinformationen für %s senden
-[Set My Avatar for %s...]
-Avatar für %s setzen
-[Set My Nickname for %s...]
-Nickname für %s setzen
-[Set My Status Message for %s...]
-Statusnachricht für %s setzen
-[Hide My Details]
+[Enable listening to for %s]
+'Höre gerade' für %s aktivieren
+[Set my avatar for %s...]
+Avatar für %s setzen...
+[Set my nickname for %s...]
+Nickname für %s setzen...
+[Set my status message for %s...]
+Statusnachricht für %s setzen...
+[Hide my details]
 Meine Details verstecken
 ;file \plugins\MyDetails\src\mydetails.cpp
-[Listening to]
-Höre gerade
-[Previous protocol]
-Vorheriges Protokoll
-[Next protocol]
-Nächstes Protokoll
-[Set My Nickname for %s]
-Nickname für %s setzen
-[Set My Status Message for %s]
-Statusnachricht für %s setzen
-[Contact List]
+[Previous account]
+Vorheriges Konto
+[Next account]
+Nächstes Konto
+[Set my nickname for %s]
+Meinen Nicknamen für %s setzen
+[Set my status message for %s]
+Meine Statusnachricht für %s setzen
+[Contact list]
 Kontaktliste
 ;file \plugins\MyDetails\src\options.cpp

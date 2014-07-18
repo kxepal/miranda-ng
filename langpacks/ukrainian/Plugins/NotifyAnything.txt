@@ -6,7 +6,7 @@
 ;  Authors: Daniel Wesslen, Korney San
 ;============================================================
 [Displays popups for custom events, triggered by UDP packages.]
-Відображає спливаючі вікна для подій, викликаних UDP пакетами.
+Сповіщає у спливаючих вікнах про різні події, викликані UDP-пакетами.
 [Property Page]
 Властивості
 [Security]
@@ -33,38 +33,14 @@
 Дозволити виконання програм
 [Password:]
 Пароль:
-[No resource name given.]
-Не вказане ім'я ресурсу.
-[Icon indices start at 1.]
-Значок індекси починаються з 1.
-[Could not find the requested icon.]
-Не вдалося знайти потрібний значок.
-[Application launching is disabled.]
-Запуск програми вимкнено.
-[Unterminated option.]
-Незавершений варіант.
-[No argument given to msg option.]
-Не вказано аргумент для параметру msg.
-[ID is required for replacement.]
-Ідентифікатор необхідний для заміни.
-[Invalid argument for replace option: ]
-Неправильний аргумент для заміни:\s
-[Empty message ignored.]
-Пусте повідомлення ігнорується.
-[Failed to write to log file.]
-Не вдалося записати в файл журналу.
-[Failed to open log file.]
-Не вдалося відкрити файл журналу.
 [N/A: Failed to format error message]
-N/A: Поимлка у форматі повідомлення з помилкою
+N/A: Помилка у форматі повідомлення з помилкою
 [N/A: FormatMessage failed, error code was 0x]
 N/A: Помилка формату повідомлення, код помилки: 0x
 [Error]
 Помилка
-[Services]
-Служби
-[LogService]
-Служба журналів
+[Log (*.log)\0*.log\0Text (*.txt)\0*.txt\0All Files (*.*)\0*.*\0]
+Журнали (*.log)\0*.log\0Текстові файли (*.txt)\0*.txt\0Усі файли (*.*)\0*.*\0
 [Invalid port number]
 Неправильний номер порту
 [Plugins]

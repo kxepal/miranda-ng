@@ -1,7 +1,7 @@
 ﻿#muuid {748f8934-781a-528d-5208-001265404ab3}
 ;============================================================
 ;  File: Tlen.dll
-;  Plugin: Tlen Protocol
+;  Plugin: Tlen protocol
 ;  Version: 2.1.0.0
 ;  Authors: Santithorn Bunchua, Adam Strzelecki, Piotr Piastucki
 ;============================================================
@@ -140,7 +140,7 @@ Tlen Пароль
 Узрост:
 [to]
 у
-[Extra Search Criterias]
+[Extra Search Criteria]
 Дадатковыя крытэрыі
 [Status:]
 Статус:
@@ -185,8 +185,6 @@ Tlen чаты
 Уваходная пошта
 [Alert]
 Увага
-[Tlen Chats]
-Tlen чаты
 [Multi-User Conference]
 Канферэнцыя
 [Tlen Mail]
@@ -199,6 +197,7 @@ Tlen пошта
 Запытаць аўтарызацыю
 [Grant authorization]
 Аўтарызаваць
+;file \protocols\Tlen\src\tlen_avatar.cpp
 ;file \protocols\Tlen\src\tlen_file.cpp
 [1 File]
 1 файл
@@ -209,33 +208,6 @@ Tlen пошта
 Аутэнтыфікацыя не пройдзена для %s@%s.
 [Tlen Authentication]
 Аўтэнтыфікацыя Tlen
-;file \protocols\Tlen\src\tlen_muc.cpp
-[You have been kicked. Reason: %s ]
-Вас выгналі. Чыннік: %s
-[You cannot join this chat room, because you are banned.]
-Вы не можаце ўвайсці ў чат, таму што Вы заблакаваны.
-[Chat room not found.]
-Чат не знойдзены.
-[This is a private chat room and you are not one of the members.]
-Гэта прыватны чат, і вы не яго ўдзельнік.
-[You cannot send any message unless you join this chat room.]
-Вы не можаце пасылаць паведамленне, пакуль Вы не ўвайшлі ў чат.
-[Chat room with already created.]
-Чат ужо створаны.
-[Nickname '%s' is already registered.]
-Мянушка '%s' ужо занята.
-[Nickname already in use, please try another one. Hint: '%s' is free.]
-Мянушка ужо выкарыстоўваецца, абярыце іншую. Падказка: '%s' вольны.
-[You cannot register more than %s nicknames.]
-Вы не можаце зарэгістраваць больш чым %s мянушак.
-[You cannot create more than %s chat rooms.]
-Вы не можаце стварыць больш чым %s чатаў.
-[You cannot join more than %s chat rooms.]
-Вы не можаце ўвайсці ў больш чым %s чатаў.
-[Anonymous nicknames are not allowed in this chat room.]
-Ананімныя мянушкі забаронены ў гэтым чаты.
-[Unknown error code: %d]
-Невядомая памылка: %d
 ;file \protocols\Tlen\src\tlen_opt.cpp
 [General]
 Агульнае
@@ -275,33 +247,17 @@ Tlen пошта
 (Апошняе паведамленне)
 [Forwarding]
 Перанакіраванне
-[%s mail]
-%s пошта
+[%S mail]
+%S пошта
 ;file \protocols\Tlen\src\tlen_picture.cpp
 ;file \protocols\Tlen\src\tlen_svc.cpp
 [Tlen login]
 Tlen уваход
 ;file \protocols\Tlen\src\tlen_thread.cpp
-[Enter password for %s@%s.]
-Увядзіце пароль для %s@%s.
+[Enter password for %s]
+Увядзіце пароль для %s.
 [Tlen Connection Error]
 Tlen памылка далучэння
-[Windows Server 2003]
-Windows Server 2003
-[Windows XP]
-Windows XP
-[Windows 2000]
-Windows 2000
-[Windows NT]
-Windows NT
-[Windows 95]
-Windows 95
-[Windows 98]
-Windows 98
-[Windows ME]
-Windows ME
-[Windows]
-Windows
 [%s Web Messages]
 %s Web паведамленняў
 [Web message]
@@ -314,6 +270,8 @@ Windows
 Абвестка прынята.
 [Private conference]
 Асабістая канферэнцыя
+[%s mail]
+%s пошта
 [Subject]
 Тэма
 ;file \protocols\Tlen\src\tlen_userinfo.cpp

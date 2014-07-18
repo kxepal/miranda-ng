@@ -27,7 +27,7 @@ MCONTACT AddRoom(const char *pszModule, const TCHAR *pszRoom, const TCHAR *pszDi
 	TCHAR pszGroup[50]; *pszGroup = '\0';
 	ptrT groupName(db_get_tsa(NULL, CHAT_MODULE, "AddToGroup"));
 	if (groupName)
-		_tcsncpy_s(pszGroup, SIZEOF(pszGroup), groupName, _TRUNCATE);
+		_tcsncpy_s(pszGroup, groupName, _TRUNCATE);
 	else
 		_tcscpy(pszGroup, _T("Chat rooms"));
 
@@ -60,7 +60,7 @@ MCONTACT AddRoom(const char *pszModule, const TCHAR *pszRoom, const TCHAR *pszDi
 		return NULL;
 
 	CallService(MS_PROTO_ADDTOCONTACT, hContact, (LPARAM)pszModule);
-	if (pszGroup && lstrlen(pszGroup) > 0)
+	if (pszGroup[0])
 		db_set_ts(hContact, "CList", "Group", pszGroup);
 	else
 		db_unset(hContact, "CList", "Group");
@@ -75,7 +75,7 @@ BOOL SetOffline(MCONTACT hContact, BOOL bHide)
 {
 	if (hContact) {
 		char *szProto = GetContactProto(hContact);
-		db_set_w(hContact, szProto, "ApparentMode", (LPARAM)0);
+		db_set_w(hContact, szProto, "ApparentMode", 0);
 		db_set_w(hContact, szProto, "Status", ID_STATUS_OFFLINE);
 		return TRUE;
 	}
@@ -219,7 +219,7 @@ BOOL AddEvent(MCONTACT hContact, HICON hIcon, HANDLE hEvent, int type, TCHAR* fm
 	cle.ptszTooltip = TranslateTS(szBuf);
 	if (type) {
 		if (!CallService(MS_CLIST_GETEVENT, hContact, 0))
-			CallService(MS_CLIST_ADDEVENT, (WPARAM) hContact, (LPARAM) &cle);
+			CallService(MS_CLIST_ADDEVENT, hContact, (LPARAM)&cle);
 	}
 	else {
 		if (CallService(MS_CLIST_GETEVENT, hContact, 0))

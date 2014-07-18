@@ -8,16 +8,46 @@
 [Internet Relay Chat (IRC) protocol support for Miranda NG.]
 Internet Relay Chat (IRC)-Protokollunterstützung für Miranda NG.
 ;file \protocols\IRCG\res\IRC.rc
+[Default network]
+Standardnetzwerk
+[Enable]
+Aktivieren
+[Server name]
+Servername
+[Internet address]
+Internetadresse
+[SSL]
+SSL
+[Port range]
+Portbereich
+[Password]
+Passwort
 [&Add]
 Hinzufügen
 [&Edit]
 B&earbeiten
 [&Del]
 Löschen
-[Enable]
-Aktivieren
+[User info - Required]
+Erforderliche Angaben
+[Nick]
+Nick
+[Alternative nick]
+Alternativer Nick
+[Full name (e-mail)]
+Voller Name (E-Mail)
+[User ID (Ident)]
+Nutzer-ID (Ident)
+[Ident]
+Ident
+[System]
+System
+[Port]
+Port
 [only while connecting]
 Nur beim Verbindungsaufbau
+[Other]
+Sonstige
 [Force visible (-i)]
 Sichtbar setzen (-i)
 [Rejoin channel if kicked]
@@ -40,40 +70,10 @@ Bei Einladung automatisch beitreten
 'Alter Stil' Statusänderungen
 [Update online statuses for users]
 Status für Kontakte aktualisieren
-[Update statuses in channel nick list]
-Status für Benutzerliste aktualisieren
-[Internet address]
-Internetadresse
-[Port range]
-Portbereich
-[Nick]
-Nick
-[User ID (Ident)]
-Nutzer-ID (Ident)
-[Full name (e-mail)]
-Voller Name (E-Mail)
-[Password]
-Passwort
-[Server name]
-Servername
-[Alternative nick]
-Alternativer Nick
-[Ident]
-Ident
-[System]
-System
-[Port]
-Port
-[Default network]
-Standardnetzwerk
-[User info - Required]
-Erforderliche Angaben
-[Other]
-Sonstige
 [Check every (s):]
 Prüfe alle (s):
-[SSL]
-SSL
+[Update statuses in channel nick list]
+Status für Benutzerliste aktualisieren
 [Don't check if more than (users):]
 Nicht prüfen bei mehr als (Ben.):
 [User information]
@@ -112,8 +112,6 @@ Der Server liefert die folgenden Informationen. Beachten Sie aber, dass diese ve
 CTCP-Informationen
 [Question]
 Frage
-[&OK]
-&OK
 [&Cancel]
 Abbre&chen
 [Perform]
@@ -226,7 +224,7 @@ Client-to-Client-Protokoll
 Client-to-Client-Chats
 [Send mode:]
 Sendemodus:
-[Packet size (b):]
+[Packet size (bytes):]
 Paketgröße (b):
 [Get IP address from server]
 IP-Adresse vom Server beziehen
@@ -244,7 +242,7 @@ Ablehnen
 Aktivieren (*)
 [Ignore channel messages by default]
 Channelnachrichten standardmäßig ignorieren
-[Ignore filetransfer requests]
+[Ignore file transfer requests]
 Dateiübertragungsanfragen ignorieren
 [Ignore DCC Chat requests]
 DCC-Chatanfragen ignorieren
@@ -264,8 +262,8 @@ Notizen
 CTCP
 [DCC]
 DCC
-[Ignore mask ( nick!user@host )]
-Ignoriermaske ( nick!user@host )
+[Ignore mask (nick!user@host)]
+Ignoriermaske (nick!user@host)
 [Network (*)]
 Netzwerk (*)
 [Ignore events]
@@ -276,8 +274,6 @@ Zu ignorierende Ereignisse
 Server:
 [Password:]
 Passwort:
-[Alternate nick]
-Alternativer Nick
 ;file \protocols\IRCG\src\clist.cpp
 [CTCP chat request from %s]
 CTCP-Chatanfrage von %s
@@ -392,17 +388,13 @@ Bitte Antwort eingeben
 ;file \protocols\IRCG\src\irclib.cpp
 [Failed to connect to]
 Konnte nicht verbinden mit
-[DCC ERROR: Unable to bind local port for passive filetransfer]
+[DCC ERROR: Unable to bind local port for passive file transfer]
 DCC-FEHLER: Konnte den lokalen Port für passiven Dateitransfer nicht einbinden
 ;file \protocols\IRCG\src\ircproto.cpp
 [%s server connection]
 %s Serververbindung
 [%s client-to-client connections]
 %s Client-to-Client-Verbindungen
-[The IRC protocol depends on another plugin called 'Chat'\n\nDo you want to download it from the Miranda NG web site now?]
-Das IRC-Protokoll hängt von einem anderen Plugin namens 'Chat' ab.\n\nMöchten Sie es nun von der Miranda-NG-Website herunterladen?
-[Information]
-Information
 [Nickname]
 Nick
 [DCC ERROR: No valid files specified]
@@ -500,6 +492,26 @@ Server bearbeiten
 <Automatisch>
 [<Local IP: ]
 <lokale IP:\s
+[Event: Available]
+
+[Event: Away]
+
+[Event: N/A]
+
+[Event: Occupied]
+
+[Event: DND]
+
+[Event: Free for chat]
+
+[Event: On the phone]
+
+[Event: Out for lunch]
+
+[Event: Disconnect]
+
+[ALL NETWORKS]
+Alle Netzwerke
 [Click to set commands that will be performed for this event]
 Klicken Sie hier, um die Befehle zu setzen, die bei diesem Ereignis ausgeführt werden.
 [Click to delete the commands for this event]
@@ -522,7 +534,7 @@ Hinzufügen
 Bearbeiten
 [Account]
 Konto
-[DCC'n CTCP]
+[DCC and CTCP]
 DCC und CTCP
 [Advanced]
 Erweitert
@@ -572,9 +584,9 @@ Channelnamen zum Betreten eingeben
 Bitte IRC-Netzwerk auswählen und gegebenenfalls Passwort eingeben
 [Please enter a unique nickname]
 Bitte eindeutigen Nick eingeben
-[Please enter your authentification code]
+[Please enter your authentication code]
 Bitte geben Sie hier Ihren Authentifizierungscode ein
-[Authentificate nick]
+[Authenticate nick]
 Nick authentifizieren
 [Are you sure you want to unregister your current nick?]
 Sind Sie sicher, dass Sie den aktuellen Nick entregistrieren möchten?

@@ -1,4 +1,4 @@
-﻿#muuid  {e4058506-6494-4d60-9cf4-40bf545f78bd}
+﻿#muuid {e4058506-6494-4d60-9cf4-40bf545f78bd}
 ;============================================================
 ;  File: QuickSearch.dll
 ;  Module: Quick Search
@@ -6,7 +6,7 @@
 ;  Authors: Awkward
 ;============================================================
 [This plugin allows you to quick search for nickname, firstname, lastname, email, uin in your contact list. And now you may add any setting to display - for example user's version of Miranda, group or city.]
-Плагин позволит вам быстро найти ник, имя, фамилию, e-mail, uin в вашем списке контактов. Теперь вы можете добавить любую настройку для отображения. Например версии Miranda, группы или города.
+Плагин позволит вам быстро найти ник, имя, фамилию, e-mail, uin в вашем списке контактов. Пользователь может добавить любую настройку для отображения (например, версии Miranda, группы или города).
 [Quick Search]
 Поиск по списку
 [Title]
@@ -61,6 +61,8 @@ ID пользователя
 Группа
 [Container]
 Контейнер
+[E-mail]
+Почта
 [Client ID]
 ID клиента
 [Ext IP]
@@ -193,9 +195,9 @@ ID клиента
 Фон метаконтактов
 [Metacontact foreground]
 Текст метаконтактов
-[SubMetacontact background]
+[Subcontact background]
 Фон субконтактов
-[SubMetacontact foreground]
+[Subcontact foreground]
 Текст субконтактов
 [&Delete]
 &Удалить
@@ -203,6 +205,8 @@ ID клиента
 &Копировать
 [C&onvert to Meta]
 Прео&бразовать в метаконтакт
+[Attach to &Tab container]
+Присоединить к &контейнеру
 [&Move to Group]
 &Переместить в группу
 [Some of selected contacts in different metacontacts already]

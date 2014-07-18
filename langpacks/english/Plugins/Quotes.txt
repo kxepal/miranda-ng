@@ -2,13 +2,12 @@
 ;============================================================
 ;  File: Quotes.dll
 ;  Plugin: Quotes
-;  Version: 0.0.24.0
+;  Version: 0.0.26.0
 ;  Authors: Dioksin
 ;============================================================
 [Shows currency rates and economic quotes.]
 ;file \plugins\Quotes\res\Forex.rc
 [Variable List]
-[OK]
 [Edit Settings]
 [Use contact specific settings]
 [Log]
@@ -55,8 +54,6 @@
 [&Status Message:]
 [&Tendency:]
 [&Advanced Settings...]
-[Static]
-[<a>SysLink1</a>]
 [Current Rate:]
 [Rate Fetch Time:]
 [Previous Rate:]
@@ -82,7 +79,10 @@
 [Info provided by]
 [Enter positive number.]
 ;file \plugins\Quotes\src\Forex.cpp
+[Auto Update Enabled]
+[Auto Update Disabled]
 [Quotes]
+[Enable/Disable Auto Update]
 [Refresh All Quotes\\Rates]
 [Currency Converter...]
 [Export All Quotes]
@@ -91,6 +91,9 @@
 [Open Log File...]
 [Chart...]
 [Edit Settings...]
+[Enable/Disable Quotes Auto Update]
+[Quotes Auto Update Enabled]
+[Quotes Auto Update Disabled]
 [Network]
 ;file \plugins\Quotes\src\HTTPSession.cpp
 [Quotes HTTP connections]
@@ -105,7 +108,7 @@
 [Swap button]
 [Import]
 ;file \plugins\Quotes\src\ImportExport.cpp
-[Xml File (*.xml)]
+[XML File (*.xml)]
 [All files (*.*)]
 ;file \plugins\Quotes\src\ModuleInfo.cpp
 [Miranda could not load Quotes plugin. XML parser is missing.]

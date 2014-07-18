@@ -1,7 +1,7 @@
 ﻿#muuid {eebc474c-b0ad-470f-99a8-9dd9210ce233}
 ;============================================================
 ;  File: mRadio.dll
-;  Module: mRadio
+;  Plugin: mRadio Mod
 ;  Version: 0.0.2.4
 ;  Authors: Awkward
 ;============================================================
@@ -58,7 +58,7 @@ Włącz EAX
 [Under Water]
 Pod wodą
 [Station URL (required)]
-URL do stacji (wymagany)
+Link do stacji (wymagany)
 [To INI]
 Do pliku
 [Buffer, ms (5000)]
@@ -114,11 +114,11 @@ Nagrywaj
 [Stop record]
 Przerwij nagrywanie
 [Currently played URL]
-Aktualnie odtwarzany URL
+Aktualnie odtwarzany link
 [Current stream title]
 Aktualny tytuł strumienia
 [Station/playlist URL]
-Stacja/plik playlisty
+Stacja/Plik playlisty
 [Currently used decoder]
 Aktualnie używany kodek
 [connecting]
@@ -176,7 +176,7 @@ Wymuś Mono
 [Play/Pause]
 Odtwarzaj/Pauza
 [Oops! BASS error]
-Uups! Błąd biblioteki BASS.
+Ups! Błąd biblioteki BASS.
 [Mute with Miranda]
 Wycisz z Mirandą
 [Advanced]

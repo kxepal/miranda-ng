@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: AdvancedAutoAway.dll
 ;  Plugin: Advanced Auto Away
-;  Version: 0.8.1.0
+;  Version: 0.8.1.1
 ;  Authors: P Boon
 ;============================================================
 [An Auto Away module with some more options than the original.]
@@ -68,12 +68,10 @@ OK
 
 [Command line]
 
-[OK]
-OK
 [Copy to clipboard]
 Copier dans le Presse-Papiers
 [Command line:]
-Commande:
+Commande :
 [Create shortcut]
 
 [Add new profile]

@@ -87,7 +87,8 @@ static void SaveSRMMProtoSettings(HWND hwndDlg, ProtocolSettings *proto)
 	}
 }
 
-static void SaveChatProtoSettings(HWND hwndDlg, ProtocolSettings *proto) {
+static void SaveChatProtoSettings(HWND hwndDlg, ProtocolSettings *proto)
+{
 	if (proto != NULL) {
 		char path[MAX_PATH];
 		int i = Options::MODE_COMPATIBLE;
@@ -198,7 +199,8 @@ static void UpdateTemplateIcons(HWND hwnd, const char *path)
 	}
 }
 
-static void UpdateSRMMProtoInfo(HWND hwndDlg, ProtocolSettings *proto) {
+static void UpdateSRMMProtoInfo(HWND hwndDlg, ProtocolSettings *proto)
+{
 	if (proto != NULL) {
 		HWND hProtoList = GetDlgItem(hwndDlg, IDC_PROTOLIST);
 		TreeView_SetCheckState(hProtoList, TreeView_GetSelection(hProtoList), proto->isSRMMEnableTemp());
@@ -235,7 +237,8 @@ static void UpdateSRMMProtoInfo(HWND hwndDlg, ProtocolSettings *proto) {
 	}
 }
 
-static void UpdateChatProtoInfo(HWND hwndDlg, ProtocolSettings *proto) {
+static void UpdateChatProtoInfo(HWND hwndDlg, ProtocolSettings *proto)
+{
 	if (proto != NULL) {
 		HWND hProtoList = GetDlgItem(hwndDlg, IDC_PROTOLIST);
 		TreeView_SetCheckState(hProtoList, TreeView_GetSelection(hProtoList), proto->isChatEnableTemp());
@@ -272,7 +275,8 @@ static void UpdateChatProtoInfo(HWND hwndDlg, ProtocolSettings *proto) {
 	}
 }
 
-static void UpdateHistoryProtoInfo(HWND hwndDlg, ProtocolSettings *proto) {
+static void UpdateHistoryProtoInfo(HWND hwndDlg, ProtocolSettings *proto)
+{
 	if (proto != NULL) {
 		HWND hProtoList = GetDlgItem(hwndDlg, IDC_PROTOLIST);
 		TreeView_SetCheckState(hProtoList, TreeView_GetSelection(hProtoList), proto->isHistoryEnableTemp());
@@ -309,7 +313,8 @@ static void UpdateHistoryProtoInfo(HWND hwndDlg, ProtocolSettings *proto) {
 	}
 }
 
-static void RefreshProtoIcons() {
+static void RefreshProtoIcons()
+{
 	int i;
 	ProtocolSettings *proto;
 	if (hProtocolImageList != NULL) {
@@ -337,7 +342,8 @@ static void RefreshProtoIcons() {
 	}
 }
 
-static void RefreshIcons() {
+static void RefreshIcons()
+{
 	if (hImageList != NULL) {
 		ImageList_RemoveAll(hImageList);
 	} else {
@@ -349,7 +355,8 @@ static void RefreshIcons() {
 	ImageList_AddIcon(hImageList, (HICON) LoadImage(hInstance, MAKEINTRESOURCE(IDI_RTL_ON),IMAGE_ICON,0,0,0));
 }
 
-static void RefreshProtoList(HWND hwndDlg, int mode, bool protoTemplates) {
+static void RefreshProtoList(HWND hwndDlg, int mode, bool protoTemplates)
+{
 	int i;
 	HTREEITEM hItem = NULL;
 	HWND hProtoList = GetDlgItem(hwndDlg, IDC_PROTOLIST);
@@ -396,7 +403,8 @@ static void RefreshProtoList(HWND hwndDlg, int mode, bool protoTemplates) {
 	TreeView_SelectItem(hProtoList, hItem);
 }
 
-static bool BrowseFile(HWND hwndDlg, char *filter, char *defExt,  char *path, int maxLen) {
+static bool BrowseFile(HWND hwndDlg, char *filter, char *defExt,  char *path, int maxLen)
+{
 	OPENFILENAMEA ofn={0};
 	GetWindowTextA(hwndDlg, path, maxLen);
 	ofn.lStructSize = sizeof(OPENFILENAME);//_SIZE_VERSION_400;
@@ -441,7 +449,8 @@ int IEViewOptInit(WPARAM wParam, LPARAM lParam)
 static int initialized = 0;
 static int changed = 0;
 
-static void MarkInitialized(int i) {
+static void MarkInitialized(int i)
+{
 	if (initialized == 0) {
 		Options::resetProtocolSettings();
 		RefreshProtoIcons();
@@ -450,7 +459,8 @@ static void MarkInitialized(int i) {
 	initialized |= i;
 }
 
-static void ApplyChanges(int i) {
+static void ApplyChanges(int i)
+{
 	changed &= ~i;
 	initialized &= ~i;
 	if (changed == 0) {
@@ -459,12 +469,14 @@ static void ApplyChanges(int i) {
 	}
 }
 
-static void MarkChanges(int i, HWND hWnd) {
+static void MarkChanges(int i, HWND hWnd)
+{
 	SendMessage(GetParent(hWnd), PSM_CHANGED, 0, 0);
 	changed |= i;
 }
 
-static INT_PTR CALLBACK IEViewGeneralOptDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+static INT_PTR CALLBACK IEViewGeneralOptDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+{
 	int i;
 	switch (msg) {
 	case WM_INITDIALOG:
@@ -476,9 +488,6 @@ static INT_PTR CALLBACK IEViewGeneralOptDlgProc(HWND hwndDlg, UINT msg, WPARAM w
 			}
 			if (Options::getGeneralFlags() & Options::GENERAL_ENABLE_FLASH) {
 				CheckDlgButton(hwndDlg, IDC_ENABLE_FLASH, TRUE);
-			}
-			if (Options::getGeneralFlags() & Options::GENERAL_ENABLE_MATHMODULE) {
-				CheckDlgButton(hwndDlg, IDC_ENABLE_MATHMODULE, TRUE);
 			}
 			if (Options::getGeneralFlags() & Options::GENERAL_ENABLE_PNGHACK) {
 				CheckDlgButton(hwndDlg, IDC_ENABLE_PNGHACK, TRUE);
@@ -492,7 +501,6 @@ static INT_PTR CALLBACK IEViewGeneralOptDlgProc(HWND hwndDlg, UINT msg, WPARAM w
 			if (Options::getGeneralFlags() & Options::GENERAL_ENABLE_EMBED) {
 				CheckDlgButton(hwndDlg, IDC_ENABLE_EMBED, TRUE);
 			}
-			EnableWindow(GetDlgItem(hwndDlg, IDC_ENABLE_MATHMODULE), Options::isMathModule());
 			EnableWindow(GetDlgItem(hwndDlg, IDC_SMILEYS_IN_NAMES), Options::isSmileyAdd());
 			EnableWindow(GetDlgItem(hwndDlg, IDC_EMBED_SIZE), IsDlgButtonChecked(hwndDlg, IDC_ENABLE_EMBED));
 			TCHAR* size[] = {  _T("320 x 205"), _T("480 x 385") , _T("560 x 349"), _T("640 x 390")};
@@ -508,7 +516,6 @@ static INT_PTR CALLBACK IEViewGeneralOptDlgProc(HWND hwndDlg, UINT msg, WPARAM w
 			switch (LOWORD(wParam)) {
 			case IDC_ENABLE_BBCODES:
 			case IDC_ENABLE_FLASH:
-			case IDC_ENABLE_MATHMODULE:
 			case IDC_ENABLE_PNGHACK:
 			case IDC_SMILEYS_IN_NAMES:
 			case IDC_NO_BORDER:
@@ -532,9 +539,6 @@ static INT_PTR CALLBACK IEViewGeneralOptDlgProc(HWND hwndDlg, UINT msg, WPARAM w
 				}
 				if (IsDlgButtonChecked(hwndDlg, IDC_ENABLE_FLASH)) {
 					i |= Options::GENERAL_ENABLE_FLASH;
-				}
-				if (IsDlgButtonChecked(hwndDlg, IDC_ENABLE_MATHMODULE)) {
-					i |= Options::GENERAL_ENABLE_MATHMODULE;
 				}
 				if (IsDlgButtonChecked(hwndDlg, IDC_ENABLE_PNGHACK)) {
 					i |= Options::GENERAL_ENABLE_PNGHACK;
@@ -561,7 +565,8 @@ static INT_PTR CALLBACK IEViewGeneralOptDlgProc(HWND hwndDlg, UINT msg, WPARAM w
 	return FALSE;
 }
 
-static INT_PTR CALLBACK IEViewSRMMOptDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+static INT_PTR CALLBACK IEViewSRMMOptDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+{
 	BOOL bChecked;
 	char path[MAX_PATH], filter[MAX_PATH];
 	switch (msg) {
@@ -696,7 +701,8 @@ static INT_PTR CALLBACK IEViewSRMMOptDlgProc(HWND hwndDlg, UINT msg, WPARAM wPar
 	return FALSE;
 }
 
-static INT_PTR CALLBACK IEViewHistoryOptDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+static INT_PTR CALLBACK IEViewHistoryOptDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+{
 	BOOL bChecked = FALSE;
 	char path[MAX_PATH], filter[MAX_PATH];
 	switch (msg) {
@@ -830,7 +836,8 @@ static INT_PTR CALLBACK IEViewHistoryOptDlgProc(HWND hwndDlg, UINT msg, WPARAM w
 	return FALSE;
 }
 
-static INT_PTR CALLBACK IEViewGroupChatsOptDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+static INT_PTR CALLBACK IEViewGroupChatsOptDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+{
 	BOOL bChecked;
 	char path[MAX_PATH], filter[MAX_PATH];
 	switch (msg) {
@@ -964,7 +971,6 @@ static INT_PTR CALLBACK IEViewGroupChatsOptDlgProc(HWND hwndDlg, UINT msg, WPARA
 }
 
 bool Options::isInited = false;
-bool Options::bMathModule = false;
 bool Options::bSmileyAdd = false;
 int  Options::avatarServiceFlags = 0;
 int  Options::generalFlags;
@@ -1481,17 +1487,18 @@ void Options::init()
 		ProtocolSettings *proto;
 		char tmpPath[MAX_PATH];
 		char dbsName[256];
-		if (i==0) {
+		if (i == 0) {
 			proto = new ProtocolSettings("_default_");
 			proto->setSRMMEnable(true);
-		} else if (strcmp(pProtos[i-1]->szModuleName,"MetaContacts")) {
-			if ((CallProtoService(pProtos[i-1]->szModuleName, PS_GETCAPS, PFLAGNUM_1, 0) & PF1_IM) == 0) {
-				continue;
-			}
-			proto = new ProtocolSettings(pProtos[i-1]->szModuleName);
-		} else {
-			continue;
 		}
+		else if (strcmp(pProtos[i-1]->szModuleName, META_PROTO)) {
+			if ((CallProtoService(pProtos[i - 1]->szModuleName, PS_GETCAPS, PFLAGNUM_1, 0) & PF1_IM) == 0)
+				continue;
+
+			proto = new ProtocolSettings(pProtos[i - 1]->szModuleName);
+		}
+		else continue;
+
 		/* SRMM settings */
 		mir_snprintf(dbsName, SIZEOF(dbsName), "%s.%s", proto->getProtocolName(), DBS_SRMM_ENABLE);
 		proto->setSRMMEnable(i==0 ? true : 0 != db_get_b(NULL, ieviewModuleName, dbsName, FALSE));
@@ -1599,7 +1606,6 @@ void Options::init()
 		lastProto = proto;
 	}
 
-	bMathModule = 0 != ServiceExists(MTH_GET_GIF_UNICODE);
 	bSmileyAdd = 0 != ServiceExists(MS_SMILEYADD_BATCHPARSE);
 	avatarServiceFlags = 0;
 	if (ServiceExists(MS_AV_GETAVATARBITMAP))
@@ -1639,11 +1645,6 @@ void Options::setEmbedsize(int size)
 int Options::getEmbedsize()
 {
 	return db_get_dw(NULL, ieviewModuleName, "Embedsize", 0);
-}
-
-bool Options::isMathModule()
-{
-	return bMathModule;
 }
 
 bool Options::isSmileyAdd()

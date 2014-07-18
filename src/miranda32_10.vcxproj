@@ -151,7 +151,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\include;..\plugins\ExternalAPI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_NOSDK;_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_NOSDK;_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -237,6 +237,7 @@
     <ClInclude Include="..\include\m_json.h" />
     <ClInclude Include="..\include\m_langpack.h" />
     <ClInclude Include="..\include\m_message.h" />
+    <ClInclude Include="..\include\m_metacontacts.h" />
     <ClInclude Include="..\include\m_netlib.h" />
     <ClInclude Include="..\include\m_options.h" />
     <ClInclude Include="..\include\m_popup.h" />
@@ -263,6 +264,8 @@
     <ClInclude Include="modules\extraicons\extraicons.h" />
     <ClInclude Include="modules\extraicons\usedIcons.h" />
     <ClInclude Include="modules\findadd\findadd.h" />
+    <ClInclude Include="modules\langpack\langpack.h" />
+    <ClInclude Include="modules\metacontacts\metacontacts.h" />
     <ClInclude Include="modules\netlib\netlib.h" />
     <ClInclude Include="modules\options\filter.h" />
     <ClInclude Include="..\include\m_protoint.h" />
@@ -274,6 +277,7 @@
     <ClInclude Include="modules\icolib\IcoLib.h" />
     <ClInclude Include="..\include\m_xml.h" />
     <ClInclude Include="modules\xml\xmlParser.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\stdafx.cpp">
@@ -369,7 +373,37 @@
     <ClCompile Include="modules\ignore\ignore.cpp">
       <PrecompiledHeaderFile>..\..\core\commonheaders.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="modules\langpack\langpack.cpp">
+      <PrecompiledHeaderFile>..\..\core\commonheaders.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="modules\langpack\lpopts.cpp">
+      <PrecompiledHeaderFile>..\..\core\commonheaders.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="modules\langpack\lpservices.cpp">
+      <PrecompiledHeaderFile>..\..\core\commonheaders.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="modules\metacontacts\meta_addto.cpp">
+      <PrecompiledHeaderFile>..\..\core\commonheaders.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="modules\metacontacts\meta_edit.cpp">
+      <PrecompiledHeaderFile>..\..\core\commonheaders.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="modules\metacontacts\meta_api.cpp">
+      <PrecompiledHeaderFile>..\..\core\commonheaders.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="modules\metacontacts\meta_main.cpp">
+      <PrecompiledHeaderFile>..\..\core\commonheaders.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="modules\metacontacts\meta_menu.cpp">
+      <PrecompiledHeaderFile>..\..\core\commonheaders.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="modules\metacontacts\meta_options.cpp">
+      <PrecompiledHeaderFile>..\..\core\commonheaders.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="modules\metacontacts\meta_services.cpp">
+      <PrecompiledHeaderFile>..\..\core\commonheaders.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="modules\metacontacts\meta_utils.cpp">
       <PrecompiledHeaderFile>..\..\core\commonheaders.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="modules\netlib\netlib.cpp">
@@ -601,6 +635,86 @@
       <Project>{e2a369cd-eda3-414f-8ad0-e732cd7ee68c}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\always_visible.ico" />
+    <None Include="res\auth_add.ico" />
+    <None Include="res\auth_grant.ico" />
+    <None Include="res\auth_request.ico" />
+    <None Include="res\auth_revoke.ico" />
+    <None Include="res\chat_channel.ico" />
+    <None Include="res\chat_join.ico" />
+    <None Include="res\chat_leave.ico" />
+    <None Include="res\check_off.ico" />
+    <None Include="res\check_on.ico" />
+    <None Include="res\contact_add.ico" />
+    <None Include="res\contact_delete.ico" />
+    <None Include="res\contact_groups.ico" />
+    <None Include="res\contact_rename.ico" />
+    <None Include="res\contact_view_details.ico" />
+    <None Include="res\cursor_drag_copy.cur" />
+    <None Include="res\cursor_drop_user.cur" />
+    <None Include="res\cursor_hyperlink.cur" />
+    <None Include="res\female.ico" />
+    <None Include="res\group_closed.ico" />
+    <None Include="res\group_opened.ico" />
+    <None Include="res\icon_accmgr.ico" />
+    <None Include="res\icon_all.ico" />
+    <None Include="res\icon_ansi.ico" />
+    <None Include="res\icon_auth_request.ico" />
+    <None Include="res\icon_connecting.ico" />
+    <None Include="res\icon_down_arrow.ico" />
+    <None Include="res\Icon_exit.ico" />
+    <None Include="res\icon_file.ico" />
+    <None Include="res\icon_find_user.ico" />
+    <None Include="res\icon_frame.ico" />
+    <None Include="res\icon_help.ico" />
+    <None Include="res\icon_history.ico" />
+    <None Include="res\icon_loaded.ico" />
+    <None Include="res\icon_loaded_gray.ico" />
+    <None Include="res\icon_mail.ico" />
+    <None Include="res\icon_mainmenu.ico" />
+    <None Include="res\icon_message.ico" />
+    <None Include="res\icon_notloaded.ico" />
+    <None Include="res\icon_notloaded_gray.ico" />
+    <None Include="res\icon_options.ico" />
+    <None Include="res\icon_search_all.ico" />
+    <None Include="res\Icon_show_hide.ico" />
+    <None Include="res\icon_small_dot.ico" />
+    <None Include="res\icon_sms.ico" />
+    <None Include="res\icon_typing.ico" />
+    <None Include="res\icon_undo.ico" />
+    <None Include="res\icon_unicode.ico" />
+    <None Include="res\icon_url.ico" />
+    <None Include="res\icon_window.ico" />
+    <None Include="res\icon_windows.ico" />
+    <None Include="res\male.ico" />
+    <None Include="res\meta_add.ico" />
+    <None Include="res\meta_convert.ico" />
+    <None Include="res\meta_edit.ico" />
+    <None Include="res\meta_menu.ico" />
+    <None Include="res\meta_menuof.ico" />
+    <None Include="res\meta_remove2.ico" />
+    <None Include="res\meta_set_as_default.ico" />
+    <None Include="res\miranda_home.ico" />
+    <None Include="res\miranda_logo.ico" />
+    <None Include="res\miranda_manager.ico" />
+    <None Include="res\never_visible.ico" />
+    <None Include="res\Off.ico" />
+    <None Include="res\On.ico" />
+    <None Include="res\status_away.ico" />
+    <None Include="res\status_DND.ico" />
+    <None Include="res\status_free4chat.ico" />
+    <None Include="res\status_invisible.ico" />
+    <None Include="res\status_locked.ico" />
+    <None Include="res\status_NA.ico" />
+    <None Include="res\status_occupied.ico" />
+    <None Include="res\status_offline.ico" />
+    <None Include="res\status_online.ico" />
+    <None Include="res\status_on_the_phone.ico" />
+    <None Include="res\status_out2lunch.ico" />
+    <None Include="res\status_user_online.ico" />
+    <None Include="res\_blank.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

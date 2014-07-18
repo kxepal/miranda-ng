@@ -76,8 +76,7 @@ static void LayoutTransfers(HWND hwnd, struct TFtPageData *dat)
 	if (dat->wnds->realCount) {
 		HDWP hdwp = BeginDeferWindowPos(dat->wnds->realCount);
 		top -= dat->scrollPos;
-		for (int i=0; i < dat->wnds->realCount; ++i)
-		{
+		for (int i = 0; i < dat->wnds->realCount; ++i) {
 			int height = dat->wnds->items[i]->rc.bottom - dat->wnds->items[i]->rc.top;
 			hdwp = DeferWindowPos(hdwp, dat->wnds->items[i]->hwnd, NULL, 0, top, rc.right, height, SWP_NOZORDER);
 			top += height;
@@ -88,9 +87,9 @@ static void LayoutTransfers(HWND hwnd, struct TFtPageData *dat)
 
 	dat->dataHeight = top;
 
-	SCROLLINFO si = {0};
+	SCROLLINFO si = { 0 };
 	si.cbSize = sizeof(si);
-	si.fMask = SIF_DISABLENOSCROLL|SIF_PAGE|SIF_RANGE;
+	si.fMask = SIF_DISABLENOSCROLL | SIF_PAGE | SIF_RANGE;
 	si.nPage = dat->height;
 	si.nMin = 0;
 	si.nMax = dat->dataHeight;
@@ -231,7 +230,7 @@ static INT_PTR CALLBACK FtMgrPageDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPA
 		{
 			TFtProgressData *prg = (TFtProgressData *)wParam;
 			for (i=0; i < dat->wnds->realCount; ++i) {
-				struct FileDlgData *trdat = (struct FileDlgData *)GetWindowLongPtr(dat->wnds->items[i]->hwnd, GWLP_USERDATA);
+				FileDlgData *trdat = (FileDlgData *)GetWindowLongPtr(dat->wnds->items[i]->hwnd, GWLP_USERDATA);
 				if (trdat->transferStatus.totalBytes && trdat->fs && !trdat->send && (trdat->transferStatus.totalBytes == trdat->transferStatus.totalProgress))
 					prg->scan++;
 				else if (trdat->transferStatus.totalBytes && trdat->fs) { // in progress

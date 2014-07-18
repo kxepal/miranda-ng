@@ -522,9 +522,6 @@ static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, 
 
 				SendMessage(hwnd, WM_SETREDRAW, FALSE, 0);
 
-				LOGFONT lf;
-				pci->LoadMsgDlgFont(17, &lf, NULL);
-
 				if (lpPrevCmd) {
 					SETTEXTEX ste;
 					ste.flags = ST_DEFAULT;
@@ -641,9 +638,6 @@ static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, 
 	case WM_RBUTTONUP:
 	case WM_MBUTTONUP:
 		{
-			COLORREF cr;
-			pci->LoadMsgDlgFont(17, NULL, &cr);
-
 			CHARFORMAT2 cf;
 			cf.cbSize = sizeof(CHARFORMAT2);
 			cf.dwMask = CFM_BOLD | CFM_ITALIC | CFM_UNDERLINE | CFM_BACKCOLOR | CFM_COLOR;
@@ -659,9 +653,9 @@ static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, 
 					Parentsi->iFG = index;
 				}
 
-				if (u == BST_UNCHECKED && cf.crTextColor != cr)
+				if (u == BST_UNCHECKED && cf.crTextColor != g_Settings.MessageAreaColor)
 					CheckDlgButton(GetParent(hwnd), IDC_COLOR, BST_CHECKED);
-				else if (u == BST_CHECKED && cf.crTextColor == cr)
+				else if (u == BST_CHECKED && cf.crTextColor == g_Settings.MessageAreaColor)
 					CheckDlgButton(GetParent(hwnd), IDC_COLOR, BST_UNCHECKED);
 			}
 
@@ -712,7 +706,7 @@ static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, 
 		}
 		break;
 
-	case EM_UNSUBCLASSED:
+	case WM_DESTROY:
 		mir_free(dat);
 		return 0;
 	}
@@ -1222,7 +1216,7 @@ INT_PTR CALLBACK RoomWndProc(HWND hwndDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 			SendMessage(GetDlgItem(hwndDlg, IDC_LOG), EM_SETBKGNDCOLOR , 0, g_Settings.crLogBackground);
 
 			if (g_Settings.bTabsEnable) {
-				int mask = (int)GetWindowLongPtr(GetDlgItem(hwndDlg, IDC_TAB), GWL_STYLE);
+				LONG_PTR mask = GetWindowLongPtr(GetDlgItem(hwndDlg, IDC_TAB), GWL_STYLE);
 				if (g_Settings.TabsAtBottom)
 					mask |= TCS_BOTTOM;
 				else
@@ -1230,18 +1224,14 @@ INT_PTR CALLBACK RoomWndProc(HWND hwndDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 				SetWindowLongPtr(GetDlgItem(hwndDlg, IDC_TAB), GWL_STYLE, (LONG_PTR)mask);
 			}
 			{
-				// messagebox
-				COLORREF	crFore;
-				pci->LoadMsgDlgFont(17, NULL, &crFore);
-
 				CHARFORMAT2 cf;
 				cf.cbSize = sizeof(CHARFORMAT2);
 				cf.dwMask = CFM_COLOR|CFM_BOLD|CFM_UNDERLINE|CFM_BACKCOLOR;
 				cf.dwEffects = 0;
-				cf.crTextColor = crFore;
+				cf.crTextColor = g_Settings.MessageAreaColor;
 				cf.crBackColor = (COLORREF)db_get_dw(NULL, CHAT_MODULE, "ColorMessageBG", GetSysColor(COLOR_WINDOW));
 				SendMessage(GetDlgItem(hwndDlg, IDC_MESSAGE), EM_SETBKGNDCOLOR , 0, db_get_dw(NULL, CHAT_MODULE, "ColorMessageBG", GetSysColor(COLOR_WINDOW)));
-				SendDlgItemMessage(hwndDlg, IDC_MESSAGE, WM_SETFONT, (WPARAM) g_Settings.MessageBoxFont, MAKELPARAM(TRUE, 0));
+				SendDlgItemMessage(hwndDlg, IDC_MESSAGE, WM_SETFONT, (WPARAM) g_Settings.MessageAreaFont, MAKELPARAM(TRUE, 0));
 				SendDlgItemMessage(hwndDlg, IDC_MESSAGE, EM_SETCHARFORMAT, (WPARAM)SCF_ALL , (LPARAM)&cf);
 
 				// nicklist
@@ -1852,7 +1842,7 @@ END_REMOVETAB:
 			if (CallService(MS_CLIST_GETEVENT, (WPARAM)si->hContact, 0))
 				CallService(MS_CLIST_REMOVEEVENT, (WPARAM)si->hContact, (LPARAM)GC_FAKE_EVENT);
 			si->wState &= ~STATE_TALK;
-			db_set_w(si->hContact, si->pszModule, "ApparentMode", (LPARAM)0);
+			db_set_w(si->hContact, si->pszModule, "ApparentMode", 0);
 			SendMessage(hwndDlg, GC_CLOSEWINDOW, 0, 0);
 			return TRUE;
 
@@ -2353,7 +2343,7 @@ LABEL_SHOWWINDOW:
 			break;
 
 		case IDC_SHOWNICKLIST:
-			if (!IsWindowEnabled(GetDlgItem(hwndDlg,IDC_SHOWNICKLIST)))
+			if (!IsWindowEnabled(GetDlgItem(hwndDlg, IDC_SHOWNICKLIST)))
 				break;
 			if (si->iType == GCW_SERVER)
 				break;
@@ -2380,8 +2370,8 @@ LABEL_SHOWWINDOW:
 				smaddInfo.targetWParam = TRUE;
 				smaddInfo.Protocolname = si->pszModule;
 				smaddInfo.Direction = 3;
-				smaddInfo.xPosition = rc.left+3;
-				smaddInfo.yPosition = rc.top-1;
+				smaddInfo.xPosition = rc.left + 3;
+				smaddInfo.yPosition = rc.top - 1;
 				smaddInfo.hContact = si->hContact;
 				smaddInfo.hwndParent = hwndDlg;
 
@@ -2413,17 +2403,17 @@ LABEL_SHOWWINDOW:
 			break;
 
 		case IDC_CHANMGR:
-			if (!IsWindowEnabled(GetDlgItem(hwndDlg,IDC_CHANMGR)))
+			if (!IsWindowEnabled(GetDlgItem(hwndDlg, IDC_CHANMGR)))
 				break;
 			pci->DoEventHookAsync(hwndDlg, si->ptszID, si->pszModule, GC_USER_CHANMGR, NULL, NULL, 0);
 			break;
 
 		case IDC_FILTER:
-			if (!IsWindowEnabled(GetDlgItem(hwndDlg,IDC_FILTER)))
+			if (!IsWindowEnabled(GetDlgItem(hwndDlg, IDC_FILTER)))
 				break;
 
 			si->bFilterEnabled = !si->bFilterEnabled;
-			SendDlgItemMessage(hwndDlg,IDC_FILTER,BM_SETIMAGE,IMAGE_ICON,(LPARAM)LoadIconEx( si->bFilterEnabled ? "filter" : "filter2", FALSE ));
+			SendDlgItemMessage(hwndDlg, IDC_FILTER, BM_SETIMAGE, IMAGE_ICON, (LPARAM)LoadIconEx(si->bFilterEnabled ? "filter" : "filter2", FALSE));
 			if (si->bFilterEnabled && db_get_b(NULL, CHAT_MODULE, "RightClickFilter", 0) == 0) {
 				SendMessage(hwndDlg, GC_SHOWFILTERMENU, 0, 0);
 				break;
@@ -2470,10 +2460,8 @@ LABEL_SHOWWINDOW:
 					}
 				}
 				else {
-					COLORREF cr;
-					pci->LoadMsgDlgFont(17, NULL, &cr);
 					cf.dwMask = CFM_COLOR;
-					cf.crTextColor = cr;
+					cf.crTextColor = g_Settings.MessageAreaColor;
 					SendDlgItemMessage(hwndDlg, IDC_MESSAGE, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 				}
 			}
@@ -2482,27 +2470,26 @@ LABEL_SHOWWINDOW:
 		case IDC_BOLD:
 		case IDC_ITALICS:
 		case IDC_UNDERLINE:
-			{
-				CHARFORMAT2 cf;
-				cf.cbSize = sizeof(CHARFORMAT2);
-				cf.dwMask = CFM_BOLD|CFM_ITALIC|CFM_UNDERLINE;
-				cf.dwEffects = 0;
+			CHARFORMAT2 cf;
+			cf.cbSize = sizeof(CHARFORMAT2);
+			cf.dwMask = CFM_BOLD | CFM_ITALIC | CFM_UNDERLINE;
+			cf.dwEffects = 0;
 
-				if (LOWORD(wParam) == IDC_BOLD && !IsWindowEnabled(GetDlgItem(hwndDlg,IDC_BOLD)))
-					break;
-				if (LOWORD(wParam) == IDC_ITALICS && !IsWindowEnabled(GetDlgItem(hwndDlg,IDC_ITALICS)))
-					break;
-				if (LOWORD(wParam) == IDC_UNDERLINE && !IsWindowEnabled(GetDlgItem(hwndDlg,IDC_UNDERLINE)))
-					break;
-				if (IsDlgButtonChecked(hwndDlg, IDC_BOLD))
-					cf.dwEffects |= CFE_BOLD;
-				if (IsDlgButtonChecked(hwndDlg, IDC_ITALICS))
-					cf.dwEffects |= CFE_ITALIC;
-				if (IsDlgButtonChecked(hwndDlg, IDC_UNDERLINE))
-					cf.dwEffects |= CFE_UNDERLINE;
+			if (LOWORD(wParam) == IDC_BOLD && !IsWindowEnabled(GetDlgItem(hwndDlg, IDC_BOLD)))
+				break;
+			if (LOWORD(wParam) == IDC_ITALICS && !IsWindowEnabled(GetDlgItem(hwndDlg, IDC_ITALICS)))
+				break;
+			if (LOWORD(wParam) == IDC_UNDERLINE && !IsWindowEnabled(GetDlgItem(hwndDlg, IDC_UNDERLINE)))
+				break;
+			if (IsDlgButtonChecked(hwndDlg, IDC_BOLD))
+				cf.dwEffects |= CFE_BOLD;
+			if (IsDlgButtonChecked(hwndDlg, IDC_ITALICS))
+				cf.dwEffects |= CFE_ITALIC;
+			if (IsDlgButtonChecked(hwndDlg, IDC_UNDERLINE))
+				cf.dwEffects |= CFE_UNDERLINE;
 
-				SendDlgItemMessage(hwndDlg, IDC_MESSAGE, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
-		}	}
+			SendDlgItemMessage(hwndDlg, IDC_MESSAGE, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
+		}
 		break;
 
 	case WM_KEYDOWN:
@@ -2510,7 +2497,7 @@ LABEL_SHOWWINDOW:
 		break;
 
 	case WM_MOVE:
-		SendMessage(hwndDlg,GC_SAVEWNDPOS,0,1);
+		SendMessage(hwndDlg, GC_SAVEWNDPOS, 0, 1);
 		break;
 
 	case WM_GETMINMAXINFO:
@@ -2552,7 +2539,7 @@ LABEL_SHOWWINDOW:
 		break;
 
 	case WM_DESTROY:
-		SendMessage(hwndDlg,GC_SAVEWNDPOS,0,0);
+		SendMessage(hwndDlg, GC_SAVEWNDPOS, 0, 0);
 
 		si->hWnd = NULL;
 		si->wState &= ~STATE_TALK;
@@ -2560,18 +2547,17 @@ LABEL_SHOWWINDOW:
 		si->hwndStatus = NULL;
 
 		if (si->hwndTooltip != NULL) {
-			HWND hNickList = GetDlgItem(hwndDlg,IDC_LIST);
+			HWND hNickList = GetDlgItem(hwndDlg, IDC_LIST);
 			TOOLINFO ti = { 0 };
 			ti.cbSize = sizeof(TOOLINFO);
 			ti.uId = (UINT_PTR)hNickList;
 			ti.hwnd = hNickList;
-			SendMessage( si->hwndTooltip, TTM_DELTOOL, 0, (LPARAM)(LPTOOLINFO)&ti );
+			SendMessage(si->hwndTooltip, TTM_DELTOOL, 0, (LPARAM)(LPTOOLINFO)&ti);
 		}
-		DestroyWindow( si->hwndTooltip );
+		DestroyWindow(si->hwndTooltip);
 		si->hwndTooltip = NULL;
 		if (si->pAccPropServicesForNickList) si->pAccPropServicesForNickList->Release();
-		SetWindowLongPtr(hwndDlg,GWLP_USERDATA,0);
-		SendDlgItemMessage(hwndDlg, IDC_MESSAGE, EM_UNSUBCLASSED, 0, 0);
+		SetWindowLongPtr(hwndDlg, GWLP_USERDATA, 0);
 		break;
 	}
 	return FALSE;

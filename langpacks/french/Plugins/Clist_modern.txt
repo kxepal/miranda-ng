@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Clist_modern.dll
 ;  Plugin: Modern contact list
-;  Version: 0.9.0.12
+;  Version: 0.9.0.13
 ;  Authors: Artem Shpynov, Ricardo Pescuma Domenecci and Anton Senko based on clist_mw by Bethoven
 ;============================================================
 [Displays contacts, event notifications, protocol status with advantage visual modifications. Supported MW modifications, enhanced metacontact cooperation.]
@@ -42,9 +42,9 @@ Liste de contact transparente
 Opacité si inactive :
 [Active opacity:]
 Opacité si active :
-[Show Avatars]
+[Show avatars]
 Montrer les avatars
-[Animate Avatars]
+[Animate avatars]
 Avatars animés
 [Show contact time in list]
 Afficher l'heure du contact dans la liste
@@ -76,8 +76,8 @@ Défiler avec le texte
 Étirer proportionnellement
 [Tile vertically according to row height]
 
-[Use Windows Colors]
-Couleurs de Windows
+[Use Windows colors]
+Utiliser les couleurs Windows
 [Available skins]
 Skins disponibles
 [Rescan]
@@ -88,50 +88,14 @@ Appliquer
 Info
 [\n\n\nPlease select one of available skins. \n\nOr browse for skin not in list.]
 \n\n\nVeuillez sélectionner un des skins disponibles. \n\nOu cliquez sur 'Localiser'
-[Skin Preview]
-Aperçu du skin
+[Skin preview]
+Aperçu du Skin
 [WARNING: \tSkins can modify your current profile. Rollback is not possible. \n\t\tPlease BACKUP your database before applying skin.]
 ATTENTION => \tDes skins peuvent modifier votre profil. Un retour ne sera pas possible. \n\t\tVeuillez sauvegarder votre base de données avant de changer de skin.
 [* Restart may be required for all changes to take effect]
 * Relancer Miranda pour valider tous les changements
-[Available objects]
-Objets disponibles
-[Copy]
-Copier
-[Paste]
-Coller
-[Object properties]
-Propriété de l'objet
-[Type]
+[Skin folder]
 
-[Color]
-Couleur
-[Alpha]
-
-[Image file and fitting mode]
-Image et étirements
-[File]
-Fichier
-[Borders]
-Bordures
-[Fit mode]
-Position
-[Fragment location]
-Position
-[Position:]
-Position :
-[Left]
-Gauche
-[Top]
-Haut
-[Size:]
-Taille :
-[Width]
-Largeur
-[Height]
-hauteur
-[W x H: 0 x 0 pixels]
-L x H: 0 x 0 pixels
 [Available view modes]
 Mode d'affichages disponibles
 [Include protocols]
@@ -144,8 +108,6 @@ Groupes inclus
 Afficher les contacts dans des groupes
 [Include status modes]
 Inclure les états
-[OK]
-OK
 [Cancel]
 Annuler
 [Sticky contacts]
@@ -168,7 +130,7 @@ Paramètres des modes d'affichages
 
 [Last message]
 Dernier message
-[Status Bar]
+[Status bar]
 Barre d'état
 [Show status bar]
 Afficher la barre d'état
@@ -176,19 +138,21 @@ Afficher la barre d'état
 Faire des sections de taille égale
 [Space between]
 Espace entre boutons
-[Vertical Align]
+[Borders]
+Bordures
+[Vertical align]
 Verticalement
-[Horizontal Align]
+[Horizontal align]
 Horizontalement
 [Multiline status bar:]
 Barre des états
 [Accounts per line]
 Comptes par ligne
-[* To increase Status Bar height:\nSet in Main menu: Frames->Status Bar->Show title then pull appeared title of status bar up or down.]
-Pour réduire la barre des états:\nMenu Principal => Cadres => Barre d'état => Afficher la barre de titre. Puis tirez dessus.
-[Hold [Shift] to inverse [Right Click] behavior]
-Maintenez la touche [Maj] pour inverser le comportement [clic droit]
-[[Ctrl]+[Left Click] to filter only protocol. Click on empty space to show all]
+[* To increase status bar height:\nset in Main menu: Frames->Status Bar->Show title then pull appeared title of status bar up or down.]
+Pour réduire la barre des états :\nMenu Principal => Cadres => Barre d'état => Afficher la barre de titre. Puis tirez dessus.
+[Hold [Shift] to inverse [Right Click] behavior.]
+Maintenez la touche [Maj] pour inverser le comportement du [clic droit]
+[[Ctrl]+[Left Click] to filter only protocol. Click on empty space to show all.]
 
 [Set options per account]
 Options par comptes
@@ -218,11 +182,11 @@ Voir les courriels non lus (si supporté)
 Le clic droit ouvre le menu "État"
 [Right click opens Miranda menu]
 Le clic droit ouvre le menu Miranda
-[Space on Left]
+[Space on left]
 Espace à gauche
 [Space on right]
 Espace à droite
-[Delete Contact]
+[Delete contact]
 Supprimer un contact
 [No]
 Non
@@ -246,9 +210,9 @@ Désactiver les groupes
 Demander avant de supprimer
 [Don't move offline user to bottom]
 Ne pas déplacez les utilisateur déconnecté en bas
-[Contact List]
+[Contact list]
 Liste de contacts
-[Contact List Sorting]
+[Contact list sorting]
 Tri des contacts dans la liste
 [Place offline users out of groups]
 Sortir les Hors ligne de leur groupe
@@ -262,7 +226,7 @@ Plus de choix
 Moins de choix
 [No selection]
 Aucun choix
-[Selection Mode]
+[Selection mode]
 Méthode de sélection
 [Bring to front if covered]
 Réafficher si elle est cachée
@@ -280,7 +244,7 @@ Comportement
 Verrouiller le redimensionnement manuel
 [Drag to]
 Le "Drag && Drop"
-[Easy Scroll]
+[Easy scroll]
 Défilement fluide
 [Easy move]
 Déplacement facile
@@ -304,7 +268,7 @@ Zone de notification
 Désactivé
 [Show automaticaly]
 Afficher automatiquement
-[Always Visible]
+[Always visible]
 Toujours visible
 [Dock to sides]
 Ancrer sur les côtés
@@ -326,7 +290,7 @@ Afficher la sélection même si la liste n'est pas visible
 Activer la sélection translucide
 [Dim idle contacts]
 Estomper les contacts inactifs
-['Hide Offline' means to hide:]
+['Hide offline' means to hide:]
 "Cacher les Hors ligne" masque :
 [Groups]
 Groupes
@@ -343,7 +307,7 @@ Visuel
 [Scroll list smoothly]
 Activer le défilement fluide
 [Time:]
-Durée:
+Durée :
 [milliseconds]
 millisecondes
 [Hide vertical scrollbar]
@@ -374,28 +338,26 @@ Icône de la barre des tâches
 
 [Use xStatus icon]
 Utiliser l'icône xStatus
-[Ignore Empty Extra icons places (arrange to right).]
+[Ignore empty extra icons places (arrange to right).]
 
-[Use 'Meta' protocol icons for Metacontacts]
-Utilisez les 'Meta' icônes pour les protocoles des Metacontacts
+[Use 'Meta' protocol icons for metacontacts]
+Utilisez les 'Meta' icônes pour les protocoles des metacontacts
 [Expand metacontacts]
-Développer les MetaContacts
-[Avoid doubleclick expand]
+Développer les metacontacts
+[Avoid double click expand]
 
-[Hide all 'Extra icons' for subcontacts]
-Cachez tous les 'icônes supplémentaires' pour les sous contacts
-[Hide offline subcontacts.]
-Cachez les sous contacts hors ligne.
-[MetaContacts stuff]
-Paramètres pour les MetaContacts
+[Hide all extra icons for subcontacts]
+Cachez tous les icônes supplémentaires pour les sous contacts
+[Hide offline subcontacts]
+Cachez les sous contacts hors ligne
+[Metacontacts stuff]
+Paramètres pour les metacontacts
 [Additional stuff]
 Paramètres avancés
-[For other stuff MetaContacts plugin should be loaded.\n\nhttp://miranda-ng.org/p/MetaContacts/]
-
 [Allow internal requesting of status message text]
 Autoriser la demande interne du texte de message d'état
 [Subcontacts indent:]
-Décalage des sous-contacts:
+Décalage des sous-contacts :
 [Remove status message if contact became offline]
 
 [Use improved search method in contact list]
@@ -436,13 +398,13 @@ Entre les cadres :
 Après les légendes :
 [Gaps]
 transparence
-[Use Non-Layered mode]
+[Use non-layered mode]
 Désactiver la surcouche
 [Round corners]
 Coins arrondis
 [Non-layered mode]
 Mode sans surcouche
-[Disable Skin Engine]
+[Disable skin engine]
 Désactiver les skins
 [Enable Aero Glass (Vista+)]
 Activer Aero Glass (Vista+)
@@ -472,6 +434,8 @@ Mode compact\n(Voir les avatars et texte complémentaire sur les contacts sélec
 Cadre sur les avatars
 [Draw overlay icons]
 Superposer l'icône d'état
+[Size:]
+Taille :
 [Round corners of avatars]
 Arrondir les coins des avatars
 [Ignore size for row height calcs]
@@ -504,7 +468,7 @@ Montrer l'icône "Toujours visible"
 Utiliser l'icône Xstatus à la place du protocole
 [Draw normal status as overlay]
 État normal en surcouche
-[Right-To-Left reading mode (mirror template)]
+[Right-to-left reading mode (mirror template)]
 Lecture inversée (effet mirroir = DàG)
 [Replace smileys in contact list]
 Afficher des smileys dans la CList
@@ -523,19 +487,19 @@ Terminer les longs textes par des points de suspensions
 [Show second line]
 
 [Top space:]
-Séparation:
+Séparation :
 [Draw smileys on second line]
 Afficher les smileys
 [Text:]
-
+Texte :
 [Status]
 État
 [Nickname]
 Pseudo
-[Status Message]
+[Status message]
 
 [Listening to]
-
+Écoute
 [Contact time]
 
 [Show status if there is no status message]
@@ -545,7 +509,7 @@ Pseudo
 [XStatus has priority]
 Préférer XStatus
 [Use 'XStatus: XMessage']
-Utiliser 'XStatus: XMessage'
+Utiliser 'XStatus : XMessage'
 [(Variables will be replaced)]
 (Utilisé des variables)
 [Show third line]
@@ -624,9 +588,9 @@ Occ&upé\tCtrl+4
 Ok pour un &chat\tCtrl+6
 [&Invisible\tCtrl+7]
 &Invisible\tCtrl+7
-[On the &Phone\tCtrl+8]
+[On the &phone\tCtrl+8]
 Au &téléphone\tCtrl+8
-[Out to &Lunch\tCtrl+9]
+[Out to &lunch\tCtrl+9]
 Parti &manger\tCtrl+9
 [Tray]
 Tray
@@ -634,38 +598,38 @@ Tray
 &Afficher/Cacher
 [Nowhere]
 Autre
-[&New Group]
-Nouveau groupe
-[&Hide Offline Users]
-Cacher les contacts hors ligne
-[Hide &Offline Users out here]
+[&New group]
+&Nouveau groupe
+[&Hide offline users]
+&Cacher les contacts hors ligne
+[Hide &offline users out here]
 Cacher les &Hors ligne de ce groupe
-[Hide &Empty Groups]
-Cacher les groupes vides
-[Disable &Groups]
-Désactiver les groupes
+[Hide &empty groups]
+Cacher les groupes &vides
+[Disable &groups]
+Désactiver les &groupes
 [Hide Miranda]
 Cacher Miranda
-[&New Subgroup]
+[&New subgroup]
 &Nouveau sous-groupe
-[&Hide Offline Users in here]
-Cacher les Hors ligne de ce groupe
-[&Show Offline Users in here]
-Afficher les contacts hors ligne de ce groupe
-[&Rename Group]
+[&Hide offline users in here]
+&Cacher les Hors ligne de ce groupe
+[&Show offline users in here]
+&Afficher les contacts hors ligne de ce groupe
+[&Rename group]
 &Renommer le groupe
-[&Delete Group]
-Effacer le groupe
+[&Delete group]
+&Effacer le groupe
 ;file \plugins\Clist_modern\src\modern_clc.cpp
 [Skins]
 Skins
 [Modern contact list]
 
-[Avatar Overlay]
+[Avatar overlay]
 
-[Status Overlay]
+[Status overlay]
 
-[Contact List smileys]
+[Contact list smileys]
 Smileys de la CList
 [List background]
 Arrière-plan
@@ -675,31 +639,29 @@ Arrière-plan
 Arrière plan de la barre d'état
 [Frames title bar background]
 
-[Do you want contact '%s' to be converted to MetaContact and '%s' be added to it?]
-Voulez-vous que le contact '%s' soit converti en MetaContact et y ajouter '%s' ?
-[Converting to MetaContact]
-Conversion en MetaContact
-[Do you want contact '%s' to be converted to MetaContact and '%s' be added to it (remove it from '%s')?]
-Voulez-vous que le contact '%s' soit converti en MetaContact et y ajouter '%s' (le retiré de '%s') ?
-[Converting to MetaContact (Moving)]
-Conversion en MetaContact (Déplacement)
+[Do you want contact '%s' to be converted to metacontact and '%s' be added to it?]
+Voulez-vous que le contact '%s' soit converti en metacontact et y ajouter '%s' ?
+[Converting to metacontact]
+Conversion en metacontact
+[Do you want contact '%s' to be converted to metacontact and '%s' be added to it (remove it from '%s')?]
+Voulez-vous que le contact '%s' soit converti en metacontact et y ajouter '%s' (le retiré de '%s') ?
+[Converting to metacontact (moving)]
+Converting to metacontact (déplacement)
 [Do you want contact '%s' to be added to metacontact '%s'?]
-Voulez-vous que le contact '%s' soit ajouté au MetaContact '%s' ?
-[Adding contact to MetaContact]
-Ajout d'un contact dans MetaContact
+Voulez-vous que le contact '%s' soit ajouté au metacontact '%s' ?
+[Adding contact to metacontact]
+Ajout d'un contact dans metacontact
 [Do you want contact '%s' to be default?]
 Voulez-vous que '%s' soir le par défaut?
 [Set default contact]
 Ce contact en par défaut
-[Do you want contact '%s' to be removed from MetaContact '%s' and added to '%s'?]
-Voulez-vous que le contact '%s' soit transféré du MetaContact '%s' au MetaContact '%s' ?
-[Changing MetaContacts (Moving)]
-Changement de MetaContact (Déplacement)
-[Do you want contact '%s' to be added to MetaContact '%s'?]
-Voulez-vous que le contact '%s' soit ajouté au MetaContact '%s' ?
+[Do you want contact '%s' to be removed from metacontact '%s' and added to '%s'?]
+Voulez-vous que le contact '%s' soit transféré du metacontact '%s' au metacontact '%s' ?
+[Changing metacontacts (moving)]
+Changement de metacontact (déplacement)
 ;file \plugins\Clist_modern\src\modern_clcopts.cpp
 [Contact names]
-
+Noms des contacts
 [Row items]
 Détail des lignes
 [Frame texts]
@@ -796,7 +758,7 @@ Nom
 Nom (utilise les options locales)
 [Last message time]
 Heure du dernier message
-[Account Name]
+[Account name]
 Nom de compte
 [Rate]
 Note
@@ -817,12 +779,12 @@ Liste
 [Window]
 Fenêtre
 ;file \plugins\Clist_modern\src\modern_clistevents.cpp
-[Event area background]
-
-[Event Area]
-Zone d'évenement
 [No Events]
 Pas d'évènement
+[Event area background]
+
+[Event area]
+Zone d'évènements
 ;file \plugins\Clist_modern\src\modern_clistmenus.cpp
 [&Contact rate]
 Note du &contact
@@ -834,19 +796,19 @@ Bas
 Moyen
 [High]
 Haut
-[Contact rate None]
+[Contact rate: none]
 
-[Contact rate Low]
+[Contact rate: low]
 
-[Contact rate Medium]
+[Contact rate: medium]
 
-[Contact rate High]
+[Contact rate: high]
 
 [Show even if offline]
 Afficher l'évènement si hors-ligne
 ;file \plugins\Clist_modern\src\modern_clistopts.cpp
 [Avatar]
-
+Avatar
 [Icon]
 
 [Text]
@@ -865,27 +827,31 @@ Aligner les groupes sur la droite
 Ligne
 [Row design]
 
-[Second Line]
-Seconde ligne
-[Third Line]
-Troisième ligne
 ;file \plugins\Clist_modern\src\modern_clistsettings.cpp
 [(Unknown Contact)]
 (Contact inconnu)
 ;file \plugins\Clist_modern\src\modern_clisttray.cpp
 [Tray menu]
 
-[&Find/Add Contacts...]
+[&Hide/show]
+&Afficher/Cacher
+[&Find/add contacts...]
 &Chercher/Ajouter des contacts...
 [&Options...]
 &Paramètres...
 [&About]
 
 ;file \plugins\Clist_modern\src\modern_clui.cpp
-[Show Contact &Avatar]
+[Show avatar]
+
+[Hide avatar]
+
+[Show contact &avatar]
 Afficher l'avatar du contact
-[Hide Contact &Avatar]
+[Hide contact &avatar]
 Cacher l'avatar du contact
+[My contacts]
+Mes Contacts
 [My Contacts]
 Mes Contacts
 ;file \plugins\Clist_modern\src\modern_keyboard.cpp
@@ -912,41 +878,18 @@ lignes
 /s, contient /s
 [ layered]
 
-;file \plugins\Clist_modern\src\modern_skineditor.cpp
-[- Empty - (do not draw this object)]
-- Vide - (ne pas modifier ce skin)
-[Solid fill object]
-Objet immuable
-[Image (draw image)]
-Image (déformable)
-[Fragment (draw portion of image)]
-Fragment (modifiable
-[Stretch Both directions]
-Étirer dans les 2 directions
-[Stretch Vertical, Tile Horizontal]
-
-[Tile Vertical, Stretch Horizontal]
-
-[Tile Both directions]
-
-[Image size is]
-Taille de l'image
 ;file \plugins\Clist_modern\src\modern_skinengine.cpp
 [You need an image services plugin to process PNG images.]
 Vous avez besoin d'un plugin d'imagerie pour gérer les images PNG.
 [Error]
 Erreur
 ;file \plugins\Clist_modern\src\modern_skinopt.cpp
-[Load/Save]
-Charger/Sauver
-[Object Editor]
-Éditeur de skin
 [( unknown )]
 
 [%s\n\n%s\n\nAuthor(s):\t %s\nContact:\t %s\nWeb:\t %s\n\nFile:\t %s]
-%s\n\n%s\n\nAuteur(s):\t %s\nContact:\t %s\nPage Web:\t %s\n\nFichier:\t %s
+%s\n\n%s\n\nAuteur(s) :\t %s\nContact :\t %s\nPage Web :\t %s\n\nFichier :\t %s
 [%s\n\n%s\n\nAuthor(s): %s\nContact:\t %s\nWeb:\t %s\n\nFile:\t %s]
-%s\n\n%s\n\nAuteur(s): %s\nContact:\t %s\nWeb:\t %s\n\nFichier:\t %s
+%s\n\n%s\n\nAuteur(s) : %s\nContact :\t %s\nWeb :\t %s\n\nFichier :\t %s
 [reVista for Modern v0.5]
 
 [This is second default Modern Contact list skin in Vista Aero style]
@@ -957,16 +900,10 @@ Voici le second skin Aero Vista pour Modern CList
 Librairie interne
 [Skin Information]
 
-[Skin editor contains not stored changes.\n\nAll changes will be lost.\n\n Continue to load new skin?]
-Les changement dans l'éditeur de skin n'ont pas été sauvegardés.\n\nTous ces changements vont être perdus.\n\n Voulez-vous quand même charger un autre skin ?
-[Warning!]
-Attention !
-[Current skin was not saved to file.\n\nAll changes will be lost.\n\n Continue to load new skin?]
-Le skin actuel n'a pas été sauvegardé.\n\nTous les changements vont être perdus.\n\n Voulez-vous quand même charger un autre skin ?
 [Preview is not available\n\n%s\n----------------------\n\n%s\n\nAUTHOR(S):\n%s\n\nCONTACT:\n%s\n\nHOMEPAGE:\n%s]
-Aperçu non disponible\n\n%s\n----------------------\n\n%s\n\nAUTEUR(S):\n%s\n\nCONTACT:\n%s\n\nPAGE WEB:\n%s
+Aperçu non disponible\n\n%s\n----------------------\n\n%s\n\nAUTEUR(S) :\n%s\n\nCONTACT :\n%s\n\nPAGE WEB :\n%s
 [%s\n\n%s\n\nAUTHORS:\n%s\n\nCONTACT:\n%s\n\nWEB:\n%s\n\n\n]
-%s\n\n%s\n\nAUTEURS:\n%s\n\nCONTACT:\n%s\n\nWEB:\n%s\n\n\n
+%s\n\n%s\n\nAUTEURS :\n%s\n\nCONTACT :\n%s\n\nWEB :\n%s\n\n\n
 [graphics by Angeli-Ka\ntemplate by FYR]
 
 [Select skin from list]
@@ -981,10 +918,16 @@ Skin par défaut
 ;file \plugins\Clist_modern\src\modern_statusbar_options.cpp
 [<<Global>>]
 <<Général>>
+[Left]
+Gauche
 [Center]
 Centre
 [Right]
 Droite
+[Top]
+Haut
+[Bottom]
+Bas
 ;file \plugins\Clist_modern\src\modern_toolbar.cpp
 [Main menu]
 Menu principal
@@ -1006,8 +949,6 @@ Chercher un contact
 Activer/désactiver les groupes
 [Use groups]
 
-[Disable Groups]
-Désactiver les groupes
 [Enable/Disable sounds]
 Activer/désactiver les sons
 [Enable sounds]
@@ -1040,7 +981,7 @@ Heures
 [Days]
 Jours
 [Configuring view mode: %s]
-Configurer le mode d'affichage: %s
+Configurer le mode d'affichage : %s
 [All contacts]
 tous les contacts
 [Filtering]
@@ -1053,13 +994,11 @@ Configurer les modes d'affichages
 Effacer ce mode d'affichage? Ne pourra pas être récupérer
 [Delete a view mode]
 Effacer un mode d'affichage
-[A view mode with this name does alredy exist]
+[A view mode with this name does already exist]
 Un mode d'affichage existe déjà avec ce nom
 [Duplicate name]
 Nom en double
-[All Contacts]
-tous les contacts
-[Setup View Modes...]
+[Setup view modes...]
 Configurer les modes d'affichages
 [Select a view mode]
 Sélectionner un mode d'affichage
@@ -1069,9 +1008,9 @@ Configurer les modes d'affichages
 Réinitialiser le mode d'affichage et retourner à l'affichage par défaut
 [Reset view mode]
 Réinitialiser le mode d'affichage
-[View Mode Background]
+[View mode background]
 
-[View Modes]
+[View modes]
 Modes d'affichages
 ;file \plugins\Clist_modern\src\CLUIFrames\cluiframes.cpp
 [&Visible]
@@ -1082,7 +1021,7 @@ Modes d'affichages
 &Verrouillé
 [&Expanded]
 
-[&Floating Mode]
+[&Floating mode]
 &Mode détaché
 [&Border]
 &Bordure
@@ -1100,7 +1039,7 @@ Modes d'affichages
 &Vers le Haut
 [&Down]
 &Vers le Bas
-[Show All Frames]
+[Show all frames]
 Montrer tous les cadres
 [Show all title bars]
 Montrer toutes les barres de titres
@@ -1112,9 +1051,9 @@ Cadre vérouillé
 [Frame menu]
 
 ;file \plugins\Clist_modern\src\CLUIFrames\groupmenu.cpp
+[New group]
+Nouveau groupe
 [Group menu]
 
 [Subgroup menu]
 
-[&New SubGroup]
-&Nouveau sous-groupe

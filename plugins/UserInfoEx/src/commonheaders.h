@@ -76,7 +76,6 @@ using namespace std;
 #include <m_extraicons.h>
 #include <m_avatars.h>
 #include <m_contacts.h>
-#include <m_db3xSA.h>
 #include <m_icolib.h>
 #include <m_string.h>
 #include <m_popup.h>
@@ -85,7 +84,6 @@ using namespace std;
  * Used Plugins SDK includes and macros
  ***********************************************************************************************************/
 
-#include <m_popup2.h>
 #include <m_flags.h>
 #include <m_metacontacts.h>
 #include <m_toptoolbar.h>
@@ -180,8 +178,6 @@ typedef struct _MGLOBAL
 	BYTE		ShowPropsheetColours : 1;		// cached SET_PROPSHEET_SHOWCOLOURS database value
 	BYTE		WantAeroAdaption : 1;			// reserved for later use
 	BYTE		UseDbxTree : 1;					// use dbx_tree ?
-	LPCSTR		szMetaProto;
-
 } MGLOBAL, *LPMGLOBAL;
 
 extern HINSTANCE		ghInst;

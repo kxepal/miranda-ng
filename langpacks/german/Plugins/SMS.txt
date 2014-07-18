@@ -28,8 +28,6 @@ SMS-Nachricht
 An:
 [Add number to list]
 Nummer zur Liste hinzufügen
-[&H]
-&H
 [Save number]
 Nummer speichern
 [Multiple >>]
@@ -38,8 +36,6 @@ Mehr >>
 Nachrichteingabe:
 [Chars:]
 Zeichen:
-[%d/160]
-%d/160
 [&Send]
 &Senden
 [SMS Message Didn't Send]
@@ -52,7 +48,7 @@ Abbre&chen
 Die SMS-Nachricht konnte nicht zugestellt werden.
 [SMS Plugin]
 SMS-Plugin
-[Begining]
+[Beginning]
 Anfang
 [End]
 Ende
@@ -68,8 +64,6 @@ Fenster bei neuer Nachricht automatisch öffnen
 Fenster-Position per Kontat speichern
 [SMS Message Sent]
 SMS-Nachricht versandt
-[&OK]
-&OK
 [Message ID:]
 Nachricht-ID:
 [Source:]
@@ -123,8 +117,6 @@ Ungültige Telefonnummer
 [<< Single]
 << Weniger
 ;file \plugins\SMS\src\SMSConstans.h
-[SMS]
-SMS
 [Send &SMS...]
 &SMS senden...
 [&SMS Message]

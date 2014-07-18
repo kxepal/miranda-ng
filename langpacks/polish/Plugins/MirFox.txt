@@ -11,9 +11,9 @@ MirFox (Miranda NG) - plugin integrujący Miranda-Firefox - http://wsx22.3.xpdev
 [Send to contact action]
 Wyślij do kontaktu
 [on left mouse button click]
-po kliknięciu lewym przyciskiem myszy
+po kliknięciu LPM
 [on right mouse button click]
-po kliknięciu prawym przyciskiem myszy
+po kliknięciu PPM
 [on middle mouse button click\n(note: use middle mouse button to send multiple messages from Firefox)]
 po kliknięciu środkowym przyciskiem myszy\n(używając środkowego przycisku można wysłać wiadomość wielokrotnie)
 [Firefox profiles]
@@ -21,9 +21,9 @@ Profile Firefox
 [Show Miranda menu only in these Firefox profiles (comma delimited)]
 Aktywuj MirFox tylko dla następujących profili Firefox (rozdzielone przecinkiem)
 [Show these contacts in 'Send ... to' option in Firefox]
-Pokazuj następujące kontakty w menu 'wyślij do' w Firefox
+Pokazuj następujące kontakty w menu "Wyślij ... do" w Firefox
 [Show these accounts in 'Set status message' option in Firefox]
-Pokazuj następujące konta w menu 'ustaw opis' w Firefox
+Pokazuj następujące konta w menu "Ustaw opis" w Firefox
 ;file \plugins\MirFox\src\MirandaInterface.cpp
 [MirFox/Notification]
 MirFox/Informacja
@@ -55,8 +55,6 @@ MirFox log
 Wiadomość wysłana do %s (%s)
 [Message sent]
 Wiadomość wysłana
-[MirFox]
-MirFox
 [Cannot send message to %s (%s) - %S]
 Błąd przy wysyłaniu wiadomości do %s (%s) - %S
 [Cannot send message - %S]

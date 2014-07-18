@@ -1,4 +1,4 @@
-/* 
+/*
 Copyright (C) 2012 Mataes
 
 This is free software; you can redistribute it and/or
@@ -79,6 +79,8 @@ int NewsAggrPreShutdown(WPARAM wParam, LPARAM lParam)
 
 	KillTimer(NULL, timerId);
 	NetlibUnInit();
+
+	CallService(MS_HOTKEY_UNREGISTER, 0, (LPARAM)"NewsAggregator/CheckAllFeeds");
 	return 0;
 }
 
@@ -174,7 +176,7 @@ INT_PTR ChangeFeed(WPARAM hContact, LPARAM lParam)
 {
 	HWND hChangeFeedDlg = WindowList_Find(hChangeFeedDlgList, hContact);
 	if (!hChangeFeedDlg) {
-		hChangeFeedDlg = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_ADDFEED), NULL, DlgProcChangeFeedMenu, (LPARAM)hContact);
+		hChangeFeedDlg = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_ADDFEED), NULL, DlgProcChangeFeedMenu, hContact);
 		ShowWindow(hChangeFeedDlg, SW_SHOW);
 	} else {
 		SetForegroundWindow(hChangeFeedDlg);
@@ -254,6 +256,7 @@ void UpdateMenu(BOOL State)
 INT_PTR EnableDisable(WPARAM wParam, LPARAM lParam)
 {
 	UpdateMenu(db_get_b(NULL, MODULE, "AutoUpdate", 1));
+	NewsAggrSetStatus(db_get_b(NULL, MODULE, "AutoUpdate", 1) ? ID_STATUS_ONLINE : ID_STATUS_OFFLINE, 0);
 	return 0;
 }
 

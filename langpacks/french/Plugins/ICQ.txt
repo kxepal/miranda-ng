@@ -1,12 +1,12 @@
 ﻿#muuid {73a9615c-7d4e-4555-badb-ee05dc928eff}
 ;============================================================
 ;  File: ICQ.dll
-;  Plugin: IcqOscarJ Protocol
-;  Version: 0.11.2.0
+;  Plugin: IcqOscarJ protocol
+;  Version: 0.11.2.5
 ;  Authors: Joe Kucera, Bio, Martin Öberg, Richard Hughes, Jon Keating, etc.
 ;============================================================
 [ICQ protocol support for Miranda NG.]
-
+Support du protocole ICQ pour Miranda NG.
 ;file \protocols\IcqOscarJ\res\resources.rc
 [ICQ Number:]
 Identifiant :
@@ -26,16 +26,12 @@ Entrer le passe ICQ
 Entrez un mot de passe pour l'UIN %d :
 [Remember this session password]
 
-[OK]
-OK
 [Cancel]
 Annuler
-[ICQ]
-
 [ICQ number:]
-Identifiant:
-[Hint: If you don't enter your password here, Miranda will ask for the password everytime you try to go online.]
-Note: Si vous ne saisissez pas de mot de passe, Miranda vous le demandera à chaque connexion.
+Identifiant :
+[Hint: If you don't enter your password here, Miranda will ask for the password every time you try to go online.]
+Note : Si vous ne saisissez pas de mot de passe, Miranda vous le demandera à chaque connexion.
 [Retrieve a lost password or ICQ number]
 Retrouver un mot de passe perdu ou un numéro ICQ
 [Create a new ICQ account using the ICQ website]
@@ -61,7 +57,7 @@ Garder la connexion active (activez cette option si vous utilisez un serveur pro
 [Ignore concurrent error messages]
 Ignorer les messsages d'erreur concourant
 [Show connection error messages:]
-Afficher les erreurs de connexion:
+Afficher les erreurs de connexion :
 [ICQ contacts stored on server]
 Contacts ICQ sauvegardés sur le serveur
 [Manage server's list...]
@@ -95,12 +91,10 @@ Activer le support des messages unicode
 [Send all messages in unicode if possible]
 Envoyer tous les messages en unicode si possible
 [Use this codepage for Ansi <-> Unicode translation:]
-Traduire de Ansi vers Unicode avec l'encodage:
+Traduire de Ansi vers Unicode avec l'encodage :
 [Make me temporarily visible to contacts I send message to]
 Devenir temporairement visible lorsque j'envoi des messages
-[Notify me when a message delivery has failed (recommended)]
-Me prévenir lors de l'échec d'un envoi de message (recommandé) 
-[Never use legacy messaging (server acknowledgements)]
+[Notify me when a message delivery has failed]
 
 [Peer-to-peer Messaging]
 Envoi de message en peer-to-peer
@@ -195,13 +189,13 @@ Protocole version :
 [User Client:]
 Client :
 [Online since:]
-
+En ligne depuis :
 [System up since:]
 Démarré depuis :
 [Idle since:]
 Inactif depuis :
 [Status:]
-
+État :
 [Summary]
 Résumé
 [Nickname:]
@@ -277,7 +271,7 @@ Récupération de l'état personnalisé...
 [Confirm Password Change]
 Confirmer le mot de passe
 [Please re-type your new password:]
-Veuillez retaper votre mot de passe:
+Veuillez retaper votre mot de passe :
 [Enter your current password:]
 Entrez le mot de passe actuel :
 ;file \protocols\IcqOscarJ\src\chan_04close.cpp
@@ -300,7 +294,7 @@ Connexion échouée.\nVous vous êtes reconnecté trop rapidement,\nveuillez ré
 [Connection failed.\nThe server did not accept this client version.]
 Connexion échouée.\nLe serveur n'a pas accepté votre version de client.
 [The server sent warning, this version is getting old.\nTry to look for a new one.]
-Le serveur a envoyé un avertissement: version trop vieille.\nEssayez de trouver une plus récente.
+Le serveur a envoyé un avertissement : version trop vieille.\nEssayez de trouver une plus récente.
 [Connection failed.\nYou were rejected by the server for an unknown reason.\nThis can happen if the UIN is already connected.]
 Connexion échouée.\nVous avez été rejeté du serveur pour une raison inconnue.\nCeci peut arriver si votre ID est déjà connecté.
 [Connection failed.\nSecure (MD5) login is not supported on this account.]
@@ -402,10 +396,9 @@ Modification du nom du groupe-serveur échouée.
 
 [Error uploading avatar to server, server refused to accept the image.]
 
-;file \protocols\IcqOscarJ\src\icq_constants.h
 ;file \protocols\IcqOscarJ\src\icq_fieldnames.cpp
 [Afghanistan]
-
+Afghanistan
 [Albania]
 Albanie
 [Algeria]
@@ -441,7 +434,7 @@ Autriche
 [Azerbaijan]
 Azerbaïdjan
 [Bahamas]
-
+Bahamas
 [Bahrain]
 Bahrain
 [Bangladesh]
@@ -515,7 +508,7 @@ Côte d'Ivoire
 [Croatia]
 Croatie
 [Cuba]
-
+Cuba
 [Greek, Republic of South Cyprus]
 
 [Czech Republic]
@@ -711,7 +704,7 @@ Antilles Hollandaises
 [St. Maarten]
 
 [Curacao]
-
+Curaçao
 [Netherlands (Bonaire Island)]
 
 [Netherlands (Saba Island)]
@@ -729,7 +722,7 @@ Niger
 [Nigeria]
 Nigéria
 [Niue]
-
+Niue
 [Northern Mariana Islands, US Territory of]
 
 [Norway]
@@ -893,7 +886,7 @@ Serbie
 [Kosovo, Republic of]
 
 [Montenegro]
-
+Monténégro
 [Zambia]
 Zambie
 [Zimbabwe]
@@ -999,9 +992,9 @@ Sports
 [Women]
 
 [Afrikaans]
-
+Afrikaans
 [Albanian]
-
+Albanais
 [Arabic]
 Arabe
 [Armenian]
@@ -1015,9 +1008,9 @@ Arabe
 [Bosnian]
 
 [Bulgarian]
-
+Bulgare
 [Burmese]
-
+Birman
 [Cantonese]
 
 [Catalan]
@@ -1025,31 +1018,31 @@ Arabe
 [Chamorro]
 
 [Chinese]
-
+Chinois
 [Croatian]
-
+Croate
 [Czech]
-
+Tchèque
 [Danish]
-
+Danois
 [Dutch]
 
 [English]
-
+Anglais
 [Esperanto]
-
+Esperanto
 [Estonian]
-
+Estonien
 [Farsi]
 
 [Finnish]
-
+Finnois
 [French]
-
+Français
 [Gaelic]
 
 [German]
-
+Allemand
 [Greek]
 Grecque
 [Gujarati]
@@ -1057,15 +1050,15 @@ Grecque
 [Hebrew]
 Hébreux
 [Hindi]
-
+Hindi
 [Hungarian]
-
+Hongrois
 [Icelandic]
-
+Islandais
 [Indonesian]
-
+Indonésien
 [Italian]
-
+Italien
 [Japanese]
 Japonais
 [Khmer]
@@ -1073,51 +1066,51 @@ Japonais
 [Korean]
 Coréen
 [Kurdish]
-
+Kurde
 [Lao]
 
 [Latvian]
-
+Letton
 [Lithuanian]
-
+Lituanien
 [Macedonian]
-
+Macédonien
 [Malay]
-
+Malais
 [Mandarin]
 
 [Mongolian]
-
+Mongol
 [Norwegian]
-
+Norvégien
 [Persian]
-
+Perse
 [Polish]
-
+Polonais
 [Portuguese]
-
+Portugais
 [Punjabi]
 
 [Romanian]
-
+Roumain
 [Russian]
-
+Russe
 [Serbian]
-
+Serbe
 [Sindhi]
 
 [Slovak]
-
+Slovaque
 [Slovenian]
-
+Slovène
 [Somali]
-
+Somali
 [Spanish]
 
 [Swahili]
 
 [Swedish]
-
+Suédois
 [Tagalog]
 
 [Taiwanese]
@@ -1131,7 +1124,7 @@ Thaïlandais
 [Turkish]
 Turque
 [Ukrainian]
-
+Ukrainien
 [Urdu]
 
 [Vietnamese]
@@ -1139,7 +1132,7 @@ Vietnamien
 [Welsh]
 
 [Yiddish]
-
+Yiddish
 [Yoruba]
 
 [Elementary School]
@@ -1449,17 +1442,17 @@ Suppression du groupe "%s"...
 Opérations terminées!
 [Close]
 Fermer
-[You have to be online to sychronize the server-list!]
+[You have to be online to synchronize the server-list!]
 Vous devez être En ligne pour synchroniser le serveur!
 [** All contacts **]
 ** Tous les contacts **
 ;file \protocols\IcqOscarJ\src\icq_xstatus.cpp
 [Angry]
-
+En colère
 [Taking a bath]
-
+prend un bain
 [Tired]
-
+Fatigué
 [Birthday]
 
 [Drinking beer]
@@ -1467,7 +1460,7 @@ Boit de la bière
 [Thinking]
 Pensif
 [Eating]
-
+Mange
 [Watching TV]
 Regarde la télé
 [Meeting]
@@ -1495,15 +1488,15 @@ Malade
 [Surfing]
 Surfe
 [Working]
-
+Travail
 [Typing]
 Écrit
 [Picnic]
 Pique-nique
 [Cooking]
-
+Cuisine
 [Smoking]
-
+Fume
 [I'm high]
 Plane
 [On WC]
@@ -1605,7 +1598,7 @@ OK pour un chat
 [On my mobile]
 
 [Depressed]
-
+Déprimé
 [Beetle]
 
 [Double Rainbow]
@@ -1621,7 +1614,7 @@ OK pour un chat
 [Playing]
 en lecture
 [Writing]
-
+Écrit
 [%s Custom Status]
 %s État Personnel
 [None]
@@ -1646,7 +1639,7 @@ Le serveur n'a pas répondu à la tentative de connexion dans un délai raisonna
 [The connection with the server was abortively closed during the connection attempt. You may have lost your local network connection.]
 
 [Miranda was unable to resolve the name of a server to its numeric address. This is most likely caused by a catastrophic loss of your network connection (for example, your modem has disconnected), but if you are behind a proxy, you may need to use the 'Resolve hostnames through proxy' option in M->Options->Network.]
-Miranda n'a pas pu résoudre le nom du serveur en adresse IP numérique. Cela est sûrement dû par une perte brutale de votre connexion réseau (par exemple: votre modem a été déconnecté), mais si vous êtes derrière un proxy, vous pouvez avoir besoin d'utiliser l'option 'Résoudre les noms à travers un proxy' dans M->Options->ICQ->Réseau.
+Miranda n'a pas pu résoudre le nom du serveur en adresse IP numérique. Cela est sûrement dû par une perte brutale de votre connexion réseau (par exemple : votre modem a été déconnecté), mais si vous êtes derrière un proxy, vous pouvez avoir besoin d'utiliser l'option 'Résoudre les noms à travers un proxy' dans M->Options->ICQ->Réseau.
 [Miranda was unable to make a connection with a server. It is likely that the server is down, in which case you should wait for a while and try again later.]
 
 [Your proxy rejected the user name and password that you provided. Please check them in M->Options->Network.]
@@ -1677,6 +1670,8 @@ Fichiers %d
 [File transfer negotiation failed for unknown reason.]
 
 [The checksum of file "%s" does not match, the file is probably damaged.]
+
+[Your file transfer has been aborted (error=%d), because one of the files that you selected to send is no longer readable from the disk. You may have deleted or moved it.]
 
 ;file \protocols\IcqOscarJ\src\utilities.cpp
 [<invalid>]
@@ -1721,7 +1716,7 @@ Nom
 [Password]
 Mot de passe
 [Contact]
-
+Contact
 [Primary e-mail]
 
 [Secondary e-mail]

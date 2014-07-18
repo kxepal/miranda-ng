@@ -8,7 +8,7 @@
 [ToptoolBar adds buttons in top frame for fast access.]
 ToptoolBar - добавя бутони в лента за бърз достъп до различни функции.
 ;file \plugins\TopToolBar\res\main.rc
-[Buttons Order && Visibility]
+[Buttons order and visibility]
 Подреждане на бутоните и видимост
 [Button height]
 Височина на бутоните
@@ -24,11 +24,11 @@ ToptoolBar - добавя бутони в лента за бърз достъп 
 Само на един ред
 [Buttons order:]
 Подреждане на бутоните:
-[Add Separator]
+[Add separator]
 Добавяне на разделител
-[Add Launch]
-Добавпне на стартиращ бутон
-[Del Sep/Launch Button]
+[Add launch]
+Добавяне на стартиращ бутон
+[Delete separator/launch button]
 Изтиване на бутона
 [Name:]
 Име:
@@ -36,17 +36,56 @@ ToptoolBar - добавя бутони в лента за бърз достъп 
 Път:
 [Set]
 Задай
+;file \plugins\TopToolBar\src\InternalButtons.cpp
+[Show main menu]
+
+[Show options page]
+
+[Show accounts manager]
+
+[Find/add contacts]
+Търсене/Добавяне на контакти
+[Show status menu]
+
+[Show/hide offline contacts]
+
+[Hide offline contacts]
+
+[Show offline contacts]
+
+[Enable/disable metacontacts]
+
+[Disable metacontacts]
+
+[Enable metacontacts]
+
+[Enable/disable groups]
+
+[Enable groups]
+
+[Disable groups]
+Без групи
+[Enable/disable sounds]
+
+[Disable sounds]
+
+[Enable sounds]
+
+[Minimize contact list]
+
+[Exit]
+Изход
 ;file \plugins\TopToolBar\src\toolbar.cpp
 [Default]
 Стандарт
-[TopToolBar Background]
+[TopToolBar background]
 
 [Frames service has not been found, so plugin will be disabled.\nTo run it you need to install and / or enable contact list plugin that supports it:\n- Modern contact list\n- MultiWindow (MW)\n- Nicer+\nYou can get them at http://miranda-ng.org/]
 
 [TopToolBar]
 TopToolBar
 ;file \plugins\TopToolBar\src\ttbopt.cpp
-[Contact List]
+[Contact list]
 Списък с контакти
 [Toolbar]
 Лента с инструменти

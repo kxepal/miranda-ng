@@ -10,8 +10,6 @@
 ;file \plugins\New_GPG\res\new_gpg.rc
 [Load Public GPG key]
 
-[OK]
-ОК
 [Load from file]
 
 [Select existing]
@@ -108,7 +106,7 @@
 
 [Decrypt]
 
-[Recieved encrypted file form contact with disabled encryption.]
+[Received encrypted file from contact with disabled encryption.]
 
 [Remember choice]
 
@@ -130,8 +128,6 @@
 
 [Export PubKey]
 
-[Select own key]
-
 [Turn on debug log]
 
 [Use Jabber API on Miranda NG (recommended)]
@@ -143,6 +139,8 @@
 [Automatic key exchange]
 
 [Copy own key]
+
+[Select own key]
 
 [Add tags to encoded and decoded messages]
 
@@ -156,7 +154,7 @@
 
 [Strip all tags in outgoing messages]
 
-[Turn on presence signing (Jabber) (required by xep 0-27)]
+[Turn on presence signing (Jabber) (required by XEP 0-27)]
 
 [Export keys]
 
@@ -206,7 +204,11 @@
 Грешка
 [Generating new random key, please wait]
 
-[Failed to alocate memory]
+[Failed to allocate memory]
+
+[Failed to lock memory with error %d]
+
+[Failed write to clipboard with error %d]
 
 [GPG binary found in Miranda folder, but English locale does not exist.\nIt's highly recommended to place \\gnupg.nls\\en@quot.mo in GnuPG folder under Miranda root.\nWithout this file you may experience many problems with GPG output on non-English systems\nand plugin may completely not work.\nYou have been warned.]
 
@@ -238,7 +240,7 @@
 
 [Accept]
 
-[Received key from ]
+[Received key from %s]
 
 [You must set encryption algorithm first]
 
@@ -272,7 +274,7 @@
 
 [GPG plugin problems]
 
-[Your secret key whith ID: ]
+[Your secret key with ID: ]
 
 [ for account ]
 
@@ -327,7 +329,7 @@
 [we have secret key for this public key, do not removing from GPG keyring]
 
 [info]
-
+Информация
 [Key removed from GPG keyring]
 
 [Do you want to remove key from entire metacontact (all subcontacts)?]
@@ -335,6 +337,8 @@
 [Export public key]
 
 [.asc pubkey file]
+
+[Failed to open clipboard with error %d]
 
 [Set log file]
 
@@ -371,21 +375,23 @@
 
 [Capability to decrypt file not found on other side.\nRecipient may be unable to decrypt file(s).\nDo you want to encrypt file(s) anyway?]
 
-[Filetransfer warning]
+[File transfer warning]
 
 [Unable to check encryption support on other side.\nRecipient may be unable to decrypt file(s).\nCurrently capability check supported only for ICQ and Jabber protocols.\nIt will work for any other proto if Miranda with New_GPG is used on other side.\nDo you want to encrypt file(s) anyway?]
 
 [encrypting file for transfer]
 
-[we have succesfully exported]
+[We have successfully exported %d public keys and all private keys.]
 
-[public keys]
+[We have successfully exported all private keys.]
 
-[and]
-
-[all private keys]
+[We have successfully exported %d public keys.]
 
 [Keys export result]
+
+[We have successfully processed %d public keys and some private keys.]
+
+[We have successfully processed %d public keys.]
 
 [Keys import result]
 

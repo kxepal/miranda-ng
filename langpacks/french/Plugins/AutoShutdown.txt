@@ -13,7 +13,7 @@ Arrêt Système
 [&Show confirmation dialog before shutdown]
 &Demander confirmation avant de fermer
 [&Countdown starts at:]
-&Compte à rebours à:
+&Compte à rebours à :
 [seconds]
 secondes
 [Shutdown Events]
@@ -25,11 +25,9 @@ secondes
 [Critical Shutdown Events]
 Évènements d'extinction critque
 [Automatically shutdown the computer and turn the power off when one of the following occurs:]
-Éteindre automatiquement l'ordinateur si:
+Éteindre automatiquement l'ordinateur si :
 [&Thunderstorm warning is issued (Weather)]
 Un &orage est annoncé (plugin Weather)
-[&Harddrive overheats (HDD Info)]
-&Surchauffe du disque dur (plugin HDD Info)
 [Automatic Shutdown]
 Extinction Automatique
 [Select the automatic shutdown event]
@@ -37,27 +35,25 @@ Sélectionner l'évènement qui fermera Miranda-IM
 [Shutdown at &specific time]
 À une heure précise
 [Shutdown a&t:]
-Extinction à:
+Extinction à :
 [Shutdown i&n:]
-Extinction dans:
+Extinction dans :
 [Shutdown when a &message is received containing the following text:]
-À la réception d'un message contenant le texte suivant:
+À la réception d'un message contenant le texte suivant :
 [Shutdown when Miranda NG becomes &idle]
 Quand Miranda NG devient inactif
 [Configure]
 Configurer
-[Shutdown when &prozessor usage drops below:]
-Extinction si la charge processeur descend à:
+[Shutdown when &processor usage drops below:]
+Extinction si la charge du &processeur descend sous :
 [(current: 0%)]
-(actuel: 0%)
+(actuel : 0%)
 [Shutdown when all contacts are &offline]
 Quand tous vos contacts sont déconnectés
 [Shutdown when all &file transfers are finished]
 Éteindre quand tous les fichiers auront été transféré
 [&Action:]
-&Action:
-[OK]
-OK
+&Action :
 [Cancel]
 Annuler
 [Unsaved data in open applications except Miranda NG might get lost.]
@@ -68,9 +64,9 @@ Cliquer sur "Annuler" pour annuler cette action, ou sur "Maintenant" pour ne pas
 &Maintenant !
 ;file \plugins\AutoShutdown\src\frame.cpp
 [Shutdown at:]
-Heure d'extinction:
+Heure d'extinction :
 [Time left:]
-Temps restant:
+Temps restant :
 [Paused]
 EN PAUSE
 [&Unpause Countdown]
@@ -111,7 +107,7 @@ Semaine(s)
 [Month(s)]
 Mois
 [(current: %u%%)]
-(actuel: %u%%)
+(actuel : %u%%)
 [Start/Stop automatic shutdown]
 Lancer/Arrêter l'arrêt automatique
 [Start automatic shutdown]
@@ -144,11 +140,11 @@ L'ordinateur s'éteindra automatiquement dans %u seconde(s).
 [Automatic Shutdown Error]
 Erreur de Automatic Shutdown
 [The shutdown process failed!\nReason: %s]
-La procédure d'extinction a échouée !\nMotif:%s
+La procédure d'extinction a échouée !\nMotif : %s
 [Unknown]
 Inconnu
 [Inititiating the shutdown process failed!\nReason: %s]
-Échec de l'initialisation d'extinction !\nMotif: %s
+Échec de l'initialisation d'extinction !\nMotif : %s
 [Close Miranda NG]
 Fermer Miranda NG
 [Set Miranda NG offline]
@@ -179,7 +175,7 @@ Ferme Windows et redémarre l'ordinateur.
 Clôture tous les programmes en cours et arrête Windows à un point auquel il est sûr d'éteindre l'ordinateur.
 [Saves the current Windows session in memory and sets the system to suspend mode.]
 Sauvegarde la session actuelle de Windows en mémoire et met le système en veille.
-[Saves the current Windows session on harddisc, so that the power can be turned off.]
+[Saves the current Windows session on hard drive, so that the power can be turned off.]
 Sauvegarde la session actuelle de Windows sur le disque dur, de sorte que le courant puisse être coupé (Veille Prolongée).
 [Locks the computer. To unlock the computer, you must log in.]
 Verrouille l'ordinateur (ou plutôt Windows).  Pour le déverrouiller, vous devrez vous identifier (login et mot de passe Windows).

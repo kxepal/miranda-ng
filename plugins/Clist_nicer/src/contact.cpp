@@ -79,7 +79,7 @@ static void MF_CalcFrequency(MCONTACT hContact, DWORD dwCutoffDays, int doSleep)
 		 }
 		 if (eventCount >= 100 || dbei.timestamp < curTime - (dwCutoffDays * 86400))
 			 break;
-		 hEvent = db_event_prev(hEvent);
+		 hEvent = db_event_prev(hContact, hEvent);
 		 if (doSleep && mf_updatethread_running == FALSE)
 			 return;
 		 if (doSleep)
@@ -122,14 +122,11 @@ void MF_UpdateThread(LPVOID)
 	CloseHandle(hEvent);
 }
 
-static BOOL mc_hgh_removed = FALSE;
-
 void LoadContactTree(void)
 {
 	int i, status, hideOffline;
-	BOOL mc_disablehgh = ServiceExists(MS_MC_DISABLEHIDDENGROUP);
-	DBVARIANT dbv = {0};
-	BYTE      bMsgFrequency = cfg::getByte("CList", "fhistdata", 0);
+	BYTE bMsgFrequency = cfg::getByte("CList", "fhistdata", 0);
+	DBVARIANT dbv = { 0 };
 
 	CallService(MS_CLUI_LISTBEGINREBUILD, 0, 0);
 	for (i = 1; ; i++) {
@@ -145,32 +142,21 @@ void LoadContactTree(void)
 		if ((!hideOffline || status != ID_STATUS_OFFLINE) && !CLVM_GetContactHiddenStatus(hContact, NULL, NULL))
 			pcli->pfnChangeContactIcon(hContact, IconFromStatusMode(GetContactProto(hContact), status, hContact, NULL), 1);
 
-		if (mc_disablehgh && !mc_hgh_removed) {
-			if ( !db_get(hContact, "CList", "Group", &dbv)) {
-				if ( !strcmp(dbv.pszVal, "MetaContacts Hidden Group"))
-					db_unset(hContact, "CList", "Group");
-				mir_free(dbv.pszVal);
-			}
-		}
-
 		// build initial data for message frequency
 		if ( !bMsgFrequency)
 			MF_CalcFrequency(hContact, 100, 0);
 	}
 	cfg::writeByte("CList", "fhistdata", 1);
-	mc_hgh_removed = TRUE;
 	CallService(MS_CLUI_LISTENDREBUILD, 0, 0);
 }
 
 DWORD INTSORT_GetLastMsgTime(MCONTACT hContact)
 {
-	HANDLE hDbEvent = db_event_last(hContact);
-	while(hDbEvent) {
+	for (HANDLE hDbEvent = db_event_last(hContact); hDbEvent; hDbEvent = db_event_prev(hContact, hDbEvent)) {
 		DBEVENTINFO dbei = { sizeof(dbei) };
 		db_event_get(hDbEvent, &dbei);
 		if (dbei.eventType == EVENTTYPE_MESSAGE && !(dbei.flags & DBEF_SENT))
 			return dbei.timestamp;
-		hDbEvent = db_event_prev(hDbEvent);
 	}
 	return 0;
 }
@@ -180,7 +166,7 @@ int __forceinline GetProtoIndex(char * szName)
 	if ( !szName )
 		return -1;
 
-	PROTOACCOUNT* pa = ProtoGetAccount( szName );
+	PROTOACCOUNT *pa = ProtoGetAccount( szName );
 	return ( pa == NULL ) ? -1 : pa->iOrder;
 }
 
@@ -281,14 +267,19 @@ int CompareContacts(const ClcContact* c1, const ClcContact* c2)
 
 int SetHideOffline(WPARAM wParam, LPARAM lParam)
 {
+	int newVal = (int)wParam;
 	switch ((int)wParam) {
 	case 0:
 		cfg::writeByte("CList", "HideOffline", 0); break;
 	case 1:
 		cfg::writeByte("CList", "HideOffline", 1); break;
 	case -1:
-		cfg::writeByte("CList", "HideOffline", (BYTE) ! cfg::getByte("CList", "HideOffline", SETTING_HIDEOFFLINE_DEFAULT)); break;
+		newVal = !cfg::getByte("CList", "HideOffline", SETTING_HIDEOFFLINE_DEFAULT);
+		cfg::writeByte("CList", "HideOffline", (BYTE)newVal);
+		break;
 	}
+	SetButtonStates(pcli->hwndContactList);
+	ClcSetButtonState(IDC_TBHIDEOFFLINE, newVal);
 	LoadContactTree();
 	return 0;
 }

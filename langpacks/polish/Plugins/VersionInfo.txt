@@ -10,8 +10,6 @@ Zbiera i wyświetla informacje o Mirandzie, używanych wtyczkach i systemie oper
 ;file \plugins\VersionInfo\res\resource.rc
 [Output to:]
 Zapisz w:
-[OK]
-OK
 [Cancel]
 Anuluj
 [Text file]
@@ -43,7 +41,7 @@ Jednocześnie kopiuj informacje do schowka
 [Upload site settings]
 Strona do przesyłu
 [Username]
-Użytkownik
+Użytkownik:
 [Password]
 Hasło:
 [Highlight version number using]
@@ -65,14 +63,14 @@ Informacje o wersji Mirandy
 [Close]
 Zamknij
 [&Copy text]
-Kopiuj tekst
+&Kopiuj tekst
 [Upload]
 Wyślij
 [&Save to file]
-Zapisz do pliku
+&Zapisz do pliku
 ;file \plugins\VersionInfo\src\CVersionInfo.cpp
 [If you are going to use this report to submit a bug, remember to check the website for questions or help the developers may need.\r\nIf you don't check your bug report and give feedback, it will not be fixed!]
-Jeżeli zamierzasz użyć tego raportu w celu zgłoszenia błędu, pamiętaj, by przejrzeć stronę internetową w poszukiwaniu dodatkowych pytań lub innej pomocy jakiej mogą potrzebować twórcy.\r\nJeżeli nie sprawdzisz swojego raportu błędu i nie odpowiesz, błąd nie zostanie naprawiony.
+Jeśli zamierzasz użyć tego raportu w celu zgłoszenia błędu, pamiętaj, by przejrzeć stronę internetową w poszukiwaniu dodatkowych pytań lub innej pomocy jakiej mogą potrzebować twórcy.\r\nJeśli nie sprawdzisz swojego raportu błędu i nie odpowiesz, błąd nie zostanie naprawiony.
 [Information successfully written to file: "%s".]
 Informacje zostały pomyślnie zapisane w pliku: "%s".
 [Error during the creation of file "%s". Disk may be full or write protected.]
@@ -83,7 +81,7 @@ Schowek jest niedostępny, spróbuj ponownie.
 Informacje pomyślnie skopiowano do schowka.
 ;file \plugins\VersionInfo\src\dlgHandlers.cpp
 [Customize using folders plugin]
-Dostosuj używając wtyczki 'folders'
+Dostosuj używając wtyczki "Folders"
 [Are you sure you want to enable this option?\nPlease only enable this option if you really know what you're doing and what the option is for or if someone asked you to do it.]
 Czy na pewno chcesz włączyć tę opcję?\nNie jest to zalecane.
 [Show plugin UUIDs?]
@@ -99,5 +97,5 @@ Informacja o wersji
 Usługi
 ;file \plugins\VersionInfo\src\main.cpp
 ;file \plugins\VersionInfo\src\utils.cpp
-[Ok, something went wrong in the "%s" setting. Report back the following values:\nFacility: %X\nError code: %X\nLine number: %d]
-Ok, coś poszło nie tak w ustawieniu "%s". Zgłoś ponownie następujące wartości:\nFunkcja: %X\nKod błędu:%X\nNumer linii: %d
+[Something went wrong in the "%s" setting. Report back the following values:\nFacility: %X\nError code: %X\nLine number: %d]
+Coś poszło nie tak w ustawieniu "%s". Zgłoś następujące wartości:\nFunkcja: %X\nKod błędu: %X\nNumer linii: %d

@@ -18,11 +18,11 @@
 [Enable notification]
 Включить уведомление
 [Show previous client name]
-Показывать предыдущее имя клиента 
+Показывать предыдущее имя клиента
 [Notify also when just client version changes]
-Уведомлять, когда сменится версия клиента 
+Уведомлять, когда сменится версия клиента
 [Show client version]
-Показать версию клиента 
+Показать версию клиента
 [Don't notify for contacts with disabled status notification]
 Не уведомлять для контактов с отключённым уведомлением статуса
 [Click action]
@@ -59,8 +59,6 @@
 поменял(а) клиент на %s
 [%s (was %s)]
 %s (был %s)
-[) changed client to ]
-) сменил клиент на\s
 [Disable c&lient change notification]
 Выключить уведомления о смене к&лиента
 [Enable c&lient change notification]
@@ -69,8 +67,6 @@
 Всплывающие окна
 [ClientChangeNotify: Client changed]
 Уведомление о смене клиента: Клиент изменился
-[ClientChangeNotify]
-Уведомление о смене клиента
 [Error #%d]
 Ошибка #%d
 [Can't open log file ]
@@ -87,7 +83,7 @@
 Открыть меню контакта
 [Open contact history]
 Открыть историю контакта
-[Open log file]
-Открыть журнал
 [Do nothing]
 Ничего не делать
+[ClientChangeNotify]
+Уведомление о смене клиента

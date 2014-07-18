@@ -75,7 +75,7 @@ UTF8 за нови файлове
 ;file \plugins\Msg_Export\src\FileViewer.cpp
 [Failed to write to the RichEdit the buffer was to small.]
 
-[Error: Optimal buffer size decrecied to a to low size!]
+[Error: Optimal buffer size decreased to a too low size!]
 
 [Internal error! (lExtraRead >= 0)]
 
@@ -143,9 +143,9 @@ UTF8 за нови файлове
 [You have not applied the changes, do you wish to apply them first?]
 
 [Executable files]
-
+Изпълними файлове
 [All files]
-
+Всички файлове
 [Failed to get the shells allocator!]
 
 [Failed to Allocate buffer space]

@@ -9,7 +9,6 @@ IconItem gdiMenuItems[MAIN_MENU_ITEMS_COUNT] =
 	{ MRA_SHOW_INBOX_STATUS_STR,  MRA_SHOW_INBOX_STATUS,  IDI_MAIL_NOTIFY       },
 	{ MRA_EDIT_PROFILE_STR,       MRA_EDIT_PROFILE,       IDI_PROFILE           },
 	{ MRA_MY_ALBUM_STR,           MRA_VIEW_ALBUM,         IDI_MRA_PHOTO         },
-	{ MRA_MY_BLOG_STR,            MRA_READ_BLOG,          IDI_MRA_BLOGS         },
 	{ MRA_MY_BLOGSTATUS_STR,      MRA_REPLY_BLOG_STATUS,  IDI_BLOGSTATUS        },
 	{ MRA_MY_VIDEO_STR,           MRA_VIEW_VIDEO,         IDI_MRA_VIDEO         },
 	{ MRA_MY_ANSWERS_STR,         MRA_ANSWERS,            IDI_MRA_ANSWERS       },
@@ -24,9 +23,9 @@ IconItem gdiContactMenuItems[CONTACT_MENU_ITEMS_COUNT] =
 {
 	{ MRA_REQ_AUTH_STR,           MRA_REQ_AUTH,           IDI_AUTHRUGUEST       },
 	{ MRA_GRANT_AUTH_STR,         MRA_GRANT_AUTH,         IDI_AUTHGRANT         },
+	{ MRA_SEND_EMAIL_STR,         MRA_SEND_EMAIL,         IDI_INBOX             },
 	{ MRA_SEND_POSTCARD_STR,      MRA_SEND_POSTCARD,      IDI_MRA_POSTCARD      },
 	{ MRA_VIEW_ALBUM_STR,         MRA_VIEW_ALBUM,         IDI_MRA_PHOTO         },
-	{ MRA_READ_BLOG_STR,          MRA_READ_BLOG,          IDI_MRA_BLOGS         },
 	{ MRA_REPLY_BLOG_STATUS_STR,  MRA_REPLY_BLOG_STATUS,  IDI_BLOGSTATUS        },
 	{ MRA_VIEW_VIDEO_STR,         MRA_VIEW_VIDEO,         IDI_MRA_VIDEO         },
 	{ MRA_ANSWERS_STR,            MRA_ANSWERS,            IDI_MRA_ANSWERS       },
@@ -36,11 +35,11 @@ IconItem gdiContactMenuItems[CONTACT_MENU_ITEMS_COUNT] =
 
 IconItem gdiExtraStatusIconsItems[ADV_ICON_MAX] =
 {
-   { ADV_ICON_DELETED_STR,      	 ADV_ICON_DELETED_ID,        IDI_DELETED     },
-   { ADV_ICON_NOT_ON_SERVER_STR,  ADV_ICON_NOT_ON_SERVER_ID,  IDI_AUTHGRANT   },
-   { ADV_ICON_NOT_AUTHORIZED_STR, ADV_ICON_NOT_AUTHORIZED_ID, IDI_AUTHRUGUEST },
-   { ADV_ICON_PHONE_STR,          ADV_ICON_PHONE_ID,          IDI_MRA_PHONE   },
-   { ADV_ICON_BLOGSTATUS_STR,     ADV_ICON_BLOGSTATUS_ID,     IDI_BLOGSTATUS  }
+   { ADV_ICON_DELETED_STR,		ADV_ICON_DELETED_ID,		IDI_DELETED     },
+   { ADV_ICON_NOT_ON_SERVER_STR,	ADV_ICON_NOT_ON_SERVER_ID,	IDI_AUTHGRANT   },
+   { ADV_ICON_NOT_AUTHORIZED_STR,	ADV_ICON_NOT_AUTHORIZED_ID,	IDI_AUTHRUGUEST },
+   { ADV_ICON_PHONE_STR,		ADV_ICON_PHONE_ID,		IDI_MRA_PHONE   },
+   { ADV_ICON_BLOGSTATUS_STR,		ADV_ICON_BLOGSTATUS_ID,		IDI_BLOGSTATUS  }
 };
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -108,7 +107,7 @@ void InitXStatusIcons()
 	sid.flags = SIDF_ALL_TCHAR;
 
 	hXStatusAdvancedStatusIcons[0] = NULL;
-	for (int i = 1; i < MRA_XSTATUS_COUNT+1; i++) {
+	for (DWORD i = 1; i < MRA_XSTATUS_COUNT+1; i++) {
 		char szBuff[MAX_PATH];
 		mir_snprintf(szBuff, SIZEOF(szBuff), "mra_xstatus%ld", i);
 		sid.pszName = szBuff;
@@ -125,10 +124,10 @@ void DestroyXStatusIcons()
 {
 	char szBuff[MAX_PATH];
 
-	for (size_t i = 1; i < MRA_XSTATUS_COUNT+1; i++) {
+	for (DWORD i = 1; i < MRA_XSTATUS_COUNT+1; i++) {
 		mir_snprintf(szBuff, SIZEOF(szBuff), "mra_xstatus%ld", i);
 		Skin_RemoveIcon(szBuff);
 	}
 
-	bzero(hXStatusAdvancedStatusIcons, sizeof(hXStatusAdvancedStatusIcons));
+	memset(hXStatusAdvancedStatusIcons, 0, sizeof(hXStatusAdvancedStatusIcons));
 }

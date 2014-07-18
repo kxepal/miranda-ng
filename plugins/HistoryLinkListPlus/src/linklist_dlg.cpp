@@ -84,7 +84,7 @@ INT_PTR WINAPI MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam )
 
 			SetClassLongPtr(hDlg, GCLP_HICON, (LONG_PTR)LoadIcon(hInst, MAKEINTRESOURCE(IDI_LINKLISTICON))); 
 			WindowList_Add(hWindowList, hDlg, DlgParam->hContact);
-			mir_sntprintf(title, _countof(title), _T("%s [%s]"), TranslateT("Linklist Plugin"), (LPCTSTR)CallService(MS_CLIST_GETCONTACTDISPLAYNAME, (WPARAM)DlgParam->hContact, GCDNF_TCHAR));
+			mir_sntprintf(title, _countof(title), _T("%s [%s]"), TranslateT("Linklist plugin"), (LPCTSTR)CallService(MS_CLIST_GETCONTACTDISPLAYNAME, (WPARAM)DlgParam->hContact, GCDNF_TCHAR));
 			SetWindowText(hDlg, title);
 			GetFilterText(listMenu, filter, _countof(filter));
 			SetDlgItemText(hDlg, IDC_STATUS, filter);
@@ -473,7 +473,7 @@ INT_PTR WINAPI SearchDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
 		case WM_INITDIALOG:
 		{
 			TranslateDialogDefault(hDlg);
-			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LPARAM)lParam);
+			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)lParam);
 			SetWindowText(hDlg, TXT_SEARCH);
 			SendDlgItemMessage(hDlg, IDC_DIR_ALL, BM_SETCHECK, BST_CHECKED, 0);
 			SendDlgItemMessage(hDlg, IDC_TYPE_ALL, BM_SETCHECK, BST_CHECKED, 0);

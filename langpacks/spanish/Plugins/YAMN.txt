@@ -8,8 +8,6 @@
 [Mail notifier and browser for Miranda NG. Included POP3 protocol.]
 
 ;file \plugins\YAMN\res\YAMN.rc
-[OK]
-Aceptar
 [Installed plugins]
 
 [Version:]
@@ -128,7 +126,7 @@ Salí a comer
 
 [Enable Close on Delete Button]
 
-[Show long localised date]
+[Show long localized date]
 
 [Don't show today's date]
 
@@ -150,7 +148,7 @@ Ventana emergente
 
 [Popup if no mail]
 
-[Persistant message]
+[Persistent message]
 
 [Connection failure notifications]
 
@@ -338,7 +336,7 @@ Ventanas emergentes
 [Time left to next check [s]: %d]
 
 [New Account]
-
+Nueva cuenta
 [Executables]
 
 [All Files]

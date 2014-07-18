@@ -1,7 +1,7 @@
 ﻿#muuid {748f8934-781a-528d-5208-001265404ab3}
 ;============================================================
 ;  File: Tlen.dll
-;  Plugin: Tlen Protocol
+;  Plugin: Tlen protocol
 ;  Version: 2.1.0.0
 ;  Authors: Santithorn Bunchua, Adam Strzelecki, Piotr Piastucki
 ;============================================================
@@ -145,7 +145,7 @@
 Вік:
 [to]
 до
-[Extra Search Criterias]
+[Extra Search Criteria]
 Дод. критерії пошуку
 [Status:]
 Статус:
@@ -189,8 +189,6 @@
 Вхідна пошта
 [Alert]
 Попередження
-[Tlen Chats]
-Чати Tlen
 [Multi-User Conference]
 Кімната чату
 [Tlen Mail]
@@ -221,32 +219,6 @@
 Аутентифікація не пройдена для %s@%s
 [Tlen Authentication]
 Аутентифікація Tlen
-[You have been kicked. Reason: %s ]
-Вас вигнали. Причина: %s\s
-[You cannot join this chat room, because you are banned.]
-Ви не можете увійти в кімнату, тому що ви заблоковані.
-[Chat room not found.]
-Чат-кімнату не знайдено.
-[This is a private chat room and you are not one of the members.]
-Це приватна чат-кімната, і ви не її член.
-[You cannot send any message unless you join this chat room.]
-Ви не можете надсилати повідомлення, поки ви не ввійшли в кімнату.
-[Chat room with already created.]
-Кімната вже створена.
-[Nickname '%s' is already registered.]
-Псевдонім '%s' вже зареєстрований.
-[Nickname already in use, please try another one. Hint: '%s' is free.]
-Псевдонім вже використовується, виберіть інший. Підказка: '%s' вільний.
-[You cannot register more than %s nicknames.]
-Ви не можете зареєструвати більше ніж %s псевдонімів.
-[You cannot create more than %s chat rooms.]
-Ви не можете створити більше ніж %s кімнат.
-[You cannot join more than %s chat rooms.]
-Ви не можете увійти більше ніж до %s кімнат.
-[Anonymous nicknames are not allowed in this chat room.]
-Анонімні псевдоніми заборонені в цій кімнаті.
-[Unknown error code: %d]
-Невідома помилка: %d
 [General]
 Загальне
 [Advanced]
@@ -285,12 +257,12 @@
 (Останнє повідомлення)
 [Forwarding]
 Перенаправлення
-[%s mail]
-%s пошта
+[%S mail]
+%S пошта
 [Image sent file://%s]
-Зображення надіслано://%s
+Зображення надіслано file://%s
 [Image received file://%s]
-Отримано зображення://%s
+Отримано зображення file://%s
 [Tlen login]
 Вхід Tlen
 [You need to be connected to Tlen account to set avatar.]
@@ -311,6 +283,8 @@ Web-повідомлення
 Сповіщення прийнято.
 [Private conference]
 Особиста конференція
+[%s mail]
+%s пошта
 [Subject]
 Тема
 [Account]
@@ -336,6 +310,6 @@ Web-повідомлення
 [Default]
 За замовчанням
 [%s connection]
-%s з'єднання 
+%s з'єднання
 [%s SOCKS connection]
 %s SOCKS з'єднання

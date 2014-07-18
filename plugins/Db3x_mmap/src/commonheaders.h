@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define _CRT_SECURE_NO_WARNINGS
 #define _WIN32_WINNT 0x0501
 
+#pragma warning(disable:4509)
+
 #include <windows.h>
 #include <time.h>
 #include <process.h>
@@ -38,6 +40,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <m_icolib.h>
 #include <m_options.h>
 #include <m_crypto.h>
+#include <m_metacontacts.h>
+#include <m_protocols.h>
 
 #include "database.h"
 #include "dbintf.h"
@@ -46,7 +50,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 extern HINSTANCE g_hInst;
 extern LIST<CDb3Mmap> g_Dbs;
-extern DBSignature dbSignatureU, dbSignatureE, dbSignatureIM, dbSignatureSA;
+extern DBSignature dbSignatureU, dbSignatureE, dbSignatureIM, dbSignatureSA, dbSignatureSD;
 
 #ifdef __GNUC__
 #define mir_i64(x) (x##LL)

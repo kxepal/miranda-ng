@@ -34,11 +34,11 @@ Tylko adresy WWW
 Głębokie wyszukiwanie
 [Static]
 Statyczne
-[Color Select]
+[Color select]
 Kolor zaznaczenia
 [Incoming messages]
 Przychodzące wiadomości
-[Plugin Default]
+[Plugin default]
 Domyślna wtyczka
 [Preview]
 Podgląd
@@ -46,17 +46,17 @@ Podgląd
 Wychodzące wiadomości
 [Background color]
 Kolor tła
-[Use Miranda Settings]
+[Use Miranda settings]
 Użyj ustawień Mirandy
 [Text color]
 Kolor tekstu
-[General Settings]
+[General settings]
 Ogólne
 [Open links always in a new window]
 Zawsze otwieraj linki w nowym oknie
 [Update list on new events]
 Zaktualizuj listę
-[Show whole Message on 'mouse over' event]
+[Show whole message on 'mouse over' event]
 Pokaż całą wiadomość po najechaniu kursorem
 [Save window position individually for each contact]
 Zapisz pozycję okna indywidualnie dla każdego kontaktu
@@ -73,38 +73,38 @@ Kierunek
 [Type]
 Typ
 [&File]
-Plik
+&Plik
 [&Save]
-Zapisz
+&Zapisz
 [&Close]
-Zamknij
+Z&amknij
 [&Options]
-Opcje...
-[Message &Direction]
-Kierunek wiadomości
-[&Outgoing Messages Only]
-Tylko wiadomości wychodzące
-[&Incoming Messages Only]
-Tylko wiadomości przychodzące
-[Message &Type]
-Typ wiadomości
-[&Webaddresses Only]
-Tylko adresy WWW
-[&Mail-Addresses Only]
-Tylko adresy e-mail
-[&Clear Search Results]
-Wyczyść wyniki wyszukiwania
+&Opcje...
+[Message &direction]
+&Kierunek wiadomości
+[&Outgoing messages only]
+Tylko wiadomości &wychodzące
+[&Incoming messages only]
+Tylko wiadomości &przychodzące
+[Message &type]
+&Typ wiadomości
+[&Web addresses only]
+Tylko adresy &WWW
+[&Mail addresses only]
+Tylko adresy e-&mail
+[&Clear search results]
+&Wyczyść wyniki wyszukiwania
 [&Search]
-Szukaj
+&Szukaj
 [link]
 link
 [Open]
 Otwórz
-[Open in new Window]
+[Open in new window]
 Otwórz w nowym oknie
-[Copy to Clipboard]
+[Copy to clipboard]
 Kopiuj do schowka
-[Show Message]
+[Show message]
 Pokaż wiadomości
 ;file \plugins\HistoryLinkListPlus\src\language.h
 [History Linklist]
@@ -123,13 +123,13 @@ wychodzące
 Filtr
 [no filter]
 brak
-[Search Filter]
+[Search filter]
 Filtr wyszukiwania
 [no settings]
 brak ustawień
 ;file \plugins\HistoryLinkListPlus\src\linklist.cpp
 [&Create Linklist]
-Utwórz listę linków
+&Utwórz listę linków
 [History]
 Historia
 [Processing history...]
@@ -139,7 +139,7 @@ Nie można utworzyć okna!
 [Could not allocate memory!]
 Nie można przydzielić pamięci!
 ;file \plugins\HistoryLinkListPlus\src\linklist_dlg.cpp
-[Linklist Plugin]
+[Linklist plugin]
 Lista linków
 ;file \plugins\HistoryLinkListPlus\src\linklist_fct.cpp
 [Matches for searchtext]

@@ -78,7 +78,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>..\..\include;..\ExternalAPI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Full</Optimization>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
@@ -104,7 +104,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\include;..\ExternalAPI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -189,7 +189,10 @@
     <ClCompile Include="src\CSendFile.cpp" />
     <ClCompile Include="src\CSendFTPFile.cpp" />
     <ClCompile Include="src\CSendHTTPServer.cpp" />
-    <ClCompile Include="src\CSendImageShack.cpp" />
+    <ClCompile Include="src\CSendDropbox.cpp" />
+    <ClCompile Include="src\CSendHost_ImageShack.cpp" />
+    <ClCompile Include="src\CSendHost_uploadpie.cpp" />
+    <ClCompile Include="src\CSendHost_imgur.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -207,7 +210,10 @@
     <ClInclude Include="src\CSendFile.h" />
     <ClInclude Include="src\CSendFTPFile.h" />
     <ClInclude Include="src\CSendHTTPServer.h" />
-    <ClInclude Include="src\CSendImageShack.h" />
+    <ClInclude Include="src\CSendDropbox.h" />
+    <ClInclude Include="src\CSendHost_ImageShack.h" />
+    <ClInclude Include="src\CSendHost_uploadpie.h" />
+    <ClInclude Include="src\CSendHost_imgur.h" />
     <ClInclude Include="src\global.h" />
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\version.h" />

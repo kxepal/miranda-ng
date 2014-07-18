@@ -6,6 +6,7 @@
 // Copyright © 2001-2002 Jon Keating, Richard Hughes
 // Copyright © 2002-2004 Martin Öberg, Sam Kothari, Robert Rainwater
 // Copyright © 2004-2008 Joe Kucera
+// Copyright © 2012-2014 Miranda NG Team
 // 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,13 +21,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
 // -----------------------------------------------------------------------------
 //  DESCRIPTION:
 //
 //  Implements Manage Server List dialog
-//
 // -----------------------------------------------------------------------------
+
 #include "icqoscar.h"
 
 static int bListInit = 0;
@@ -811,7 +811,7 @@ static INT_PTR CALLBACK DlgProcUploadList(HWND hwndDlg, UINT message, WPARAM wPa
 			SendDlgItemMessage(hwndDlg, IDC_LOG, LB_RESETCONTENT, 0, 0);
 			if (!ppro->icqOnline()) {
 				char str[MAX_PATH];
-				AppendToUploadLog(hwndDlg, ICQTranslateUtfStatic(LPGEN("You have to be online to sychronize the server-list!"), str, MAX_PATH));
+				AppendToUploadLog(hwndDlg, ICQTranslateUtfStatic(LPGEN("You have to be online to synchronize the server-list!"), str, MAX_PATH));
 				break;
 			}
 			working = 1;

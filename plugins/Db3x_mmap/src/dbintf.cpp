@@ -27,6 +27,7 @@ DBSignature dbSignatureU = { "Miranda NG DBu", 0x1A }; // unencrypted database
 DBSignature dbSignatureE = { "Miranda NG DBe", 0x1A }; // encrypted database
 DBSignature dbSignatureIM = { "Miranda ICQ DB", 0x1A };
 DBSignature dbSignatureSA = { "Miranda ICQ SA", 0x1A };
+DBSignature dbSignatureSD = { "Miranda ICQ SD", 0x1A };
 
 static int ModCompare(const ModuleName *mn1, const ModuleName *mn2)
 {
@@ -43,14 +44,16 @@ static int stringCompare2(const char *p1, const char *p2)
 	return strcmp(p1, p2);
 }
 
-CDb3Mmap::CDb3Mmap(const TCHAR *tszFileName, bool bReadOnly) :
+CDb3Mmap::CDb3Mmap(const TCHAR *tszFileName, int iMode) :
 	m_hDbFile(INVALID_HANDLE_VALUE),
 	m_safetyMode(true),
-	m_bReadOnly(bReadOnly),
+	m_bReadOnly((iMode & DBMODE_READONLY) != 0),
+	m_bShared((iMode & DBMODE_SHARED) != 0),
 	m_dwMaxContactId(1),
 	m_lMods(50, ModCompare),
 	m_lOfs(50, OfsCompare),
-	m_lResidentSettings(50, stringCompare2)
+	m_lResidentSettings(50, stringCompare2),
+	m_contactsMap(50, NumericKeySortT)
 {
 	m_tszProfileName = mir_tstrdup(tszFileName);
 	InitDbInstance(this);
@@ -77,6 +80,9 @@ CDb3Mmap::~CDb3Mmap()
 		UnmapViewOfFile(m_pDbCache);
 	}
 
+	DestroyServiceFunction(hService);
+	UnhookEvent(hHook);
+
 	if (m_crypto)
 		m_crypto->destroy();
 
@@ -87,9 +93,11 @@ CDb3Mmap::~CDb3Mmap()
 	if (!m_bReadOnly) {
 		DWORD bytesWritten;
 		SetFilePointer(m_hDbFile, 0, NULL, FILE_BEGIN);
-		WriteFile(m_hDbFile, &dbSignatureIM, 1, &bytesWritten, NULL);
+		WriteFile(m_hDbFile, &dbSignatureU, 1, &bytesWritten, NULL);
 	}
-	CloseHandle(m_hDbFile);
+
+	if (m_hDbFile != INVALID_HANDLE_VALUE)
+		CloseHandle(m_hDbFile);
 
 	DestroyHookableEvent(hContactDeletedEvent);
 	DestroyHookableEvent(hContactAddedEvent);
@@ -108,25 +116,28 @@ CDb3Mmap::~CDb3Mmap()
 	free(m_pNull);
 }
 
+static TCHAR szMsgConvert[] = 
+	LPGENT("Your database must be converted into the new format. This is potentially dangerous operation and might damage your profile, so please make a backup before.\n\nClick Yes to proceed with conversion or No to exit Miranda");
+
 int CDb3Mmap::Load(bool bSkipInit)
 {
 	log0("DB logging running");
-	
-	DWORD dummy = 0;
+
+	DWORD dummy = 0, dwMode = FILE_SHARE_READ;
+	if (m_bShared)
+		dwMode |= FILE_SHARE_WRITE;
 	if (m_bReadOnly)
-		m_hDbFile = CreateFile(m_tszProfileName, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+		m_hDbFile = CreateFile(m_tszProfileName, GENERIC_READ, dwMode, NULL, OPEN_EXISTING, 0, NULL);
 	else
-		m_hDbFile = CreateFile(m_tszProfileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, 0, NULL);
-	if ( m_hDbFile == INVALID_HANDLE_VALUE )
+		m_hDbFile = CreateFile(m_tszProfileName, GENERIC_READ | GENERIC_WRITE, dwMode, NULL, OPEN_ALWAYS, 0, NULL);
+
+	if (m_hDbFile == INVALID_HANDLE_VALUE)
 		return EGROKPRF_CANTREAD;
 
 	if (!ReadFile(m_hDbFile, &m_dbHeader, sizeof(m_dbHeader), &dummy, NULL)) {
 		CloseHandle(m_hDbFile);
 		return EGROKPRF_CANTREAD;
 	}
-
-	if (!memcmp(&m_dbHeader.signature, &dbSignatureSA, sizeof(m_dbHeader.signature)))
-		memcpy(&m_dbHeader.signature, &dbSignatureIM, sizeof(m_dbHeader.signature));
 
 	if (!bSkipInit) {
 		if (InitMap()) return 1;
@@ -135,10 +146,15 @@ int CDb3Mmap::Load(bool bSkipInit)
 
 		// everything is ok, go on
 		if (!m_bReadOnly) {
-			if (m_dbHeader.version < DB_095_VERSION) {
-				ConvertContacts();
+			if (m_dbHeader.version < DB_095_1_VERSION) {
+				if (IDYES != MessageBox(NULL, TranslateTS(szMsgConvert), TranslateT("Database conversion required"), MB_YESNO | MB_ICONWARNING))
+					return EGROKPRF_CANTREAD;
 
-				m_dbHeader.version = DB_095_VERSION;
+				if (m_dbHeader.version < DB_095_VERSION)
+					ConvertContacts();
+				ConvertEvents();
+
+				m_dbHeader.version = DB_095_1_VERSION;
 				DBWrite(sizeof(dbSignatureU), &m_dbHeader.version, sizeof(m_dbHeader.version));
 			}
 

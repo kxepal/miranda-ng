@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Scriver.dll
 ;  Plugin: Scriver
-;  Version: 2.11.0.0
+;  Version: 2.11.0.1
 ;  Authors: Miranda NG Development Team
 ;============================================================
 [Scriver - send and receive instant messages.]
@@ -10,7 +10,7 @@
 [Behavior]
 Поведение
 [Automatically pop up the window when]
-Автоматически показывать окно когда 
+Автоматически показывать окно когда
 [and stay minimized]
 и оставаться свёрнутым
 [Cascade new windows]
@@ -22,9 +22,9 @@
 [Hide windows on close]
 Прятать окна при закрытии
 [Send message on 'Enter']
-Посылать по "Enter"
+Отправлять по Enter
 [Send message on double 'Enter']
-Посылать по двойному "Enter"
+Отправлять по двойному Enter
 [Remember unsent messages]
 Помнить неотправленные сообщения
 [Delete temporary contacts on closing]
@@ -60,7 +60,7 @@
 [Show title bar]
 Показать название
 [Show status bar]
-Показывать панель статуса
+Показывать строку состояния
 [Show toolbar]
 Показывать панель кнопок
 [Show info bar]
@@ -80,7 +80,7 @@
 [Min input area size]
 Минимальный размер поля ввода
 [lines]
-линий
+строк
 [Message Window Event Log]
 Журнал в окне диалога
 [Enable IEView]
@@ -101,7 +101,7 @@
 Показывать имена
 [Enable message grouping]
 Группировать сообщения
-[Mark follow-up msgs with timestamp]
+[Mark follow-up messages with timestamp]
 Отмечать датой
 [Start message text on a new line]
 Текст сообщения с новой строки
@@ -116,19 +116,19 @@
 [Unread events only]
 Только непрочитанные события
 [Last]
-Посл.
+Последние
 [Events in the last]
 События полученные позже, чем
 [events]
-события(й)
+событий
 [minutes]
-минут(ы)
+минут
 [Typing Notification Options]
 Настройки уведомлений набора
 [Send typing notifications to the following users when you are typing a message to them:]
 Оповещать отмеченных пользователей о том, что вы набираете сообщение:
 [Show typing notification switch in the status bar]
-Переключатель "Уведомление о наборе" в панели статуса
+Переключатель "Уведомление о наборе" в строке состояния
 [Show typing notifications when a user is typing a message]
 Показывать уведомления о наборе текста
 [Update message window icons when a user is typing]
@@ -220,7 +220,7 @@
 [Add new rooms to group:]
 Добавлять комнаты чата в группу:
 [Nick list row height]
-Высота списка пользователей
+Высота строки в списке пользователей
 [pixels]
 пикселей
 [Log Options]
@@ -273,8 +273,6 @@
 Выделить &всё
 [Word lookup]
 Найти слово
-[Yahoo]
-Yahoo
 [C&lear Log]
 Оч&истить журнал
 [&Open link]
@@ -448,13 +446,13 @@ Yahoo
 [Navigate: Tab %d]
 Навигация: Вкладка %d
 [Window: Toggle status bar]
-Окно: вкл./выкл. панели статуса
+Окно: Вкл./выкл. строку состояния
 [Window: Toggle title bar]
-Окно: вкл./выкл. панели заголовка
+Окно: Вкл./выкл. заголовок
 [Window: Toggle toolbar]
-Окно: вкл./выкл. панели кнопок
+Окно: Вкл./выкл. панель кнопок
 [Window: Toggle info bar]
-Окно: вкл./выкл. панели информации
+Окно: Вкл./выкл. панель информации
 [Window: Clear log]
 Окно: Очистить лог
 [Window: Minimize]
@@ -464,7 +462,7 @@ Yahoo
 [Action: Quote]
 Действие: Цитировать
 [Action: Send to all]
-Действие: Послать всем
+Действие: Отправить всем
 [Action: Paste and send]
 Действие: Вставить и отправить
 [Quote]
@@ -509,16 +507,22 @@ Yahoo
 Неизвестный контакт
 [Me]
 Я
+[O Lord, bless this Thy hand grenade that with it Thou mayest blow Thine enemies]
+Благослови, Господи, свою ручную гранату, каковою можешь Ты в своей милости
+[to tiny bits, in Thy mercy]
+разносить врагов Твоих на маленькие кусочки
+[My Contact]
+Мой контакт
 [Today]
 Сегодня
 [Yesterday]
 Вчера
 [File sent]
-Посылка файла
+Отправлен файл
 [File received]
 Файл получен
 [URL sent]
-Посылка URL'a
+Отправлен URL
 [URL received]
 Получен URL
 [General]
@@ -526,7 +530,7 @@ Yahoo
 [Event Log]
 Журнал событий
 [Group Chat Log]
-Лог чата
+Журнал чатов
 [Outgoing messages]
 Исходящие сообщения
 [Outgoing background]
@@ -640,13 +644,13 @@ Miranda не смогла загрузить встроенную систему
 [Do not play sounds when focused]
 Не воспроизводить звук, когда окно чата на переднем плане
 [Do not pop up when joining]
-Не показывать всплывающие окна, когда кто-то заходит
+Не раскрывать окно при входе в комнату
 [Show and hide by double clicking in the contact list]
-Показывать и скрывать список контактов по двойному щелчку
+Показывать и скрывать окно чата по двойному щелчку в списке контактов
 [Show contact statuses (if supported)]
 Показывать статусы (если поддерживается)
 [Display contact status icon before role icon]
-Показывать значок статуса, после значка ролей
+Показывать значок статуса перед значком роли
 [Add ':' to auto-completed names]
 Добавлять ":" к именам пользователей
 [Prefix all events with a timestamp]
@@ -743,9 +747,11 @@ Miranda не смогла загрузить встроенную систему
 Значки в трее
 [nick of current contact (if defined)]
 ник текущего контакта (если определен)
-[protocol name of current contact (if defined). Account name is used when protocol supports multiaccounts]
+[protocol name of current contact (if defined). Account name is used when protocol supports multiple accounts]
 название протокола текущего контакта (если определено). Имя учётной записи используется когда протокол поддерживает несколько учётных записей
-[User ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
+[user-defined account name of current contact (if defined).]
+имя учётной записи текущего контакта (если определено).
+[user ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
 ID текущего контакта (если определен). Например, UIN для ICQ, JID для Jabber и т.д.
 [path to Miranda root folder]
 путь к папке программы
@@ -755,6 +761,8 @@ ID текущего контакта (если определен). Наприм
 имя текущего профиля (только имя, без расширения)
 [will return parsed string %miranda_profile%\\Profiles\\%miranda_profilename%]
 возвратит строку вида %miranda_profile%\\Profiles\\%miranda_profilename%
+[will return parsed string %miranda_userdata%\\Logs]
+возвратит строку вида %miranda_userdata%\\Logs
 [same as environment variable %APPDATA% for currently logged-on Windows user]
 аналог переменной среды %APPDATA% для текущего пользователя системы
 [username for currently logged-on Windows user]
@@ -806,7 +814,7 @@ ID текущего контакта (если определен). Наприм
 [Manager]
 Настройки комнаты
 [Nick list]
-Список ников
+Список пользователей
 [Insert a smiley]
 Вставить смайл
 [Make the text bold (CTRL+B)]
@@ -838,6 +846,6 @@ ID текущего контакта (если определен). Наприм
 [%s: Chat Room (%u users)]
 %s: Комната чата (%u пользователей)
 [%s: Message Session]
-%s: диалог
+%s: Беседа
 [%s: Message Session (%u users)]
-%s: диалог (%u пользователей)
+%s: Беседа (%u пользователей)

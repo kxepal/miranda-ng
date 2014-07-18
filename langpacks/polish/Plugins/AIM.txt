@@ -89,7 +89,7 @@ Dodaj
 [Remove]
 Usuń
 [Idle]
-Bezczynność 
+Bezczynność
 [Allow contacts to be notified of:]
 Zezwalaj na powiadomienia:
 [Join Chat Room]
@@ -97,17 +97,17 @@ Dołącz do czatu
 [Chat Room]
 Pokój
 [&Join]
-Dołącz
+&Dołącz
 [&Cancel]
-Anuluj
+&Anuluj
 [This allows access to user defined chat rooms. To access predefined chat rooms use web links]
 Pozwala na dostęp do zdefiniowanych przez użytkownika czatów.
 [Change Password]
 Zmień hasło
 [Original]
-Oryginalny
+Oryginalne
 [New]
-Nowy
+Nowe
 [Repeat]
 Powtórz
 [*Passwords don't match.]
@@ -125,13 +125,13 @@ Zapisz zmiany
 [Invite Buddy To Chat Room]
 Zaproś znajomego do czatu
 [&Invite]
-Zaproś
+&Zaproś
 [Invitation reason]
 Powód zaproszenia
 [Chat Room Invitation Request]
 Prośba o dołączenie do pokoju
 [&Deny]
-Odrzuć
+&Odrzuć
 [Message]
 Wiadomość
 [Room]
@@ -142,13 +142,13 @@ Ja
 [Others]
 Inne
 [&Invite user...]
-Zaproś użytkownika...
+&Zaproś użytkownika...
 [&Leave chat session]
-Opuść pokój
+&Opuść pokój
 [User &details]
-Dane kontaktu
+&Dane kontaktu
 [User &history]
-Historia użytkownika
+&Historia użytkownika
 ;file \protocols\AimOscar\src\error.cpp
 [Invalid Screen Name or password.]
 Niepoprawna nazwa okna lub hasło.
@@ -211,7 +211,7 @@ Sprawdź nazwę okna.
 [Check your Password.]
 Sprawdź hasło.
 [Check your Email Address.]
-Sprawdź adres email.
+Sprawdź adres e-mail.
 [Service temporarily unavailable.]
 Usługa tymczasowo niedostępna.
 [Field change temporarily unavailable.]
@@ -221,7 +221,7 @@ Niepoprawna nazwa okna.
 [Invalid Password.]
 Niepoprawne hasło.
 [Invalid Email.]
-Niepoprawny email.
+Niepoprawny e-mail.
 [Invalid Registration Preference.]
 Niepoprawne preferencje rejestracji.
 [Invalid Old Password.]
@@ -231,7 +231,7 @@ Niepoprawna długość nazwy okna.
 [Invalid Password Length.]
 Niepoprawna długość hasła.
 [Invalid Email Length.]
-Niepoprawna długość emaila.
+Niepoprawna długość e-maila.
 [Invalid Old Password Length.]
 Niepoprawna długość starego hasła.
 [Need Old Password.]
@@ -267,11 +267,11 @@ To nie jest status DT.
 [Outstanding Confirmation.]
 Wybitne potwierdzenie.
 [No Email Address.]
-Brak adresu email.
+Brak adresu e-mail.
 [Over Limit.]
 Ponad limit.
 [Email Host Fail.]
-Błąd hosta email.
+Błąd hosta e-mail.
 [DNS Fail.]
 Błąd DNS.
 ;file \protocols\AimOscar\src\file.cpp
@@ -292,7 +292,7 @@ Połączenie %s
 Połączenie Klient-do-Klienta %s
 ;file \protocols\AimOscar\src\server.cpp
 [[Auto-Response]:]
-[Auto-odpowiedź]:
+\[Autoodpowiedź]:
 [Contact tried to open an audio/video conference (not currently supported)]
 Kontakt próbował utworzyć konferencję audio/wideo (obecnie nie obsługiwane)
 [No information has been provided by the server.]
@@ -328,7 +328,7 @@ Błąd przy wgrywaniu awatara. (Zabronione)
 [Error uploading avatar. (Unknown error)]
 Błąd przy wgrywaniu awatara. (Nieznany błąd).
 [A confirmation message has been sent to the new email address. Please follow its instructions.]
-Wiadomość została wysłana na nową skrzynkę email. Wykonaj polecenia, które zostały w niej zawarte.
+Wiadomość została wysłana na nową skrzynkę pocztową. Wykonaj polecenia, które zostały w niej zawarte.
 [A confirmation message has been sent to your email address. Please follow its instructions.]
 Wiadomość potwierdzająca została wysłana na adres e-mail. Postępuj zgodnie z zawartymi instrukcjami.
 [Unable to confirm at this time. Please try again later.]
@@ -338,8 +338,6 @@ Twoje konto jest już zatwierdzone.
 [Can't start the confirmation procedure.]
 Nie można rozpocząć procedury potwierdzającej.
 ;file \protocols\AimOscar\src\theme.cpp
-[ICQ]
-ICQ
 [Block]
 Blokuj
 [Profile]
@@ -397,15 +395,15 @@ Typ konta AIM
 [AIM Extended Status]
 Rozszerzony status AIM
 [&Block]
-Zablokuj
+&Zablokuj
 [&Unblock]
-Odblokuj
+&Odblokuj
 [Manage Account]
 Zarządzaj kontem
 [Instant Idle]
 Chwilowa bezczynność
 [Read &HTML Away Message]
-Czytaj opis HTML
+Czytaj opis &HTML
 [Read Profile]
 Wczytaj profil
 [Add To Server List]

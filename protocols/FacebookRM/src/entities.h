@@ -3,7 +3,7 @@
 Facebook plugin for Miranda Instant Messenger
 _____________________________________________
 
-Copyright © 2009-11 Michal Zelinka, 2011-13 Robert Pösel
+Copyright ï¿½ 2009-11 Michal Zelinka, 2011-13 Robert Pï¿½sel
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@ struct facebook_user
 
 	std::string user_id;
 	std::string real_name;
+	std::string nick;
+	std::string username;
 
 	unsigned int status_id;
 	unsigned int gender;
@@ -43,7 +45,7 @@ struct facebook_user
 	facebook_user()
 	{
 		this->handle = NULL;
-		this->user_id = this->real_name = this->image_url = "";
+		this->user_id = this->real_name = this->nick = this->username = this->image_url = "";
 		this->status_id = ID_STATUS_OFFLINE;
 		this->gender = this->last_active = 0;
 		this->deleted = this->idle = false;
@@ -55,6 +57,8 @@ struct facebook_user
 		this->handle = fu->handle;
 		this->user_id = fu->user_id;
 		this->real_name = fu->real_name;
+		this->nick = fu->nick;
+		this->username = fu->username;
 		this->status_id = fu->status_id;
 		this->gender = fu->gender;
 		this->last_active = fu->last_active;
@@ -84,10 +88,10 @@ struct facebook_user
 
 struct facebook_chatroom
 {
-	HANDLE handle;
+	facebook_chatroom(std::tstring thread_id) : thread_id(thread_id) {}
 
-	std::tstring chat_name;
 	std::tstring thread_id;
+	std::tstring chat_name;
 	std::map<std::string, std::string> participants;
 
 	std::string message_readers;
@@ -107,12 +111,15 @@ struct facebook_message
 	bool isUnread;
 	bool isChat;
 
+	int flag_;
+
 	facebook_message()
 	{
 		this->user_id = this->message_text = this->sender_name = this->message_id = this->thread_id = "";
 		this->time = 0;
 		this->isUnread = this->isIncoming = true;
 		this->isChat = false;
+		this->flag_ = 0;
 	}
 
 	facebook_message(const facebook_message& msg)
@@ -126,6 +133,7 @@ struct facebook_message
 		this->isIncoming = msg.isIncoming;
 		this->isUnread = msg.isUnread;
 		this->isChat = msg.isChat;
+		this->flag_ = msg.flag_;
 	}
 };
 
@@ -135,10 +143,14 @@ struct facebook_notification
 	std::string text;
 	std::string link;
 	std::string id;
+	bool seen;
+	HWND hWndPopup;
 
 	facebook_notification()
 	{
 		this->user_id = this->text = this->link = this->id = "";
+		this->seen = false;
+		this->hWndPopup = NULL;
 	}
 };
 
@@ -221,4 +233,11 @@ struct post_status_data {
 	}
 	FacebookProto *proto;
 	std::vector<wall_data*> walls;
+};
+
+struct open_url
+{
+	open_url(TCHAR *browser, TCHAR *url) : browser(browser), url(url) {}
+	TCHAR *browser;
+	TCHAR *url;	
 };

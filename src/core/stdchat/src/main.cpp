@@ -267,11 +267,12 @@ static BOOL DoPopup(SESSION_INFO *si, GCEVENT *gce)
 
 static void OnLoadSettings()
 {
+	if (g_Settings.MessageAreaFont)
+		DeleteObject(g_Settings.MessageAreaFont);
+
 	LOGFONT lf;
-	if (g_Settings.MessageBoxFont)
-		DeleteObject(g_Settings.MessageBoxFont);
-	pci->LoadMsgDlgFont(17, &lf, NULL);
-	g_Settings.MessageBoxFont = CreateFontIndirect(&lf);
+	LoadMessageFont(&lf, &g_Settings.MessageAreaColor);
+	g_Settings.MessageAreaFont = CreateFontIndirect(&lf);
 
 	g_Settings.iX = db_get_dw(NULL, CHAT_MODULE, "roomx", -1);
 	g_Settings.iY = db_get_dw(NULL, CHAT_MODULE, "roomy", -1);
@@ -337,28 +338,28 @@ extern "C" __declspec(dllexport) int Load(void)
 	AddIcons();
 	RegisterFonts();
 
-	CHAT_MANAGER_INITDATA data = { &g_Settings, sizeof(MODULEINFO), sizeof(SESSION_INFO), LPGENT("Chat module"), FONTMODE_USE };
+	CHAT_MANAGER_INITDATA data = { &g_Settings, sizeof(MODULEINFO), sizeof(SESSION_INFO), LPGENT("Chat module"), FONTMODE_SKIP };
 	mir_getCI(&data);
 	saveCI = *pci;
 
 	pci->OnAddUser = OnAddUser;
 	pci->OnNewUser = OnNewUser;
 	pci->OnRemoveUser = OnRemoveUser;
-	
+
 	pci->OnAddStatus = OnAddStatus;
 	pci->OnSetStatus = OnSetStatus;
 	pci->OnSetTopic = OnSetTopic;
-	
+
 	pci->OnAddLog = OnAddLog;
 	pci->OnClearLog = OnClearLog;
-	
+
 	pci->OnCreateModule = OnCreateModule;
 	pci->OnOfflineSession = OnOfflineSession;
 	pci->OnRemoveSession = OnRemoveSession;
 	pci->OnRenameSession = OnRenameSession;
 	pci->OnReplaceSession = OnReplaceSession;
 	pci->OnDblClickSession = OnDblClickSession;
-	
+
 	pci->OnEventBroadcast = OnEventBroadcast;
 	pci->OnLoadSettings = OnLoadSettings;
 	pci->OnSetStatusBar = OnSetStatusBar;
@@ -385,11 +386,11 @@ extern "C" __declspec(dllexport) int Unload(void)
 	db_set_w(NULL, CHAT_MODULE, "SplitterY", (WORD)g_Settings.iSplitterY);
 	db_set_dw(NULL, CHAT_MODULE, "roomx", g_Settings.iX);
 	db_set_dw(NULL, CHAT_MODULE, "roomy", g_Settings.iY);
-	db_set_dw(NULL, CHAT_MODULE, "roomwidth" , g_Settings.iWidth);
+	db_set_dw(NULL, CHAT_MODULE, "roomwidth", g_Settings.iWidth);
 	db_set_dw(NULL, CHAT_MODULE, "roomheight", g_Settings.iHeight);
 
-	if (g_Settings.MessageBoxFont)
-		DeleteObject(g_Settings.MessageBoxFont);
+	if (g_Settings.MessageAreaFont)
+		DeleteObject(g_Settings.MessageAreaFont);
 	DestroyMenu(g_hMenu);
 	return 0;
 }

@@ -1794,8 +1794,8 @@ static void InitListView(HWND AHLV)
 	STICKYNOTE *pNote;
 	TREEELEMENT *TTE;
 
-	char *V = Translate("V");
-	char *T = Translate("T");
+	char *V = Translate("Visible");
+	char *T = Translate("Top");
 
 	ListView_SetHoverTime(AHLV,700);
 	ListView_SetExtendedListViewStyle(AHLV,LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_TRACKSELECT);
@@ -1965,14 +1965,14 @@ INT_PTR CALLBACK DlgProcViewNotes(HWND Dialog,UINT Message,WPARAM wParam,LPARAM 
 			ListView_InsertColumn(H,0,&lvCol);
 			lvCol.mask = LVCF_TEXT | LVCF_WIDTH;
 
-			S = TranslateT("T");
+			S = TranslateT("Top");
 			lvCol.pszText = S;
 			lvCol.cchTextMax = (int)_tcslen(S);
 			lvCol.cx = g_notesListColGeom[2];
 			ListView_InsertColumn(H,0,&lvCol);
 			lvCol.mask = LVCF_TEXT | LVCF_WIDTH;
 
-			S = TranslateT("V");
+			S = TranslateT("Visible");
 			lvCol.pszText = S;
 			lvCol.cchTextMax = (int)strlen(S);
 			lvCol.cx = g_notesListColGeom[1];
@@ -1986,7 +1986,7 @@ INT_PTR CALLBACK DlgProcViewNotes(HWND Dialog,UINT Message,WPARAM wParam,LPARAM 
 			ListView_InsertColumn(H,0,&lvCol);
 
 			InitListView(H);
-			SetWindowLong(GetDlgItem(H, 0), GWL_ID, IDC_LISTREMINDERS_HEADER);
+			SetWindowLongPtr(GetDlgItem(H, 0), GWL_ID, IDC_LISTREMINDERS_HEADER);
 			LV = Dialog;
 
 			if (g_notesListGeom[1] && g_notesListGeom[2])

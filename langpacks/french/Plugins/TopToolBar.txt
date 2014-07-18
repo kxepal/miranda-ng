@@ -8,8 +8,8 @@
 [ToptoolBar adds buttons in top frame for fast access.]
 
 ;file \plugins\TopToolBar\res\main.rc
-[Buttons Order && Visibility]
-Ordre && Visibilité des Boutons
+[Buttons order and visibility]
+Ordre et visibilité des boutons
 [Button height]
 
 [Button width]
@@ -23,30 +23,69 @@ Largeur
 [Single line]
 
 [Buttons order:]
-Ordre des boutons:
-[Add Separator]
+Ordre des boutons :
+[Add separator]
 Ajouter
-[Add Launch]
+[Add launch]
 Ajouter Fonction
-[Del Sep/Launch Button]
+[Delete separator/launch button]
 
 [Name:]
-Nom:
+Nom :
 [Path:]
 
 [Set]
 OK
+;file \plugins\TopToolBar\src\InternalButtons.cpp
+[Show main menu]
+
+[Show options page]
+
+[Show accounts manager]
+
+[Find/add contacts]
+Chercher/Ajouter des contacts
+[Show status menu]
+
+[Show/hide offline contacts]
+Afficher/Cacher contacts hors-ligne
+[Hide offline contacts]
+Cacher les contacts Hors-Ligne
+[Show offline contacts]
+Montrer les contacts hors ligne
+[Enable/disable metacontacts]
+
+[Disable metacontacts]
+
+[Enable metacontacts]
+
+[Enable/disable groups]
+
+[Enable groups]
+
+[Disable groups]
+Désactiver les groupes
+[Enable/disable sounds]
+Activer/désactiver les sons
+[Disable sounds]
+Sons désactivés
+[Enable sounds]
+
+[Minimize contact list]
+Minimiser la liste de contact
+[Exit]
+Quitter
 ;file \plugins\TopToolBar\src\toolbar.cpp
 [Default]
 Défaut
-[TopToolBar Background]
+[TopToolBar background]
 
 [Frames service has not been found, so plugin will be disabled.\nTo run it you need to install and / or enable contact list plugin that supports it:\n- Modern contact list\n- MultiWindow (MW)\n- Nicer+\nYou can get them at http://miranda-ng.org/]
 
 [TopToolBar]
 
 ;file \plugins\TopToolBar\src\ttbopt.cpp
-[Contact List]
+[Contact list]
 Liste de contacts
 [Toolbar]
 Barre d'outils

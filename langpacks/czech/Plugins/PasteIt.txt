@@ -19,7 +19,7 @@ Nastavení
 [Show confirmation dialog box]
 
 [Autosend download link to contact]
-Automaticky poslat odkaz na soubor
+Automaticky odeslat odkaz kontaktu
 [Web page settings]
 
 [Web page to configure]
@@ -40,8 +40,6 @@ Nastavit...
 
 [Configure formatting]
 
-[OK]
-OK
 [Cancel]
 Zrušit
 [Up]
@@ -131,7 +129,7 @@ Chyba
 
 [Cannot get data from clipboard]
 
-[File size is %d KB, do you realy want to paste such a large file?]
+[File size is %d KB, do you really want to paste such a large file?]
 
 [Are You sure?]
 Opravdu chcete pokračovat?

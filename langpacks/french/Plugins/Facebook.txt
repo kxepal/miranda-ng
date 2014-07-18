@@ -2,58 +2,60 @@
 ;============================================================
 ;  File: Facebook.dll
 ;  Plugin: Facebook RM
-;  Version: 0.2.2.1
+;  Version: 0.2.7.0
 ;  Authors: Michal Zelinka, Robert Pösel
 ;============================================================
 [Facebook protocol support for Miranda NG.]
-
+Support du protocole Facebook pour Miranda NG.
 ;file \protocols\FacebookRM\res\facebook.rc
 [E-mail:]
-E-mail:
+Courriel :
 [Password:]
-Passe:
+Passe :
 [Create a new Facebook account]
-
+Créer un nouveau compte Facebook
 [What's on your mind?]
-
+Exprimez-vous
 [Wall:]
-
+Mur :
 [Visibility:]
-
+Visibilité :
 [Text:]
-
+Texte :
 [URL:]
-Lien:
+Lien :
 [Place:]
 
 [Share]
-
+Partager
 [Cancel]
 Annuler
 [Contacts >>]
-
+Contacts >>
 [Attach contacts:]
 
 [User details]
 Détails du contact
 [Default group:]
-Groupes:
+Groupes :
 [Automatically set 'Ignore status change' flag]
 
 [Contacts Settings]
-
+Configuration des contacts
 [Use bigger avatars]
-
+Utiliser des grands avatars
 [Event notifications]
 
 [Notifications]
 Notifications
 [News feeds]
+Fil d'actualité
+[News feed types to notify:]
 
-[News Feed types to notify:]
+[Don't show advertising posts]
 
 [Other events]
-
+Autres événements
 [Client notifications]
 
 [Preview]
@@ -63,9 +65,9 @@ Aperçu
 [Advanced Settings]
 Options Avancées
 [Force secure (HTTPS) connection]
-
+Se connecter via une connection sécurisée HTTPS
 [Post Miranda statuses to Wall]
-
+Poster les statuts de Miranda sur le mur
 [Use secure connection also for channel requests]
 
 [Also disconnect chat when going to offline]
@@ -75,20 +77,32 @@ Options Avancées
 [Allow posting statuses to my pages (may slow down login)]
 
 [Use this server for opening links:]
-
+Utiliser ce serveur pour ouvrir les liens :
 [Enable support for Custom smileys (EXPERIMENTAL + BUGGY!)]
 
 [Use local time for received messages]
-
+Utiliser l'heure locale pour les messages reçus
 [Message sessions]
 Sessions de message
 [Keep messages as unread on server (don't send "seen" info)]
-
+Conserver les messages comme non lus sur le serveur (ne pas envoyer "vu")
 [Receive messages from "inbox" folder only]
+Recevoir uniquement les messages de la boîte de réception
+[Load last messages on opening message window (EXPERIMENTAL)]
+
+[Number of messages to load:]
+
+[Do not open chat windows on creation]
 
 ;file \protocols\FacebookRM\src\chat.cpp
-[&Invite user...]
+[Myself]
 
+[User]
+Utilisateur
+[Friend]
+
+[&Invite user...]
+&Inviter l'utilisateur...
 [&Leave chat session]
 
 [User &details]
@@ -99,7 +113,7 @@ Sessions de message
 [Login error: %s]
 
 [Unknown error]
-
+Erreur inconnue
 [Login error: Invalid request.]
 
 [Login error: Some Facebook things are required.]
@@ -117,33 +131,27 @@ Sessions de message
 [Timeout when sending message.]
 
 [Status update was successful.]
-
+Mise à jour du statut avec succès.
 ;file \protocols\FacebookRM\src\connection.cpp
 [Please enter a username.]
-
+Veuillez entrer un nom d'utilisateur.
 [Please enter a password.]
-
+S'il vous plaît entrer un mot de passe.
 ;file \protocols\FacebookRM\src\constants.h
-[Most Recent]
-
-[Wall Posts]
-
 [Top News]
 
-[Photos]
+[Most Recent]
 
-[Links]
-
-[Apps and Games]
+[Pages]
 
 [Classic website]
-
+Site internet classique
 [Mobile website]
-
+Site internet Mobile
 [Smartphone website]
-
+Site internet Mobile
 [Public]
-
+Public
 [Friends of friends]
 
 [Friends]
@@ -153,8 +161,10 @@ Sessions de message
 [Only me]
 
 ;file \protocols\FacebookRM\src\contacts.cpp
-[Contact was removed from your server list.]
+[%s and more (%d)]
 
+[Contact was removed from your server list.]
+Le contact a été supprimé de votre liste sur le serveur.
 [Error occurred when removing contact from server.]
 
 [Request for friendship was sent.]
@@ -184,25 +194,25 @@ Défaut
 
 ;file \protocols\FacebookRM\src\json.cpp
 [a sticker]
-
+un autocollant
 [files]
 Fichiers
 [a file]
-
+un fichier
 [photos]
-
+photos
 [a photo]
+une photo
+[User sent %s:]
 
-[User sent you %s:]
+[User sent an unsupported attachment. Open your browser to see it.]
 
 [Message read: %s by %s]
 
-[Message read: %s]
-Message lu : %s
 [This message is no longer available, because it was marked as abusive or spam.]
-
-[%s and more (%d)]
-
+Ce message n'est plus disponible, car il a été marqué comme injurieux ou indésirable.
+[%s is typing a message...]
+%s vous écrit un message...
 ;file \protocols\FacebookRM\src\messages.cpp
 [You cannot send messages when you are offline.]
 Vous ne pouvez pas envoyer de message si vous êtes Hors ligne.
@@ -210,7 +220,7 @@ Vous ne pouvez pas envoyer de message si vous êtes Hors ligne.
 [Contact is back on server-list.]
 
 [Contact is no longer on server-list.]
-
+Le contact n'est plus sur la liste du serveur.
 ;file \protocols\FacebookRM\src\proto.cpp
 [%s server connection]
 %s serveur connexion
@@ -238,6 +248,10 @@ Partager le statut
 
 [Do you want to cancel your friendship with '%s'?]
 
+[Visit profile]
+Visiter le profil
+[Visit notifications]
+
 [Show 'Share status' window]
 
 [Notification]
@@ -245,24 +259,30 @@ Partager le statut
 [News Feed]
 
 [Other Event]
-
+Autre événement
+[Message read: %s]
+Message lu : %s
 ;file \protocols\FacebookRM\src\theme.cpp
 [Facebook icon]
 
 [Mind]
 
 [Poke]
-
+Poke
 [Newsfeed]
 
 [Friendship details]
 
-[Visit profile]
-Visiter le profil
+[Conversation]
+Conversation
+[Message read]
+
 [Visit friendship details]
 Voir les détails
-[Cancel friendship]
+[Visit conversation]
 
+[Cancel friendship]
+Supprimer
 [Cancel friendship request]
 
 [Request friendship]
@@ -270,9 +290,9 @@ Voir les détails
 [Approve friendship]
 
 [Services...]
-
+Services...
 [Refresh Buddy List]
-
+Actualiser la liste d'amis
 [Services]
 Services
 [Check Friends Requests]

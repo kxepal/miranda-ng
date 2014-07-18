@@ -22,6 +22,7 @@
     <ClInclude Include="..\..\include\m_core.h" />
     <ClInclude Include="..\..\include\m_database.h" />
     <ClInclude Include="..\..\include\m_json.h" />
+    <ClInclude Include="..\..\include\m_metacontacts.h" />
     <ClInclude Include="..\..\include\m_system.h" />
     <ClInclude Include="..\..\include\m_system_cpp.h" />
     <ClInclude Include="commonheaders.h" />
@@ -95,6 +96,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../commonheaders.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="logger.cpp" />
+    <ClCompile Include="mc.cpp" />
     <ClCompile Include="mstring.cpp" />
     <ClCompile Include="protos.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -179,7 +181,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;MIR_CORE_EXPORTS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;MIR_CORE_EXPORTS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>commonheaders.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -252,7 +254,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MIR_CORE_EXPORTS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;MIR_CORE_EXPORTS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>commonheaders.h</PrecompiledHeaderFile>
     </ClCompile>

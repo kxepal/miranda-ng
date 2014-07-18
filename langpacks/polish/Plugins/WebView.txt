@@ -13,9 +13,9 @@ Webview
 [Update data every]
 Aktualizuj dane co
 [minutes]
-minut
+min
 [Delay update on start]
-Opóźniaj aktualizację przy starcie
+Opóźniaj przy starcie
 [seconds]
 s
 [Hide icon on status bar]
@@ -47,7 +47,7 @@ Komunikaty o błędach
 [Suppress error messages]
 Ignoruj komunikaty o błędach
 [Display using Popup or OSD plugin]
-Wyświetlaj używając wtyczki Popup lub OSD
+Użyj wtyczki Popup lub OSD
 [Expert options]
 Opcje zaawansowane
 [Disable download protection]
@@ -55,7 +55,7 @@ Wyłącz ochronę przed pobieraniem
 [(not recommended)]
 (niezalecane)
 [Display data in popup on alert]
-Wyświetl dane w popupie przy powiadomieniu
+Powiadomienia
 [Display data in popup]
 Wyświetl dane w popupie
 [You may need to restart Miranda NG for this change to take effect.]
@@ -63,7 +63,7 @@ Restart Mirandy NG, może być potrzebny by te zmiany weszły w życie.
 [Contact name:]
 Nazwa kontaktu:
 [URL:]
-URL:
+Link:
 [Display]
 Wyświetlanie
 [Between start and end strings]
@@ -86,8 +86,6 @@ Otwiera okno z danymi
 Wyświetl czyszczenie
 [Remove HTML]
 Usuń HTML
-[OK]
-OK
 [Cancel]
 Anuluj
 [Apply]
@@ -95,7 +93,7 @@ Zastosuj
 [Find]
 Szukaj
 [&Find next]
-szukaj następnego
+&szukaj następnego
 [Find what:]
 Szukaj:
 [Search was completed.]
@@ -159,29 +157,29 @@ Użyj kolorów Windows
 [Use same colors as data window]
 Używaj tych samych kolorów co okno z danymi
 [Left click action]
-Akcja po kliknięciu lewym przyciskiem myszy
+Akcja po kliknięciu LPM
 [Open data display window]
-Otwórz okno wyświetlania danych
+Otwórz okno danych
 [Open web page]
 Otwórz stronę
 [Dismiss popup]
 Odrzuć popup
 [Right click action]
-Akcja po kliknięciu prawym przyciskiem myszy
+Akcja po kliknięciu PPM
 [Log]
 Dziennik
 [&Copy]
-Kopiuj
+&Kopiuj
 [C&ut]
-Wytnij
+W&ytnij
 [&Delete]
-Usuń
+&Usuń
 [&Paste]
-Wklej
+&Wklej
 [Co&py all]
-Kopiuj wszystko
+Ko&piuj wszystko
 [&Select all]
-Wszystkie
+&Wszystkie
 [C&lear all]
 W&yczyść wszystko
 ;file \plugins\WebView\src\main.cpp
@@ -202,13 +200,13 @@ Otwórz folder Cache
 [Open/Close window]
 Otwórz/Zamknij okno
 [Update data]
-Zaktualizuj Dane
+Zaktualizuj dane
 [Contact options]
 Opcje kontaktu
 [Contact alert options]
 Opcje powiadomień kontaktu
 [Ping web site]
-Pinguj Stronę
+Pinguj stronę
 [Stop data processing]
 Zakończ przetwarzanie danych
 ;file \plugins\WebView\src\webview.cpp

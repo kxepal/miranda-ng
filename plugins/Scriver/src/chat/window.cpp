@@ -539,7 +539,7 @@ static LRESULT CALLBACK MessageSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, 
 		}
 		break;
 
-	case EM_UNSUBCLASSED:
+	case WM_DESTROY:
 		mir_free(dat->szSearchQuery);
 		mir_free(dat->szSearchResult);
 		mir_free(dat);
@@ -803,7 +803,7 @@ static void ProcessNickListHovering(HWND hwnd, int hoveredItem, POINT * pt, SESS
 		if (ProtoServiceExists(parentdat->pszModule, MS_GC_PROTO_GETTOOLTIPTEXT)) {
 			TCHAR *p = (TCHAR*)ProtoCallService(parentdat->pszModule, MS_GC_PROTO_GETTOOLTIPTEXT, (WPARAM)parentdat->ptszID, (LPARAM)ui->pszUID);
 			if (p != NULL) {
-				_tcsncpy_s(tszBuf, SIZEOF(tszBuf), p, _TRUNCATE);
+				_tcsncpy_s(tszBuf, p, _TRUNCATE);
 				mir_free(p);
 			}
 		}
@@ -1282,7 +1282,7 @@ static INT_PTR CALLBACK RoomWndProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPAR
 						break;
 
 					pLog = pLog->next;
-					if (si->iType != GCW_CHATROOM || !si->bFilterEnabled || (si->iLogFilterFlags&pLog->iType) != 0)
+					if ((si->iType != GCW_CHATROOM && si->iType != GCW_PRIVMESS) || !si->bFilterEnabled || (si->iLogFilterFlags&pLog->iType) != 0)
 						index++;
 				}
 				Log_StreamInEvent(hwndDlg, pLog, si, TRUE);
@@ -1492,7 +1492,7 @@ static INT_PTR CALLBACK RoomWndProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPAR
 			if (CallService(MS_CLIST_GETEVENT, (WPARAM)si->hContact, 0))
 				CallService(MS_CLIST_REMOVEEVENT, (WPARAM)si->hContact, (LPARAM)GC_FAKE_EVENT);
 			si->wState &= ~STATE_TALK;
-			db_set_w(si->hContact, si->pszModule, "ApparentMode", (LPARAM)0);
+			db_set_w(si->hContact, si->pszModule, "ApparentMode", 0);
 			SendMessage(hwndDlg, GC_CLOSEWINDOW, 0, 0);
 			return TRUE;
 
@@ -1627,7 +1627,7 @@ LABEL_SHOWWINDOW:
 		pci->SetActiveSession(si->ptszID, si->pszModule);
 
 		if (db_get_w(si->hContact, si->pszModule, "ApparentMode", 0) != 0)
-			db_set_w(si->hContact, si->pszModule, "ApparentMode", (LPARAM)0);
+			db_set_w(si->hContact, si->pszModule, "ApparentMode", 0);
 		if (CallService(MS_CLIST_GETEVENT, (WPARAM)si->hContact, 0))
 			CallService(MS_CLIST_REMOVEEVENT, (WPARAM)si->hContact, (LPARAM)GC_FAKE_EVENT);
 		break;
@@ -2013,7 +2013,6 @@ LABEL_SHOWWINDOW:
 		NotifyLocalWinEvent(si->hContact, hwndDlg, MSG_WINDOW_EVT_CLOSING);
 		si->hWnd = NULL;
 		SetWindowLongPtr(hwndDlg, GWLP_USERDATA, 0);
-		SendDlgItemMessage(hwndDlg, IDC_CHAT_MESSAGE, EM_UNSUBCLASSED, 0, 0);
 
 		SendMessage(GetParent(hwndDlg), CM_REMOVECHILD, 0, (LPARAM)hwndDlg);
 		if (si->windowData.hwndLog != NULL) {

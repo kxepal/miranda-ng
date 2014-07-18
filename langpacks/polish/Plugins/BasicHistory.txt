@@ -9,7 +9,7 @@
 Pokazuje historię wiadomości.
 ;file \plugins\BasicHistory\res\BasicHistory.rc
 [Message History]
-Historia wiadomości 
+Historia wiadomości
 [Settings]
 Ustawienia
 [Always show contact list]
@@ -136,15 +136,13 @@ Eksportuj zaimportowane wiadomości
 * Użyj ujemne wartości do filtrowania nowszych zdarzeń
 [Execute task for specified contacts]
 Wykonaj zadanie dla określonych kontaktów
-[OK]
-OK
 [Cancel]
 Anuluj
 ;file \plugins\BasicHistory\src\BasicHistory.cpp
 [Open History]
 Otwórz historię
 [View &History]
-Zobacz historię
+Zobacz &historię
 [Delete All User History]
 Usuń całą historię
 [Execute history task]
@@ -201,11 +199,11 @@ Czy na pewno?
 [Do you want to delete all imported messages for this contact?\nNote that next scheduler task import this messages again.]
 Czy chcesz usunąć wszystkie zaimportowane wiadomości dla tego kontaktu?\nZauważ, że następne zadanie harmonogramu zaimportuje tą wiadomość ponownie.
 [Open in &new window]
-Otwórz w nowym oknie
+Otwórz w &nowym oknie
 [&Open in existing window]
-Otwórz w istniejącym oknie
+&Otwórz w istniejącym oknie
 [&Copy link]
-Kopiuj link
+&Kopiuj link
 [Copy]
 Kopiuj
 [Delete]
@@ -213,7 +211,7 @@ Usuń
 [Send Message]
 Wyślij wiadomość
 [Reply &Quoted]
-Odpowiedz cytując
+Odpowiedz &cytując
 [Delete Group]
 Usuń grupę
 [Options]
@@ -247,7 +245,7 @@ Plik zawiera historię innego kontaktu. Czy chcesz zmienić kontakt i importowa�
 [Error]
 Błąd
 [Number of history items to delete: %d.\nAre you sure you want to do this?]
-Ilość wpisów historii do usunięcia: %d\nCzy na pewno chcesz to zrobić?
+Ilość wpisów historii do usunięcia: %d. \nCzy na pewno chcesz to zrobić?
 ;file \plugins\BasicHistory\src\Options.cpp
 [Message]
 Wiadomość
@@ -262,7 +260,7 @@ Zostałeś dodany
 [Contacts received]
 Pobrane kontakty
 [SMTP Simple Email]
-Prosty email SMTP
+Prosty e-mail SMTP
 [SMS message]
 Wiadomość SMS
 [Group list]
@@ -310,7 +308,7 @@ Przełącz wielkość liter
 [Switch Match Whole Word]
 Przełącz całe wyrazy
 [Show/Hide Contacts]
-Pokaż/ukryj kontakty
+Pokaż/Ukryj kontakty
 [Switch Only Incoming Messages]
 Przełącz na przychodzące wiadomości
 [Switch Only Outgoing Messages]
@@ -333,7 +331,7 @@ Nieprawidłowy numer zdarzenia
 Przychodzące zdarzenia
 [Outgoing events]
 Wychodzące zdarzenia
-[File do not exist. Enter correct file path.]
+[File does not exist. Enter correct file path.]
 Plik nie istnieje. Wprowadź poprawną ścieżkę do pliku.
 [Invalid file]
 Nieprawidłowy plik
@@ -392,13 +390,13 @@ Sobota
 [Sunday]
 Niedziela
 [Invalid '%s' value.]
-Nieprawidłowa wartość '%s'.
+Nieprawidłowa wartość "%s".
 [Events older than]
 Zdarzenia starsze niż
 [Some value is invalid]
 Jakaś wartość jest nieprawidłowa
 [Invalid '%s' value.\n%s]
-Nieprawidłowa wartość '%s'.\n%s
+Nieprawidłowa wartość "%s".\n%s
 [** Use <ext> to insert extension, <contact> to insert contact name]
 ** Użyj <ext> do umieszczania rozszerzenia, <contact> do umieszczania nazwy kontaktu
 [Input files are compressed]
@@ -441,8 +439,8 @@ Załaduj na FTP
 Aby utworzyć sesję: otwórz WinSCP, naciśnij Nowa Sesja, wprowadź dane i zapisz z określoną nazwą. Pamiętaj, jeśli serwer FTP używa hasła, powinieneś zapisać go w WinSCP.
 [Path to file]
 Ścieżka do pliku
-[FTP path must contain '/' instead '\' and start with '/'.]
-Ścieżka FTP musi zawierać "/" zamiast "\" i zaczynać się od "/".
+[FTP path must contain '/' instead '\\' and start with '/'.]
+Ścieżka FTP musi zawierać "/" zamiast "\\" i zaczynać się od "/".
 [FTP path cannot contain <date> in import task.]
 Ścieżka FTP nie może zawierać <date> w zadaniu importu.
 [Unknown error]
@@ -464,11 +462,11 @@ Niemożna wysłać plik(ów) FTP.
 [Task finished]
 Zadanie zakończone
 [Task '%s' execution failed]
-Zadanie '%s' nie powiodło się
+Zadanie "%s" nie powiodło się
 [Task '%s' finished successfully]
-Zadanie '%s' zakończyło się prawidłowo
+Zadanie "%s" zakończyło się prawidłowo
 [Task '%s' execution failed:]
-Zadanie '%s' nie powiodło się:
+Zadanie "%s" nie powiodło się:
 ;file \plugins\BasicHistory\src\Searcher.cpp
 ["%s" not found]
 Nie znaleziono "%s"

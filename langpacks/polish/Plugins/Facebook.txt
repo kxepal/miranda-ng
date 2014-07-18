@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Facebook.dll
 ;  Plugin: Facebook RM
-;  Version: 0.2.2.1
+;  Version: 0.2.7.0
 ;  Authors: Michal Zelinka, Robert Pösel
 ;============================================================
 [Facebook protocol support for Miranda NG.]
@@ -13,7 +13,7 @@ E-mail:
 [Password:]
 Hasło:
 [Create a new Facebook account]
-Stwórz nowe konto na Facebooku
+Utwórz nowe konto na Facebooku
 [What's on your mind?]
 O czym teraz myślisz?
 [Wall:]
@@ -23,7 +23,7 @@ Widoczność:
 [Text:]
 Tekst:
 [URL:]
-URL:
+Link:
 [Place:]
 Miejsce:
 [Share]
@@ -39,7 +39,7 @@ Dane kontaktu
 [Default group:]
 Domyślna grupa:
 [Automatically set 'Ignore status change' flag]
-Automatycznie ustaw 'Ignoruj zmiany statusu'
+Automatycznie ustaw "Ignoruj zmiany statusu"
 [Contacts Settings]
 Opcje kontaktu
 [Use bigger avatars]
@@ -50,8 +50,10 @@ Zdarzenia
 Powiadomienia
 [News feeds]
 Aktualności
-[News Feed types to notify:]
-Typy aktualności, o których chcesz być informowany
+[News feed types to notify:]
+Powiadamiaj o następujących typach aktualności:
+[Don't show advertising posts]
+Nie pokazuj proponowanych postów
 [Other events]
 Inne zdarzenia
 [Client notifications]
@@ -67,9 +69,9 @@ Wymuś szyfrowane połączenie (HTTPS)
 [Post Miranda statuses to Wall]
 Pokazuj statusy Mirandy jako posty na Tablicy
 [Use secure connection also for channel requests]
-Również dla kanału próśb o dodanie do znajomych
+Używaj bezpiecznego połączenia również dla kanału próśb o dodanie do znajomych
 [Also disconnect chat when going to offline]
-Rozłączaj również 'Czat' przechodząc w status rozłączony
+Rozłączaj również "Czat" przechodząc w status rozłączony
 [Map non-standard statuses to Invisible (instead of Online)]
 Niestandardowy status jako Niewidoczny (zamiast Dostępnego)
 [Allow posting statuses to my pages (may slow down login)]
@@ -86,15 +88,27 @@ Sesje rozmowy
 Utrzymuj wiadomości na serwerze jako nieprzeczytane (nie wysyłaj informacji o dostępności)
 [Receive messages from "inbox" folder only]
 Odbieraj wiadomości tylko z folderu "Odebrane"
+[Load last messages on opening message window (EXPERIMENTAL)]
+Załaduj ostatnie wiadomości podczas otwierania okna rozmowy(Eksperymentalne)
+[Number of messages to load:]
+Liczba wiadomości do załadowania:
+[Do not open chat windows on creation]
+Nie otwieraj okien czatów po ich utworzeniu
 ;file \protocols\FacebookRM\src\chat.cpp
+[Myself]
+Ja
+[User]
+Użytkownik
+[Friend]
+Znajomy
 [&Invite user...]
-Zaproś użytkownika
+&Zaproś użytkownika
 [&Leave chat session]
-Opuść sesję czatu
+&Opuść sesję czatu
 [User &details]
-Dane użytkownika
+&Dane użytkownika
 [User &history]
-Historia użytkownika
+&Historia użytkownika
 ;file \protocols\FacebookRM\src\communication.cpp
 [Login error: %s]
 Błąd logowania: %s
@@ -124,18 +138,12 @@ Wprowadź nazwę użytkownika.
 [Please enter a password.]
 Wprowadź hasło
 ;file \protocols\FacebookRM\src\constants.h
-[Most Recent]
-Najnowsze
-[Wall Posts]
-Posty
 [Top News]
 Najpopularniejsze
-[Photos]
-Zdjęcia
-[Links]
-Linki
-[Apps and Games]
-Aplikacje i Gry
+[Most Recent]
+Najnowsze
+[Pages]
+Strony
 [Classic website]
 Klasyczna strona
 [Mobile website]
@@ -153,6 +161,8 @@ Znajomi poza dalszymi znajomymi
 [Only me]
 Tylko ja
 ;file \protocols\FacebookRM\src\contacts.cpp
+[%s and more (%d)]
+%s i więcej (%d)
 [Contact was removed from your server list.]
 Kontakt został usunięty z listy serwera.
 [Error occurred when removing contact from server.]
@@ -173,7 +183,7 @@ Domyślny
 [What's on your mind, %s?]
 O czym teraz myślisz, %s?
 [Note: Make sure you have disabled 'Validate SSL certificates' option in Network options to work properly.]
-Uwaga: Upewnij się, że wyłączyłeś opcję 'Potwierdzaj ważność certyfikatów SSL' w opcjach sieci, aby zapewnić poprawne działanie.
+Uwaga: Upewnij się, że wyłączyłeś opcję "Potwierdzaj ważność certyfikatów SSL" w opcjach sieci, aby zapewnić poprawne działanie.
 [Sample event]
 Próbne zdarzenie
 [Sample request]
@@ -193,16 +203,16 @@ plik
 zdjęcia
 [a photo]
 zdjęcie
-[User sent you %s:]
-Użytkownik wysłał Ci %s:
+[User sent %s:]
+Użytkownik wysłał %s:
+[User sent an unsupported attachment. Open your browser to see it.]
+Użytkownik wysłał plik niewspieranego typu. Otwórz przeglądarkę, aby go zobaczyć.
 [Message read: %s by %s]
 Wiadomość odczytana: %s przez %s
-[Message read: %s]
-Wiadomość odczytana: %s
 [This message is no longer available, because it was marked as abusive or spam.]
 Ta wiadomość nie jest już dostępna, ponieważ została oznaczona jako nadużycie lub spam.
-[%s and more (%d)]
-%s i więcej (%d)
+[%s is typing a message...]
+%s pisze wiadomość...
 ;file \protocols\FacebookRM\src\messages.cpp
 [You cannot send messages when you are offline.]
 Nie można wysłać wiadomości, gdy jesteś offline.
@@ -237,7 +247,11 @@ Sprawdzanie zaproszeń do grona znajomych...
 [Refreshing buddy list...]
 Odświeżanie listy kontaktów...
 [Do you want to cancel your friendship with '%s'?]
-Czy chcesz anulować znajomość z '%s'?
+Czy chcesz anulować znajomość z "%s"?
+[Visit profile]
+Odwiedź profil
+[Visit notifications]
+Przejdź do powiadomień
 [Show 'Share status' window]
 Pokaż okno "Udostępnij status"
 [Notification]
@@ -246,6 +260,8 @@ Powiadomienie
 Aktualności
 [Other Event]
 Inne zdarzenie
+[Message read: %s]
+Wiadomość odczytana: %s
 ;file \protocols\FacebookRM\src\theme.cpp
 [Facebook icon]
 Facebook
@@ -257,16 +273,20 @@ Zaczep
 Aktualności
 [Friendship details]
 Dane znajomości
-[Visit profile]
-Odwiedź profil
+[Conversation]
+Rozmowa
+[Message read]
+Wiadomość odczytana
 [Visit friendship details]
 Sprawdź dane znajomości
+[Visit conversation]
+Przejdź do historii rozmowy
 [Cancel friendship]
 Cofnij znajomość
 [Cancel friendship request]
 Cofnij zaproszenie
 [Request friendship]
-Wyślij zaproszenie do grona znajomych
+Zaproś do grona znajomych
 [Approve friendship]
 Zatwierdź znajomość
 [Services...]

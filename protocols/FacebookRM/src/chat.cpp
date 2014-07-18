@@ -41,11 +41,9 @@ void FacebookProto::UpdateChat(const TCHAR *tchat_id, const char *id, const char
 	gce.ptszUID  = tid;
 	CallServiceSync(MS_GC_EVENT,0,reinterpret_cast<LPARAM>(&gce));
 	
-	std::map<std::tstring, facebook_chatroom>::iterator chatroom = facy.chat_rooms.find(tchat_id);
-	chatroom->second.message_readers = "";
-
-	//HANDLE hChatContact = ChatIDToHContact(chat_id);
-	//CallService(MS_MSG_SETSTATUSTEXT, (WPARAM)hChatContact, (LPARAM)mir_a2u("Unseen"));
+	// TODO: keep it here or move it somewhere else?
+	std::map<std::tstring, facebook_chatroom*>::iterator chatroom = facy.chat_rooms.find(tchat_id);
+	chatroom->second->message_readers = "";
 }
 
 void FacebookProto::RenameChat(const char *chat_id, const char *name)
@@ -155,37 +153,36 @@ void FacebookProto::AddChatContact(const TCHAR *tchat_id, const char *id, const 
 	gce.time = ::time(NULL);
 	gce.bIsMe = !strcmp(id, facy.self_.user_id.c_str());
 
-	if (gce.bIsMe)
-		gce.ptszStatus = _T("Admin");
-	else
-		gce.ptszStatus = _T("Normal");
+	if (gce.bIsMe) {
+		gce.ptszStatus = TranslateT("Myself");
+	} else {
+		MCONTACT hContact = ContactIDToHContact(id);
+		if (hContact == NULL || getByte(hContact, FACEBOOK_KEY_CONTACT_TYPE, CONTACT_NONE) != CONTACT_FRIEND)
+			gce.ptszStatus = TranslateT("User");
+		else {
+			gce.ptszStatus = TranslateT("Friend");
+		}
+	}
 
-	std::map<std::tstring, facebook_chatroom>::iterator room = facy.chat_rooms.find(tchat_id);
-	if(room != facy.chat_rooms.end())
-		room->second.participants.insert(std::make_pair(id, name));
-
-	CallServiceSync(MS_GC_EVENT,0,reinterpret_cast<LPARAM>(&gce));
+	CallServiceSync(MS_GC_EVENT, 0, reinterpret_cast<LPARAM>(&gce));
 }
 
-
-void FacebookProto::RemoveChatContact(const TCHAR *tchat_id, const char *id)
+void FacebookProto::RemoveChatContact(const TCHAR *tchat_id, const char *id, const char *name)
 {
 	// We dont want to remove our self-contact from chat. Ever.
 	if (!strcmp(id, facy.self_.user_id.c_str()))
 		return;
 
+	ptrT tnick(mir_a2t_cp(name, CP_UTF8));
 	ptrT tid( mir_a2t(id));
 	
 	GCDEST gcd = { m_szModuleName, tchat_id, GC_EVENT_PART };
 	GCEVENT gce = { sizeof(gce), &gcd };
 	gce.dwFlags = GCEF_ADDTOLOG;
-	gce.ptszUID = gce.ptszNick = tid;
+	gce.ptszNick = tnick;
+	gce.ptszUID = tid;
 	gce.time = ::time(NULL);
-	gce.bIsMe = false;//!strcmp(id, facy.self_.user_id.c_str());
-
-	std::map<std::tstring, facebook_chatroom>::iterator room = facy.chat_rooms.find(tchat_id);
-	if (room != facy.chat_rooms.end())
-		room->second.participants.erase(id);
+	gce.bIsMe = false;
 
 	CallServiceSync(MS_GC_EVENT,0,reinterpret_cast<LPARAM>(&gce));
 }
@@ -215,7 +212,7 @@ void FacebookProto::AddChat(const TCHAR *tid, const TCHAR *tname)
 {
 	// Create the group chat session
 	GCSESSION gcw = { sizeof(gcw) };
-	gcw.iType = GCW_CHATROOM;
+	gcw.iType = GCW_PRIVMESS;
 	gcw.ptszID = tid;
 	gcw.pszModule = m_szModuleName;
 	gcw.ptszName = tname;
@@ -226,9 +223,11 @@ void FacebookProto::AddChat(const TCHAR *tid, const TCHAR *tname)
 	GCEVENT gce = { sizeof(gce), &gcd };
 
 	// Create a user statuses
-	gce.ptszStatus = _T("Admin");
+	gce.ptszStatus = TranslateT("Myself");
 	CallServiceSync(MS_GC_EVENT, NULL, reinterpret_cast<LPARAM>(&gce));
-	gce.ptszStatus = _T("Normal");
+	gce.ptszStatus = TranslateT("Friend");
+	CallServiceSync(MS_GC_EVENT, NULL, reinterpret_cast<LPARAM>(&gce));
+	gce.ptszStatus = TranslateT("User");
 	CallServiceSync(MS_GC_EVENT, NULL, reinterpret_cast<LPARAM>(&gce));
 	
 	// Finish initialization
@@ -236,14 +235,12 @@ void FacebookProto::AddChat(const TCHAR *tid, const TCHAR *tname)
 	gce.time = ::time(NULL);
 	gce.pDest = &gcd;
 	
-	facebook_chatroom chatroom;
-	chatroom.chat_name = tname;
-	facy.chat_rooms.insert(std::make_pair(tid, chatroom));
+	bool hideChats = getBool(FACEBOOK_KEY_HIDE_CHATS, DEFAULT_HIDE_CHATS);
 
 	// Add self contact
 	AddChatContact(tid, facy.self_.user_id.c_str(), facy.self_.real_name.c_str());
-	CallServiceSync(MS_GC_EVENT,SESSION_INITDONE,reinterpret_cast<LPARAM>(&gce));
-	CallServiceSync(MS_GC_EVENT,SESSION_ONLINE,  reinterpret_cast<LPARAM>(&gce));
+	CallServiceSync(MS_GC_EVENT, (hideChats ? WINDOW_HIDDEN : SESSION_INITDONE), reinterpret_cast<LPARAM>(&gce));
+	CallServiceSync(MS_GC_EVENT, SESSION_ONLINE,  reinterpret_cast<LPARAM>(&gce));
 }
 
 INT_PTR FacebookProto::OnJoinChat(WPARAM hContact, LPARAM suppress)
@@ -259,7 +256,7 @@ INT_PTR FacebookProto::OnJoinChat(WPARAM hContact, LPARAM suppress)
 
 	// Create the group chat session
 	gcw.dwFlags   = GC_TCHAR;
-	gcw.iType     = GCW_CHATROOM;
+	gcw.iType     = GCW_PRIVMESS;
 	gcw.pszModule = m_szModuleName;
 	gcw.ptszName  = m_tszUserName;
 	gcw.ptszID    = m_tszUserName;
@@ -271,10 +268,11 @@ INT_PTR FacebookProto::OnJoinChat(WPARAM hContact, LPARAM suppress)
 	// Create a group
 	GCDEST gcd = { m_szModuleName, m_tszUserName, GC_EVENT_ADDGROUP };
 	GCEVENT gce = { sizeof(gce), &gcd };
-	gce.ptszStatus = _T("Admin");
+	gce.ptszStatus = TranslateT("Myself");
 	CallServiceSync(MS_GC_EVENT, NULL, reinterpret_cast<LPARAM>(&gce));
-	
-	gce.ptszStatus = _T("Normal");
+	gce.ptszStatus = TranslateT("Friend");
+	CallServiceSync(MS_GC_EVENT, NULL, reinterpret_cast<LPARAM>(&gce));
+	gce.ptszStatus = TranslateT("User");
 	CallServiceSync(MS_GC_EVENT, NULL, reinterpret_cast<LPARAM>(&gce));
 
 	SetTopic("Omegle is a great way of meeting new friends!");

@@ -89,7 +89,6 @@ void LoadOptions() {
 	options.end_offline = (db_get_b(0, MODULENAME, "EndOffline", 1) == 1);
 	options.end_window_close = (db_get_b(0, MODULENAME, "EndWindowClose", 0) == 1);
 
-	options.bHaveMetaContacts = 0 != ServiceExists(MS_MC_GETMETACONTACT);
 	options.bHavePopups = 0 != ServiceExists(MS_POPUP_ADDPOPUPT) && ServiceExists(MS_POPUP_SHOWMESSAGE);
 	options.bHaveSecureIM = 0 != ServiceExists("SecureIM/IsContactSecured");
 	options.bHaveButtonsBar = 0 != ServiceExists(MS_BB_ADDBUTTON);
@@ -372,7 +371,7 @@ static INT_PTR CALLBACK DlgProcMirOTROptsProto(HWND hwndDlg, UINT msg, WPARAM wP
 
 			ProtoEnumAccounts(&num_protocols, &pppDesc);
 			for(int i = 0; i < num_protocols; i++) {
-				if((!g_metaproto || strcmp(pppDesc[i]->szModuleName, g_metaproto) != 0)
+				if((strcmp(pppDesc[i]->szModuleName, META_PROTO) != 0)
 					&& (CallProtoService(pppDesc[i]->szModuleName, PS_GETCAPS, PFLAGNUM_1, 0) & PF1_IM) == PF1_IM)
 				{
 					//if (unicode) {
@@ -495,7 +494,7 @@ static INT_PTR CALLBACK DlgProcMirOTROptsContacts(HWND hwndDlg, UINT msg, WPARAM
 		{
 			TranslateDialogDefault( hwndDlg );
 
-			SetWindowLongPtr(hwndDlg, GWLP_USERDATA, (ULONG_PTR) new ContactPolicyMap());
+			SetWindowLongPtr(hwndDlg, GWLP_USERDATA, (LONG_PTR) new ContactPolicyMap());
 
 			HWND cmb = GetDlgItem(hwndDlg, IDC_CMB_CONT_POLICY);
 			SendMessage(cmb, CB_ADDSTRING, 0, (WPARAM)TranslateT(LANG_POLICY_DEFAULT));
@@ -560,11 +559,11 @@ static INT_PTR CALLBACK DlgProcMirOTROptsContacts(HWND hwndDlg, UINT msg, WPARAM
 			for (MCONTACT hContact = db_find_first(); hContact; hContact = db_find_next(hContact)) {
 				proto = contact_get_proto(hContact);
 				if(proto && db_get_b(hContact, proto, "ChatRoom", 0) == 0 && CallService(MS_PROTO_ISPROTOONCONTACT, hContact, (LPARAM)MODULENAME) // ignore chatrooms
-					&& (g_metaproto  == 0 || strcmp(proto, g_metaproto) != 0)) // and MetaContacts
+					&& strcmp(proto, META_PROTO) != 0) // and MetaContacts
 				{
 					lvI.iItem = 0;
 					lvI.iSubItem = 0;
-					lvI.lParam = (LPARAM)hContact;
+					lvI.lParam = hContact;
 					lvI.pszText = (TCHAR*)contact_get_nameT(hContact);
 					lvI.iItem = ListView_InsertItem(lv , &lvI);
 
@@ -683,7 +682,7 @@ static INT_PTR CALLBACK DlgProcMirOTROptsFinger(HWND hwndDlg, UINT msg, WPARAM w
 	switch ( msg ) {
 	case WM_INITDIALOG:
 		TranslateDialogDefault( hwndDlg );
-		SetWindowLongPtr(hwndDlg, GWLP_USERDATA, (ULONG_PTR) new FPModifyMap());
+		SetWindowLongPtr(hwndDlg, GWLP_USERDATA, (LONG_PTR) new FPModifyMap());
 
 		SendDlgItemMessage(hwndDlg, IDC_LV_FINGER_LIST ,LVM_SETEXTENDEDLISTVIEWSTYLE, 0,LVS_EX_FULLROWSELECT);// | LVS_EX_CHECKBOXES);
 

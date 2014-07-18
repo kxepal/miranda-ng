@@ -47,8 +47,11 @@ public:
 
 	inline bool isInvisible()
 	{
-		return (m_iStatus == ID_STATUS_INVISIBLE);
+		return m_invisible;
+		//return (m_iStatus == ID_STATUS_INVISIBLE);
 	}
+
+	bool m_invisible;
 
 	// DB utils missing in proto_interface
 
@@ -116,6 +119,8 @@ public:
 	INT_PTR __cdecl GetAvatarCaps(WPARAM, LPARAM);
 	INT_PTR __cdecl VisitProfile(WPARAM, LPARAM);
 	INT_PTR __cdecl VisitFriendship(WPARAM, LPARAM);
+	INT_PTR __cdecl VisitConversation(WPARAM, LPARAM);
+	INT_PTR __cdecl VisitNotifications(WPARAM, LPARAM);
 	INT_PTR __cdecl Poke(WPARAM, LPARAM);
 	INT_PTR __cdecl CancelFriendship(WPARAM, LPARAM);
 	INT_PTR __cdecl RequestFriendship(WPARAM, LPARAM);
@@ -124,6 +129,7 @@ public:
 	INT_PTR __cdecl CheckNewsfeeds(WPARAM, LPARAM);
 	INT_PTR __cdecl CheckFriendRequests(WPARAM, LPARAM);
 	INT_PTR __cdecl RefreshBuddyList(WPARAM, LPARAM);
+	INT_PTR __cdecl GetNotificationsCount(WPARAM, LPARAM);
 
 	INT_PTR __cdecl OnJoinChat(WPARAM,LPARAM);
 	INT_PTR __cdecl OnLeaveChat(WPARAM,LPARAM);
@@ -146,6 +152,8 @@ public:
 	int  __cdecl OnIdleChanged(WPARAM,LPARAM);
 	int  __cdecl OnGCEvent(WPARAM,LPARAM);
 	int  __cdecl OnGCMenuHook(WPARAM,LPARAM);
+	int  __cdecl OnDbEventRead(WPARAM, LPARAM);
+	int  __cdecl OnProcessSrmmEvent(WPARAM, LPARAM);
 
 	// Loops
 	bool    NegotiateConnection();
@@ -164,6 +172,8 @@ public:
 	void __cdecl ProcessFriendRequests(void*);
 	void __cdecl SearchAckThread(void*);
 	void __cdecl SearchIdAckThread(void*);
+	void __cdecl ProcessPages(void*);
+	void __cdecl LoadLastMessages(void*);
 
 	// Worker threads
 	void __cdecl SignOn(void*);
@@ -183,13 +193,16 @@ public:
 	void __cdecl SendPokeWorker(void*);
 
 	// Contacts handling
-	bool     IsMyContact(MCONTACT, bool include_chat = false);
-	MCONTACT ContactIDToHContact(std::string);
-	MCONTACT ChatIDToHContact(std::tstring);
-	std::string ThreadIDToContactID(std::string thread_id);
-	MCONTACT AddToContactList(facebook_user*, ContactType type, bool dont_check = false);
-	void     SetAllContactStatuses(int status);
-	MCONTACT HContactFromAuthEvent(HANDLE hEvent);
+	bool		IsMyContact(MCONTACT, bool include_chat = false);
+	MCONTACT	ContactIDToHContact(std::string);
+	MCONTACT	ChatIDToHContact(std::tstring);
+	std::string	ThreadIDToContactID(std::string thread_id);
+	void		LoadContactInfo(facebook_user* fbu);
+	MCONTACT	AddToContactList(facebook_user*, ContactType type, bool force_add = false);
+	void		SetAllContactStatuses(int status);
+	MCONTACT	HContactFromAuthEvent(HANDLE hEvent);
+	void		StartTyping(MCONTACT hContact);
+	void		StopTyping(MCONTACT hContact);
 
 	// Chats handling
  	void AddChat(const TCHAR *id, const TCHAR *name);
@@ -197,9 +210,12 @@ public:
 	void RenameChat(const char *chat_id, const char *name);
 	bool IsChatContact(const TCHAR *chat_id, const char *id);
 	void AddChatContact(const TCHAR *chat_id, const char *id, const char *name);
-	void RemoveChatContact(const TCHAR *chat_id, const char *id);
+	void RemoveChatContact(const TCHAR *chat_id, const char *id, const char *name);
 	void SetChatStatus(const char *chat_id, int status);
 	char *GetChatUsers(const TCHAR *chat_id);
+	void ReceiveMessages(std::vector<facebook_message*> messages, bool local_timestamp, bool check_duplicates = false);
+	void LoadChatInfo(facebook_chatroom* fbc);
+	void LoadParticipantsNames(facebook_chatroom *fbc);
 
 	// Connection client
 	facebook_client facy; // TODO: Refactor to "client" and make dynamic
@@ -209,9 +225,11 @@ public:
 	bool GetDbAvatarInfo(PROTO_AVATAR_INFORMATIONT &ai, std::string *url);
 	void CheckAvatarChange(MCONTACT hContact, std::string image_url);
 	void ToggleStatusMenuItems(BOOL bEnable);
-	void ParseSmileys(std::string message, MCONTACT hContact);
+	void ParseSmileys(std::string message, MCONTACT hContact);	
+	void SaveName(MCONTACT hContact, const facebook_user *fbu);	
 	void OpenUrl(std::string url);
-	void SaveName(MCONTACT hContact, const facebook_user *fbu);
+	void __cdecl OpenUrlThread(void*);
+	void MessageRead(MCONTACT hContact);
 
 	// Handles, Locks
 	HGENMENU m_hMenuRoot, m_hMenuServicesRoot, m_hStatusMind;
@@ -230,5 +248,6 @@ public:
 	static void CALLBACK APC_callback(ULONG_PTR p);
 
 	// Information providing
-	void NotifyEvent(TCHAR* title, TCHAR* info, MCONTACT contact, DWORD flags, std::string *url = NULL, std::string *notification_id = NULL);
+	HWND NotifyEvent(TCHAR* title, TCHAR* info, MCONTACT contact, DWORD flags, std::string *url = NULL, std::string *notification_id = NULL);
+	void ShowNotifications();
 };

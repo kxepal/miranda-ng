@@ -8,43 +8,41 @@
 [Advanced Database Editor.]
 
 ;file \plugins\DbEditorPP\res\resource.rc
-[Database Editor++ Search and Replace]
+[Database Editor++ search and replace]
 
-[Case Sensitive]
+[Search for]
 
-[Module Name]
+[Text:]
+Texto:
+[In:]
 
-[Exact Match]
+[Case sensitive]
 
-[Setting Name]
+[Module name]
 
-[Setting Value]
+[Exact match]
+
+[Setting name]
+
+[Setting value]
 
 [&Search]
 Bu&scar
+[Replace with]
+
+[Entirely]
+
 [Found field]
 
 [&Replace]
 
 [&Cancel]
 &Cancelar
-[Search For]
-
-[Text:]
-Texto:
-[In:]
-
-[Replace With]
-
-[Entirely]
-
 [Restore last opened position]
 
-[Automatically expand "settings" when Database Editor ++ starts]
+[Automatically expand "Settings" when Database Editor++ starts]
 
 [Warn when deleting modules]
-
-["Open user tree in DBE++" menu item]
 
 [Use popups when watched settings change values]
 
@@ -56,13 +54,23 @@ Color de fondo
 
 [Add a module named]
 
-[Add to all contacts (Includes Settings)]
+[Add to all contacts (including Settings)]
 
-[OK]
-Aceptar
 [Cancel]
 Cancelar
-[Edit Setting]
+[Edit setting]
+
+[Value name:]
+
+[Value data:]
+
+[Base]
+
+[Hexadecimal]
+
+[Decimal]
+
+[Save value as:]
 
 [Byte]
 
@@ -72,49 +80,37 @@ Cancelar
 
 [String]
 
-[Hexadecimal]
-
-[Decimal]
-
-[Value Name:]
-
-[Value Data:]
-
-[Base]
-
-[Save Value as:]
-
-[Watched Database Variables]
+[Watched database settings]
 
 [Copy module to contact]
 
-[Copy to all contacts (Includes Settings)]
-
 [Contact to copy module and settings to]
 
-[Import Module/Settings]
+[Copy to all contacts (including Settings)]
+
+[Import module/settings]
+
+[Paste the settings to import here.]
 
 [Import]
 
 [Insert &CR/LF]
 
-[Paste the Settings to import here.]
-
 [Database Editor++]
 
 [&Main]
 
-[&Refresh Modules]
+[&Refresh modules]
 
-[Refresh &Settings]
+[Refresh &settings]
 
 [E&xit]
 &Salir
 [&Actions]
 
-[&Search and Replace]
+[&Search and replace]
 
-[&Delete Module]
+[&Delete module]
 
 [&Watches]
 
@@ -124,11 +120,11 @@ Cancelar
 
 [&Export]
 
-[Entire &Database]
+[Entire &database]
 
-[All &Settings]
+[All &settings]
 
-[All &Contacts]
+[All &contacts]
 
 [&Import]
 
@@ -140,11 +136,11 @@ Cancelar
 &Opciones
 [&Sort by protocol]
 
-[Show &All]
+[Show &all]
 
-[Show only &Loaded]
+[Show only &loaded]
 
-[Show only &Unloaded]
+[Show only &unloaded]
 
 [Edit &Bytes in Hex]
 
@@ -154,11 +150,11 @@ Cancelar
 
 [&Restore position]
 
-[&Open Options]
+[&Open options]
 
-[&Edit / Rename]
+[&Edit/rename]
 
-[NEW]
+[New]
 
 [&Byte]
 
@@ -176,13 +172,13 @@ Cancelar
 
 [Encyption]
 
-[View Decrypted String]
+[View decrypted string]
 
-[View Encrypted String]
+[View encrypted string]
 
-[Decrypt String]
+[Decrypt string]
 
-[Encrypt String]
+[Encrypt string]
 
 [&Watch]
 
@@ -190,33 +186,33 @@ Cancelar
 &Borrar
 [&Rename]
 &Renombrar
-[Copy To Contact]
+[Copy to contact]
 
-[Export Module]
+[Export module]
 
 [&Clone]
 
-[Export Contact]
+[Export contact]
 
-[Import Settings]
+[Import settings]
 
 [From a file]
 
 [From pasted text]
 
-[&Add Module]
+[&Add module]
 
-[Export Settings]
+[Export settings]
 
-[Export Contacts]
+[Export contacts]
 
-[Import Contacts]
+[Import contacts]
 
-[Export Module from all contacts]
+[Export module from all contacts]
 
-[Watch Window]
+[Watch window]
 
-[Reload Watch List]
+[Reload watch list]
 
 ;file \plugins\DbEditorPP\src\addeditsettingsdlg.cpp
 [Cannot Convert!]
@@ -253,13 +249,13 @@ Ajustes
 ;file \plugins\DbEditorPP\src\deletemodule.cpp
 [Are you sure you want to delete module "%s"?]
 
-[Confirm Module Deletion]
+[Confirm module deletion]
 
-[Delete module from Database]
+[Delete module from database]
 
-[Delete module from Database... Loading]
+[Delete module from database... Loading]
 
-[Delete module from all contacts (Includes Setting)]
+[Delete module from all contacts (including Setting)]
 
 ;file \plugins\DbEditorPP\src\exportimport.cpp
 [INI Files]
@@ -268,7 +264,7 @@ Ajustes
 Todos los archivos
 [Export to file]
 Importar a archivo
-[Error Loading Module List]
+[Error loading module list]
 
 [Couldn't open file for writing]
 
@@ -304,16 +300,34 @@ Importar a archivo
 [Finished. %d items were found.]
 
 ;file \plugins\DbEditorPP\src\icons.cpp
-[Closed Known Module]
+[Main icon]
 
-[Open Known Module]
+[Closed known module]
 
-[Contacts Group]
+[Open known module]
 
-[Unknown Contact]
+[Contacts group]
 
-[Known Contact]
+[Unknown contact]
 
+[Known contact]
+
+[Open user tree]
+
+[BLOB setting]
+
+[Byte setting]
+
+[Word setting]
+
+[Dword setting]
+
+[String setting]
+
+[Unicode setting]
+
+[Handle]
+Manejar
 ;file \plugins\DbEditorPP\src\main.cpp
 [Open Database Editor]
 
@@ -322,7 +336,7 @@ Importar a archivo
 ;file \plugins\DbEditorPP\src\main_window.cpp
 [Are you sure you want to delete contact "%s"?]
 
-[Confirm Contact Delete]
+[Confirm contact delete]
 
 ;file \plugins\DbEditorPP\src\modules.cpp
 ;file \plugins\DbEditorPP\src\moduletree.cpp
@@ -335,7 +349,7 @@ Importar a archivo
 [Contacts]
 Contactos
 [HANDLE]
-
+MANEJAR
 [Add module to contact "%s"]
 
 ;file \plugins\DbEditorPP\src\options.cpp

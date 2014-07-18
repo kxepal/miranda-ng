@@ -92,7 +92,7 @@ static int JabberSearchAddField(HWND hwndDlg, Data* FieldDat)
 
 	HFONT hFont = (HFONT)SendMessage(hwndDlg, WM_GETFONT, 0, 0);
 	HWND hwndParent=GetDlgItem(hwndDlg,IDC_FRAME);
-	LONG frameExStyle = GetWindowLongPtr(hwndParent, GWL_EXSTYLE);
+	LONG_PTR frameExStyle = GetWindowLongPtr(hwndParent, GWL_EXSTYLE);
 	frameExStyle |= WS_EX_CONTROLPARENT;
 	SetWindowLongPtr(hwndParent, GWL_EXSTYLE, frameExStyle);
 	SetWindowLongPtr(GetDlgItem(hwndDlg,IDC_FRAME),GWLP_WNDPROC,(LONG_PTR)JabberSearchFrameProc);
@@ -148,7 +148,7 @@ void CJabberProto::OnIqResultGetSearchFields(HXML iqNode, CJabberIqInfo *pInfo)
 		ShowWindow(searchHandleDlg,SW_HIDE);
 		if (xNode) {
 			//1. Form
-			PostMessage(searchHandleDlg, WM_USER+11, (WPARAM)xi.copyNode(xNode), (LPARAM)0);
+			PostMessage(searchHandleDlg, WM_USER+11, (WPARAM)xi.copyNode(xNode), 0);
 			HXML xcNode = xmlGetNthChild(xNode, _T("instructions"), 1);
 			if (xcNode)
 				SetDlgItemText(searchHandleDlg, IDC_INSTRUCTIONS, xmlGetText(xcNode));
@@ -171,7 +171,7 @@ void CJabberProto::OnIqResultGetSearchFields(HXML iqNode, CJabberIqInfo *pInfo)
 					MyData->defValue = mir_tstrdup(xmlGetText(chNode));
 					MyData->Order = Order;
 					if (MyData->defValue) MyData->bReadOnly = TRUE;
-					PostMessage(searchHandleDlg,WM_USER+10,(WPARAM)FALSE,(LPARAM)MyData);
+					PostMessage(searchHandleDlg,WM_USER+10,FALSE,(LPARAM)MyData);
 					Order++;
 				}
 			}

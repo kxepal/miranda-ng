@@ -1,7 +1,7 @@
 ﻿#muuid {9c448c61-fc3f-42f9-b9f0-4a30e1cf8671}
 ;============================================================
 ;  File: Skype.dll
-;  Plugin: Skype Protocol
+;  Plugin: Skype protocol
 ;  Version: 0.11.0.2
 ;  Authors: unsane, mataes, ghazan
 ;============================================================
@@ -191,13 +191,15 @@ SkypeKit.exe не распакаваны.
 [Failed to verify password. No connection to server]
 Немагчыма праверыць пароль. Няма падлучэння да сервера
 [Password was set but server didn't like it much]
-Пароль быў адпрэчаны серверам 
+Пароль быў адпрэчаны серверам
 [New password was exactly the same as old one]
-Уведзены пароль сапраўды такой жа як стары 
+Уведзены пароль сапраўды такой жа як стары
 [The new password was unacceptable]
-Новы пароль непрымальны 
+Новы пароль непрымальны
 [Account was currently not logged in]
 Конт не далучаны
+[You have not entered a Skype name.\nConfigure this in Options->Network->%s and try again.]
+Вы не ўвялі Skype ID.\nУвядзіце яго ў Налады->Сеціва->%s і паспрабуйце зноў.
 ;file \protocols\Skype\src\skype_blocked.cpp
 [Name]
 Імя
@@ -227,9 +229,9 @@ SkypeKit.exe не распакаваны.
 Выкінуць
 [Outlaw (&ban)]
 Забаніць
-[Copy &skypename]
+[Copy &Skype name]
 Капіяваць &Skype ID
-[Copy room &uri]
+[Copy room &URI]
 Капіяваць URI канферэнцыі
 [User]
 Кантакт

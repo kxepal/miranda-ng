@@ -136,8 +136,6 @@ Mot de passe
 
 [Execute task for specified contacts]
 
-[OK]
-OK
 [Cancel]
 Annuler
 ;file \plugins\BasicHistory\src\BasicHistory.cpp
@@ -333,7 +331,7 @@ Chercher
 Éléments reçus
 [Outgoing events]
 Élements envoyés
-[File do not exist. Enter correct file path.]
+[File does not exist. Enter correct file path.]
 
 [Invalid file]
 
@@ -441,12 +439,12 @@ Contacts
 
 [Path to file]
 
-[FTP path must contain '/' instead '\' and start with '/'.]
+[FTP path must contain '/' instead '\\' and start with '/'.]
 
 [FTP path cannot contain <date> in import task.]
 
 [Unknown error]
-
+Erreur inconnue
 [Cannot get FTP file(s).]
 
 [Cannot unzip file(s).]

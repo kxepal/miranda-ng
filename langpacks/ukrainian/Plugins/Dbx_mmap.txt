@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Dbx_mmap.dll
 ;  Plugin: Miranda NG mmap database driver
-;  Version: 0.95.0.1
+;  Version: 0.95.1.1
 ;  Authors: Miranda-NG project
 ;============================================================
 [Provides Miranda database support: global settings, contacts, history, settings per contact.]
@@ -33,7 +33,7 @@
 Повний
 [Only critical data are encrypted (passwords, security tokens, etc). All another settings and history remains unencrypted. Fast and effective, suitable for the most cases]
 Шифрування тільки критичних даних (паролі, токени авторизації тощо). Інші налаштування, а також історія залишаються незашифрованими. Швидкий та ефективний, підходить для більшості випадків.
-[All string settings and all events in histories are encrypted. It also makes Miranda much slower and creates a risk of losing everything you've stored in a profile in case of losing password. Recommended only for paranoidal users]
+[All string settings and all events in histories are encrypted. It also makes Miranda much slower and creates a risk of losing everything you've stored in a profile in case of losing password. Recommended only for paranoid users]
 Шифрування всіх налаштувань та подій історії. Уповільнює роботу програми, а також створює ризик втрати всього збереженого в профілі в разі втрати пароля. Рекомендується тільки параноїдальним користувачам.
 [Set password]
 Встановити пароль
@@ -47,6 +47,14 @@
 Виявлено пошкодження вашої бази даних. Це пошкодження можна виправити за допомогою плагіна DbChecker. Будь ласка, завантажте його з http://miranda-ng.org/p/DbChecker/. Miranda NG буде закрита.
 [Database Panic]
 Проблема з базою
+[This profile is too old to be updated with PluginUpdater, your database must be converted first.\n\nWould you like to read how to fix this?]
+Ваш профіль застарілого формату. Для оновлення за допомогою PluginUpdater, необхідно спочатку конвертувати профіль у сучасний формат.\n\nНатисніть "Так", щоб дізнатися, як це зробити.
+[Obsolete database format]
+Застарілий формат профілю
+[Your database must be converted into the new format. This is potentially dangerous operation and might damage your profile, so please make a backup before.\n\nClick Yes to proceed with conversion or No to exit Miranda]
+Ваша база даних буде сконвертована у новий формат. Це потенційно небезпечна дія, що може спричинити втрату історії переписки або пошкодити ваш профіль, зробіть будь ласка, резервну копію бази.\n\nНатисніть "Так", щоб почати конвертацію, або "Ні", щоб вийти з програми.
+[Database conversion required]
+Конвертація бази
 [Change/remove password]
 Змінити/видалити пароль
 [Logo]
@@ -97,8 +105,6 @@
 Ланцюжок подій пошкоджений, подальші дані ігноруються
 [First event not marked as such: correcting]
 Перша подія не позначена як така: виправлення
-[Event marked as first which is not: correcting]
-Подія, позначена як перша, не є такою: виправлення
 [Extra flags found in event: removing]
 У події знайдені додаткові прапори: видалення
 [First unread event marked wrong: fixing]

@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Dbx_mmap.dll
 ;  Plugin: Miranda NG mmap database driver
-;  Version: 0.95.0.1
+;  Version: 0.95.1.1
 ;  Authors: Miranda-NG project
 ;============================================================
 [Provides Miranda database support: global settings, contacts, history, settings per contact.]
@@ -10,10 +10,6 @@ Zapewnia wsparcie profilu Mirandy: ustawień globalnych, kontaktów, historii, u
 ;file \plugins\Db3x_mmap\res\db3x_mmap.rc
 [Login to Miranda NG]
 Logowanie do Mirandy NG
-[EN]
-EN
-[OK]
-OK
 [Cancel]
 Anuluj
 [New password]
@@ -37,9 +33,9 @@ Standardowy
 [Total]
 Całkowity
 [Only critical data are encrypted (passwords, security tokens, etc). All another settings and history remains unencrypted. Fast and effective, suitable for the most cases]
-Tylko najważniejsze dane (hasła, tokeny bezpieczeństwa  itp.) są zaszyfrowane. Inne ustawienia, historia itp. pozostają niezaszyfrowane. Szybki i efektywny sposób. Powinien wystarczyć w większości przypadków.
-[All string settings and all events in histories are encrypted. It also makes Miranda much slower and creates a risk of losing everything you've stored in a profile in case of losing password. Recommended only for paranoidal users]
-Wszystkie wpisy ustawień oraz zdarzenia historii są szyfrowane. Sprawia to, że Miranda działa wolniej oraz stwarza zagrożenie utraty wszystkiego co zapisane jest w profilu w przypadku utraty hasła. Zalecane tylko mającym obsesję na punkcie bezpieczeństwa.
+Tylko najważniejsze dane (hasła, tokeny bezpieczeństwa itp.) są zaszyfrowane. Inne ustawienia, historia itp. pozostają niezaszyfrowane. Szybki i efektywny sposób. Powinien wystarczyć w większości przypadków.
+[All string settings and all events in histories are encrypted. It also makes Miranda much slower and creates a risk of losing everything you've stored in a profile in case of losing password. Recommended only for paranoid users]
+Wszystkie wpisy ustawień oraz zdarzenia w bazie są zaszyfrowane. Sprawia to, że Miranda może działać wolniej oraz stwarza ryzyko utraty wszystkich danych zapisanych w profilu w przypadku utraty hasła. Zalecane tylko obsesyjnym użytkownikom.
 [Set password]
 Ustaw/Zmień hasło
 ;file \plugins\Db3x_mmap\src\database.cpp
@@ -53,9 +49,19 @@ Błąd profilu
 Miranda wykryła błąd w twojej bazie danych. Może być naprawiony przez wtyczkę DbChecker. Pobierz go z http://miranda-ng.org/p/DbChecker/. Miranda zostanie teraz zamknięta.
 [Database Panic]
 Panika profilu
+;file \plugins\Db3x_mmap\src\dbheaders.cpp
+[This profile is too old to be updated with PluginUpdater, your database must be converted first.\n\nWould you like to read how to fix this?]
+Ten profil jest zbyt stary, by uaktualnić go wtyczką PluginUpdater. Twoja baza danych musi zostać najpierw skonwertowana.\n\nChcesz przeczytać jak to naprawić?
+[Obsolete database format]
+Przestarzały format bazy danych
+;file \plugins\Db3x_mmap\src\dbintf.cpp
+[Your database must be converted into the new format. This is potentially dangerous operation, so please make a backup before.\n\nClick Yes to proceed with conversion or No to exit Miranda]
+Twoja baza danych musi zostać skonwertowana do nowego formatu. Jest to potencjalnie niebezpieczna operacja, proszę utworzyć kopię bezpieczeństwa.\nNaciśnij "tak", aby rozpocząć konwersję lub "nie", aby wyjść z Mirandy.
+[Database conversion required]
+Ostrzeżenie przed konwersją bazy danych
 ;file \plugins\Db3x_mmap\src\dbintf.h
 [Change/remove password]
-Zmień/usuń hasło
+Zmień/Usuń hasło
 ;file \plugins\Db3x_mmap\src\ui.cpp
 [Logo]
 Logo
@@ -84,7 +90,7 @@ Agresywny: losowe śmieci w %08X: pomijam
 Agresywny: nieoznaczone dane w %08X: nie można automatycznie rozmieścić
 ;file \plugins\Db3x_mmap\src\dbtool\contactchain.cpp
 [Processing contact chain]
-Przetwarzanie łańcucha kontaktu 
+Przetwarzanie łańcucha kontaktu
 [Contact count marked wrongly: correcting]
 Źle oznaczone dane kontaktów: poprawianie
 [Contact chain corrupted, further entries ignored]
@@ -106,11 +112,9 @@ Nie można zapisać do pliku - dysk jest pełen? (%u)
 [Event chain corrupted, trying to recover...]
 Łańcuch zdarzeń uszkodzony, próbuję odzyskać...
 [Event chain corrupted, further entries ignored]
-Uszkodzony łańcuch zdarzeń, dalsze wpisy ignorowane 
+Uszkodzony łańcuch zdarzeń, dalsze wpisy ignorowane
 [First event not marked as such: correcting]
 Pierwsze zdarzenie nie oznaczone jako: poprawianie
-[Event marked as first which is not: correcting]
-Zdarzenie oznaczone jako pierwsze, które nie jest: poprawianie
 [Extra flags found in event: removing]
 Dodatkowe flagi w przypadku: usuwanie
 [First unread event marked wrong: fixing]
@@ -140,14 +144,14 @@ Profil nie zawiera żadnych danych
 [Processing completed successfully]
 Przetwarzanie zakończone sukcesem
 [Can't create map view of file (%u)]
-Nie udało się stworzyć widoku mapy pliku (%u)
+Nie udało się utworzyć widoku mapy pliku (%u)
 ;file \plugins\Db3x_mmap\src\dbtool\modulechain.cpp
 [Processing module name chain]
 Przetwarzanie łańcucha nazwy modułu
 [Module chain corrupted, further entries ignored]
-Uszkodzony łańcuch modułu, dalsze wpisy będą ignorowane 
+Uszkodzony łańcuch modułu, dalsze wpisy będą ignorowane
 [Module name '%s' is not unique: %d duplicates found]
-Nazwa modułu "%s" nie jest unikalna: znaleziono %d duplikatów 
+Nazwa modułu "%s" nie jest unikalna: znaleziono %d duplikatów
 [Invalid module name offset, skipping data]
 Nieprawidłowy offset nazwy modułu, pomijam dane
 ;file \plugins\Db3x_mmap\src\dbtool\settingschain.cpp

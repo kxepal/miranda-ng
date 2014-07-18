@@ -1,4 +1,4 @@
-﻿#muuid  {e4058506-6494-4d60-9cf4-40bf545f78bd}
+﻿#muuid {e4058506-6494-4d60-9cf4-40bf545f78bd}
 ;============================================================
 ;  File: QuickSearch.dll
 ;  Module: Quick Search
@@ -6,7 +6,7 @@
 ;  Authors: Awkward
 ;============================================================
 [This plugin allows you to quick search for nickname, firstname, lastname, email, uin in your contact list. And now you may add any setting to display - for example user's version of Miranda, group or city.]
-Плагін дозволяє вам швидко знайти нік, ім'я, прізвище, E-mail, UIN у вашому списку контактів. Тепер ви можете додати будь-які налаштування для відображення. Наприклад, версії Miranda, групи або міста.
+Дозволяє швидко знайти нік, ім'я, прізвище, E-mail, UIN у вашому списку контактів. Можна додати будь-які налаштування для відображення (наприклад, версії Miranda, групи або міста).
 [Quick Search]
 Пошук у списку
 [Title]
@@ -98,7 +98,7 @@ ID користувача
 [Word]
 Слово
 [DWord]
-Дв.слово
+Подв. слово
 [Signed]
 Зі знаком
 [As hex]
@@ -130,7 +130,7 @@ ID користувача
 [Result]
 Результат
 [Result type]
-Результат виклику служби
+Тип результату
 [Free memory]
 очищати пам'ять
 [Save]
@@ -197,9 +197,9 @@ ID користувача
 Фон метаконтактів
 [Metacontact foreground]
 Текст метаконтактів
-[SubMetacontact background]
+[Subcontact background]
 Фон субконтактів
-[SubMetacontact foreground]
+[Subcontact foreground]
 Текст субконтактів
 [&Delete]
 &Видалити
@@ -267,6 +267,7 @@ ID користувача
 Невідомий
 [Stay on Top]
 Поверх усіх вікон
+; these lines are not present in the sources, but they are present in compiled plugin
 [Text Editor]
 Текстовий редактор
 [Wrap Text]

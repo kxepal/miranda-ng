@@ -23,7 +23,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 int HTMLBuilder::mimFlags = 0;
 
-HTMLBuilder::HTMLBuilder() {
+HTMLBuilder::HTMLBuilder()
+{
 	lastIEViewEvent.cbSize = sizeof (IEVIEWEVENT);
 	lastIEViewEvent.iType = IEE_LOG_MEM_EVENTS;
 	lastIEViewEvent.codepage = CP_ACP;
@@ -58,15 +59,9 @@ bool HTMLBuilder::encode(MCONTACT hContact, const char *proto, const wchar_t *te
 		}
 		level++;
 	case 2:
-		if ((Options::getGeneralFlags()&Options::GENERAL_ENABLE_MATHMODULE) && Options::isMathModule()) {
-			token = TextToken::tokenizeMath(text);
-			break;
-		}
-		level++;
-	case 3:
 		token = TextToken::tokenizeLinks(text);
 		break;
-	case 4:
+	case 3:
 		if ((flags & ENF_SMILEYS) || ((Options::getGeneralFlags() & Options::GENERAL_SMILEYINNAMES) &&  (flags & ENF_NAMESMILEYS)))
 			token = TextToken::tokenizeSmileys(hContact, proto, text, isSent);
 		break;
@@ -148,8 +143,8 @@ char* HTMLBuilder::getRealProto(MCONTACT hContact)
 		return NULL;
 
 	char *szProto = mir_strdup(GetContactProto(hContact));
-	if (szProto != NULL && !strcmp(szProto, "MetaContacts")) {
-		hContact = (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, hContact, 0);
+	if (szProto != NULL && !strcmp(szProto, META_PROTO)) {
+		hContact = db_mc_getMostOnline(hContact);
 		if (hContact != NULL) {
 			mir_free(szProto);
 			szProto = mir_strdup(GetContactProto(hContact));
@@ -160,8 +155,8 @@ char* HTMLBuilder::getRealProto(MCONTACT hContact)
 
 char *HTMLBuilder::getRealProto(MCONTACT hContact, const char *szProto)
 {
-	if (szProto != NULL && !strcmp(szProto, "MetaContacts")) {
-		hContact = (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, hContact, 0);
+	if (szProto != NULL && !strcmp(szProto, META_PROTO)) {
+		hContact = db_mc_getMostOnline(hContact);
 		if (hContact != NULL)
 			return mir_strdup(GetContactProto(hContact));
 	}
@@ -171,8 +166,8 @@ char *HTMLBuilder::getRealProto(MCONTACT hContact, const char *szProto)
 MCONTACT HTMLBuilder::getRealContact(MCONTACT hContact)
 {
 	char *szProto = GetContactProto(hContact);
-	if (szProto != NULL && !strcmp(szProto,"MetaContacts"))
-		hContact = (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, hContact, 0);
+	if (szProto != NULL && !strcmp(szProto, META_PROTO))
+		hContact = db_mc_getMostOnline(hContact);
 	return hContact;
 }
 
@@ -333,19 +328,19 @@ void HTMLBuilder::appendEventOld(IEView *view, IEVIEWEVENT *event)
 		DBEVENTINFO dbei = { sizeof(dbei) };
 		dbei.cbBlob = db_event_getBlobSize(hDbEvent);
 		if (dbei.cbBlob == 0xFFFFFFFF) {
-			hDbEvent = db_event_next(hDbEvent);
+			hDbEvent = db_event_next(event->hContact, hDbEvent);
 			continue;
 		}
 		dbei.pBlob = (PBYTE) malloc(dbei.cbBlob);
 		db_event_get(  hDbEvent, &dbei);
 		if (!(dbei.flags & DBEF_SENT) && (dbei.eventType == EVENTTYPE_MESSAGE || dbei.eventType == EVENTTYPE_URL)) {
 			db_event_markRead(event->hContact, hDbEvent);
-			CallService(MS_CLIST_REMOVEEVENT, (WPARAM) event->hContact, (LPARAM) hDbEvent);
+			CallService(MS_CLIST_REMOVEEVENT, event->hContact, (LPARAM)hDbEvent);
 		}
 
 		if (!isDbEventShown(&dbei)) {
 			free(dbei.pBlob);
-			hDbEvent = db_event_next(hDbEvent);
+			hDbEvent = db_event_next(event->hContact, hDbEvent);
 			continue;
 		}
 		eventData = new IEVIEWEVENTDATA;
@@ -367,7 +362,7 @@ void HTMLBuilder::appendEventOld(IEView *view, IEVIEWEVENT *event)
 			eventData->pszNickW = getContactName(event->hContact, szProto);
 			eventData->bIsMe = FALSE;
 		}
-		if (dbei.eventType == EVENTTYPE_MESSAGE || dbei.eventType == EVENTTYPE_URL || dbei.eventType == EVENTTYPE_JABBER_CHATSTATES) {
+		if (dbei.eventType == EVENTTYPE_MESSAGE || dbei.eventType == EVENTTYPE_URL || Utils::DbEventIsForMsgWindow(&dbei)) {
 			eventData->pszTextW = DbGetEventTextW(&dbei, newEvent.codepage);
 			if (dbei.eventType == EVENTTYPE_MESSAGE)
 				eventData->iType = IEED_EVENT_MESSAGE;
@@ -411,7 +406,7 @@ void HTMLBuilder::appendEventOld(IEView *view, IEVIEWEVENT *event)
 		prevEventData = eventData;
 		newEvent.count++;
 		event->hDbEventFirst = hDbEvent;
-		hDbEvent = db_event_next(hDbEvent);
+		hDbEvent = db_event_next(event->hContact, hDbEvent);
 	}
 	appendEventNew(view, &newEvent);
 	for ( IEVIEWEVENTDATA* eventData2 = newEvent.eventData; eventData2 != NULL; eventData2 = eventData) {

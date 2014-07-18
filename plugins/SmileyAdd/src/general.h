@@ -64,7 +64,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <m_metacontacts.h>
 #include <m_smileyadd.h>
-#include <m_smileyadd_deprecated.h>
 #include <m_folders.h>
 
 #include "regexp\wcpattern.h"
@@ -88,7 +87,6 @@ typedef WCMatcher _TMatcher;
 #include "smltool.h"
 
 extern HINSTANCE g_hInst;
-extern char* metaProtoName;
 extern HANDLE hNetlibUser;
 extern HANDLE hEvent1;
 extern HGENMENU hContactMenuItem;

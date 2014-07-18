@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: SendSS.dll
 ;  Plugin: Send ScreenShot+
-;  Version: 0.8.3.1
+;  Version: 0.8.7.0
 ;  Authors: Merlin
 ;============================================================
 [Take a screenshot and send it to a contact.]
@@ -10,8 +10,6 @@ Erstellt einen Screenshot und sendet ihn einem Kontakt
 ;file \plugins\SendScreenshotPlus\res\resource.rc
 [Dialog]
 Dialog
-[OK]
-OK
 [All]
 Alle
 [None]
@@ -23,7 +21,7 @@ Screenshot senden
 [Send screenshot to\n<unknown>]
 Sende Screenshot an\n<unbekannt>
 [Ti&med capture]
-Verzögerte Aufnahme
+Verzögerte Aufnah&me
 [Time (secs):]
 Zeit (Sek.):
 [&Format:]
@@ -31,15 +29,17 @@ Zeit (Sek.):
 [Send B&y:]
 Senden per:
 [E&xplore]
-Öffnen
+&Öffnen
 [&Fill description textbox.]
 Beschreibungs-Textbox aus&füllen
 [Delete &after send]
 N&ach dem Senden löschen
+[Open editor before sending]
+Editor vor dem Senden öffnen
 [Open again]
 Erneut öffnen
 [&Capture]
-&Starten
+Auf&nehmen
 [About]
 Über
 [%s\nv%s]
@@ -50,27 +50,62 @@ Dank an >
 S&chließen
 [Edit]
 Bearbeiten
-[C&lient Area]
-Fensterinha&lt
 [Caption:]
 Fenstertitel:
 [Size (HxW):]
 Größe (HxB):
+[C&lient Area]
+Fensterinha&lt
+[indirect capture]
+Indirekte Aufnahme
 [Target Tool]
 Zielscheibe
+[File:]
+Datei:
+[Description:]
+Beschreibung:
+[Result]
+Ergebnis
+[Thumbnail]
+Vorschaubild
+[&Copy]
+&Kopieren
+[Close]
+Schließen
 ;file \plugins\SendScreenshotPlus\src\CSend.cpp
+[Resulting URL from\n]
+Zurückgegebene URL von\n
+[Copy]
+Kopieren
+[Copy BBCode]
+BBCode kopieren
+[Copy BBCode w/ link]
+BBCode mit Link kopieren
+[%s requires a valid contact!]
+%s benötigt einen gültigen Kontakt!
+[Error]
+Fehler
 [GCHAT error]
 GCHAT-Fehler
 [An unknown error has occurred.]
 Ein unbekannter Fehler ist aufgetreten.
-[Error]
-Fehler
 ;file \plugins\SendScreenshotPlus\src\CSend.h
 [Unable to initiate %s.]
 Konnte %s nicht einleiten.
 [MAPI error (%i):\n%s.]
 MAPI-Fehler (%i):\n%s.
+[Unknown response from %s (%i)]
+Unbekannte Antwort von %s (%i)
+[Got no response from %s (%i)]
+Keine Antwort von %s erhalten. (%i)
+;file \plugins\SendScreenshotPlus\src\CSendDropbox.cpp
+[Dropbox transfer]
+Dropbox-Übertragung
+[%s (%i):\nCould not add a share to the Dropbox plugin.]
+%s (%i):\nKonnte freigegebene Datei nicht zum Dropbox-Plugin hinzufügen.
 ;file \plugins\SendScreenshotPlus\src\CSendEmail.cpp
+[Email transfer]
+E-Mail-Übertragung
 [A recipient matched more than one of the recipient descriptor structures and MAPI_DIALOG was not set]
 Ein Empfänger trifft auf mehr als einen der Empfänger in der Beschreibung überein und MAPI_DIALOG wurde nicht gesetzt.
 [The specified attachment was not found]
@@ -99,19 +134,26 @@ Ein Empfänger tauchte nicht in der Adressliste auf
 Der Benutzer hat einen der Dialoge abgebrochen
 [Unknown Error]
 Unbekannter Fehler
+;file \plugins\SendScreenshotPlus\src\CSendFile.cpp
+[File transfer]
+Dateiübertragung
 ;file \plugins\SendScreenshotPlus\src\CSendFTPFile.cpp
 [FTPFile transfer]
 FTPFile-Übertragung
 [%s (%i):\nCould not add a share to the FTP File plugin.]
 %s (%i):\nKonnte Freigabe nicht dem FTP-Datei-Plugin hinzufügen.
+;file \plugins\SendScreenshotPlus\src\CSendHost_ImageShack.cpp
+[Image upload]
+Bild hochladen
+;file \plugins\SendScreenshotPlus\src\CSendHost_imgur.cpp
+;file \plugins\SendScreenshotPlus\src\CSendHost_uploadpie.cpp
 ;file \plugins\SendScreenshotPlus\src\CSendHTTPServer.cpp
+[HTTPServer transfer]
+HTTPServer-Übertragungen
 [Could not start the HTTP Server plugin.]
 Kann HTTP-Server-Plugin nicht starten.
 [%s (%i):\nCould not add a share to the HTTP Server plugin.]
 %s (%i):\nKonnte Freigabe nicht dem HTTP-Server-Plugin hinzufügen.
-;file \plugins\SendScreenshotPlus\src\CSendImageShack.cpp
-[Upload server did not respond timely.]
-Uploadserver hat nicht rechtzeitig geantwortet.
 ;file \plugins\SendScreenshotPlus\src\dlg_msgbox.cpp
 [Retry]
 Wiederholen
@@ -155,15 +197,9 @@ Screenshot Icon1
 [Screenshot Icon2]
 Screenshot Icon2
 [Target Cursor]
-Target Cursor]
+Zielcursor
 [Target Desktop]
-Target Desktop
-[Default]
-Standard
-[Overlay on]
-Overlay ein
-[Overlay off]
-Overlay aus
+Zieldesktop
 [Help]
 Hilfe
 [Open Folder]
@@ -182,8 +218,12 @@ Zurück
 Weiter
 [Update]
 Aktualisieren
-[Apply]
-Übernehmen
+[Edit on]
+Bearbeiten
+[BBC]
+BBC
+[BBC link]
+BBC-Link
 [Down arrow]
 Pfeil runter
 ;file \plugins\SendScreenshotPlus\src\mir_icolib.h
@@ -213,6 +253,8 @@ Desktop
 Monitor
 [ (primary)]
  (primär)
+[File]
+Datei
 [<Only save>]
 <Nur speichern>
 [File Transfer]
@@ -221,24 +263,30 @@ Dateiübertragung
 E-Mail
 [FTP File]
 FTP-Datei
-[ImageShack]
-ImageShack
+[Upload Pie (30m)]
+Upload Pie (30M)
+[Upload Pie (1d)]
+Upload Pie (1T)
+[Upload Pie (1w)]
+Upload Pie (1W)
 [Information]
 Information
 [Fill description textbox.]
-Fülle Beschreibungstextbox.
+Beschreibungstextbox ausfüllen.
 [Delete after send]
 Nach dem Senden löschen
 [Capture]
-Einfangen
+Aufnehmen
 [Can't create a Screenshot]
 Konnte kein Screenshot erstellen.
+[Select a file]
+Datei auswählen
 [Select a target window.]
 Bitte gewünschtes Fenster auswählen.
 [Screenshot ]
 Screenshot\s
 [for Client area ]
-für Client-Bereich\s
+für Fensterinhalt\s
 [of "]
 vom "
 [" Window]

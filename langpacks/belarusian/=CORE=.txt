@@ -1,4 +1,9 @@
-﻿;file \src\resource.rc
+﻿;============================================================
+;  File: miranda32/64.exe
+;  Module: Miranda Core
+;  Version: 0.95.2
+;============================================================
+;file \src\resource.rc
 [Enter account name (for example, My Google)]
 Увядзіце імя конта
 [Choose the protocol type]
@@ -45,15 +50,15 @@
 Параметры паказу кантактаў
 [Instead of displaying contacts by their nickname,\ndrag to choose another order:]
 Замест паказу мянушак,\nабярыце іншы прыярытэт паказу імёнаў:
-[Miranda NG Profile Manager]
+[Miranda NG profile manager]
 Мэнэджар профіляў Miranda
 [&Run]
 выканаць
 [&Exit]
 Выхад
-[Start in Service Mode with]
+[Start in service mode with]
 Запуск у службовым рэжыме з
-[Find/Add contacts]
+[Find/add contacts]
 Знайсці/дадаць кантакты
 [Search:]
 Шукаць:
@@ -79,7 +84,7 @@
 Дадаць у спіс
 [Custom]
 Наладзіць
-[Find/Add contacts\nHere you can add contacts to your contact list]
+[Find/add contacts\nHere you can add contacts to your contact list]
 Пошук кантактаў\nТут Вы можаце знайсці і дадаць кантакты ў спіс кантактаў
 [Options\nConfigure your Miranda NG options]
 Налады\nГалоўны дыялог налад Miranda NG
@@ -157,7 +162,7 @@
 Выснова адладкавых радкоў
 [File]
 Файл
-[Run program when Miranda NG starts (eg tail -f, dbgview, etc.):]
+[Run program when Miranda NG starts (e.g., tail -f, dbgview, etc.):]
 Выканаць праграму пры запуску (напрыклад, tail -f, dbgview, etc.):
 [Run now]
 Вык. зараз
@@ -277,7 +282,7 @@
 напр. "Працоўны"
 [You can select a different profile driver from the default, it may offer more features or abilities, if in doubt use the default.]
 Вы можаце абраць  іншы драйвер базы дадзеных, які мае больш магчымасцяў. Калі не ўпэўнены, выкарыстоўвайце драйвер па змаўчанні.
-[e.g., Miranda Database]
+[e.g., dbx mmap]
 напрыклад, dbx_mmap
 [Driver]
 Драйвер
@@ -407,8 +412,6 @@ Cлужба:
 &Мадэрнізацыя
 [&Remove...]
 Выдаліць...
-[Miranda NG]
-Miranda NG
 [Miranda NG is being restarted.\nPlease wait...]
 Miranda NG перазапускаецца.\nКалі ласка, пачакайце...
 [Error console]
@@ -421,11 +424,11 @@ Miranda NG перазапускаецца.\nКалі ласка, пачакай�
 Шрыфт для загалоўкаў асноўных частак ці тэкставых элементаў.
 [Normal text:]
 Звычайны тэкст:
-[This font is used to display most text element or section bodies.]
+[This font is used to display most text elements or section bodies.]
 Шрыфт для большасці тэкставых элементаў ці частак.
 [Minor notes:]
 Нататкі:
-[This font is used to display various addtional notes.]
+[This font is used to display various additional notes.]
 Шрыфт для розных дадатковых нататак.
 [Welcome to Miranda NG's account manager!\nHere you can set up your IM accounts.\n\nSelect an account from the list on the left to see the available options. Alternatively, just click on the Plus sign underneath the list to set up a new IM account.]
 Вас вітае менеджэр контаў Міранды НГ!\nТут вы можаце наладзіць свае конты.\n\nАбярыце конт з спісу злева, каб убачыць даступныя опцыі. Цi проста націсніце на кнопку "Стварыць" пад спісам, каб стварыць новы конт.
@@ -449,6 +452,60 @@ Miranda NG перазапускаецца.\nКалі ласка, пачакай�
 *будуць адлюстроўвацца толькі першыя %d абразкоў
 [You can group/ungroup icons by selecting them (CTRL+left click) and using the popup menu (right click)]
 Вы можаце гуртаваць/разгуртоўваць абразкі, вылучаючы іх (CTRL+клік левай кнопкай мышы) і выклікаючы меню з дапамогай правай кнопкі мышы.
+[Add to existing metacontact]
+Дадаць да метакантакту
+[Please select a metacontact:]
+Абярыце метакантакт
+[Sort alphabetically]
+Па алфавіце
+[Editing]
+Рэдагаванне
+[Information]
+Інфармацыя
+[Contacts]
+Кантакты
+[&Remove]
+выдаліць
+[&Set as default]
+&Па змаўчанні
+[Move &up]
+Угару
+[Move &down]
+Уніз
+[Send &offline]
+У афлайн
+[Context menu]
+Кантэкстнае меню
+[Use contact's unique ID]
+UIN, E-mail і г.д.
+[Use contact's display name]
+Выкарыстоўваць імя
+[Contact labels]
+Пазнакі кантактаў
+[Set default and open message window]
+Адчыніць вакно паведамленні
+[Show subcontact context menu]
+Паказваць кантэкстнае меню
+[Show user information]
+Пра кантакт
+[Contact list]
+Спіс кантактаў
+[Display subcontact nickname]
+Выкарыстоўваць мянушку субкантакту
+[Display subcontact display name]
+Выкарыстоўваць адлюстроўванае імя
+[Lock name to first contact]
+Фіксаваць імя
+[Last modified using:]
+Праверана на версіі:
+[Date:]
+Дата:
+[Locale:]
+Мова:
+[Reload langpack]
+Аднавіць пераклад
+[Download more language packs]
+Загрузіць дадатковыя пераклады
 [Tray]
 Трэй
 [&Hide/Show]
@@ -584,8 +641,6 @@ Miranda NG перазапускаецца.\nКалі ласка, пачакай�
 Змены тэмы
 [Status changes]
 Змены статусу
-[Information]
-Інфармацыя
 [Disconnects]
 Адключэнні
 [User kicks]
@@ -705,8 +760,6 @@ Miranda NG перазапускаецца.\nКалі ласка, пачакай�
 Некалькі абразкоў
 [Only when statuses differ]
 Пры розных статусах
-[Contact list]
-Спіс кантактаў
 [System tray icon]
 Абразок у трэі
 [System tray icon when using multiple protocols]
@@ -908,8 +961,6 @@ Miranda NG перазапускаецца.\nКалі ласка, пачакай�
 Адмовіць
 [From:]
 Ад:
-[Date:]
-Дата:
 [Files:]
 Файлы:
 [Save to:]
@@ -1003,17 +1054,11 @@ Miranda NG перазапускаецца.\nКалі ласка, пачакай�
 ;file \src\core\stdhelp\resource.rc
 [About Miranda NG]
 Аб праграме
-[Miranda NG\n%s]
-Miranda NG\n%s
 [Credits >]
 Аўтары >
 ;file \src\core\stdidle\resource.rc
 [Become idle if the following is left unattended:]
 Перайсці ў рэжым чакання, калі неактыўныя:
-[Windows]
-Windows
-[Miranda]
-Miranda
 [Become idle if the screen saver is active]
 Рэжым чакання, калі ўключана застаўка
 [Become idle if the computer is locked]
@@ -1097,24 +1142,22 @@ Miranda
 Паказваць імёны
 [Show timestamp]
 Паказваць час
+[Show seconds]
+Секунды
 [Show dates]
 Паказваць даты
+[Show formatting]
+Паказаць фарматаванне
+[Load history events]
+Падгрузка гісторыі
 [Load unread events only]
 Толькі непрачытаныя падзеі
 [Load number of previous events]
 Папярэднія падзеі ў колькасці
 [Load previous events less than]
-Падзеі, атрыманыя 
+Падзеі, атрыманыя
 [minutes old]
 хвілін назад
-[Show status changes]
-Паказваць змены статусу
-[Show seconds]
-Секунды
-[Load history events]
-Падгрузка гісторыі
-[Show formatting]
-Паказаць фарматаванне
 [Send typing notifications to the following users when you are typing a message to them:]
 Абвяшчаць адзначаных пра тое, што вы набіраеце паведамленне:
 [Show typing notifications when a user is typing a message]
@@ -1449,7 +1492,7 @@ Miranda
 [Show popup for users leaving]
 Выйсці ўдзельнікаў
 [Show popup for users kicking other user]
-Выспятак 
+Выспятак
 [Show popup for notices]
 Вакно абвесткі
 [Show popup for name changes]
@@ -1982,6 +2025,8 @@ URL ад %s
 [&Leave chat]
 Пакінуць чат
 ;file \src\modules\chat\clist.cpp
+[&Open chat window]
+Адчыніць гутарку
 ;file \src\modules\chat\log.cpp
 [%s has joined]
 %s увайшоў
@@ -1998,7 +2043,7 @@ URL ад %s
 [%s kicked %s]
 %s выкінуў %s
 [Notice from %s: ]
-Абвестка ад %s: 
+Абвестка ад %s:\s
 [The topic is '%s%s']
 Тэма '%s%s'
 [ (set by %s on %s)]
@@ -2172,7 +2217,7 @@ Miranda NG не можа адкрыць гэты профіль
 Кантакты:\s
 ;file \src\modules\database\profilemanager.cpp
 [The profile '%s' already exists. Do you want to move it to the Recycle Bin?\n\nWARNING: The profile will be deleted if Recycle Bin is disabled.\nWARNING: A profile may contain confidential information and should be properly deleted.]
-Профіль '%s' ўжо існуе. Хочаце перамясціць яго ў Сметніцу?\n\nУвага: Профіль будзе выдалены, калі ён адключаны.\nУвага: Профіль можа ўтрымліваць канфідэнцыйную інфармацыю і павінен быць правільна выдалены. 
+Профіль '%s' ўжо існуе. Хочаце перамясціць яго ў Сметніцу?\n\nУвага: Профіль будзе выдалены, калі ён адключаны.\nУвага: Профіль можа ўтрымліваць канфідэнцыйную інфармацыю і павінен быць правільна выдалены.
 [The profile already exists]
 Профіль ужо існуе
 [Couldn't move '%s' to the Recycle Bin. Please select another profile name.]
@@ -2227,7 +2272,7 @@ Miranda NG не можа адкрыць гэты профіль
 Усе пратаколы
 [Handle]
 Назва
-[&Find/Add contacts...]
+[&Find/add contacts...]
 Дадаць кантакты
 ;file \src\modules\findadd\searchresults.cpp
 [Could not start a search on '%s', there was a problem - is %s connected?]
@@ -2286,9 +2331,114 @@ Miranda NG не можа адкрыць гэты профіль
 ;file \src\modules\ignore\ignore.cpp
 [** All contacts **]
 ** Усе кантакты **
-[Contacts]
-Кантакты
+;file \src\modules\langpack\lpopts.cpp
+[(incompatible)]
+(несумяшчальны)
+[Unknown]
+Невядома
+[built-in]
+убудаваны
+[Languages]
+Мовы
+;file \src\modules\metacontacts\metacontacts.h
+[You are going to remove all the contacts associated with this metacontact.\nThis will delete the metacontact.\n\nProceed anyway?]
+Выдаліць метакантакт?
+;file \src\modules\metacontacts\meta_addto.cpp
+[Either there is no metacontact in the database (in this case you should first convert a contact into one)\nor there is none that can host this contact.\nAnother solution could be to convert this contact into a new metacontact.\n\nConvert this contact into a new metacontact?]
+Няма яшчэ ніводнага метакантакту ў базе (у гэтым выпадку трэба спачатку канверсаваць адзін просты кантакт у метакантакт).\n Як варыянт пераўтварыце гэты кантакт у новы метакантакт.\n\n Пераўтварыць гэты кантакт у метакантакт?
+[This contact is a metacontact.\nYou can't add a metacontact to another metacontact.\n\nPlease choose another.]
+Гэты кантакт з'яўлецца МетаКантактам.\nВы не можаце дадаць МетаКантакт у іншы.\n\nКалі ласка, абярыце іншы.
+[Metacontact conflict]
+Канфлікт метакантактаў
+[This contact is already associated to a metacontact.\nYou cannot add a contact to multiple metacontacts.]
+Гэты кантакт ужо дададзены ў метакантакт.\n Вы не можаце дадаць кантакт у некалькі метакантактаў.
+[Multiple metacontacts]
+Мноства метакантактаў
+[No suitable metacontact found]
+Не знойдзена падыходнага метакантакту
+[a contact]
+кантакт
+[Adding %s...]
+Даданне %s...
+[Please select a metacontact]
+Абярыце метакантакт
+[No metacontact selected]
+Метакантакт не абраны
+[Assignment to the metacontact failed.]
+Не атрымалася дадаць да метакантакту.
+[Assignment failure]
+Няўдалае прызначэнне
+;file \src\modules\metacontacts\meta_edit.cpp
+[Protocol]
+Пратакол
+[Send offline]
+Адпраўка ў афлайн
+[Delete metacontact?]
+Выдаліць метакантакт?
+;file \src\modules\metacontacts\meta_main.cpp
+[Toggle off]
+Выключыць
+[Toggle on]
+Уключыць
+[Convert to metacontact]
+Зрабіць метакантактам
+[Add to existing]
+Дадаць
+[Edit]
+Змяніць
+[Set to default]
+Па змаўчанні
+;file \src\modules\metacontacts\meta_menu.cpp
+[There was a problem in assigning the contact to the metacontact]
+Выяўлена праблема дадання кантакту да метакантакту
+[This will remove the metacontact permanently.\n\nProceed anyway?]
+Выдаленне метакантакту.\n\n Працягнуць?
+[Are you sure?]
+Вы ўпэўнены?
+[Remove from metacontact]
+Выдаліць з метакантакту
+[Toggle metacontacts off]
+Выключыць метакантакты
+[Toggle metacontacts on]
+Уключыць метакантакты
+[Add to existing metacontact...]
+Дадаць да метакантакту
+[Edit metacontact...]
+Змяніць метакантакт...
+[Set as metacontact default]
+Метакантакт па змаўчанні
+[Delete metacontact]
+Выдаліць метакантакт
+[Subcontacts]
+Субкантакты
+;file \src\modules\metacontacts\meta_options.cpp
+[Metacontacts]
+Метакантакты
+;file \src\modules\metacontacts\meta_services.cpp
+[No online contacts found.]
+Няма далучаных кантактаў.
+;file \src\modules\metacontacts\meta_utils.cpp
+[Sender]
+Адпраўшчык
+[Could not retrieve contact protocol]
+Не магу запытаць пратакол кантакту
+[Assignment error]
+Памылка прызначэння
+[Could not get unique ID of contact]
+Не магу атрымаць унікальны ID кантакту
+[Contact is 'not on list' - please add the contact to your contact list before assigning.]
+Кантакт не ў спісе. Калі ласка, дадайце кантакт у спіс перад прызначэннем.
+[Metacontact is full]
+Метакантакт поўны
+[Could not write contact protocol to metacontact]
+Памылка запісу пратаколу кантакту ў метакантакт
+[Could not write unique ID of contact to metacontact]
+Памылка запісу ўнікальнага ID кантакту ў метакантакт
+[Could not write nickname of contact to metacontact]
+Не магу запісаць мянушку кантакту ў метакантакт
 ;file \src\modules\netlib\netliblog.cpp
+[Standard netlib log]
+Стандартны журнал netlib
 [No times]
 Без часу
 [Standard hh:mm:ss times]
@@ -2303,9 +2453,9 @@ Miranda NG не можа адкрыць гэты профіль
 Абраць шлях ды файла лога
 [Select program to be run]
 Абраць праграму для запуску
-[Standard netlib log]
-Стандартны журнал netlib
 ;file \src\modules\netlib\netlibopts.cpp
+[<mixed>]
+<розныя>
 [<All connections>]
 <Усе далучэнні>
 [Network]
@@ -2339,7 +2489,7 @@ Miranda NG не можа адкрыць гэты профіль
 '%s' адключаны, далучыць?
 [Re-enable Miranda plugin?]
 Уключыць плагін?
-[Unable to load plugin in Service Mode!]
+[Unable to load plugin in service mode!]
 Немагчыма загрузіць плагін у службовым рэжыме!
 [Unable to start any of the installed contact list plugins, I even ignored your preferences for which contact list couldn't load any.]
 Немагчыма загрузіць ніводны з усталяваных плагінаў спісу кантактаў. Нават адключаныя ў наладах не запускаюцца.
@@ -2377,16 +2527,12 @@ Miranda NG не можа адкрыць гэты профіль
 Конт адключаны. Уключыце для кіравання.
 [New account]
 Новы конт
-[Edit]
-Змяніць
 [Remove account]
 Выдаліць конт
 [Configure...]
 Налада...
 [Upgrade account]
 Аднаўленне
-[Protocol]
-Пратакол
 [Account ID]
 ID конта
 [<unknown>]
@@ -2445,8 +2591,6 @@ ID конта
 Уніз
 [Find user]
 Знайсці
-[SMS]
-СМС
 [Search all]
 Знайсці ўсіх
 [Tick]
@@ -2527,7 +2671,6 @@ BMP
 Выявы GIF
 [PNG bitmaps]
 Выявы PNG
-;file \src\modules\utils\enterstring.cpp
 ;file \src\modules\utils\path.cpp
 [Avatars]
 Аватары
@@ -2539,8 +2682,6 @@ BMP
 ;file \src\modules\utils\utils.cpp
 [Unspecified]
 Не пазначана
-[Unknown]
-Невядома
 [Afghanistan]
 Афганістан
 [Aland Islands]
@@ -2778,7 +2919,7 @@ BMP
 [North Korea]
 Паўночная Карэя
 [South Korea]
-Рэспубліка Карэя 
+Рэспубліка Карэя
 [Kuwait]
 Кувейт
 [Kyrgyzstan]
@@ -2941,8 +3082,6 @@ BMP
 Сьера-Леонэ
 [Singapore]
 Сінгапур
-[Sint Maarten (Dutch part)]
- 
 [Slovakia]
 Славакія
 [Slovenia]

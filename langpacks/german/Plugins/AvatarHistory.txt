@@ -28,13 +28,11 @@ Avatare auf Datenträger speichern
 Änderungen im Verlauf speichern
 [Show popups for this user]
 Popups für diesen Kontakt zeigen
-[OK]
-OK
 [Protocols]
 Protokolle
 [Enable tracking for these protocols:]
 Folgende Protokolle verfolgen:
-[MetaContacts have special handling: the info is always copied from subcontacts (notifications from a meta are ignored)]
+[Metacontacts have special handling: the info is always copied from subcontacts (notifications from a meta are ignored)]
 Metakontakte werden gesondert gehandhabt: Änderungen von den Unterkontakten werden übernommen, Benachrichtigungen von Metakontakten werden ignoriert
 [Show popup when a contact change his avatar]
 Zeige Popup, wenn Kontakt seinen Avatar ändert
@@ -124,7 +122,7 @@ Avatar speichern
 ;file \plugins\AvatarHistory\src\AvatarHistory.cpp
 [AVH Debug]
 AVH-Debug
-[Removed avatar, no avatar before...skipping]
+[Removed avatar, no avatar before... skipping]
 Avatar entfernt, zuvor kein Avatar... überspringe
 [Hashes are the same... skipping]
 Hashwerte sind identisch... überspringe

@@ -24,8 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int FacebookProto::RecvMsg(MCONTACT hContact, PROTORECVEVENT *pre)
 {
-	ForkThread(&FacebookProto::ReadMessageWorker, (void*)hContact);
-	CallService(MS_PROTO_CONTACTISTYPING, hContact, (LPARAM)PROTOTYPE_CONTACTTYPING_OFF);
+	StopTyping(hContact);
+
+	// Remove from "readers" list and clear statusbar
+	facy.readers.erase(hContact);
+	CallService(MS_MSG_SETSTATUSTEXT, (WPARAM)hContact, NULL);
 
 	return Proto_RecvMessage(hContact, pre);
 }
@@ -51,11 +54,14 @@ void FacebookProto::SendMsgWorker(void *p)
 		std::string error_text = "";
 		bool result = false;
 		while (!result && retries > 0) {
-			result = facy.send_message(dbv.pszVal, data->msg, &error_text, retries % 2 == 0 ? MESSAGE_INBOX : MESSAGE_MERCURY);
+			result = facy.send_message(data->hContact, dbv.pszVal, data->msg, &error_text, retries % 2 == 0 ? MESSAGE_INBOX : MESSAGE_MERCURY);
 			retries--;
 		}
 		if (result) {
 			ProtoBroadcastAck(data->hContact, ACKTYPE_MESSAGE, ACKRESULT_SUCCESS, data->msgid, 0);
+			
+			// Remove from "readers" list and clear statusbar
+			facy.readers.erase(data->hContact);
 			CallService(MS_MSG_SETSTATUSTEXT, (WPARAM)data->hContact, NULL);
 		} else {
 			ProtoBroadcastAck(data->hContact, ACKTYPE_MESSAGE, ACKRESULT_FAILED, data->msgid, (LPARAM)error_text.c_str());
@@ -95,7 +101,7 @@ void FacebookProto::SendChatMsgWorker(void *p)
 		}		
 		
 		if (!tid.empty()) {
-			if (facy.send_message(tid, data->msg, &err_message, MESSAGE_TID))
+			if (facy.send_message(hContact, tid, data->msg, &err_message, MESSAGE_TID))
 				UpdateChat(_A2T(data->chat_id.c_str()), facy.self_.user_id.c_str(), facy.self_.real_name.c_str(), data->msg.c_str());
 			else
 				UpdateChat(_A2T(data->chat_id.c_str()), NULL, NULL, err_message.c_str());
@@ -126,14 +132,13 @@ int FacebookProto::UserIsTyping(MCONTACT hContact,int type)
 
 void FacebookProto::SendTypingWorker(void *p)
 {
-	if(p == NULL)
+	if (p == NULL)
 		return;
 
 	send_typing *typing = static_cast<send_typing*>(p);
 
-	// TODO: don't send typing when we are not online?
-	// Dont send typing notifications to contacts, that are offline or not friends
-	if (getWord(typing->hContact, "Status", 0) == ID_STATUS_OFFLINE || getWord(typing->hContact, FACEBOOK_KEY_CONTACT_TYPE, 0) != CONTACT_FRIEND) {
+	// Dont send typing notifications to not friends - Facebook won't give them that info anyway
+	if (!isChatRoom(typing->hContact) && getWord(typing->hContact, FACEBOOK_KEY_CONTACT_TYPE, 0) != CONTACT_FRIEND) {
 		delete typing;
 		return;
 	}
@@ -147,16 +152,22 @@ void FacebookProto::SendTypingWorker(void *p)
 		return;
 	}
 	
-	ptrA id( getStringA(typing->hContact, FACEBOOK_KEY_ID));
+	const char *value = (isChatRoom(typing->hContact) ? FACEBOOK_KEY_TID : FACEBOOK_KEY_ID);
+	ptrA id( getStringA(typing->hContact, value));
 	if (id != NULL) {
 		std::string data = "&source=mercury-chat";
-		data += (typing->status == PROTOTYPE_SELFTYPING_ON ? "&typ=1" : "&typ=0"); // PROTOTYPE_SELFTYPING_OFF
-		data += "&to=" + utils::url::encode(std::string(id));
+		data += (typing->status == PROTOTYPE_SELFTYPING_ON ? "&typ=1" : "&typ=0");
+		
+		data += "&to=";
+		if (isChatRoom(typing->hContact))
+			data += "&thread=";
+		data += utils::url::encode(std::string(id));
+
 		data += "&fb_dtsg=" + (facy.dtsg_.length() ? facy.dtsg_ : "0");
 		data += "&lsd=&phstamp=0&__user=" + facy.self_.user_id;
 		
 		http::response resp = facy.flap(REQUEST_TYPING_SEND, &data);
-	}		
+	}
 
 	delete typing;
 }
@@ -172,11 +183,11 @@ void FacebookProto::ReadMessageWorker(void *p)
 		return;
 
 	// mark message read (also send seen info)
-	ptrA mid( getStringA(hContact, FACEBOOK_KEY_MESSAGE_ID));
-	if (mid == NULL)
+	ptrA tid( getStringA(hContact, FACEBOOK_KEY_TID));
+	if (tid == NULL)
 		return;
 
-	std::string data = "ids[" + utils::url::encode(std::string(mid)) + "]=true";
+	std::string data = "ids[" + utils::url::encode(std::string(tid)) + "]=true";
 	data += "&fb_dtsg=" + (facy.dtsg_.length() ? facy.dtsg_ : "0");
 	data += "&__user=" + facy.self_.user_id;
 	data += "&__a=1&__dyn=&__req=&ttstamp=0";

@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Dbx_mmap.dll
 ;  Plugin: Miranda NG mmap database driver
-;  Version: 0.95.0.1
+;  Version: 0.95.1.1
 ;  Authors: Miranda-NG project
 ;============================================================
 [Provides Miranda database support: global settings, contacts, history, settings per contact.]
@@ -10,10 +10,6 @@ Umožňuje čtení a zápis dat do uživatelského profilu: globální nastaven�
 ;file \plugins\Db3x_mmap\res\db3x_mmap.rc
 [Login to Miranda NG]
 Přihlášení do Mirandy NG
-[EN]
-EN
-[OK]
-OK
 [Cancel]
 Zrušit
 [New password]
@@ -37,9 +33,11 @@ Standardní
 [Total]
 Kompletní
 [Only critical data are encrypted (passwords, security tokens, etc). All another settings and history remains unencrypted. Fast and effective, suitable for the most cases]
-Pouze kritická data jsou šifrována (hesla, bezpečnostní tokeny, atd.). Všechna ostatní nastavení a historie zůstanou čitelná. Rychlé a efektivní, vhodné ve většině případů.
-[All string settings and all events in histories are encrypted. It also makes Miranda much slower and creates a risk of losing everything you've stored in a profile in case of losing password. Recommended only for paranoidal users]
+Pouze kritická data jsou šifrována (hesla, bezpečnostní tokeny, atd.). Všechna ostatní nastavení a historie zůstanou čitelná. Rychlé a efektivní, vhodné pro většinu případů.
+[All string settings and all events in histories are encrypted. It also makes Miranda much slower and creates a risk of losing everything you've stored in a profile in case of losing password. Recommended only for paranoid users]
 Všechny řetězce a události v historii jsou šifrovány. To v důsledku způsobí pomalejší běh Mirandy a riziko ztráty veškerých dat v profilu při zapomenutí hesla. Doporučeno pouze pro paranoidní uživatele.
+[Set password]
+Nastavit heslo
 ;file \plugins\Db3x_mmap\src\database.cpp
 [Disk is full. Miranda will now shut down.]
 Disk je plný. Miranda bude nyní ukončena.
@@ -51,11 +49,19 @@ Chyba databáze.
 Miranda zjistila poškození vaší databáze. Toto poškození může být možná opraveno doplňkem DbChecker. Stáhněte si jej z http://miranda-ng.org/p/DbChecker/. Miranda bude nyní ukončena.
 [Database Panic]
 Poškození databáze
+;file \plugins\Db3x_mmap\src\dbheaders.cpp
+[This profile is too old to be updated with PluginUpdater, your database must be converted first.\n\nWould you like to read how to fix this?]
+Tento profil je příliš starý a nemůže být automaticky aktualizován. Je potřeba jej převést do nového formátu.\n\nPřejete si otevřít stránku s více informacemi?
+[Obsolete database format]
+Zastaralý formát databáze
+;file \plugins\Db3x_mmap\src\dbintf.cpp
+[Your database must be converted into the new format. This is potentially dangerous operation, so please make a backup before.\n\nClick Yes to proceed with conversion or No to exit Miranda]
+Vaše databáze musí být zkonvertována do nového formátu. Toto je potenciálně nebezpečná operace, vytvořte si nejprve zálohu databáze.\n\nKlikněte na 'Ano' pro provedení konverze nebo na 'Ne' pro ukončení Mirandy
+[Database conversion required]
+Vyžadována konverze databáze
 ;file \plugins\Db3x_mmap\src\dbintf.h
 [Change/remove password]
 Změnit/zrušit heslo
-[Set password]
-Nastavit heslo
 ;file \plugins\Db3x_mmap\src\ui.cpp
 [Logo]
 Logo
@@ -109,8 +115,6 @@ Seznam událostí je poškozen; pokus o opravu...
 Seznam událostí je poškozen; ignorování dalších položek
 [First event not marked as such: correcting]
 První událost nebyla označena jako první: opraveno
-[Event marked as first which is not: correcting]
-Neplatné číslování události: opraveno
 [Extra flags found in event: removing]
 Neplatná značka události: odstraněno
 [First unread event marked wrong: fixing]

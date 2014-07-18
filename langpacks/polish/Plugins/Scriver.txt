@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Scriver.dll
 ;  Plugin: Scriver
-;  Version: 2.11.0.0
+;  Version: 2.11.0.1
 ;  Authors: Miranda NG Development Team
 ;============================================================
 [Scriver - send and receive instant messages.]
@@ -102,8 +102,8 @@ Data względna
 Pokaż nazwy
 [Enable message grouping]
 Włącz grupowanie wiadomości
-[Mark follow-up msgs with timestamp]
-Dodaj czas do kolejnych wiadomości
+[Mark follow-up messages with timestamp]
+Oznaczaj kolejne wiadomości znacznikiem czasu
 [Start message text on a new line]
 Umieść wiadomość w nowej linii
 [Show lines between messages]
@@ -159,13 +159,11 @@ Menu &użytkownika
 [&Emoticons]
 &Emotikony
 [&Add]
-Dod&aj
+&Dodaj
 [&History]
 &Historia
 [&Quote]
 &Cytuj
-[&OK]
-&OK
 [Send To All Tabs]
 Wyślij do wszystkich zakładek
 [You are about to send a message to all open tabs.\nAre you sure?]
@@ -177,21 +175,21 @@ Tak
 [No]
 Nie
 [&Bold]
-Pogrubienie
+&Pogrubienie
 [&Italic]
-Kursywa
+&Kursywa
 [&Underline]
-Podkreślenie
+P&odkreślenie
 [&Color]
-Kolor
+Ko&lor
 [&Background color]
-Kolor tła
+Kolor &tła
 [&Filter]
-Filtr
+&Filtr
 [&Room Settings]
-Ustawienia pokoju
+Ustawienia &pokoju
 [&Show/hide nick list]
-Pokaż/Ukryj listę nicków
+&Pokaż/Ukryj listę nicków
 [Show these events only:]
 Pokaż tylko te zdarzenia:
 [Actions]
@@ -265,21 +263,17 @@ Tło
 [Timeout (s)]
 Opóźnienie (s)
 [(0 means default setting, -1 means indefinite time)]
-(0 - Domyślny, -1 - Nie chowaj)
-[OK]
-OK
+(0 - domyślnie, -1 - nie chowaj)
 [Log]
 Dziennik
 [&Copy]
-Kopiuj
+&Kopiuj
 [Co&py All]
-Kopiuj wszystko
+Ko&piuj wszystko
 [Select &All]
-Zaznacz wszystko
+Zaznacz &wszystko
 [Word lookup]
 Wyszukaj słowo
-[Google]
-Google
 [Bing]
 Bing
 [Yandex]
@@ -295,11 +289,11 @@ Yahoo
 [Foodnetwork]
 Foodnetwork
 [C&lear Log]
-Wyczyść dziennik
+W&yczyść dziennik
 [&Open link]
-Otwórz link
+&Otwórz link
 [&Copy link]
-Kopiuj link
+&Kopiuj link
 [Message]
 Wiadomość
 [Undo]
@@ -325,11 +319,11 @@ Zamknij kartę
 [List]
 Lista
 [&Message]
-Wiadomość
+&Wiadomość
 [Clear lo&g]
-Wyczyść dziennik
+Wyczyść dzienn&ik
 [Co&py all]
-Kopiuj wszystko
+Ko&piuj wszystko
 ;file \plugins\Scriver\src\globals.cpp
 [Add contact]
 Dodaj kontakt
@@ -416,7 +410,7 @@ Wyjdź (10x10)
 [Quit (10x10)]
 Wyjście (10x10)
 [Kick (10x10)]
-Wykop (10x10)
+Wyrzuć (10x10)
 [Nickchange (10x10)]
 Zmiana nazwy (10x10)
 [Topic (10x10)]
@@ -504,7 +498,7 @@ Historia
 [Send]
 Wyślij
 [Look up '%s':]
-Zobacz '%s':
+Zobacz "%s":
 [No word to look up]
 Nie podano słowa do wyszukania
 [Add Contact Permanently to List]
@@ -595,6 +589,8 @@ Nazwa kontaktu w pasku informacyjnym
 Tło paska informacyjnego
 [Info bar status message]
 Opis w pasku informacyjnym
+[Line between messages]
+Linia pomiędzy wiadomościami
 [Offline]
 Rozłączony
 [Online]
@@ -633,7 +629,7 @@ Wiadomość od %s
 [Typing Notification]
 Kontakt
 [Miranda could not load the built-in message module, riched20.dll is missing. If you are using Windows 95 or WINE please make sure you have riched20.dll installed. Press 'Yes' to continue loading Miranda.]
-Miranda nie mogła załadować wbudowanego modułu obsługi wiadomości, brakujący plik Riched20.dll. Jeżeli używasz Windows 95 lub WINE, upewnij się, że posiadasz zainstalowany Riched20.dll. Naciśnij "tak", aby kontynuować ładowanie Mirandy.
+Miranda nie mogła załadować wbudowanego modułu obsługi wiadomości, brakujący plik Riched20.dll. Jeśli używasz Windows 95 lub WINE, upewnij się, że posiadasz zainstalowany Riched20.dll. Naciśnij "Tak", aby kontynuować ładowanie Mirandy.
 [Instant messages]
 Wiadomości
 [Incoming (Focused Window)]
@@ -645,7 +641,7 @@ Przychodzące (Nowa sesja)
 [Outgoing]
 Wychodzące
 [Contact started typing]
-Kontakt pisze wiadomość 
+Kontakt pisze wiadomość
 [Contact stopped typing]
 Kontakt przestał pisać
 ;file \plugins\Scriver\src\msgtimedout.cpp
@@ -683,7 +679,7 @@ Nie odtwarzaj dźwięków, jeśli okno jest aktywne
 [Do not pop up when joining]
 Nie aktywuj okna przy dołączaniu
 [Show and hide by double clicking in the contact list]
-Pokaż/ukryj okno przy podwójnym kliknięciu na liście kontaktów
+Pokaż/Ukryj okno przy podwójnym kliknięciu na liście kontaktów
 [Show contact statuses (if supported)]
 Pokaż statusy kontaktów (jeśli obsługiwane)
 [Display contact status icon before role icon]
@@ -769,7 +765,7 @@ Pokaż popup podświetleń
 [Show popup for users leaving]
 Pokaż popup wychodzących użytkowników
 [Show popup for users kicking other user]
-Pokaż popup wykopanych użytkowników
+Pokaż popup wyrzuconych użytkowników
 [Show popup for notices]
 Pokaż popup powiadomień
 [Show popup for name changes]
@@ -783,10 +779,12 @@ Wygląd i zachowanie okien rozmowy
 [Icons to display in the tray]
 Ikony wyświetlane w zasobniku
 [nick of current contact (if defined)]
-Nick obecnego kontaktu (jeśli zdefiniowany)
-[protocol name of current contact (if defined). Account name is used when protocol supports multiaccounts]
-Nazwa protokołu obecnego kontaktu (jeśli zdefiniowana). Jeżeli protokół wspiera wiele kont, użyta zostanie nazwa konta.
-[User ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
+nick obecnego kontaktu (jeśli zdefiniowany)
+[protocol name of current contact (if defined). Account name is used when protocol supports multiple accounts]
+nazwa protokołu obecnego kontaktu (jeśli zdefiniowana). Jeśli protokół wspiera wiele kont, użyta zostanie nazwa konta.
+[user-defined account name of current contact (if defined).]
+nazwa zdefiniowanej nazwy konta kontaktu (jeśli zdefiniowany).
+[user ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
 ID użytkownika obecnego kontaktu (jeśli zdefiniowany). Jest to np. numer GG, JID Jabber itp.
 [path to Miranda root folder]
 folder docelowy Mirandy
@@ -801,13 +799,13 @@ zwróci analizowany ciąg %miranda_userdata%\\Logs
 [same as environment variable %APPDATA% for currently logged-on Windows user]
 takie samo zmienne środowisko %APPDATA% dla aktualnie zalogowanego użytkownika Windows
 [username for currently logged-on Windows user]
-Nazwa obecnie zalogowanego użytkownika Windows
+nazwa obecnie zalogowanego użytkownika Windows
 ["My Documents" folder for currently logged-on Windows user]
-Folder "Moje dokumenty" aktualnie zalogowanego użytkownika Windows
+folder "Moje dokumenty" aktualnie zalogowanego użytkownika Windows
 ["Desktop" folder for currently logged-on Windows user]
-Folder "Pulpit" aktualnie zalogowanego użytkownika Windows
+folder "Pulpit" aktualnie zalogowanego użytkownika Windows
 [any environment variable defined in current Windows session (like %systemroot%, %allusersprofile%, etc.)]
-Dowolna zmienna środowiskowa zdefiniowana w obecnej sesji Windows (jak %systemroot%, %allusersprofile% itp.)
+dowolna zmienna środowiskowa zdefiniowana w obecnej sesji Windows (jak %systemroot%, %allusersprofile% itp.)
 [day of month, 1-31]
 dzień miesiąca, 1-31
 [day of month, 01-31]
@@ -867,11 +865,11 @@ Wybierz kolor dla tekstu (Ctrl+K)
 [Show the history (CTRL+H)]
 Pokaż historię (Ctrl+H)
 [Show/hide the nick list (CTRL+N)]
-Pokaż/ukryj listę nazw (Ctrl+N)
+Pokaż/Ukryj listę nazw (Ctrl+N)
 [Control this room (CTRL+O)]
 Kontroluj ten pokój (Ctrl + O)
 [Enable/disable the event filter (CTRL+F)]
-Włącz/wyłącz filtr zdarzeń (Ctrl+F)
+Włącz/Wyłącz filtr zdarzeń (Ctrl+F)
 [Nickname]
 Nazwa
 [Unique ID]

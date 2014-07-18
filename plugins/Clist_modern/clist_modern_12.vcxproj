@@ -77,7 +77,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\include;..\ExternalAPI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>false</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -135,7 +135,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>..\..\include;..\ExternalAPI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -234,12 +234,10 @@
     <ClCompile Include="src\modern_keyboard.cpp" />
     <ClCompile Include="src\modern_log.cpp" />
     <ClCompile Include="src\modern_newrowopts.cpp" />
-    <ClCompile Include="src\modern_popup.cpp" />
     <ClCompile Include="src\modern_row.cpp" />
     <ClCompile Include="src\modern_rowheight_funcs.cpp" />
     <ClCompile Include="src\modern_rowtemplateopt.cpp" />
     <ClCompile Include="src\modern_skinbutton.cpp" />
-    <ClCompile Include="src\modern_skineditor.cpp" />
     <ClCompile Include="src\modern_skinengine.cpp" />
     <ClCompile Include="src\modern_skinopt.cpp" />
     <ClCompile Include="src\modern_skinselector.cpp" />
@@ -267,7 +265,6 @@
     <ClInclude Include="src\hdr\modern_image_array.h" />
     <ClInclude Include="src\hdr\modern_layered_window_engine.h" />
     <ClInclude Include="src\hdr\modern_log.h" />
-    <ClInclude Include="src\hdr\modern_popup.h" />
     <ClInclude Include="src\hdr\modern_row.h" />
     <ClInclude Include="src\hdr\modern_rowheight_funcs.h" />
     <ClInclude Include="src\hdr\modern_skinengine.h" />
@@ -287,6 +284,12 @@
   <ItemGroup>
     <ResourceCompile Include="res\resource.rc" />
     <ResourceCompile Include="res\version.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\Back.tga" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\skin.msf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

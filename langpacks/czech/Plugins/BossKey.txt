@@ -34,13 +34,9 @@ Vrátit původní stav
 Klávesy
 [Password:]
 Heslo:
-[OK]
-OK
 [Cancel]
 Zrušit
-[EN]
-EN
-[Workstation is Locked]
+[Workstation is locked]
 Pracovní stanice je uzamčena
 [Screen Saver is running]
 Běžící spořič obrazovky

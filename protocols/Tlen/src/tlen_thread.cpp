@@ -541,24 +541,24 @@ static void TlenProcessIqGetVersion(TlenProtocol *proto, XmlNode* node)
 		switch ( osvi.dwPlatformId ) {
 		case VER_PLATFORM_WIN32_NT:
 			if ( osvi.dwMajorVersion == 5 ) {
-				if ( osvi.dwMinorVersion == 2 ) os = TlenTextEncode( Translate( "Windows Server 2003" ));
-				else if ( osvi.dwMinorVersion == 1 ) os = TlenTextEncode( Translate( "Windows XP" ));
-				else if ( osvi.dwMinorVersion == 0 ) os = TlenTextEncode( Translate( "Windows 2000" ));
+				if ( osvi.dwMinorVersion == 2 ) os = TlenTextEncode("Windows Server 2003");
+				else if ( osvi.dwMinorVersion == 1 ) os = TlenTextEncode("Windows XP");
+				else if ( osvi.dwMinorVersion == 0 ) os = TlenTextEncode("Windows 2000");
 			}
 			else if ( osvi.dwMajorVersion <= 4 ) {
-				os = TlenTextEncode( Translate( "Windows NT" ));
+				os = TlenTextEncode("Windows NT");
 			}
 			break;
 		case VER_PLATFORM_WIN32_WINDOWS:
 			if ( osvi.dwMajorVersion == 4 ) {
-				if ( osvi.dwMinorVersion == 0 ) os = TlenTextEncode( Translate( "Windows 95" ));
-				if ( osvi.dwMinorVersion == 10 ) os = TlenTextEncode( Translate( "Windows 98" ));
-				if ( osvi.dwMinorVersion == 90 ) os = TlenTextEncode( Translate( "Windows ME" ));
+				if ( osvi.dwMinorVersion == 0 ) os = TlenTextEncode("Windows 95");
+				if ( osvi.dwMinorVersion == 10 ) os = TlenTextEncode("Windows 98");
+				if ( osvi.dwMinorVersion == 90 ) os = TlenTextEncode("Windows ME");
 			}
 			break;
 	}	}
 
-	if ( os == NULL ) os = TlenTextEncode( Translate( "Windows" ));
+	if ( os == NULL ) os = TlenTextEncode("Windows");
 
 	strcpy(mversion, "Miranda NG ");
 	CallService(MS_SYSTEM_GETVERSIONTEXT, sizeof( mversion ) - 11, ( LPARAM )mversion + 11 );
@@ -676,7 +676,7 @@ static void TlenProcessMessage(XmlNode *node, ThreadData *info)
 							if (item->isTyping) {
 								item->isTyping = FALSE;
 								if ((hContact=TlenHContactFromJID(info->proto, fromJid)) != NULL)
-									CallService(MS_PROTO_CONTACTISTYPING, (WPARAM) hContact, PROTOTYPE_CONTACTTYPING_OFF);
+									CallService(MS_PROTO_CONTACTISTYPING, hContact, PROTOTYPE_CONTACTTYPING_OFF);
 							}
 						}
 
@@ -873,15 +873,6 @@ static void TlenProcessIq(XmlNode *node, ThreadData *info)
 	// RECVED: <iq type='error'> ...
 	else if (!strcmp(type, "error")) {
 		TLEN_LIST_ITEM *item;
-		// Check for multi-user chat errors
-		char *from;
-		if ((from=TlenXmlGetAttrValue(node, "from")) != NULL) {
-			if (strstr(from, "@c") != NULL || !strcmp(from, "c")) {
-				TlenMUCRecvError(info->proto, from, node);
-				return;
-			}
-		}
-
 		// Check for file transfer deny by comparing idStr with ft->iqId
 		i = 0;
 		while ((i=TlenListFindNext(info->proto, LIST_FILE, i)) >= 0) {
@@ -892,65 +883,6 @@ static void TlenProcessIq(XmlNode *node, ThreadData *info)
 					SetEvent(item->ft->hFileEvent);	// Simulate the termination of file server connection
 			}
 			i++;
-		}
-	}
-	// RECVED: <iq type='1'>...
-	else if (!strcmp(type, "1")) { // Chat groups list result
-		char *from;
-		if ((from=TlenXmlGetAttrValue(node, "from")) != NULL) {
-			if (strcmp(from, "c") == 0) {
-				TlenIqResultChatGroups(info->proto, node);
-			}
-		}
-	}
-	else if (!strcmp(type, "2")) { // Chat rooms list result
-		char *from;
-		if ((from=TlenXmlGetAttrValue(node, "from")) != NULL) {
-			if (strcmp(from, "c") == 0) {
-				TlenIqResultChatRooms(info->proto, node);
-			}
-		}
-	} else if (!strcmp(type, "3")) { // room search result - result to iq type 3 query
-		char *from;
-		if ((from=TlenXmlGetAttrValue(node, "from")) != NULL) {
-			if (strcmp(from, "c") == 0) {
-				TlenIqResultRoomSearch(info->proto, node);
-			}
-		}
-	} else if (!strcmp(type, "4")) { // chat room users list
-		char *from;
-		if ((from=TlenXmlGetAttrValue(node, "from")) != NULL) {
-			if (strstr(from, "@c") != NULL) {
-				TlenIqResultChatRoomUsers(info->proto, node);
-			}
-		}
-	} else if (!strcmp(type, "5")) { // room name & group & flags info - sent on joining the room
-		char *from;
-		if ((from=TlenXmlGetAttrValue(node, "from")) != NULL) {
-			if (strstr(from, "@c") != NULL) {
-				TlenIqResultRoomInfo(info->proto, node);
-			}
-		}
-	} else if (!strcmp(type, "6")) { // new nick registered
-		char *from;
-		if ((from=TlenXmlGetAttrValue(node, "from")) != NULL) {
-			if (strcmp(from, "c") == 0) {
-				TlenIqResultUserNicks(info->proto, node);
-			}
-		}
-	} else if (!strcmp(type, "7")) { // user nicknames list
-		char *from;
-		if ((from=TlenXmlGetAttrValue(node, "from")) != NULL) {
-			if (strcmp(from, "c") == 0) {
-				TlenIqResultUserNicks(info->proto, node);
-			}
-		}
-	} else if (!strcmp(type, "8")) { // user chat rooms list
-		char *from;
-		if ((from=TlenXmlGetAttrValue(node, "from")) != NULL) {
-			if (strcmp(from, "c") == 0) {
-				TlenIqResultUserRooms(info->proto, node);
-			}
 		}
 	}
 }
@@ -1012,7 +944,7 @@ static void TlenProcessM(XmlNode *node, ThreadData *info)
 	char *tp;//typing start/stop
 	char *p, *n, *r, *s, *str, *localMessage;
 	int i;
-	XmlNode *xNode, *invNode, *bNode, *subjectNode;
+	XmlNode *xNode, *invNode, *bNode;
 
 	if (!node->name || strcmp(node->name, "m")) return;
 
@@ -1041,12 +973,11 @@ static void TlenProcessM(XmlNode *node, ThreadData *info)
 						bAlert = IsAuthorized(info->proto, fLogin);
 					}
 					if (bAlert) {
-						if (info->proto->tlenOptions.useNudge) {
-							NotifyEventHooks(info->proto->hTlenNudge,(WPARAM) hContact,0);
-						} else {
-							if (info->proto->tlenOptions.logAlerts) {
+						if (info->proto->tlenOptions.useNudge)
+							NotifyEventHooks(info->proto->hTlenNudge, hContact, 0);
+						else {
+							if (info->proto->tlenOptions.logAlerts)
 								TlenLogMessage(info->proto, hContact, 0, Translate("An alert has been received."));
-							}
 							SkinPlaySound("TlenAlertNotify");
 						}
 					}
@@ -1083,25 +1014,9 @@ static void TlenProcessM(XmlNode *node, ThreadData *info)
 						recv.szMessage = localMessage;
 						ProtoChainRecvMsg(hContact, &recv);
 						mir_free(localMessage);
-					} else {
-						/* MUC message */
-						TlenMUCRecvMessage(info->proto, f, timestamp, bNode);
 					}
 				}
 				mir_free(f);
-			} else { // message from chat room (system)
-				subjectNode = TlenXmlGetChild(node, "subject");
-				if (subjectNode != NULL) {
-					f = TlenTextDecode(f);
-					localMessage = "";
-					if (subjectNode->text != NULL)  {
-						localMessage = subjectNode->text;
-					}
-					localMessage = TlenTextDecode(localMessage);
-					TlenMUCRecvTopic(info->proto, f, localMessage);
-					mir_free(localMessage);
-					mir_free(f);
-				}
 			}
 		}
 		i=1;
@@ -1131,15 +1046,15 @@ static void TlenProcessM(XmlNode *node, ThreadData *info)
 
 static void TlenMailPopup(TlenProtocol *proto, char *title, char *emailInfo)
 {
-	if ( !ServiceExists(MS_POPUP_ADDPOPUP))
+	if ( !ServiceExists(MS_POPUP_ADDPOPUPT))
 		return;
 	if (!db_get_b(NULL, proto->m_szModuleName, "MailPopupEnabled", TRUE))
 		return;
 
-	POPUPDATA ppd = { 0 };
+	POPUPDATAT ppd = { 0 };
 	ppd.lchIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAIL));
-	strcpy(ppd.lpzContactName, title);
-	strcpy(ppd.lpzText, emailInfo);
+	_tcscpy(ppd.lptzContactName, _A2T(title));
+	_tcscpy(ppd.lptzText, _A2T(emailInfo));
 	ppd.colorBack = db_get_dw(NULL, proto->m_szModuleName, "MailPopupBack", 0);
 	ppd.colorText = db_get_dw(NULL, proto->m_szModuleName, "MailPopupText", 0);
 	BYTE delayMode = db_get_b(NULL, proto->m_szModuleName, "MailPopupDelayMode", 0);
@@ -1147,7 +1062,7 @@ static void TlenMailPopup(TlenProtocol *proto, char *title, char *emailInfo)
 		ppd.iSeconds = db_get_dw(NULL, proto->m_szModuleName, "MailPopupDelay", 4);
 	else if (delayMode == 2)
 		ppd.iSeconds = -1;
-	PUAddPopup(&ppd);
+	PUAddPopupT(&ppd);
 }
 /*
  * Incoming e-mail notification
@@ -1190,8 +1105,7 @@ static void TlenProcessN(XmlNode *node, ThreadData *info)
  */
 static void TlenProcessP(XmlNode *node, ThreadData *info)
 {
-	char jid[512];
-	char *f, *id, *tp, *a, *n, *k;
+	char *f, *a, *k;
 	XmlNode *sNode, *xNode, *iNode, *kNode;
 	int status, flags;
 
@@ -1256,29 +1170,6 @@ static void TlenProcessP(XmlNode *node, ThreadData *info)
 			k = "";
 		}
 		k = TlenTextDecode(k);
-	}
-	tp = TlenXmlGetAttrValue(node, "tp");
-	if (tp != NULL && !strcmp(tp, "c")) { // new chat room has just been created
-		id = TlenXmlGetAttrValue(node, "id");
-		if (id != NULL) {
-			n = TlenXmlGetAttrValue(node, "n");
-			if (n != NULL) {
-				n = TlenTextDecode(n);
-			} else {
-				n = mir_strdup(Translate("Private conference"));// TlenNickFromJID(f);
-			}
-			mir_snprintf(jid, SIZEOF(jid), "%s/%s", f, info->username);
-//			if (!db_get(NULL, info->proto->m_szModuleName, "LoginName", &dbv)) {
-				// always real username
-//				sprintf(jid, "%s/%s", f, dbv.pszVal);
-			TlenMUCCreateWindow(info->proto, f, n, 0, NULL, id);
-			TlenMUCRecvPresence(info->proto, jid, ID_STATUS_ONLINE, flags, k);
-//				db_free(&dbv);
-//			}
-			mir_free(n);
-		}
-	} else {
-		TlenMUCRecvPresence(info->proto, f, status, flags, k); // user presence
 	}
 	if (k != NULL) {
 		mir_free(k);

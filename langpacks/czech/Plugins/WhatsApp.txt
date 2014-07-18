@@ -12,10 +12,10 @@ WhatsApp protokol pro Mirandu NG.
 Telefonní číslo
 [Including country code, without '+' or '00']
 Včetně kódu oblasti, bez '+' či '00'
-[Password]
-Heslo
 [Nickname]
 Přezdívka
+[Password]
+Heslo
 [Request Code]
 Vyžádat kód
 [Register Code]
@@ -24,18 +24,14 @@ Zaregistrovat kód
 Kód ze SMS:
 [Will only be used for registration]
 Bude použit pouze pro registraci
-[Use SSL connection (443 port)]
-Použít SSL připojení (port 443)
 [Paste password from WART utility]
 Zadejte heslo vygenerované nástrojem WART
 [Use WART utility from Plugins folder for registering your number and generating password]
 Použijte nástroj WART ze složky Plugins pro zaregistrování vašeho čísla a vygenerování hesla
-[WhatsApp]
-WhatsApp
+[Use SSL connection (443 port)]
+Použít SSL připojení (port 443)
 [Cancel]
 Zrušit
-[OK]
-OK
 ;file \protocols\WhatsApp\src\connection.cpp
 [Please enter a country-code.]
 Zadejte kód oblasti.
@@ -53,8 +49,8 @@ Zadejte váš registrační kód, který vám přišel v SMS
 [Your password has been set automatically.\nIf you change your password manually you may lose it and need to request a new code!]
 Vaše heslo bylo nastaveno automaticky.\nPokud změníte vaše heslo ručně, může být ztraceno a budete muset vyžádat nový kód!
 ;file \protocols\WhatsApp\src\main.cpp
-[Did not unpack registration utility WART-1.5.4.0.exe.]
-Registrační nástroj WART-1.5.4.0.exe nebyl rozbalen.
+[Did not unpack WART (registration utility).]
+Registrační nástroj WART nebyl rozbalen.
 ;file \protocols\WhatsApp\src\proto.cpp
 [%s server connection]
 %s - spojení se serverem

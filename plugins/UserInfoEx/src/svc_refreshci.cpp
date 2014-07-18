@@ -612,7 +612,7 @@ class CContactUpdater : public CContactQueue
 		{
 			CLISTMENUITEM clmi = { sizeof(clmi) };
 			clmi.flags = CMIM_NAME|CMIM_ICON;
-			clmi.pszName = LPGEN("Refresh Contact Details");
+			clmi.pszName = LPGEN("Refresh contact details");
 			clmi.hIcon = Skin_GetIcon(ICO_BTN_UPDATE);
 			Menu_ModifyItem(hMenuItemRefresh, &clmi);
 		}
@@ -644,7 +644,7 @@ class CContactUpdater : public CContactQueue
 
 			if (_pProgress)
 			{
-				_pProgress->SetTextParam(TranslateT("[b]%s (%S)...[/b]\n%d Contacts remaning"),
+				_pProgress->SetTextParam(TranslateT("[b]%s (%S)...[/b]\n%d Contacts remaining"),
 					DB::Contact::DisplayName(_hContact), pszProto, Size());
 			}
 			if (IsProtoOnline(pszProto))
@@ -691,12 +691,9 @@ public:
 	{
 		LPSTR pszProto = DB::Contact::Proto(hContact);
 
-		if ((mir_strcmp(pszProto, "Weather")!=0) && 
-				(mir_strcmp(pszProto, "MetaContacts")!=0) && 
-				IsProtoOnline(pszProto))
-		{
+		if ((mir_strcmp(pszProto, "Weather") != 0) && (mir_strcmp(pszProto, META_PROTO) != 0) && IsProtoOnline(pszProto))
 			return Add(iWait, hContact);
-		}
+
 		return 0;
 	}
 
@@ -723,7 +720,7 @@ public:
 				_pProgress = new CDlgUpdProgress(this);
 			}
 
-			_pProgress->Create(TranslateT("Refresh Contact Details"), (PUpdCallback) CContactUpdater::DlgProc);
+			_pProgress->Create(TranslateT("Refresh contact details"), (PUpdCallback) CContactUpdater::DlgProc);
 			_pProgress->SetText(TranslateT("Preparing..."));
 		}
 
@@ -810,7 +807,7 @@ static INT_PTR RefreshService(WPARAM wParam, LPARAM lParam)
 			{
 				ContactUpdater->RefreshAll();
 			}
-			else if (IDYES == MsgBox(NULL, MB_YESNO|MB_ICON_QUESTION, LPGENT("Refresh Contact Details"), NULL, 
+			else if (IDYES == MsgBox(NULL, MB_YESNO|MB_ICON_QUESTION, LPGENT("Refresh contact details"), NULL, 
 				LPGENT("Do you want to cancel the current refresh procedure?")))
 			{
 				ContactUpdater->Cancel();
@@ -904,7 +901,7 @@ void SvcRefreshContactInfoLoadModule(void)
 	hk.cbSize = sizeof(HOTKEYDESC);
 	hk.pszSection = MODNAME;
 	hk.pszName = "RefreshContactDetails";
-	hk.pszDescription = LPGEN("Refresh Contact Details");
+	hk.pszDescription = LPGEN("Refresh contact details");
 	hk.pszService = MS_USERINFO_REFRESH;
 	Hotkey_Register(&hk);
 }

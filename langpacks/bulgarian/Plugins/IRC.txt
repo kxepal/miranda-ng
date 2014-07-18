@@ -8,16 +8,46 @@
 [Internet Relay Chat (IRC) protocol support for Miranda NG.]
 Осигурява комуникация чрез протокола Internet Relay Chat (IRC) в Miranda NG.
 ;file \protocols\IRCG\res\IRC.rc
+[Default network]
+Стандартна мрежа
+[Enable]
+Включване
+[Server name]
+Име на сървъра
+[Internet address]
+Интернет адрес
+[SSL]
+SSL
+[Port range]
+Портов обхват
+[Password]
+Парола
 [&Add]
 Добавяне
 [&Edit]
 Редактиране
 [&Del]
 Изтриване
-[Enable]
-Включване
+[User info - Required]
+Необходима информация
+[Nick]
+Прякор
+[Alternative nick]
+Заместващ прякор
+[Full name (e-mail)]
+Име (имейл)
+[User ID (Ident)]
+
+[Ident]
+
+[System]
+
+[Port]
+Порт
 [only while connecting]
 само при свързване
+[Other]
+Друго
 [Force visible (-i)]
 Винаги видим (-i)
 [Rejoin channel if kicked]
@@ -40,40 +70,10 @@
 
 [Update online statuses for users]
 Обновяване на потреб. състояние
-[Update statuses in channel nick list]
-Обновяване в списъка с прякори
-[Internet address]
-Интернет адрес
-[Port range]
-Портов обхват
-[Nick]
-Прякор
-[User ID (Ident)]
-
-[Full name (e-mail)]
-Име (имейл)
-[Password]
-Парола
-[Server name]
-Име на сървъра
-[Alternative nick]
-Заместващ прякор
-[Ident]
-
-[System]
-
-[Port]
-Порт
-[Default network]
-Стандартна мрежа
-[User info - Required]
-Необходима информация
-[Other]
-Друго
 [Check every (s):]
 Проверяване през (сек):
-[SSL]
-SSL
+[Update statuses in channel nick list]
+Обновяване в списъка с прякори
 [Don't check if more than (users):]
 Без проверка ако потр. са > от:
 [User information]
@@ -112,8 +112,6 @@ SSL
 CTCP информация
 [Question]
 Въпрос
-[&OK]
-ОК
 [&Cancel]
 Отказ
 [Perform]
@@ -226,7 +224,7 @@ CTCP информация
 Чатове клиент-с-клиент
 [Send mode:]
 Режим на изпращане:
-[Packet size (b):]
+[Packet size (bytes):]
 Размер на пакета (б):
 [Get IP address from server]
 Назначаване на IP от сървъра
@@ -244,7 +242,7 @@ CTCP чат заявка
 Включване*
 [Ignore channel messages by default]
 Игнорирай съобщенията за канала
-[Ignore filetransfer requests]
+[Ignore file transfer requests]
 Игнориране на заявки за прехвърляне на файлове
 [Ignore DCC Chat requests]
 Игнориране на чат заявките от DCC (директна възка клиен-склиент)
@@ -264,7 +262,7 @@ CTCP чат заявка
 CTCP
 [DCC]
 DCC
-[Ignore mask ( nick!user@host )]
+[Ignore mask (nick!user@host)]
 
 [Network (*)]
 Мрежа*
@@ -276,8 +274,6 @@ DCC
 Сървър:
 [Password:]
 Парола:
-[Alternate nick]
-Заместващ прякор
 ;file \protocols\IRCG\src\clist.cpp
 [CTCP chat request from %s]
 CTCP заявка от %s
@@ -392,17 +388,13 @@ IRC предупреждение
 ;file \protocols\IRCG\src\irclib.cpp
 [Failed to connect to]
 
-[DCC ERROR: Unable to bind local port for passive filetransfer]
+[DCC ERROR: Unable to bind local port for passive file transfer]
 
 ;file \protocols\IRCG\src\ircproto.cpp
 [%s server connection]
 %s връзка със сървъра
 [%s client-to-client connections]
 %s връзки client-to-client
-[The IRC protocol depends on another plugin called 'Chat'\n\nDo you want to download it from the Miranda NG web site now?]
-Протоколът IRC е зависим от приставка наречена "Chat".\n\nЖелаете ли да я свалите сега?
-[Information]
-Информация
 [Nickname]
 Прякор
 [DCC ERROR: No valid files specified]
@@ -500,6 +492,26 @@ Latin I
 <Автоматично>
 [<Local IP: ]
 <Локално IP:\s
+[Event: Available]
+
+[Event: Away]
+
+[Event: N/A]
+
+[Event: Occupied]
+
+[Event: DND]
+
+[Event: Free for chat]
+
+[Event: On the phone]
+
+[Event: Out for lunch]
+
+[Event: Disconnect]
+
+[ALL NETWORKS]
+Всички мрежи
 [Click to set commands that will be performed for this event]
 Натиснете тук, за да зададете команди за изпълнение за събитието
 [Click to delete the commands for this event]
@@ -522,7 +534,7 @@ Latin I
 Редактиране на игнориране
 [Account]
 Акаунт
-[DCC'n CTCP]
+[DCC and CTCP]
 
 [Advanced]
 Разширени
@@ -572,9 +584,9 @@ Latin I
 Моля, изберете IRC мрежа и въведете парола, ако е необходимо.
 [Please enter a unique nickname]
 Моля, въведете уникален прякор
-[Please enter your authentification code]
+[Please enter your authentication code]
 Моля, въведете вашия код за удостоверяване
-[Authentificate nick]
+[Authenticate nick]
 Удостоверяване на прякор
 [Are you sure you want to unregister your current nick?]
 Наистина ли желаете да бъде премахната регистрацията на прякора ви?

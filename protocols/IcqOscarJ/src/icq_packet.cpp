@@ -1,42 +1,37 @@
 // ---------------------------------------------------------------------------80
 //                ICQ plugin for Miranda Instant Messenger
 //                ________________________________________
-// 
+//
 // Copyright © 2000-2001 Richard Hughes, Roland Rabien, Tristan Van de Vreede
 // Copyright © 2001-2002 Jon Keating, Richard Hughes
 // Copyright © 2002-2004 Martin Öberg, Sam Kothari, Robert Rainwater
 // Copyright © 2004-2010 Joe Kucera, Bio
-// 
+// Copyright © 2012-2014 Miranda NG Team
+//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-//
 // -----------------------------------------------------------------------------
-//  DESCRIPTION:
-//
-//  Describe me here please...
-//
-// -----------------------------------------------------------------------------
-#include "icqoscar.h"
 
+#include "icqoscar.h"
 
 WORD generate_flap_sequence()
 {
-  DWORD n = rand(), s = 0;
+	DWORD n = rand(), s = 0;
 
-  for (DWORD i = n; i >>= 3; s += i);
+	for (DWORD i = n; i >>= 3; s += i);
 
-  return (((0 - s) ^ (BYTE)n) & 7 ^ n) + 2;
+	return (((0 - s) ^ (BYTE)n) & 7 ^ n) + 2;
 }
 
 void __fastcall init_generic_packet(icq_packet *pPacket, WORD wHeaderLen)
@@ -203,7 +198,7 @@ int __fastcall getUINLen(DWORD dwUin)
 
 int __fastcall getUIDLen(DWORD dwUin, const char *szUid)
 {
-	if (dwUin) 
+	if (dwUin)
 		return getUINLen(dwUin);
 	else
 		return strlennull(szUid);
@@ -571,7 +566,7 @@ void CIcqProto::ppackTLVDateFromDB(PBYTE *buf, int *buflen, const char *szSettin
 {
   SYSTEMTIME sTime = {0};
   double time = 0;
-  
+
   sTime.wYear = getWord(szSettingYear, 0);
   sTime.wMonth = getByte(szSettingMonth, 0);
   sTime.wDay = getByte(szSettingDay, 0);

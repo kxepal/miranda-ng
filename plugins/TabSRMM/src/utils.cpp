@@ -46,7 +46,7 @@ static TCHAR *formatting_strings_end[] = { _T("b0 "), _T("i0 "), _T("u0 "), _
 
 #define NR_CODES 5
 
-LRESULT TSAPI _dlgReturn(HWND hWnd, LRESULT result)
+LRESULT _dlgReturn(HWND hWnd, LRESULT result)
 {
 	SetWindowLongPtr(hWnd, DWLP_MSGRESULT, result);
 	return result;
@@ -326,11 +326,11 @@ const TCHAR* Utils::FormatTitleBar(const TWindowData *dat, const TCHAR *szFormat
 			break;
 		}
 		case 'o': {
-			const TCHAR* szProto = dat->cache->getActiveProtoT();
+			const char *szProto = dat->cache->getActiveProto();
 			if (szProto)
-				title.insert(tempmark + 2, szProto);
+				title.insert(tempmark + 2, _A2T(szProto));
 			title.erase(tempmark, 2);
-			curpos = tempmark + (szProto ? lstrlen(szProto) : 0);
+			curpos = tempmark + (szProto ? lstrlenA(szProto) : 0);
 			break;
 		}
 		case 'x': {
@@ -720,7 +720,7 @@ void Utils::SaveContainerSettings(TContainerData *pContainer, const char *szSett
 	mir_snprintf(szCName, 40, "%s%d_theme", szSetting, pContainer->iContainerIndex);
 	if (lstrlen(pContainer->szRelThemeFile) > 1) {
 		if (pContainer->fPrivateThemeChanged == TRUE) {
-			M.pathToRelative(pContainer->szRelThemeFile, pContainer->szAbsThemeFile);
+			PathToRelativeT(pContainer->szRelThemeFile, pContainer->szAbsThemeFile, M.getDataPath());
 			db_set_ts(NULL, SRMSGMOD_T, szCName, pContainer->szAbsThemeFile);
 			pContainer->fPrivateThemeChanged = FALSE;
 		}
@@ -774,7 +774,7 @@ HICON Utils::iconFromAvatar(const TWindowData *dat)
 	if (!ServiceExists(MS_AV_GETAVATARBITMAP) || dat == NULL)
 		return 0;
 
-	AVATARCACHEENTRY *ace = (AVATARCACHEENTRY *)CallService(MS_AV_GETAVATARBITMAP, (WPARAM)dat->hContact, 0);
+	AVATARCACHEENTRY *ace = (AVATARCACHEENTRY *)CallService(MS_AV_GETAVATARBITMAP, dat->hContact, 0);
 	if (ace == NULL || ace->hbmPic == NULL)
 		return NULL;
 
@@ -831,6 +831,13 @@ AVATARCACHEENTRY* Utils::loadAvatarFromAVS(const MCONTACT hContact)
 	return (AVATARCACHEENTRY*)CallService(MS_AV_GETAVATARBITMAP, hContact, 0);
 }
 
+void Utils::sendContactMessage(MCONTACT hContact, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	HWND h = M.FindWindow(hContact);
+	if (h != NULL)
+		PostMessage(h, uMsg, wParam, lParam);
+}
+
 void Utils::getIconSize(HICON hIcon, int& sizeX, int& sizeY)
 {
 	ICONINFO ii;
@@ -867,7 +874,7 @@ void Utils::addMenuItem(const HMENU& m, MENUITEMINFO& mii, HICON hIcon, const TC
  * return != 0 when the sound effect must be played for the given
  * session. Uses container sound settings
  */
-int	TSAPI Utils::mustPlaySound(const TWindowData *dat)
+int Utils::mustPlaySound(const TWindowData *dat)
 {
 	if (!dat)
 		return 0;
@@ -906,7 +913,7 @@ int	TSAPI Utils::mustPlaySound(const TWindowData *dat)
 /**
  * enable or disable a dialog control
  */
-void TSAPI Utils::enableDlgControl(const HWND hwnd, UINT id, BOOL fEnable)
+void Utils::enableDlgControl(const HWND hwnd, UINT id, BOOL fEnable)
 {
 	::EnableWindow(::GetDlgItem(hwnd, id), fEnable);
 }
@@ -914,7 +921,7 @@ void TSAPI Utils::enableDlgControl(const HWND hwnd, UINT id, BOOL fEnable)
 /**
  * show or hide a dialog control
  */
-void TSAPI Utils::showDlgControl(const HWND hwnd, UINT id, int showCmd)
+void Utils::showDlgControl(const HWND hwnd, UINT id, int showCmd)
 {
 	::ShowWindow(::GetDlgItem(hwnd, id), showCmd);
 }
@@ -941,7 +948,7 @@ DWORD CALLBACK Utils::StreamOut(DWORD_PTR dwCookie, LPBYTE pbBuff, LONG cb, LONG
  * extract a resource from the given module
  * tszPath must end with \
  */
-bool TSAPI Utils::extractResource(const HMODULE h, const UINT uID, const TCHAR *tszName, const TCHAR *tszPath,
+bool Utils::extractResource(const HMODULE h, const UINT uID, const TCHAR *tszName, const TCHAR *tszPath,
 								  const TCHAR *tszFilename, bool fForceOverwrite)
 {
 	HRSRC hRes = FindResource(h, MAKEINTRESOURCE(uID), tszName);
@@ -1097,7 +1104,7 @@ static wchar_t* warnings[] = {
 	LPGENT("Edit user notes|You are editing the user notes. Click the button again or use the hotkey (default: Alt-N) to save the notes and return to normal messaging mode"),  /* WARN_EDITUSERNOTES */
 	LPGENT("Missing component|The icon pack is missing. Please install it to the default icons folder.\n\nNo icons will be available"),		/* WARN_ICONPACKMISSING */
 	LPGENT("Aero peek warning|You have enabled Aero Peek features and loaded a custom container window skin\n\nThis can result in minor visual anomalies in the live preview feature."),	/* WARN_AEROPEEKSKIN */
-	LPGENT("Filetransfer problem|Sending the image by file transfer failed.\n\nPossible reasons: File transfers not supported, either you or the target contact is offline, or you are invisible and the target contact is not on your visibilty list."), /* WARN_IMGSVC_MISSING */
+	LPGENT("File transfer problem|Sending the image by file transfer failed.\n\nPossible reasons: File transfers not supported, either you or the target contact is offline, or you are invisible and the target contact is not on your visibilty list."), /* WARN_IMGSVC_MISSING */
 	LPGENT("Settings problem|The option \\b1 History->Imitate IEView API\\b0  is enabled and the History++ plugin is active. This can cause problems when using IEView as message log viewer.\n\nShould I correct the option (a restart is required)?"), /* WARN_HPP_APICHECK */
 	L" ", /* WARN_NO_SENDLATER */ /*uses "Configuration issue|The unattended send feature is disabled. The \\b1 send later\\b0  and \\b1 send to multiple contacts\\b0  features depend on it.\n\nYou must enable it under \\b1Options->Message Sessions->Advanced tweaks\\b0. Changing this option requires a restart." */
 	LPGENT("Closing Window|You are about to close a window with multiple tabs open.\n\nProceed?"),		/* WARN_CLOSEWINDOW */
@@ -1125,11 +1132,11 @@ CWarning::~CWarning()
 LRESULT CWarning::ShowDialog() const
 {
 	if (!m_fIsModal) {
-		::CreateDialogParam(g_hInst, MAKEINTRESOURCE(IDD_WARNING), 0, stubDlgProc, reinterpret_cast<LPARAM>(this));
+		::CreateDialogParam(g_hInst, MAKEINTRESOURCE(IDD_WARNING), 0, stubDlgProc, LPARAM(this));
 		return 0;
 	}
 
-	return ::DialogBoxParam(g_hInst, MAKEINTRESOURCE(IDD_WARNING), 0, stubDlgProc, reinterpret_cast<LPARAM>(this));
+	return ::DialogBoxParam(g_hInst, MAKEINTRESOURCE(IDD_WARNING), 0, stubDlgProc, LPARAM(this));
 }
 
 __int64 CWarning::getMask()
@@ -1278,9 +1285,9 @@ INT_PTR CALLBACK CWarning::dlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 			m_hwnd = hwnd;
 
 			::SetWindowTextW(hwnd, TranslateT("TabSRMM warning message"));
-			::SendMessage(hwnd, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(::LoadSkinnedIconBig(SKINICON_OTHER_MIRANDA)));
-			::SendMessage(hwnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(::LoadSkinnedIcon(SKINICON_OTHER_MIRANDA)));
-			::SendDlgItemMessage(hwnd, IDC_WARNTEXT, EM_AUTOURLDETECT, (WPARAM)TRUE, 0);
+			::SendMessage(hwnd, WM_SETICON, ICON_BIG, LPARAM(::LoadSkinnedIconBig(SKINICON_OTHER_MIRANDA)));
+			::SendMessage(hwnd, WM_SETICON, ICON_SMALL, LPARAM(::LoadSkinnedIcon(SKINICON_OTHER_MIRANDA)));
+			::SendDlgItemMessage(hwnd, IDC_WARNTEXT, EM_AUTOURLDETECT, TRUE, 0);
 			::SendDlgItemMessage(hwnd, IDC_WARNTEXT, EM_SETEVENTMASK, 0, ENM_LINK);
 
 			mir_sntprintf(temp, 1024, RTF_DEFAULT_HEADER, 0, 0, 0, 30*15);

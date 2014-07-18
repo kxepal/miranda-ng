@@ -63,6 +63,7 @@ Source: "Files\Icons\Proto_GG.dll"; DestDir: "{app}\Icons"; Components: protocol
 Source: "Files\Icons\Proto_ICQ.dll"; DestDir: "{app}\Icons"; Components: protocols\icq; Flags: ignoreversion; AfterInstall: ShowPercent() 
 Source: "Files\Icons\Proto_IRC.dll"; DestDir: "{app}\Icons"; Components: protocols\irc; Flags: ignoreversion; AfterInstall: ShowPercent() 
 Source: "Files\Icons\Proto_Jabber.dll"; DestDir: "{app}\Icons"; Components: protocols\jabber; Flags: ignoreversion; AfterInstall: ShowPercent() 
+Source: "Files\Icons\Proto_MetaContacts.dll"; DestDir: "{app}\Icons"; Components: program; Flags: ignoreversion; AfterInstall: ShowPercent() 
 Source: "Files\Icons\Proto_MSN.dll"; DestDir: "{app}\Icons"; Components: protocols\msn; Flags: ignoreversion; AfterInstall: ShowPercent() 
 Source: "Files\Icons\Proto_Yahoo.dll"; DestDir: "{app}\Icons"; Components: protocols\yahoo; Flags: ignoreversion; AfterInstall: ShowPercent() 
 Source: "Files\Icons\xstatus_icq.dll"; DestDir: "{app}\Icons"; Components: protocols\icq; Flags: ignoreversion; AfterInstall: ShowPercent() 
@@ -94,10 +95,10 @@ Source: "Files\Core\stduserinfo.dll"; DestDir: "{app}\Core"; Components: program
 Source: "Files\Core\stduseronline.dll"; DestDir: "{app}\Core"; Components: program; Flags: ignoreversion; AfterInstall: ShowPercent() 
 
 ; LangPacks
-Source: "Files\langpack_czech.txt"; DestDir: "{app}"; Components: lang\czech; Flags: ignoreversion; AfterInstall: ShowPercent() 
-Source: "Files\langpack_german.txt"; DestDir: "{app}"; Components: lang\german; Flags: ignoreversion; AfterInstall: ShowPercent() 
-Source: "Files\langpack_polish.txt"; DestDir: "{app}"; Components: lang\polish; Flags: ignoreversion; AfterInstall: ShowPercent() 
-Source: "Files\langpack_russian.txt"; DestDir: "{app}"; Components: lang\russian; Flags: ignoreversion; AfterInstall: ShowPercent() 
+Source: "Files\Languages\langpack_czech.txt"; DestDir: "{app}\Languages"; Components: lang\czech; Flags: ignoreversion; AfterInstall: ShowPercent() 
+Source: "Files\Languages\langpack_german.txt"; DestDir: "{app}\Languages"; Components: lang\german; Flags: ignoreversion; AfterInstall: ShowPercent() 
+Source: "Files\Languages\langpack_polish.txt"; DestDir: "{app}\Languages"; Components: lang\polish; Flags: ignoreversion; AfterInstall: ShowPercent() 
+Source: "Files\Languages\langpack_russian.txt"; DestDir: "{app}\Languages"; Components: lang\russian; Flags: ignoreversion; AfterInstall: ShowPercent() 
 
 ;Plugins - not selectable
 Source: "Files\Plugins\AdvaImg.dll"; DestDir: "{app}\Plugins"; Components: program; Flags: ignoreversion; AfterInstall: ShowPercent() 

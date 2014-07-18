@@ -34,8 +34,8 @@ const
     (color: $00000000; setting: 'fore_hid' ; descr: 'Hidden contact foreground'  ),
     (color: $00BAE699; setting: 'back_meta'; descr: 'Metacontact background'     ),
     (color: $00000000; setting: 'fore_meta'; descr: 'Metacontact foreground'     ),
-    (color: $00B3CCC1; setting: 'back_sub' ; descr: 'SubMetacontact background'  ),
-    (color: $00000000; setting: 'fore_sub' ; descr: 'SubMetacontact foreground'  )
+    (color: $00B3CCC1; setting: 'back_sub' ; descr: 'Subcontact background'  ),
+    (color: $00000000; setting: 'fore_sub' ; descr: 'Subcontact foreground'  )
   );
 
 
@@ -209,7 +209,7 @@ begin
 
 end;
 
-function DoMeta(hContact:HCONTACT):pointer;
+function DoMeta(hContact:TMCONTACT):pointer;
 var
   pw:pWideChar;
   i:integer;
@@ -233,7 +233,7 @@ begin
         end
         else if (flags and QSF_SUBMETA)<>0 then
         begin
-          lparam:=FindMeta(CallService(MS_MC_GETMETACONTACT,hContact,0),wparam);
+          lparam:=FindMeta(db_mc_getMeta(hContact),wparam);
         end;
 
         if wparam>0 then
@@ -433,7 +433,7 @@ end;
 
 //----- Initial table filling -----
 
-procedure AddContact(num:integer;hContact:HCONTACT);
+procedure AddContact(num:integer;hContact:TMCONTACT);
 var
   col:pcolumnitem;
   tmpstr:array [0..63] of AnsiChar;
@@ -476,7 +476,7 @@ end;
 function PrepareToFill:boolean;
 var
   cnt,cnt1:integer;
-  hContact:THCONTACT;
+  hContact:TMCONTACT;
   i:integer;
 begin
   result:=false;

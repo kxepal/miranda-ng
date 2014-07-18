@@ -158,7 +158,7 @@ x памножанае на y дзеленае на z
 [x - y - ...]
 x - y - ...
 ;file \plugins\Variables\src\parse_metacontacts.cpp
-[MetaContacts]
+[Metacontacts]
 Метакантакты
 [get parent metacontact of contact x]
 вяртае бацькоўскі метакантакт субкантакту x
@@ -205,7 +205,7 @@ z кантакт з уласцівасцю y, апісанай у x, прыкл�
 імя профіля базы
 [database profile path]
 шлях профіля базы
-[database setting z of module y of contact x and return w if z isn't exist (w is optional)]
+[database setting z of module y of contact x and return w if z doesn't exist (w is optional)]
 атрымаць наладу z плагіна y кантакту x ці вярнуць w, калі z не існуе (w не абавязкова)
 [get event for contact x (optional), according to y,z,w, see documentation]
 атрымаць падзею для кантакту x (неабавязкова), адпаведнае y,z,w, гл. дакументацыю
@@ -242,7 +242,7 @@ z кантакт з уласцівасцю y, апісанай у x, прыкл�
 (Толькі ANSI увод) падрадок супадзення z знойдзены ў тэме y з шаблонам x
 ;file \plugins\Variables\src\parse_str.cpp
 [String Functions]
-Радковыя функцыі 
+Радковыя функцыі
 [converts each first letter of a word to uppercase, all others to lowercase]
 перакладае кожную першую літару слова ў ЗАГАЛОЎНУЮ, усе астатнія ў вялікія
 [converts each first letter of a word to uppercase]
@@ -324,7 +324,7 @@ z, калі y роўна x, дапушчальныя множныя аргуме
 Сістэмныя функцыі
 [computer name]
 імя кампутара
-[cpu load of process x (without extension) (x is optional)]
+[CPU load of process x (without extension) (x is optional)]
 нагрузка працэсу x (без пашырэння) (x неабавязкова)
 [current date in format y (y is optional)]
 бягучая дата ў фармаце y (y неабавязкова)
@@ -342,8 +342,8 @@ z, калі y роўна x, дапушчальныя множныя аргуме
 ПРАЎДА, калі файл x існуе
 [window title of first window of class x]
 загаловак першага вакна класа x
-[shows files and directories of directory z, with filter y, separated by z (y and z optional)]
-паказвае файлы і тэчкі путя z, з фільтрам y, падзеленым z (y і z неабавязковыя)
+[shows files and directories of directory x, with filter y, separated by z (y and z optional)]
+паказвае файлы і тэчкі путя x, з фільтрам y, падзеленым z (y і z неабавязковыя)
 [TRUE if process x is running]
 ПРАЎДА, калі працэс х запушчаны
 [value y from registry key x (REG_SZ (string) values only)]

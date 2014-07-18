@@ -1,7 +1,7 @@
 ﻿#muuid {a71f8335-7b87-4432-b8a3-81479431c6f5}
 ;============================================================
 ;  File: SkypeClassic.dll
-;  Plugin: Skype Protocol (Classic)
+;  Plugin: Skype protocol (Classic)
 ;  Version: 0.0.0.54
 ;  Authors: leecher, tweety, jls17
 ;============================================================
@@ -56,8 +56,6 @@ Przyłącz się do rozmowy grupowej z %s
 Odbierz rozmowę; zawieś rozmowę z %s
 [Hang up]
 Rozłącz się
-[OK]
-OK
 [Dialog]
 Okno
 [Use Skype proxy connection over network instead of local Skype API]
@@ -87,7 +85,7 @@ Telefon domowy:
 [Office phone:]
 Telefon służbowy:
 [Homepage:]
-WWW:
+Strona domowa:
 [Save]
 Zapisz
 [Enable Skype menu options (currently: Find/Add user)]
@@ -95,7 +93,7 @@ Włącz elementy menu Skype (obecnie Szukaj/Dodaj kontakty)
 [Use popup plugin for displaying messages]
 Używaj wtyczki Popup do wyświetlania komunikatów
 [Suppress all error messages (not recommended, but if it annoys you... ;)]
-Ignoruj wszystkie komunikaty o błędach (niezalecane, ale jeżeli cię denerwują... ;)
+Ignoruj wszystkie komunikaty o błędach (niezalecane, ale jeśli cię denerwują... ;)
 [Use group chat interface for conversations (requires group chat module)]
 Używaj interfejsu rozmów grupowych dla konwersacji (wymaga modułu czatów grupowych)
 [Mark group chat message as read to avoid notification]
@@ -111,7 +109,7 @@ Pokazuj domyślny awatar Skype dla kontaktów
 [Suppress call summary chat message]
 Ignoruj wiadomość czatu z podsumowaniem rozmowy
 [Disable support for N/A and SkypeMe status (for Skype 4+)]
-Wyłącz wsparcie dla statusów "niedostępny" oraz "SkypeMe" (dla Skype 4+)
+Wyłącz wsparcie dla statusów "wrócę później" oraz "SkypeMe" (dla Skype 4+)
 [Show full name in contact list instead of nickname]
 Pokaż nazwę wyświetlaną, zamiast nazwy użytkownika, na liście kontaktów
 [SkypeOut contacts are in status:]
@@ -152,9 +150,9 @@ Zawieś
 [Resume call]
 Wznów
 [&File]
-Plik
+&Plik
 [&Open group chat]
-Otwórz czat grupowy
+&Otwórz czat grupowy
 [Import Skype history]
 Importuj historię Skype
 [Add Skype contact]
@@ -163,23 +161,23 @@ Dodaj kontakt Skype
 [Unknown]
 Nieznany
 [&Invite user...]
-Zaproś użytkownika...
+&Zaproś użytkownika...
 [Me]
 Ja
 [&Leave chat session]
-Opuść pokój
+&Opuść pokój
 [Set &Topic...]
-Ustaw temat...
+Ustaw &temat...
 [User &details]
-Dane kontaktu
+&Dane kontaktu
 [User &history]
-Historia użytkownika
+&Historia użytkownika
 [&Kick user]
-Wykop użytkownika
+&Wyrzuć użytkownika
 ;file \protocols\SkypeClassic\src\skype.cpp
 [Do a SkypeOut-call]
 Rozpocznij rozmowę SkypeOut
-[invited ]
+[invited]
 zaproszony
 [Phone call]
 Rozmowa telefoniczna
@@ -190,7 +188,7 @@ Przychodząca rozmowa od %s
 [Connection to Skype lost]
 Utracono połączenie ze Skype
 [This seems to be the first time that you're running the Skype protocol plugin. Do you want to enable the protocol for this Miranda profile? If you chose NO, you can always enable it in the plugin options later.]
-Wygląda na to, że po raz pierwszy uruchamiasz wtyczkę protokołu Skype. Czy chcesz włączyć protokół dla tego profilu Mirandy? Jeżeli wybierzesz "Nie" możesz to później zmienić w opcjach wtyczek.
+Wygląda na to, że po raz pierwszy uruchamiasz wtyczkę protokołu Skype. Czy chcesz włączyć protokół dla tego profilu Mirandy? Jeśli wybierzesz "Nie" możesz to później zmienić w opcjach wtyczek.
 ;file \protocols\SkypeClassic\src\skypeopt.cpp
 [Preview Error Message]
 Podgląd komunikatu błędu

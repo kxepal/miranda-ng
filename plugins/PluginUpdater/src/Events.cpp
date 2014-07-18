@@ -19,7 +19,7 @@ Boston, MA 02111-1307, USA.
 
 #include "common.h"
 
-HANDLE Timer;
+HANDLE Timer, hPluginUpdaterFolder;
 
 int OnFoldersChanged(WPARAM, LPARAM)
 {
@@ -30,9 +30,15 @@ int OnFoldersChanged(WPARAM, LPARAM)
 	return 0;
 }
 
-int ModulesLoaded(WPARAM wParam, LPARAM lParam)
+int ModulesLoaded(WPARAM, LPARAM)
 {
 	HookEvent(ME_FOLDERS_PATH_CHANGED, OnFoldersChanged);
+
+	hPluginUpdaterFolder = FoldersRegisterCustomPathT(MODULEA, LPGEN("Plugin Updater"), MIRANDA_PATHT _T("\\")DEFAULT_UPDATES_FOLDER);
+	if (hPluginUpdaterFolder)
+		OnFoldersChanged(0, 0);
+	else
+		lstrcpyn(tszRoot, VARST( _T("%miranda_path%\\"DEFAULT_UPDATES_FOLDER)), SIZEOF(tszRoot));
 
 	opts.bSilent = true;
 
@@ -51,23 +57,7 @@ int ModulesLoaded(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-INT_PTR MenuCommand(WPARAM wParam,LPARAM lParam)
-{
-	opts.bSilent = false;
-	DoCheck(true);
-	return 0;
-}
-
-#if MIRANDA_VER >= 0x0A00
-INT_PTR ShowListCommand(WPARAM wParam,LPARAM lParam)
-{
-	opts.bSilent = false;
-	DoGetList(true);
-	return 0;
-}
-#endif
-
-INT_PTR EmptyFolder(WPARAM wParam,LPARAM lParam)
+INT_PTR EmptyFolder(WPARAM,LPARAM lParam)
 {
 	SHFILEOPSTRUCT file_op = {
 		NULL,
@@ -85,12 +75,21 @@ INT_PTR EmptyFolder(WPARAM wParam,LPARAM lParam)
 	return 0;
 }
 
-int OnPreShutdown(WPARAM wParam, LPARAM lParam)
+int OnPreShutdown(WPARAM, LPARAM)
 {
 	CancelWaitableTimer(Timer);
 	CloseHandle(Timer);
 
-	if (hwndDialog != NULL)
-		DestroyWindow(hwndDialog);
+	UninitCheck();
+
+#if MIRANDA_VER >= 0x0A00
+	UninitListNew();
+#endif
 	return 0;
+}
+
+void InitEvents()
+{
+	HookEvent(ME_SYSTEM_MODULESLOADED, ModulesLoaded);
+	HookEvent(ME_SYSTEM_PRESHUTDOWN, OnPreShutdown);
 }

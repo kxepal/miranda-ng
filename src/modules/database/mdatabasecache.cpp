@@ -24,12 +24,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "..\..\core\commonheaders.h"
 #include "database.h"
 
-static int stringCompare(const char* p1, const char* p2)
+static int stringCompare(const char *p1, const char *p2)
 {
 	return strcmp(p1, p2);
 }
 
-static int compareGlobals(const DBCachedGlobalValue* p1, const DBCachedGlobalValue* p2)
+static int compareGlobals(const DBCachedGlobalValue *p1, const DBCachedGlobalValue *p2)
 {
 	return strcmp(p1->name, p2->name);
 }
@@ -40,13 +40,11 @@ MDatabaseCache::MDatabaseCache() :
 	m_lGlobalSettings(50, compareGlobals)
 {
 	m_hCacheHeap = HeapCreate(0, 0, 0);
-	InitializeCriticalSection(&m_cs);
 }
 
 MDatabaseCache::~MDatabaseCache()
 {
 	HeapDestroy(m_hCacheHeap);
-	DeleteCriticalSection(&m_cs);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -56,14 +54,14 @@ DBCachedContact* MDatabaseCache::AddContactToCache(MCONTACT contactID)
 	mir_cslock lck(m_cs);
 
 	int index = m_lContacts.getIndex((DBCachedContact*)&contactID);
-	if (index == -1) {
-		DBCachedContact* VL = (DBCachedContact*)HeapAlloc(m_hCacheHeap, HEAP_ZERO_MEMORY, sizeof(DBCachedContact));
-		VL->contactID = contactID;
-		m_lContacts.insert(VL);
-		return VL;
-	}
+	if (index != -1)
+		return m_lContacts[index];
 
-	return m_lContacts[index];
+	DBCachedContact *cc = (DBCachedContact*)HeapAlloc(m_hCacheHeap, HEAP_ZERO_MEMORY, sizeof(DBCachedContact));
+	cc->contactID = contactID;
+	cc->nSubs = -1;
+	m_lContacts.insert(cc);
+	return cc;
 }
 
 DBCachedContact* MDatabaseCache::GetCachedContact(MCONTACT contactID)
@@ -96,15 +94,17 @@ void MDatabaseCache::FreeCachedContact(MCONTACT contactID)
 	if (index == -1)
 		return;
 
-	DBCachedContact* VL = m_lContacts[index];
-	DBCachedContactValue* V = VL->first;
+	DBCachedContact *cc = m_lContacts[index];
+	DBCachedContactValue* V = cc->first;
 	while (V != NULL) {
 		DBCachedContactValue* V1 = V->next;
 		FreeCachedVariant(&V->value);
 		HeapFree(m_hCacheHeap, 0, V);
 		V = V1;
 	}
-	HeapFree(m_hCacheHeap, 0, VL);
+
+	mir_free(cc->pSubs);
+	HeapFree(m_hCacheHeap, 0, cc);
 
 	m_lContacts.remove(index);
 }
@@ -198,54 +198,49 @@ STDMETHODIMP_(DBVARIANT*) MDatabaseCache::GetCachedValuePtr(MCONTACT contactID, 
 
 	// a contact setting
 	DBCachedContactValue *V, *V1;
-	DBCachedContact VLtemp,*VL;
+	DBCachedContact ccTemp, *cc;
 
-	VLtemp.contactID = contactID;
+	ccTemp.contactID = contactID;
 
-	int index = m_lContacts.getIndex(&VLtemp);
-	if (index == -1) {
-		if ( bAllocate != 1 )
-			return NULL;
+	int index = m_lContacts.getIndex(&ccTemp);
+	if (index == -1)
+		return NULL;
 
-		VL = AddContactToCache(contactID);
-	}
-	else VL = m_lContacts[index];
+	m_lastVL = cc = m_lContacts[index];
 
-	m_lastVL = VL;
-
-	for ( V = VL->first; V != NULL; V = V->next)
+	for (V = cc->first; V != NULL; V = V->next)
 		if (V->name == szSetting)
 			break;
 
-	if ( V == NULL ) {
-		if ( bAllocate != 1 )
+	if (V == NULL) {
+		if (bAllocate != 1)
 			return NULL;
 
 		V = (DBCachedContactValue *)HeapAlloc(m_hCacheHeap, HEAP_ZERO_MEMORY, sizeof(DBCachedContactValue));
-		if (VL->last)
-			VL->last->next = V;
+		if (cc->last)
+			cc->last->next = V;
 		else
-			VL->first = V;
-		VL->last = V;
+			cc->first = V;
+		cc->last = V;
 		V->name = szSetting;
 	}
-	else if ( bAllocate == -1 ) {
+	else if (bAllocate == -1) {
 		m_lastVL = NULL;
 		FreeCachedVariant(&V->value);
-		if ( VL->first == V ) {
-			VL->first = V->next;
-			if (VL->last == V)
-				VL->last = V->next; // NULL
+		if (cc->first == V) {
+			cc->first = V->next;
+			if (cc->last == V)
+				cc->last = V->next; // NULL
 		}
 		else
-			for ( V1 = VL->first; V1 != NULL; V1 = V1->next )
-				if ( V1->next == V ) {
+			for (V1 = cc->first; V1 != NULL; V1 = V1->next)
+				if (V1->next == V) {
 					V1->next = V->next;
-					if (VL->last == V)
-						VL->last = V1;
+					if (cc->last == V)
+						cc->last = V1;
 					break;
 				}
-		HeapFree(m_hCacheHeap,0,V);
+		HeapFree(m_hCacheHeap, 0, V);
 		return NULL;
 	}
 

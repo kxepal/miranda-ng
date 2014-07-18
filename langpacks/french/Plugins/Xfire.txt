@@ -1,21 +1,21 @@
 ﻿#muuid {9b8e1735-970d-4ce0-930c-a561956bdca2}
 ;============================================================
 ;  File: Xfire.dll
-;  Plugin: Xfire Protocol
+;  Plugin: Xfire protocol
 ;  Version: 0.1.9.0
 ;  Authors: dufte
 ;============================================================
 [Xfire protocol support for Miranda NG.]
-
+Support du protocole XFire pour Miranda NG.
 ;file \protocols\Xfire\res\resource.rc
 [Password:]
-Passe:
+Passe :
 [Login name:]
 
 [XFire]
 
 [Nick:]
-Pseudo:
+Pseudo :
 [Current protocol version:]
 
 [Note: You can only change these settings, if you are connected to Xfire.]
@@ -48,7 +48,7 @@ Pseudo:
 Paramètres
 [More options]
 Plus d'options
-[Display Error and Infomessage:]
+[Display Error and Info message:]
 
 [Main group for clan groups:]
 
@@ -78,12 +78,12 @@ Fichiers
 
 [Enable]
 Activer
-[With this feature, following status message will be set on your other protocol plugins, if you are ingame. So your other buddies can also see what you play. It will also change the status to occupied, if this option is enabled.]
+[With this feature, following status message will be set on your other protocol plugins, if you are in game. So your other buddies can also see what you play. It will also change the status to occupied, if this option is enabled.]
 
 [Following Variables are available: %myxfiregame%, %myxfirevoice%, %myxfireserverip%, %myxfirevoiceip%]
 
 [Status message:]
-Message d'état:
+Message d'état :
 [Change the status to occupied or dnd]
 
 [The status message and status will be reset, if you close the game.]
@@ -113,17 +113,17 @@ Retirer
 [Edit...]
 Éditer...
 [Username:]
-Identifiant:
+Identifiant :
 [Game]
 Jeu
-[Voicechat]
-
+[Voice chat]
+Chat Vocal
 [Name:]
-Nom:
+Nom :
 [IP:]
 
 [Port:]
-Port:
+Port :
 [User details]
 Détails du contact
 [Copy]
@@ -134,13 +134,11 @@ Entrez le passe
 Rejoindre
 [Set Nickname]
 
-[OK]
-OK
 [Cancel]
 Annuler
 [New xfire_games.ini]
 
-[There is a new XFire gamelist online, do you want to update now?]
+[There is a new XFire game list online, do you want to update now?]
 
 [New supported games:]
 
@@ -149,7 +147,7 @@ Mise à jour
 [Add game]
 
 [Search:]
-Chercher:
+Chercher :
 [Custom...]
 
 [Game name:]
@@ -233,7 +231,7 @@ Mmm... Manger.
 ;file \protocols\Xfire\src\main.cpp
 [Protocol icon]
 
-[%s (Nickname: %s) has invited you to join the %s clan. Message: %s%sPlease go to the XFireclan-Site to accept the Invitation.]
+[%s (Nickname: %s) has invited you to join the %s clan. Message: %s%sPlease go to the XFire clan site to accept the Invitation.]
 
 [Friends of Friends Playing]
 
@@ -368,11 +366,11 @@ Général
 
 [Enable MBot support]
 
-[Gamedetection]
+[Game detection]
 
 [Disable game detection]
 
-[Use TSRemote.dll to get teamspeak server info]
+[Use TSRemote.dll to get TeamSpeak server info]
 
 [Disable popups when ingame]
 
@@ -394,7 +392,7 @@ Général
 
 [Hidden]
 Caché
-[Messagebox]
+[Message box]
 
 [Popup]
 
@@ -413,7 +411,7 @@ Non
 [Error: unknown game ID.]
 
 [Not supported]
-
+Non supporté
 [Configuration saved!]
 
 [Game not found?!]

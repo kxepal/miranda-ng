@@ -46,7 +46,7 @@ static BTNS[] =
 	{ "ShowHideOffline",LPGEN("Show/Hide offline contacts"), MS_CLIST_TOGGLEHIDEOFFLINE, LPGEN("Hide offline contacts"), LPGEN("Show offline contacts"), 110, IDI_RESETVIEW, IDI_RESETVIEW, TRUE },
 	{ "FindUser",LPGEN("Find user"), "FindAdd/FindAddCommand", LPGEN("Find user"), NULL,  140 , IDI_RESETVIEW, IDI_RESETVIEW, TRUE },
 	{ "Options","Options", "Options/OptionsCommand", "Options", NULL,  150 , IDI_RESETVIEW, IDI_RESETVIEW, TRUE },
-	{ "UseGroups",LPGEN("Use/Disable groups"), MS_CLIST_TOGGLEGROUPS, LPGEN("Use groups"), LPGEN("Disable Groups"), 160, IDI_RESETVIEW, IDI_RESETVIEW, FALSE },
+	{ "UseGroups",LPGEN("Use/Disable groups"), MS_CLIST_TOGGLEGROUPS, LPGEN("Use groups"), LPGEN("Disable groups"), 160, IDI_RESETVIEW, IDI_RESETVIEW, FALSE },
 	{ "EnableSounds",LPGEN("Enable/Disable sounds"), MS_CLIST_TOGGLESOUNDS, LPGEN("Enable sounds"), LPGEN("Disable sounds"), 170, IDI_RESETVIEW, IDI_RESETVIEW, FALSE },
 	{ "Minimize",LPGEN("Minimize"), "CList/ShowHide", LPGEN("Minimize"), NULL,  180 , IDI_RESETVIEW, IDI_RESETVIEW, FALSE }
 };
@@ -76,8 +76,6 @@ void Modern_InitButtons()
 			else tbb.hIconHandleUp = RegisterIcolibIconHandle(buf, "Toolbar", BTNS[i].pszTooltipUp, NULL, 0, NULL, SKINICON_OTHER_MAINMENU);
 
 			if (BTNS[i].pszTooltipDn) {
-				tbb.dwFlags |= TTBBF_ASPUSHBUTTON;
-
 				mir_snprintf(buf,SIZEOF(buf),"%s%s%s", TTB_OPTDIR, BTNS[i].pszButtonID, "_up");
 				tbb.hIconHandleDn = RegisterIcolibIconHandle(buf, "Toolbar", BTNS[i].pszTooltipDn, _T("icons\\toolbar_icons.dll"), BTNS[i].icoDefIdx+1, g_hInst, BTNS[i].defResource2 );
 			}
@@ -114,10 +112,10 @@ static tbdat = { NULL, CLCDEFAULT_BKCOLOUR, CLCDEFAULT_BKBMPUSE, CLCDEFAULT_USEW
 
 COLORREF sttGetColor(char * module, char * color, COLORREF defColor);
 
-static int ehhToolBarSettingsChanged(WPARAM wParam, LPARAM lParam)
+static int ehhToolBarSettingsChanged(WPARAM hContact, LPARAM lParam)
 {
 	DBCONTACTWRITESETTING *cws = (DBCONTACTWRITESETTING*)lParam;
-	if ((HANDLE)wParam != NULL)
+	if (hContact != NULL)
 		return 0;
 
 	if (!mir_strcmp(cws->szModule,"CList")) {

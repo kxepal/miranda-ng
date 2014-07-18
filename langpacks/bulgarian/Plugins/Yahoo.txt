@@ -1,11 +1,11 @@
 ﻿#muuid {0aa7bfea-1fc7-45f0-906e-2a46b6e119cf}
 ;============================================================
 ;  File: Yahoo.dll
-;  Plugin: Yahoo Protocol
+;  Plugin: Yahoo protocol
 ;  Version: 0.11.0.1
 ;  Authors: Gennady Feldman
 ;============================================================
-[Yahoo Protocol support for Miranda NG.]
+[Yahoo protocol support for Miranda NG.]
 Осигурява комуникация чрез протокола Yahoo в Miranda NG.
 ;file \protocols\Yahoo\res\Yahoo.rc
 [Yahoo]
@@ -24,7 +24,7 @@ Yahoo
 Ползване на книгата с адреси от Yahoo (YAB)
 [Show Avatars]
 Показване на аватари
-[AutoLogin to Yahoo Website(s)]
+[Auto login to Yahoo Website(s)]
 Автовписване в сайтовете Yahoo
 [Display Yahoo notifications]
 Изобразяване на Yahoo уведомявания
@@ -56,8 +56,6 @@ Yahoo списък за игнориране
 Задаване на персонално състояние
 [Show as busy]
 Показвай като зает
-[OK]
-ОК
 [Cancel]
 Отказ
 [Protocol:]
@@ -90,7 +88,7 @@ Yahoo списък за игнориране
 Добавяне
 ;file \protocols\Yahoo\src\chat.cpp
 [[miranda] Got conference invite to room: %s with msg: %s]
-[Съобщение от Miranda NG] Получихте покана за чая стая "%s" с текст: %s
+\[Съобщение от Miranda NG] Получихте покана за чая стая "%s" с текст: %s
 [%s denied invitation with message: %s]
 %s отхвърли поканата, със съобщението: %s
 [Me]
@@ -198,7 +196,7 @@ Yahoo поща
 Показване на профила
 ;file \protocols\Yahoo\src\webcam.cpp
 [[miranda] Got webcam invite. (not currently supported)]
-[Съобщение от Miranda NG] Получихте покана за разговор с уеб камера, но към момента Miranda NG не поддържа такава функция.
+\[Съобщение от Miranda NG] Получихте покана за разговор с уеб камера, но към момента Miranda NG не поддържа такава функция.
 ;file \protocols\Yahoo\src\yahoo.cpp
 [Calendar Reminder]
 Календар - напомняне
@@ -212,9 +210,9 @@ Yahoo поща
 Непозната грешка.
 [New Mail]
 Нов имейл
-[You have %i unread msgs]
+[You have %i unread messages]
 Имате %i непрочетени съобщения
-[New Mail (%i msgs)]
+[New Mail (%i messages)]
 Ново писмо (%i съобщения)
 [From: %s\nSubject: %s]
 От: %s\nТема: %s

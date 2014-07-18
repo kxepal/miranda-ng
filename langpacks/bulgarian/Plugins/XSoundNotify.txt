@@ -24,19 +24,15 @@
 Анулиране
 [Ignore sound for this contact]
 
-[XSoundNotify]
-
-[OK]
-ОК
 [Cancel]
 Отказ
 ;file \plugins\XSoundNotify\src\dialog.cpp
 [Custom sound for %s (%s)]
 
 [Sound files]
-
+Файлове със звуци
 [WAV files]
-
+WAV файлове
 ;file \plugins\XSoundNotify\src\options.cpp
 [Sounds]
 Звук

@@ -114,9 +114,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define DEFAULT_SKIN_FOLDER		"Skins\\Modern contact list"
 extern TCHAR SkinsFolder[MAX_PATH];
 
-// module name of MetaContacts plugin
-extern char *g_szMetaModuleName;
-
 //macros to free data and set it pointer to NULL
 #define mir_free_and_nil(x) {mir_free((void*)x); x=NULL;}
 // shared vars
@@ -198,7 +195,7 @@ extern void TRACE_ERROR();
 extern BOOL DebugDeleteObject(HGDIOBJ a);
 extern void IvalidateDisplayNameCache(DWORD mode);
 
-extern SortedList *clistCache;
+extern LIST<ClcCacheEntry> clistCache;
 
 HICON LoadSmallIcon(HINSTANCE hInstance, int idx);
 BOOL DestroyIcon_protect(HICON icon);
@@ -273,20 +270,9 @@ int AniAva_RenderAvatar(MCONTACT hContact, HDC hdcMem, RECT *rc );
 void CListSettings_FreeCacheItemData(ClcCacheEntry *pDst);
 int CLUI_SyncGetPDNCE(WPARAM wParam, LPARAM lParam);
 WORD pdnce___GetStatus(ClcCacheEntry *pdnce);
-void pdnce___SetStatus( ClcCacheEntry *pdnce, WORD wStatus );
 
 /* move to list module */
 typedef void (*ItemDestuctor)(void*);
-
-template <class T> class INIT : public T
-{
-public:
-	INIT()
-	{
-		memset(this, 0, sizeof(T));
-		this->cbSize=sizeof(T);
-	}
-};
 
 #ifdef __cplusplus
 const ROWCELL * rowAddCell(ROWCELL* &, int );

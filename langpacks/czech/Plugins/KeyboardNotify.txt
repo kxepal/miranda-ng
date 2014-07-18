@@ -46,7 +46,7 @@ Okolnosti pro oznámení
 Celoobrazovkový režim
 [Screen Saver is running]
 Běžící spořič obrazovky
-[Workstation is Locked]
+[Workstation is locked]
 Uzamčená stanice
 [Defined programs are running]
 Běží vybrané programy
@@ -112,7 +112,7 @@ Rychle
 Pomalu
 [&Preview]
 &Přehrát
-[Emulate keypresses (Use this option if you are using a USB keyboard)]
+[Emulate key presses (Use this option if you are using a USB keyboard)]
 Emulovat zmáčknutí kláves (vyžadováno pro klávesnice typu USB)
 [Create/Edit Themes]
 Tvorba a úprava sekvence
@@ -138,8 +138,6 @@ Přepsat existující
 Seznam vybraných programů
 [Program]
 Program
-[OK]
-OK
 [Cancel]
 Zrušit
 [Set LEDs for events]

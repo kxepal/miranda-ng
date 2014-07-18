@@ -24,47 +24,49 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "commonheaders.h"
 
 #include "../modules/plugins/plugins.h"
+#include "../modules/langpack/langpack.h"
 #include "../modules/chat/chat.h"
 
 int CheckRestart();		// core: IDD_WAITRESTART
 
-int LoadSystemModule(void);		// core: m_system.h services
-int LoadNewPluginsModuleInfos(void); // core: preloading plugins
-int LoadNewPluginsModule(void);	// core: N.O. plugins
-int LoadSslModule(void);
-int LoadNetlibModule(void);		// core: network
+int  LoadSystemModule(void);		// core: m_system.h services
+int  LoadNewPluginsModuleInfos(void); // core: preloading plugins
+int  LoadNewPluginsModule(void);	// core: N.O. plugins
+int  LoadSslModule(void);
+int  LoadNetlibModule(void);		// core: network
 void NetlibInitSsl(void);
-int LoadLangpackModule(void);	// core: translation
-int LoadProtocolsModule(void);	// core: protocol manager
-int LoadAccountsModule(void);    // core: account manager
-int LoadIgnoreModule(void);		// protocol filter: ignore
-int LoadDbintfModule(void);
-int LoadEventsModule(void);
-int LoadSrmmModule(void);
+int  LoadLangpackModule(void);	// core: translation
+int  LoadProtocolsModule(void);	// core: protocol manager
+int  LoadAccountsModule(void);    // core: account manager
+int  LoadIgnoreModule(void);		// protocol filter: ignore
+int  LoadDbintfModule(void);
+int  LoadEventsModule(void);
+int  LoadSrmmModule(void);
 
-int LoadContactsModule(void);
-int LoadContactListModule(void);// ui: clist
-int LoadDatabaseModule(void);
-int LoadOptionsModule(void);	// ui: options dialog
-int LoadFindAddModule(void);	// ui: search/add users
-int LoadSkinIcons(void);
-int LoadSkinSounds(void);
-int LoadSkinHotkeys(void);
-int LoadUserInfoModule(void);	// ui: user info
-int LoadVisibilityModule(void);	// ui: visibility control
-int LoadPluginOptionsModule(void);	// ui: plugin viewer
-int LoadAddContactModule(void);	// ui: authcontrol contacts
-int LoadUtilsModule(void);		// ui: utils (has a few window classes, like HyperLink)
-int LoadCLCModule(void);		// window class: CLC control
-int LoadButtonModule(void);		// window class: button class
-int LoadFontserviceModule(void); // ui: font manager
-int LoadIcoLibModule(void);   // ui: icons manager
-int LoadServiceModePlugin(void);
-int LoadDefaultServiceModePlugin(void);
-int LoadErrorsModule(void);
+int  LoadContactsModule(void);
+int  LoadContactListModule(void);// ui: clist
+int  LoadDatabaseModule(void);
+int  LoadMetacontacts(void);
+int  LoadOptionsModule(void);	// ui: options dialog
+int  LoadFindAddModule(void);	// ui: search/add users
+int  LoadSkinIcons(void);
+int  LoadSkinSounds(void);
+int  LoadSkinHotkeys(void);
+int  LoadUserInfoModule(void);	// ui: user info
+int  LoadVisibilityModule(void);	// ui: visibility control
+
+int  LoadPluginOptionsModule(void);	// ui: plugin viewer
+int  LoadAddContactModule(void);	// ui: authcontrol contacts
+int  LoadUtilsModule(void);		// ui: utils (has a few window classes, like HyperLink)
+int  LoadCLCModule(void);		// window class: CLC control
+int  LoadButtonModule(void);		// window class: button class
+int  LoadFontserviceModule(void); // ui: font manager
+int  LoadIcoLibModule(void);   // ui: icons manager
+int  LoadServiceModePlugin(void);
+int  LoadDefaultServiceModePlugin(void);
+int  LoadErrorsModule(void);
 
 void UnloadAccountsModule(void);
-void UnloadButtonModule(void);
 void UnloadClcModule(void);
 void UnloadContactListModule(void);
 void UnloadDatabase(void);
@@ -72,6 +74,7 @@ void UnloadErrorsModule(void);
 void UnloadEventsModule(void);
 void UnloadExtraIconsModule(void);
 void UnloadIcoLibModule(void);
+void UnloadMetacontacts(void);
 void UnloadNetlibModule(void);
 void UnloadNewPlugins(void);
 void UnloadProtocolsModule(void);
@@ -81,13 +84,13 @@ void UnloadSrmmModule(void);
 void UnloadSslModule(void);
 void UnloadUtilsModule(void);
 
-int LoadIcoTabsModule();
-int LoadHeaderbarModule();
-int LoadDescButtonModule();
+int  LoadIcoTabsModule();
+int  LoadHeaderbarModule();
+int  LoadDescButtonModule();
 
 int LoadDefaultModules(void)
 {
-	//load order is very important for these
+	// load order is very important for these
 	if (LoadSystemModule()) return 1;
 	if (LoadLangpackModule()) return 1;		// langpack will be a system module in the new order so this is moved here
 	if (CheckRestart()) return 1;
@@ -147,6 +150,8 @@ int LoadDefaultModules(void)
 	if (LoadContactsModule()) return 1;
 	if (LoadContactListModule()) return 1;   // prepare contact list interface
 	if (LoadAddContactModule()) return 1;
+	if (LoadMetacontacts()) return 1;
+
 	if (LoadNewPluginsModule()) return 1;    // will call Load(void) on everything, clist will load first
 
 	Langpack_SortDuplicates();
@@ -165,16 +170,16 @@ void UnloadDefaultModules(void)
 {
 	UnloadChatModule();
 	UnloadAccountsModule();
+	UnloadMetacontacts();
 	UnloadNewPlugins();
 	UnloadProtocolsModule();
 	UnloadSkinSounds();
 	UnloadSkinHotkeys();
 	UnloadSrmmModule();
-//	UnloadErrorsModule();
+	//	UnloadErrorsModule();
 	UnloadIcoLibModule();
 	UnloadUtilsModule();
 	UnloadExtraIconsModule();
-	UnloadButtonModule();
 	UnloadClcModule();
 	UnloadContactListModule();
 	UnloadEventsModule();

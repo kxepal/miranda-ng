@@ -40,7 +40,7 @@ bool FacebookProto::GetDbAvatarInfo(PROTO_AVATAR_INFORMATIONT &ai, std::string *
 			std::tstring filename = GetAvatarFolder() + L'\\' + dbv.ptszVal + (TCHAR*)_A2T(ext.c_str());
 			db_free(&dbv);			
 
-			_tcsncpy_s(ai.filename, SIZEOF(ai.filename), filename.c_str(), _TRUNCATE);
+			_tcsncpy_s(ai.filename, filename.c_str(), _TRUNCATE);
 			ai.format = ProtoGetAvatarFormat(ai.filename);
 			return true;
 		}
@@ -54,41 +54,50 @@ void FacebookProto::CheckAvatarChange(MCONTACT hContact, std::string image_url)
 	if (image_url.empty())
 		return;
 	
-	bool big_avatars = getBool(FACEBOOK_KEY_BIG_AVATARS, DEFAULT_BIG_AVATARS);
-	
-	// We've got url to avatar of default size 32x32px, let's change it to slightly bigger (50x50px) - looks like maximum size for square format
-	std::tstring::size_type pos = image_url.rfind("/s32x32/");
-	if (pos != std::wstring::npos)
-		image_url = image_url.replace(pos, 8, big_avatars ? "/s200x200/" : "/s50x50/");
-	
-	if (big_avatars)
-	{
-		pos = image_url.rfind("_q.");
-		if (pos != std::wstring::npos)
-			image_url = image_url.replace(pos, 3, "_s.");
+	// We've got url to avatar of default size 32x32px, let's change it to bigger one
+	if (image_url.find("oh=") == std::tstring::npos) {
+		// We can change avatar size only when there are no parameters (hashes) in URL
+		if (getBool(FACEBOOK_KEY_BIG_AVATARS, DEFAULT_BIG_AVATARS)) {
+			// Remove cropping and use bigger size
+			std::tstring::size_type pos = image_url.find("/t1.0-1/");
+			if (pos != std::tstring::npos) {
+				pos += 8;
+
+				std::tstring::size_type pos2 = image_url.find("/", pos);
+				if (pos2 != std::tstring::npos && image_url.find("/", pos2 + 1) != std::tstring::npos)
+					pos2 = image_url.find("/", pos2 + 1);
+
+				// TODO: crop it somehow to square image
+
+				if (pos2 != std::tstring::npos)
+					image_url.replace(pos, pos2 - pos, "p180x180");
+
+				// Allow big images
+				if ((pos = image_url.rfind("_s.")) != std::tstring::npos || (pos = image_url.rfind("_t.")) != std::tstring::npos) {
+					image_url = image_url.replace(pos, 3, "_q.");
+				}
+			}
+		} else {
+			// Try to get slighly bigger (but still square) image
+			utils::text::replace_first(&image_url, ".32.32/", ".50.50/");
+			utils::text::replace_first(&image_url, "32x32/", "50x50/");
+		}
 	}
-	
-	DBVARIANT dbv;
-	bool update_required = true;
-	if (!getString(hContact, FACEBOOK_KEY_AV_URL, &dbv))
-	{
-		update_required = image_url != dbv.pszVal;
-		db_free(&dbv);
-	}
-	if (update_required || !hContact)
-	{
+
+	// Check for avatar change
+	ptrA old_url(getStringA(hContact, FACEBOOK_KEY_AV_URL));
+	bool update_required = (old_url == NULL || image_url.compare(old_url) != 0);
+
+	if (update_required)
 		setString(hContact, FACEBOOK_KEY_AV_URL, image_url.c_str());
-		if (hContact)
-		{
-			db_set_b(hContact, "ContactPhoto", "NeedUpdate", 1);
-			ProtoBroadcastAck(hContact, ACKTYPE_AVATAR, ACKRESULT_STATUS, NULL, 0);
-		}
-		else
-		{
-			PROTO_AVATAR_INFORMATIONT ai = {sizeof(ai)};
-			if (GetAvatarInfo(update_required ? GAIF_FORCE : 0, (LPARAM)&ai) != GAIR_WAITFOR)
-				CallService(MS_AV_REPORTMYAVATARCHANGED, (WPARAM)m_szModuleName, 0);
-		}
+
+	if (!hContact) {
+		PROTO_AVATAR_INFORMATIONT ai = { sizeof(ai) };
+		if (GetAvatarInfo(update_required ? GAIF_FORCE : 0, (LPARAM)&ai) != GAIR_WAITFOR)
+			CallService(MS_AV_REPORTMYAVATARCHANGED, (WPARAM)m_szModuleName, 0);
+	} else if (update_required) {
+		db_set_b(hContact, "ContactPhoto", "NeedUpdate", 1);
+		ProtoBroadcastAck(hContact, ACKTYPE_AVATAR, ACKRESULT_STATUS, NULL, 0);
 	}
 }
 

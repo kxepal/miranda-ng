@@ -31,12 +31,12 @@ int CDb3Mmap::CreateDbHeaders(const DBSignature& _sign)
 
 	CopyMemory(m_dbHeader.signature, &_sign, sizeof(m_dbHeader.signature));
 
-	m_dbHeader.version = DB_095_VERSION;
+	m_dbHeader.version = DB_095_1_VERSION;
 	m_dbHeader.ofsFileEnd = sizeof(struct DBHeader);
 	m_dbHeader.slackSpace = 0;
 	m_dbHeader.contactCount = 0;
 	m_dbHeader.ofsFirstContact = 0;
-	m_dbHeader.ofsFirstModuleName = 0;
+	m_dbHeader.ofsModuleNames = 0;
 	m_dbHeader.ofsUser = 0;
 	//create user
 	m_dbHeader.ofsUser = m_dbHeader.ofsFileEnd;
@@ -52,15 +52,49 @@ int CDb3Mmap::CreateDbHeaders(const DBSignature& _sign)
 	return 0;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+
+static TCHAR tszOldHeaders[] = 
+	LPGENT("This profile is too old to be updated with PluginUpdater, your database must be converted first.\n\nWould you like to read how to fix this?");
+
 int CDb3Mmap::CheckDbHeaders()
 {
-	if (memcmp(m_dbHeader.signature, &dbSignatureU,  sizeof(m_dbHeader.signature)) &&
-		 memcmp(m_dbHeader.signature, &dbSignatureE,  sizeof(m_dbHeader.signature)) &&
-		 memcmp(m_dbHeader.signature, &dbSignatureIM, sizeof(m_dbHeader.signature)))
-		return EGROKPRF_UNKHEADER;
+	if (memcmp(m_dbHeader.signature, &dbSignatureU, sizeof(m_dbHeader.signature)) &&
+		 memcmp(m_dbHeader.signature, &dbSignatureE, sizeof(m_dbHeader.signature)))
+	{
+		if (!memcmp(&m_dbHeader.signature, &dbSignatureIM, sizeof(m_dbHeader.signature)) ||
+			 !memcmp(&m_dbHeader.signature, &dbSignatureSA, sizeof(m_dbHeader.signature)) ||
+			 !memcmp(&m_dbHeader.signature, &dbSignatureSD, sizeof(m_dbHeader.signature)))
+		{
+			if (IDYES == MessageBox(NULL, TranslateTS(tszOldHeaders), TranslateT("Obsolete database format"), MB_YESNO | MB_ICONWARNING)) {
+				TCHAR tszCurPath[MAX_PATH];
+				GetModuleFileName(NULL, tszCurPath, SIZEOF(tszCurPath));
+				TCHAR *p = _tcsrchr(tszCurPath, '\\');
+				if (p) *p = 0;
 
-	if (m_dbHeader.version != DB_095_VERSION && m_dbHeader.version != DB_094_VERSION && m_dbHeader.version != DB_OLD_VERSION)
+				HKEY hPathSetting;
+				if (!RegCreateKey(HKEY_CURRENT_USER, _T("Software\\Miranda NG"), &hPathSetting)) {
+					RegSetValue(hPathSetting, _T("InstallPath"), REG_SZ, tszCurPath, sizeof(tszCurPath));
+					RegCloseKey(hPathSetting);
+				}
+
+				CallService(MS_UTILS_OPENURL, 0, LPARAM("http://wiki.miranda-ng.org/index.php?title=Updating_pre-0.94.9_version_to_0.95.1_and_later"));
+				Sleep(1000);
+				exit(0);
+			}
+		}
+		return EGROKPRF_UNKHEADER;
+	}
+
+	switch (m_dbHeader.version) {
+	case DB_094_VERSION:
+	case DB_095_1_VERSION:
+	case DB_095_VERSION:
+		break;
+
+	default:
 		return EGROKPRF_VERNEWER;
+	}
 	
 	if (m_dbHeader.ofsUser == 0)
 		return EGROKPRF_DAMAGED;

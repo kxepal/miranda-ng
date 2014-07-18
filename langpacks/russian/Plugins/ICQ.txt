@@ -1,8 +1,8 @@
 ﻿#muuid {73a9615c-7d4e-4555-badb-ee05dc928eff}
 ;============================================================
 ;  File: ICQ.dll
-;  Plugin: IcqOscarJ Protocol
-;  Version: 0.11.2.0
+;  Plugin: IcqOscarJ protocol
+;  Version: 0.11.2.5
 ;  Authors: Joe Kucera, Bio, Martin Öberg, Richard Hughes, Jon Keating, etc.
 ;============================================================
 [ICQ protocol support for Miranda NG.]
@@ -29,7 +29,7 @@
 Отмена
 [ICQ number:]
 Номер ICQ:
-[Hint: If you don't enter your password here, Miranda will ask for the password everytime you try to go online.]
+[Hint: If you don't enter your password here, Miranda will ask for the password every time you try to go online.]
 Подсказка: если вы не укажете здесь пароль, Miranda NG будет запрашивать его каждый раз при подключении к сети.
 [Retrieve a lost password or ICQ number]
 Напомнить пароль или номер ICQ
@@ -88,15 +88,13 @@
 [Enable unicode messaging support]
 Включить поддержку Unicode
 [Send all messages in unicode if possible]
-Отсылать в Unicode (если возможно)
+Отправлять в Unicode (если возможно)
 [Use this codepage for Ansi <-> Unicode translation:]
 Перекодировка ANSI <-> Unicode:
 [Make me temporarily visible to contacts I send message to]
 Становиться видимым для контакта, которому посылаете сообщение
-[Notify me when a message delivery has failed (recommended)]
-Уведомлять о неудачной доставке сообщений (старый метод)
-[Never use legacy messaging (server acknowledgements)]
-Игнорировать старый метод, использовать уведомления сервера о доставке
+[Notify me when a message delivery has failed]
+Уведомлять о неудачной доставке сообщений
 [Peer-to-peer Messaging]
 Обмен сообщениями между пользователями
 [Enable peer-to-peer message connections]
@@ -114,7 +112,7 @@
 [Auto-retrieve Custom status details]
 Автозагрузка xСтатусов
 [Block known Spam Bots]
-Блок. известные спамботы
+Блок. известных спамботов
 [Enable AIM contacts support]
 Включить поддержку контактов AIM
 [Direct connections]
@@ -206,7 +204,7 @@
 [Last name:]
 Фамилия:
 [E-mail:]
-E-mail:
+Почта:
 [Gender:]
 Пол:
 [Age:]
@@ -214,7 +212,7 @@ E-mail:
 [Marital status:]
 Семейное положение:
 [Keywords:]
-Кл. слова:
+Ключ. слова:
 [Work]
 Работа
 [Occupation:]
@@ -250,7 +248,7 @@ E-mail:
 [Other]
 Другое
 [Search online users only]
-Только подключённых пользователей
+Искать только подключённых
 [Manage ICQ Server Contacts]
 Управление контактами на сервере
 [Select contacts to store:]
@@ -382,9 +380,9 @@ SNAC(4.1) Ошибка SENDMSG (x%02x)
 [** This message was blocked by the ICQ server ** The sender has flooded the server.]
 ** Это сообщение было заблокировано сервером ICQ ** Отправитель забросал сервер сообщениями.
 [** This message was blocked by the ICQ server ** You are too evil.]
-** Это сообщение было заблокировано сервером ICQ ** Нехороший вы человек...
+** Это сообщение было заблокировано сервером ICQ ** Нехороший вы человек.
 [** Unknown missed message event.]
-** Неизвестное пропущеное событие.
+** Неизвестное пропущенное событие.
 [Error uploading avatar to server, server temporarily unavailable.]
 Ошибка загрузки аватара на сервер. Сервер временно недоступен.
 [Error uploading avatar to server, server refused to accept the image.]
@@ -700,7 +698,7 @@ SNAC(4.1) Ошибка SENDMSG (x%02x)
 [Netherlands (Bonaire Island)]
 Нидерланды (о. Бонайре)
 [Netherlands (Saba Island)]
-Нидерланды  (о. Саба)
+Нидерланды (о. Саба)
 [Netherlands (St. Eustatius Island)]
 Нидерланды (о. Синт-Эстатиус)
 [New Caledonia]
@@ -1360,7 +1358,7 @@ Web-службы
 [Sample Spambot]
 Пример спамбота
 [%s server connection]
-%s подключение к серверу 
+%s подключение к серверу
 [%s client-to-client connections]
 %s подключения между клиентами
 [User ID]
@@ -1396,7 +1394,7 @@ ID пользователя
 [Ready...]
 Готово...
 [Server rate warning -> slowing down the process.]
-Предупреждение сервера о скорости -> замедляюсь...
+Предупреждение сервера о скорости -> замедляюсь.
 [Adding group "%s"...]
 Добавляю группу "%s"...
 [Uploading %s...]
@@ -1425,7 +1423,7 @@ ID пользователя
 Все операции завершены
 [Close]
 Закрыть
-[You have to be online to sychronize the server-list!]
+[You have to be online to synchronize the server-list!]
 Вы должны быть подключены для синхронизации списка на сервере
 [** All contacts **]
 ** Все контакты **
@@ -1649,6 +1647,8 @@ xСтатус %s
 Передача файла не удалась по неизвестной причине.
 [The checksum of file "%s" does not match, the file is probably damaged.]
 Контрольная сумма файла "%s" не совпадает, файл может быть поврежден.
+[Your file transfer has been aborted (error=%d), because one of the files that you selected to send is no longer readable from the disk. You may have deleted or moved it.]
+Передача файлов прервана (ошибка=%d), поскольку один из файлов более недоступен. Возможно, вы удалили или переместили его.
 [<invalid>]
 <неверно>
 [January]
@@ -1790,7 +1790,7 @@ xСтатус %s
 [The password does not match the password you originally entered. Check Caps Lock and try again.]
 Пароль не совпадает с паролем, введённым ранее. Проверьте Caps Lock и попробуйте снова.
 [The ICQ server does not support passwords longer than 8 characters. Please use a shorter password.]
-Сервер ICQ не поддерживает пароли длиной более 8 символов. Используйте пароль по короче.
+Сервер ICQ не поддерживает пароли длиной более 8 символов. Используйте пароль покороче.
 [<unremovable once applied>]
 <нельзя удалить после ввода>
 [<empty>]

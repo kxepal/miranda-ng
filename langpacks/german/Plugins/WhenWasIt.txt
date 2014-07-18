@@ -70,14 +70,12 @@ Schließen
 Alle Kontakte zeigen
 [Set birthday:]
 Geburtstag setzen:
-[OK]
-OK
 [Manage anniversaries]
 Jahrestage verwalten
 [Title:]
 Titel:
 [Description:]
-Übersicht:
+Beschreibung:
 [Date:]
 Datum:
 [Save]

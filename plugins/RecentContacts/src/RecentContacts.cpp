@@ -194,7 +194,7 @@ INT_PTR CALLBACK ShowListMainDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM 
 			ScreenToClient(hDlg, &p);
 			DlgDat->ListUCRect.right = p.x;
 			DlgDat->ListUCRect.bottom = p.y;
-			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG)DlgDat);
+			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)DlgDat);
 
 			//set listview styles
 			ListView_SetExtendedListViewStyleEx(hList,
@@ -386,7 +386,7 @@ INT_PTR OnMenuCommandShowList(WPARAM wParam, LPARAM lParam)
 
 		curEvent = db_event_last(curContact);
 		if (curEvent != NULL) {
-			for ( ; curEvent != NULL; curEvent = db_event_prev(curEvent)) {
+			for ( ; curEvent != NULL; curEvent = db_event_prev(curContact, curEvent)) {
 				dbe.cbBlob = 1;
 				if (db_event_get(curEvent, &dbe) != 0) {
 					curEvent = NULL;
@@ -415,11 +415,9 @@ INT_PTR OnMenuCommandShowList(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-static int OnContactSettingChanged( WPARAM wParam, LPARAM lParam )
+static int OnContactSettingChanged( WPARAM hContact, LPARAM lParam )
 {
-	HANDLE		hContact	= ( HANDLE )wParam;
 	DBCONTACTWRITESETTING* pdbcws = ( DBCONTACTWRITESETTING* )lParam;
-
 	if ( hContact == NULL )
 		if ( !stricmp( pdbcws->szModule, dbLastUC_ModuleName))
 			LoadDBSettings();
@@ -495,6 +493,8 @@ static int OnPrebuildContactMenu(WPARAM hContact, LPARAM lParam)
 
 int OnModulesLoaded(WPARAM wParam, LPARAM lParam)
 {
+	HookEvent(ME_TTB_MODULELOADED, Create_TopToolbarShowList);
+
 	Create_MenuitemShowList();
 	IsMessageAPI = (CallService(MS_MSG_GETWINDOWAPI, 0, 0) != CALLSERVICE_NOTFOUND);
 	LoadDBSettings();
@@ -537,7 +537,6 @@ extern "C" __declspec(dllexport) int Load(void)
 	
 	HookEvent(ME_SYSTEM_MODULESLOADED, OnModulesLoaded);
 	HookEvent(ME_CLIST_PREBUILDCONTACTMENU, OnPrebuildContactMenu);
-	HookEvent(ME_TTB_MODULELOADED, Create_TopToolbarShowList);
 	HookEvent(ME_MSG_WINDOWEVENT, OnMsgEvent);
 	HookEvent(ME_DB_CONTACT_SETTINGCHANGED, OnContactSettingChanged );
 	HookEvent(ME_OPT_INITIALISE, onOptInitialise);

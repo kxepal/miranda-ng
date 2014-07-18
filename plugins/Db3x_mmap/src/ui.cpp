@@ -63,7 +63,7 @@ static INT_PTR CALLBACK sttEnterPassword(HWND hwndDlg, UINT uMsg, WPARAM wParam,
 	switch (uMsg) {
 	case WM_INITDIALOG:
 		TranslateDialogDefault(hwndDlg);
-		SendMessage(GetDlgItem(hwndDlg, IDC_HEADERBAR), WM_SETICON, ICON_SMALL, (LPARAM)Skin_GetIconByHandle(iconList[0].hIcolib, true));
+		SendMessage(GetDlgItem(hwndDlg, IDC_HEADERBAR), WM_SETICON, ICON_SMALL, (LPARAM)LoadIcon(g_hInst, MAKEINTRESOURCE(iconList[0].defIconID)));
 
 		param = (DlgChangePassParam*)lParam;
 		SetWindowLongPtr(hwndDlg, GWLP_USERDATA, lParam);
@@ -236,7 +236,7 @@ LBL_Error:
 	return FALSE;
 }
 
-static INT_PTR ChangePassword(void* obj, LPARAM, LPARAM)
+static INT_PTR ChangePassword(void* obj, WPARAM, LPARAM)
 {
 	CDb3Mmap *db = (CDb3Mmap*)obj;
 	DlgChangePassParam param = { db };
@@ -335,6 +335,6 @@ static int OnModulesLoaded(PVOID obj, WPARAM, LPARAM)
 
 void CDb3Mmap::InitDialogs()
 {
-	CreateServiceFunctionObj(MS_DB_CHANGEPASSWORD, ChangePassword, this);
-	HookEventObj(ME_SYSTEM_MODULESLOADED, OnModulesLoaded, this);
+	hService = CreateServiceFunctionObj(MS_DB_CHANGEPASSWORD, ChangePassword, this);
+	hHook = HookEventObj(ME_SYSTEM_MODULESLOADED, OnModulesLoaded, this);
 }

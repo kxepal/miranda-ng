@@ -78,19 +78,17 @@ STDMETHODIMP_(MCONTACT) CDb3Mmap::FindNextContact(MCONTACT contactID, const char
 
 STDMETHODIMP_(LONG) CDb3Mmap::DeleteContact(MCONTACT contactID)
 {
-	if (contactID == NULL)
+	if (contactID == 0) // global contact cannot be removed
 		return 1;
 
 	mir_cslockfull lck(m_csDbAccess);
-	DBCachedContact *cc = m_cache->GetCachedContact(contactID);
-	if (cc == NULL)
-		return 1;
+	DWORD ofsContact = GetContactOffset(contactID);
 
-	DBContact *dbc = (DBContact*)DBRead(cc->dwDriverData, sizeof(DBContact), NULL);
+	DBContact *dbc = (DBContact*)DBRead(ofsContact, sizeof(DBContact), NULL);
 	if (dbc->signature != DBCONTACT_SIGNATURE)
 		return 1;
 
-	if (cc->dwDriverData == m_dbHeader.ofsUser) {
+	if (ofsContact == m_dbHeader.ofsUser) {
 		log0("FATAL: del of user chain attempted.");
 		return 1;
 	}
@@ -124,7 +122,7 @@ STDMETHODIMP_(LONG) CDb3Mmap::DeleteContact(MCONTACT contactID)
 	}
 
 	// find previous contact in chain and change ofsNext
-	if (m_dbHeader.ofsFirstContact == cc->dwDriverData) {
+	if (m_dbHeader.ofsFirstContact == ofsContact) {
 		m_dbHeader.ofsFirstContact = dbc->ofsNext;
 		DBWrite(0, &m_dbHeader, sizeof(m_dbHeader));
 	}
@@ -132,7 +130,7 @@ STDMETHODIMP_(LONG) CDb3Mmap::DeleteContact(MCONTACT contactID)
 		DWORD ofsNext = dbc->ofsNext;
 		ofsThis = m_dbHeader.ofsFirstContact;
 		DBContact *dbcPrev = (DBContact*)DBRead(ofsThis, sizeof(DBContact), NULL);
-		while (dbcPrev->ofsNext != cc->dwDriverData) {
+		while (dbcPrev->ofsNext != ofsContact) {
 			if (dbcPrev->ofsNext == 0) DatabaseCorruption(NULL);
 			ofsThis = dbcPrev->ofsNext;
 			dbcPrev = (DBContact*)DBRead(ofsThis, sizeof(DBContact), NULL);
@@ -142,7 +140,7 @@ STDMETHODIMP_(LONG) CDb3Mmap::DeleteContact(MCONTACT contactID)
 	}
 
 	// delete contact
-	DeleteSpace(cc->dwDriverData, sizeof(DBContact));
+	DeleteSpace(ofsContact, sizeof(DBContact));
 
 	// decrement contact count
 	m_dbHeader.contactCount--;
@@ -156,7 +154,7 @@ STDMETHODIMP_(LONG) CDb3Mmap::DeleteContact(MCONTACT contactID)
 	return 0;
 }
 
-STDMETHODIMP_(HANDLE) CDb3Mmap::AddContact()
+STDMETHODIMP_(MCONTACT) CDb3Mmap::AddContact()
 {
 	DWORD ofsNew;
 	log0("add contact");
@@ -180,7 +178,7 @@ STDMETHODIMP_(HANDLE) CDb3Mmap::AddContact()
 	cc->dwDriverData = ofsNew;
 
 	NotifyEventHooks(hContactAddedEvent, dbc.dwContactID, 0);
-	return (HANDLE)dbc.dwContactID;
+	return dbc.dwContactID;
 }
 
 STDMETHODIMP_(BOOL) CDb3Mmap::IsDbContact(MCONTACT contactID)
@@ -200,6 +198,185 @@ STDMETHODIMP_(BOOL) CDb3Mmap::IsDbContact(MCONTACT contactID)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
+// metacontacts support
+
+BOOL CDb3Mmap::MetaDetouchSub(DBCachedContact *cc, int nSub)
+{
+	CallService(MS_DB_MODULE_DELETE, cc->pSubs[nSub], (LPARAM)META_PROTO);
+	return 0;
+}
+
+BOOL CDb3Mmap::MetaSetDefault(DBCachedContact *cc)
+{
+	return db_set_dw(cc->contactID, META_PROTO, "Default", cc->nDefault);
+}
+
+static int SortEvent(const DBEvent *p1, const DBEvent *p2)
+{
+	return (LONG)p1->timestamp - (LONG)p2->timestamp;
+}
+
+BOOL CDb3Mmap::MetaMergeHistory(DBCachedContact *ccMeta, DBCachedContact *ccSub)
+{
+	mir_cslock lck(m_csDbAccess);
+	DBContact *dbMeta = (DBContact*)DBRead(ccMeta->dwDriverData, sizeof(DBContact), NULL);
+	DBContact *dbSub = (DBContact*)DBRead(ccSub->dwDriverData, sizeof(DBContact), NULL);
+	if (dbMeta->signature != DBCONTACT_SIGNATURE || dbSub->signature != DBCONTACT_SIGNATURE)
+		return 1;
+
+	// special cases
+	if (dbSub->ofsFirstEvent == 0) // hurrah, nothing to do
+		return 0;
+
+	LIST<DBEvent> arEvents(20000, SortEvent);
+	BOOL ret = 0;
+	__try {
+		if (dbMeta->ofsFirstEvent == 0) { // simply chain history to a meta
+			dbMeta->eventCount = dbSub->eventCount;
+			dbMeta->ofsFirstEvent = dbSub->ofsFirstEvent;
+			dbMeta->ofsLastEvent = dbSub->ofsLastEvent;
+			dbMeta->ofsFirstUnread = dbSub->ofsFirstUnread;
+			dbMeta->tsFirstUnread = dbSub->tsFirstUnread;
+		}
+		else {
+			// there're events in both meta's & sub's event chains
+			// relink sub's event chain to meta without changing events themselves
+			for (DWORD ofsMeta = dbMeta->ofsFirstEvent; ofsMeta != 0;) {
+				DBEvent *pev = (DBEvent*)DBRead(ofsMeta, sizeof(DBEvent), NULL);
+				if (pev->signature != DBEVENT_SIGNATURE) { // broken chain, don't touch it
+					ret = 2;
+					__leave;
+				}
+
+				arEvents.insert(pev);
+				ofsMeta = pev->ofsNext;
+			}
+
+			for (DWORD ofsSub = dbSub->ofsFirstEvent; ofsSub != 0;) {
+				DBEvent *pev = (DBEvent*)DBRead(ofsSub, sizeof(DBEvent), NULL);
+				if (pev->signature != DBEVENT_SIGNATURE) { // broken chain, don't touch it
+					ret = 2;
+					__leave;
+				}
+
+				arEvents.insert(pev);
+				ofsSub = pev->ofsNext;
+			}
+
+			// all events are in memory, valid & sorted in the right order.
+			// ready? steady? go!
+			dbMeta->eventCount = arEvents.getCount();
+
+			DBEvent *pFirst = arEvents[0];
+			dbMeta->ofsFirstEvent = DWORD(PBYTE(pFirst) - m_pDbCache);
+			pFirst->ofsPrev = 0;
+			dbMeta->ofsFirstUnread = pFirst->markedRead() ? 0 : dbMeta->ofsFirstEvent;
+
+			DBEvent *pLast = arEvents[arEvents.getCount() - 1];
+			dbMeta->ofsLastEvent = DWORD(PBYTE(pLast) - m_pDbCache);
+			pLast->ofsNext = 0;
+
+			for (int i = 1; i < arEvents.getCount(); i++) {
+				DBEvent *pPrev = arEvents[i - 1], *pNext = arEvents[i];
+				pPrev->ofsNext = DWORD(PBYTE(pNext) - m_pDbCache);
+				pNext->ofsPrev = DWORD(PBYTE(pPrev) - m_pDbCache);
+
+				if (dbMeta->ofsFirstUnread == 0 && !pNext->markedRead())
+					dbMeta->ofsFirstUnread = pPrev->ofsNext;
+			}
+		}
+
+		// remove any traces of history from sub
+		dbSub->ofsFirstEvent = dbSub->ofsLastEvent = dbSub->ofsFirstUnread = dbSub->tsFirstUnread = 0;
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER)
+	{
+		ret = 3;
+	}
+
+	FlushViewOfFile(m_pDbCache, 0);
+	return ret;
+}
+
+BOOL CDb3Mmap::MetaSplitHistory(DBCachedContact *ccMeta, DBCachedContact *ccSub)
+{
+	mir_cslock lck(m_csDbAccess);
+	DBContact dbMeta = *(DBContact*)DBRead(ccMeta->dwDriverData, sizeof(DBContact), NULL);
+	DBContact dbSub = *(DBContact*)DBRead(ccSub->dwDriverData, sizeof(DBContact), NULL);
+	if (dbMeta.signature != DBCONTACT_SIGNATURE || dbSub.signature != DBCONTACT_SIGNATURE)
+		return 1;
+
+	if (dbMeta.ofsFirstEvent == 0) // nothing to do
+		return 0;
+
+	BOOL ret = 0;
+	__try {
+		if (ret = WipeContactHistory(&dbSub))
+			__leave;		
+
+		DWORD dwOffset = dbMeta.ofsFirstEvent;
+		DBEvent *evMeta = NULL, *evSub = NULL;
+		dbMeta.eventCount = 0; dbMeta.ofsFirstEvent = dbMeta.ofsLastEvent = dbMeta.ofsFirstUnread = dbMeta.tsFirstUnread = 0;
+
+		while (dwOffset != 0) {
+			DBEvent *evCurr = (DBEvent*)DBRead(dwOffset, sizeof(DBEvent), NULL);
+			if (evCurr->signature != DBEVENT_SIGNATURE)
+				break;
+
+			DWORD dwNext = evCurr->ofsNext; evCurr->ofsNext = 0;
+
+			// extract it to sub's chain
+			if (evCurr->contactID == ccSub->contactID) {
+				dbSub.eventCount++;
+				if (evSub != NULL) {
+					evSub->ofsNext = dwOffset;
+					evCurr->ofsPrev = DWORD(PBYTE(evSub) - m_pDbCache);
+				}
+				else {
+					dbSub.ofsFirstEvent = dwOffset;
+					evCurr->ofsPrev = 0;
+				}
+				if (dbSub.ofsFirstUnread == 0 && !evCurr->markedRead()) {
+					dbSub.ofsFirstUnread = dwOffset;
+					dbSub.tsFirstUnread = evCurr->timestamp;
+				}
+				dbSub.ofsLastEvent = dwOffset;
+				evSub = evCurr;
+			}
+			else {
+				dbMeta.eventCount++;
+				if (evMeta != NULL) {
+					evMeta->ofsNext = dwOffset;
+					evCurr->ofsPrev = DWORD(PBYTE(evMeta) - m_pDbCache);
+				}
+				else {
+					dbMeta.ofsFirstEvent = dwOffset;
+					evCurr->ofsPrev = 0;
+				}
+				if (dbMeta.ofsFirstUnread == 0 && !evCurr->markedRead()) {
+					dbMeta.ofsFirstUnread = dwOffset;
+					dbMeta.tsFirstUnread = evCurr->timestamp;
+				}
+				dbMeta.ofsLastEvent = dwOffset;
+				evMeta = evCurr;
+			}
+
+			dwOffset = dwNext;
+		}
+
+		DBWrite(ccSub->dwDriverData, &dbSub, sizeof(DBContact));
+		DBWrite(ccMeta->dwDriverData, &dbMeta, sizeof(DBContact));
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER)
+	{
+		ret = 3;
+	}
+
+	FlushViewOfFile(m_pDbCache, 0);
+	return ret;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
 // contacts convertor
 
 #define OLD_CONTACT_SIZE offsetof(DBContact, dwContactID)
@@ -209,6 +386,7 @@ void CDb3Mmap::ConvertContacts()
 	DBContact *pPrev = NULL;
 
 	m_dbHeader.ofsUser = ReallocSpace(m_dbHeader.ofsUser, OLD_CONTACT_SIZE, sizeof(DBContact));
+	DBWrite(0, &m_dbHeader, sizeof(m_dbHeader));
 
 	for (DWORD dwOffset = m_dbHeader.ofsFirstContact; dwOffset != 0;) {
 		DBContact *pOld = (DBContact*)DBRead(dwOffset, sizeof(DBContact), NULL);
@@ -221,6 +399,8 @@ void CDb3Mmap::ConvertContacts()
 		else
 			pPrev->ofsNext = dwNew;
 		pPrev = pNew;
+
+		m_contactsMap.insert(new ConvertedContact(dwOffset, pNew->dwContactID));
 		dwOffset = pNew->ofsNext;
 	}
 
@@ -229,15 +409,17 @@ void CDb3Mmap::ConvertContacts()
 
 void CDb3Mmap::FillContacts()
 {
+	LIST<void> arMetas(10);
+
 	for (DWORD dwOffset = m_dbHeader.ofsFirstContact; dwOffset != 0;) {
 		DBContact *p = (DBContact*)DBRead(dwOffset, sizeof(DBContact), NULL);
 		if (p->signature != DBCONTACT_SIGNATURE)
 			break;
 
 		DWORD dwContactID;
-		if (m_dbHeader.version == DB_095_VERSION) {
+		if (m_dbHeader.version >= DB_095_VERSION) {
 			dwContactID = p->dwContactID;
-			if (dwContactID > m_dwMaxContactId)
+			if (dwContactID >= m_dwMaxContactId)
 				m_dwMaxContactId = dwContactID + 1;
 		}
 		else dwContactID = m_dwMaxContactId++;
@@ -246,15 +428,77 @@ void CDb3Mmap::FillContacts()
 		cc->dwDriverData = dwOffset;
 		CheckProto(cc, "");
 
+		DBVARIANT dbv; dbv.type = DBVT_DWORD;
+		cc->nSubs = (0 != GetContactSetting(dwContactID, META_PROTO, "NumContacts", &dbv)) ? -1 : dbv.dVal;
+		if (cc->nSubs != -1) {
+			cc->pSubs = (MCONTACT*)mir_alloc(cc->nSubs*sizeof(MCONTACT));
+			for (int i = 0; i < cc->nSubs; i++) {
+				char setting[100];
+				mir_snprintf(setting, sizeof(setting), "Handle%d", i);
+				MCONTACT hSub = (0 != GetContactSetting(dwContactID, META_PROTO, setting, &dbv)) ? NULL : dbv.dVal;
+				ConvertedContact *pcc = m_contactsMap.find((ConvertedContact*)&hSub);
+				if (pcc != NULL) {
+					hSub = pcc->hNew;
+
+					DBCONTACTWRITESETTING dbws = { META_PROTO, setting };
+					dbws.value.type = DBVT_DWORD;
+					dbws.value.dVal = hSub;
+					WriteContactSetting(dwContactID, &dbws);
+				}
+				cc->pSubs[i] = hSub;
+			}
+		}
+		cc->nDefault = (0 != GetContactSetting(dwContactID, META_PROTO, "Default", &dbv)) ? -1 : dbv.dVal;
+		cc->parentID = (0 != GetContactSetting(dwContactID, META_PROTO, "ParentMeta", &dbv)) ? NULL : dbv.dVal;
+
+		// whether we need conversion or not
+		if (!GetContactSetting(dwContactID, META_PROTO, "MetaID", &dbv))
+			arMetas.insert((void*)dwContactID);
+
 		dwOffset = p->ofsNext;
+	}
+
+	DBVARIANT dbv; dbv.type = DBVT_DWORD;
+	for (int i = 0; i < arMetas.getCount(); i++) {
+		MCONTACT hContact = (MCONTACT)arMetas[i];
+		DBCachedContact *ccMeta = m_cache->GetCachedContact(hContact);
+		if (ccMeta == NULL)
+			continue;
+
+		// we don't need it anymore
+		if (!GetContactSetting(hContact, META_PROTO, "MetaID", &dbv)) {
+			DeleteContactSetting(hContact, META_PROTO, "MetaID");
+			WipeContactHistory((DBContact*)DBRead(ccMeta->dwDriverData, sizeof(DBContact), NULL));
+		}
+
+		for (int k = 0; k < ccMeta->nSubs; k++) {
+			// store contact id instead of the old mc number
+			DBCONTACTWRITESETTING dbws = { META_PROTO, "ParentMeta" };
+			dbws.value.type = DBVT_DWORD;
+			dbws.value.dVal = hContact;
+			WriteContactSetting(ccMeta->pSubs[k], &dbws);
+
+			// wipe out old data from subcontacts
+			DeleteContactSetting(ccMeta->pSubs[k], META_PROTO, "ContactNumber");
+			DeleteContactSetting(ccMeta->pSubs[k], META_PROTO, "MetaLink");
+
+			DBCachedContact *ccSub = m_cache->GetCachedContact(ccMeta->pSubs[k]);
+			if (ccSub) {
+				ccSub->parentID = hContact;
+				MetaMergeHistory(ccMeta, ccSub);
+			}
+		}
 	}
 }
 
-DWORD CDb3Mmap::GetContactOffset(MCONTACT contactID)
+DWORD CDb3Mmap::GetContactOffset(MCONTACT contactID, DBCachedContact **pcc)
 {
-	if (contactID == 0)
+	if (contactID == 0) {
+		if (pcc) *pcc = NULL;
 		return m_dbHeader.ofsUser;
+	}
 
 	DBCachedContact *cc = m_cache->GetCachedContact(contactID);
+	if (pcc) *pcc = cc;
 	return (cc == NULL) ? 0 : cc->dwDriverData;
 }

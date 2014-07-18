@@ -1,12 +1,12 @@
 ﻿#muuid {144e80a2-d198-428b-acbe-9d55dacc7fde}
 ;============================================================
 ;  File: Jabber.dll
-;  Plugin: Jabber Protocol
+;  Plugin: Jabber protocol
 ;  Version: 0.11.0.4
 ;  Authors: George Hazan, Maxim Mluhov, Victor Pavlychko, Artem Shpynov, Michael Stepura
 ;============================================================
-[Jabber protocol support for Miranda NG.]
-Падтрымка пратакола Jabber у  Miranda NG.
+[Jabber (XMPP) protocol support for Miranda NG.]
+Падтрымка пратакола Jabber (XMPP) у Miranda NG.
 ;file \protocols\JabberG\res\jabber.rc
 [Edit Note]
 Рэдагаваць нататку
@@ -46,8 +46,6 @@
 Імпарт з файла
 [Export to file]
 Экспарт
-[Jabber]
-Jabber
 [Username:]
 Карыстач:
 [Change password]
@@ -463,7 +461,7 @@ Bytestream проксі недасяжны.
 Прагляд спісу службаў
 [Can inform about its Jabber capabilities]
 Паведамленне падтрымоўваных функцый Jabber (CAPs)
-[Supports stream initiation (for filetransfers for ex.)]
+[Supports stream initiation (e.g., for filetransfers)]
 Ініцыяванне струменя (перадача файлаў вонкі)
 [Supports stream initiation for file transfers]
 Ініцыяванне струменя для перадачы файлаў
@@ -525,7 +523,7 @@ xHTML фармат чат-паведамленняў
 Адпраўка інфармацыі пра парслухоўваемую музыку
 [Receives information about the music to which a user is listening]
 Прыём інфармацыі пра парслухоўваемую музыку
-[Supports private XML Storage (for bookmakrs and other)]
+[Supports private XML Storage (for bookmarks and other)]
 Захоўванне XML (для закладак і інш.)
 [Supports attention requests ('nudge')]
 Падтрымка абестак увагі ('nudge')
@@ -537,6 +535,10 @@ xHTML фармат чат-паведамленняў
 Падтрымка нататак Miranda
 [Supports Jingle]
 Падтрымка Jingle
+[Supports Roster Exchange]
+Падтрымка абмена росцера
+[Supports direct chat invitations (XEP-0249)]
+Падтрымка прамых запрашэнняў ш чат (XEP-0249)
 ;file \protocols\JabberG\src\jabber_captcha.cpp
 [Enter the text you see]
 Увядзіце тэкст, які бачыце
@@ -1567,13 +1569,13 @@ Odnoklassniki
 Выдаліць
 [** Default **]
 ** Па змаўчанні **
-[** Subsription: both **]
+[** Subscription: both **]
 ** Падпіска: абедзве **
-[** Subsription: to **]
+[** Subscription: to **]
 ** Падпіска: у **
-[** Subsription: from **]
+[** Subscription: from **]
 ** Падпіска: ад **
-[** Subsription: none **]
+[** Subscription: none **]
 ** Падпіска: няма **
 [<none>]
 <няма>
@@ -1588,15 +1590,15 @@ Odnoklassniki
 [List has no rules, empty lists will be deleted then changes applied]
 У спісе няма правіл, пустыя спісы будуць выдаленыя
 [allow ]
-дазволіць
+дазволіць\s
 [deny ]
-забараніць
+забараніць\s
 [all.]
 усё.
 [messages]
 паведамленняў
 [ and ]
- і
+ і\s
 [incoming presences]
 уваходная прысутнасць
 [outgoing presences]
@@ -1604,17 +1606,17 @@ Odnoklassniki
 [queries]
 запыты
 [Else ]
-Інакш
+Інакш\s
 [If Jabber ID is ']
 Калі JID  '
 [ (nickname: ]
- (мянушка:
+ (мянушка:\s
 [If group is ']
 Калі гурт '
 [If subscription is ']
 Калі падпіска  '
 [then ]
-то
+то\s
 [ (act., def.)]
 (актыўна, змаўч.)
 [ (active)]
@@ -1642,7 +1644,7 @@ Odnoklassniki
 [List Editor...]
 Рэдактар спісаў...
 ;file \protocols\JabberG\src\jabber_proto.cpp
-[No compatible file transfer machanism exist]
+[No compatible file transfer mechanism exists]
 Не знойдзена ні аднаго дзейснага механізма перадачы файлаў
 [Protocol is offline or no JID]
 Конт не далучаны ці няма JID.
@@ -1901,8 +1903,6 @@ Jabber vCard: рэдагаванне тэлефона
 [%s connection]
 Злучэнне %s
 ;file \protocols\JabberG\src\jabber_xstatus.cpp
-[OK (%d)]
-OK (%d)
 [Afraid]
 Спалоханы
 [Amazed]

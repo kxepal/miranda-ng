@@ -20,7 +20,7 @@
 пікс.
 [Hide all contacts]
 Хаваць усе кантакты
-[Hide when a fulscreen app is active]
+[Hide when a fullscreen app is active]
 Хаваць калі прыкладанне разгорнута
 [Show tooltips*]
 Паказваць падказкі*
@@ -98,7 +98,7 @@
 ;file \plugins\FloatingContacts\src\options.cpp
 [Floating Contacts]
 Плывучыя кантакты
-[Contact List]
+[Contact list]
 Спіс кантактаў
 [Main Features]
 Галоўнае

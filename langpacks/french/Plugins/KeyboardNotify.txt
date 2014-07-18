@@ -112,7 +112,7 @@ Rapide
 Lent
 [&Preview]
 &Aperçu
-[Emulate keypresses (Use this option if you are using a USB keyboard)]
+[Emulate key presses (Use this option if you are using a USB keyboard)]
 Émuler la pression des touches (utile en cas de clavier USB)
 [Create/Edit Themes]
 Créer/Modifier les thèmes
@@ -138,8 +138,6 @@ Exportation...
 
 [Program]
 Programme
-[OK]
-OK
 [Cancel]
 Annuler
 [Set LEDs for events]
@@ -157,13 +155,13 @@ Annuler
 [URL events]
 Liens URL
 [Other events]
-
+Autres événements
 [Consider event opened after]
 
 [Use custom theme]
 Thème personnalisé
 [The following events are being ignored:]
-Les évènements suivants sont ignorés:
+Les évènements suivants sont ignorés :
 [Ignore messages]
 Ignorer les messages
 [Ignore URLs]

@@ -128,7 +128,7 @@
 [Session name]
 Ім'я сесії
 [Path to file**]
-Шлях до файла**
+Шлях до файлу**
 [Export imported messages]
 Експорт імпортованих повідомлень
 [* Use negative values to filter younger events]
@@ -228,7 +228,7 @@
 [Binary]
 Двійковий файл
 [Dat (mContacts)]
-dat (mContacts)
+dat (плагін mContacts)
 [Save window position as default]
 Зберегти положення вікна
 [Save window position for all contacts]
@@ -270,11 +270,11 @@ dat (mContacts)
 [>> Outgoing timestamp]
 >> Вихідний час
 [Outgoing background]
-Вихідний фон
+Фон вихідних
 [<< Incoming timestamp]
 << Вхідний час
 [Incoming background]
-Вхідний фон
+Фон вхідних
 [>> Outgoing name]
 >> Вихідне ім'я
 [<< Incoming name]
@@ -316,16 +316,16 @@ dat (mContacts)
 [Import From Binary]
 Імпорт з двійкового файлу
 [Export To Dat (mContacts)]
-Експорт dat (mContacts)
+Експорт у dat (плагін mContacts)
 [Import From Dat (mContacts)]
-Імпорт з dat (mContacts)
+Імпорт з dat (плагін mContacts)
 [Invalid event number]
 Неправильний номер події
 [Incoming events]
 Вхідні події
 [Outgoing events]
 Вихідні події
-[File do not exist. Enter correct file path.]
+[File does not exist. Enter correct file path.]
 Файл відсутній. Введіть вірний шлях до файлу.
 [Invalid file]
 Неправильний файл
@@ -407,6 +407,8 @@ dat (mContacts)
 Фільтр:
 [Conversation started at %s]
 Розмова почалася %s
+[_files]
+файли
 [Menu]
 Меню
 [Open all]
@@ -427,26 +429,26 @@ dat (mContacts)
 Щоб створити сесію, відкрийте WinSCP, натисніть "Нова сесія", введіть дату та збережіть під певним ім'ям. Пам'ятайте, якщо FTP-сервер використовує пароль, то ви повинні зберегти його в WinSCP.
 [Path to file]
 Шлях до файлу
-[FTP path must contain '/' instead '\' and start with '/'.]
-FTP-шлях повинен містити '/' замість '\' і починатися з '/'.
+[FTP path must contain '/' instead '\\' and start with '/'.]
+FTP-шлях повинен містити '/' замість '\\' і починатися з '/'.
 [FTP path cannot contain <date> in import task.]
 FTP-шлях не може містити <date> в задачі імпорту.
 [Unknown error]
 Невідома помилка
 [Cannot get FTP file(s).]
-Неможливо завантажити FTP файл(и).
+Не вдається отримати файл(и) з FTP.
 [Cannot unzip file(s).]
-Неможливо разархівувати файл(и).
+Не вдається розархівувати файл(и).
 [Incorrect file format: %s.]
-Некоректний формат файлу: %S.
+Неправильний формат файлу: %s.
 [Unknown contact in file: %s.]
-Невідомий контакт у файлу: %s.
+Невідомий контакт у файлі: %s.
 [Cannot export history for contact: %s.]
-Неможливо експортувати історію для контакту: %s
+Не вдається експортувати історію контакту: %s
 [Cannot compress file(s).]
-Неможливо архівувати файл(и).
+Не вдається архівувати файл(и).
 [Cannot send FTP file(s).]
-Неможливо відіслати FTP файл(и).
+Не вдається завантажити файл(и) на FTP.
 [Task finished]
 Завдання завершено
 [Task '%s' execution failed]
@@ -463,5 +465,3 @@ FTP-шлях не може містити <date> в задачі імпорту.
 Ви досягли кінця групи
 [You have reached the end of the history.]
 Ви досягли кінця історії
-[_files]
-файли

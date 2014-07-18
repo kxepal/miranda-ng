@@ -240,7 +240,7 @@ int CLStreamRTFInfo::nLoadFileStream(LPBYTE pbBuff, LONG cb)
 
 	if (nOptimalReadLen < 500 )
 	{
-		MessageBox(NULL, TranslateT("Error: Optimal buffer size decrecied to a to low size!"), MSG_BOX_TITEL, MB_OK);
+		MessageBox(NULL, TranslateT("Error: Optimal buffer size decreased to a too low size!"), MSG_BOX_TITEL, MB_OK);
 		return 0;
 	}
 
@@ -989,7 +989,7 @@ static INT_PTR CALLBACK DlgProcFileViewer(HWND hwndDlg, UINT msg, WPARAM wParam,
 		{	
 			HWND hRichEdit = GetDlgItem(hwndDlg, IDC_RICHEDIT);
 			mir_subclassWindow(hRichEdit, EditSubclassProc);
-			SetWindowLongPtr(hRichEdit, GWLP_USERDATA, (WPARAM)pclDlg);
+			SetWindowLongPtr(hRichEdit, GWLP_USERDATA, (LONG_PTR)pclDlg);
 			SendMessage(hRichEdit, EM_SETEVENTMASK, 0, ENM_LINK);
 			SendMessage(hRichEdit, EM_AUTOURLDETECT, TRUE, 0);
 
@@ -1053,7 +1053,7 @@ static INT_PTR CALLBACK DlgProcFileViewer(HWND hwndDlg, UINT msg, WPARAM wParam,
 		LeaveCriticalSection(&csHistoryList);
 
 		delete pclDlg;
-		SetWindowLongPtr(hwndDlg,GWLP_USERDATA,NULL);
+		SetWindowLongPtr(hwndDlg,GWLP_USERDATA,0);
 		return 0;
 
 	case WM_DESTROY:

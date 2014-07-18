@@ -30,12 +30,8 @@ Passwort aus WART-Utility einfügen
 Verwenden Sie das WART-Utility aus dem Plugins-Verzeichnis um Ihre Nummer zu registrieren und ein Passwort zu erzeugen
 [Use SSL connection (443 port)]
 SSL-Verbindung verwenden (Port 443)
-[WhatsApp]
-WhatsApp
 [Cancel]
 Abbrechen
-[OK]
-OK
 ;file \protocols\WhatsApp\src\connection.cpp
 [Please enter a country-code.]
 Bitte geben Sie einen Landescode ein.
@@ -53,8 +49,8 @@ Bitte geben Sie den korrekten Registrierungscode aus der SMS an.
 [Your password has been set automatically.\nIf you change your password manually you may lose it and need to request a new code!]
 Ihr Passwort wurde automatisch gesetzt.\nWenn Sie Ihr Passwort manuell ändern, können Sie es verlieren und müssen einen neuen Code anfordern.
 ;file \protocols\WhatsApp\src\main.cpp
-[Did not unpack registration utility WART-1.5.4.0.exe.]
-Kann das Registrierungs-Utility WART-1.5.4.0.exe nicht entpacken.
+[Did not unpack WART (registration utility).]
+Kann das Registrierungs-Utility WART nicht entpacken.
 ;file \protocols\WhatsApp\src\proto.cpp
 [%s server connection]
 %s Serververbindung

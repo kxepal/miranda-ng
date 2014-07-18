@@ -1,7 +1,7 @@
 ﻿#muuid {9c448c61-fc3f-42f9-b9f0-4a30e1cf8671}
 ;============================================================
 ;  File: Skype.dll
-;  Plugin: Skype Protocol
+;  Plugin: Skype protocol
 ;  Version: 0.11.0.2
 ;  Authors: unsane, mataes, ghazan
 ;============================================================
@@ -40,8 +40,6 @@
 
 [Configure conference]
 
-[&OK]
-ОК
 [Join role:]
 
 [Set password]
@@ -52,8 +50,6 @@
 Въведете на парола
 [Remember this session password]
 Запомняне на паролата за сесията
-[OK]
-ОК
 [Cancel]
 Отказ
 [Status text:]
@@ -259,9 +255,9 @@
 Изгонване
 [Outlaw (&ban)]
 
-[Copy &skypename]
+[Copy &Skype name]
 
-[Copy room &uri]
+[Copy room &URI]
 
 [Creator]
 
@@ -353,7 +349,7 @@
 Протоколи
 ;file \protocols\Skype\src\skype_ignore_list.cpp
 ;file \protocols\Skype\src\skype_instances.cpp
-[Skype protocol plugin only permits you to login to one account at a time. Adding multiple accounts is prohibited in the licence agreement and standard distribution terms of SkypeKit.]
+[Skype protocol plugin only permits you to login to one account at a time. Adding multiple accounts is prohibited in the license agreement and standard distribution terms of SkypeKit.]
 
 [Initialization key corrupted or not valid.]
 

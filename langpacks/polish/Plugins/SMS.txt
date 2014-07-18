@@ -11,9 +11,9 @@ Wysyła wiadomości SMS na telefony komórkowe przez sieci IM.
 [Received SMS]
 Otrzymany SMS
 [&Reply]
-Odpowiedz 
+&Odpowiedz
 [&Close]
-Zamknij
+&Zamknij
 [Read Next]
 Przeczytaj następną
 [From:]
@@ -28,8 +28,6 @@ Wyślij SMS
 Do:
 [Add number to list]
 Dodaj numer do listy
-[&H]
-&H
 [Save number]
 Zapisz numer
 [Multiple >>]
@@ -38,24 +36,22 @@ Wiele >>
 Wpisz wiadomość:
 [Chars:]
 Znaków:
-[%d/160]
-%d/160
 [&Send]
-Wyślij
+&Wyślij
 [SMS Message Didn't Send]
 Wiadomość SMS nie została wysłana
 [&Try again]
-Spróbuj ponownie
+&Spróbuj ponownie
 [&Cancel]
-Anuluj
+&Anuluj
 [The SMS message send timed out]
 Przekroczono czas wysyłania wiadomości
 [SMS Plugin]
 Wtyczka SMS
-[Begining]
-Początku
+[Beginning]
+Początek
 [End]
-Zamknij
+Końcu
 [Put signature at the:]
 Wstaw podpis na:
 [Use Signature]
@@ -63,13 +59,11 @@ Użyj sygnatury
 [Show server notifications]
 Pokazuj powiadomienia serwera
 [Auto popup on new message]
-Popup przy nowej wiadomości
+Popup dla nowej wiadomości
 [Save window position per contact]
 Zapisz pozycję okna dla kontaktu
 [SMS Message Sent]
 Wysłana wiadomość SMS
-[&OK]
-&OK
 [Message ID:]
 ID wiadomości:
 [Source:]
@@ -107,7 +101,7 @@ Przekroczono czas wysyłania wiadomości do %s.
 [The phone number should start with a + and consist of numbers, spaces, brackets and hyphens only.]
 Numer telefonu powinien zaczynać się od znaku + oraz składać się tylko i wyłącznie z cyfr, spacji, nawiasów kwadratowych oraz myślników.
 [Invalid Phone Number]
-Nieprawidłowy numer telefonu 
+Nieprawidłowy numer telefonu
 [Message is too long, press OK to continue.]
 Wiadomość jest zbyt długa. Naciśnij OK, aby kontynuować.
 [Error - Message too long]
@@ -123,8 +117,6 @@ Nieprawidłowy numer telefonu
 [<< Single]
 << Pojedynczy
 ;file \plugins\SMS\src\SMSConstans.h
-[SMS]
-SMS
 [Send &SMS...]
 Wyślij &SMS...
 [&SMS Message]

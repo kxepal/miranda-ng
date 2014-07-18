@@ -16,7 +16,6 @@ typedef struct tagCLUIDATA
    BOOL   bEventAreaEnabled;
    BOOL   bNotifyActive;
    DWORD  dwFlags;
-   TCHAR *szNoEvents;
    int    hIconNotify;
 	MCONTACT hUpdateContact;
 
@@ -32,7 +31,6 @@ typedef struct tagCLUIDATA
    DWORD  stickyMaskFilter;
    DWORD  filterFlags;
    DWORD  bFilterEffective;
-   BOOL   bMetaAvail;
    DWORD  t_now;
 
    // Modern Global Variables

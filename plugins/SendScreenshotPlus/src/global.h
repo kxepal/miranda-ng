@@ -73,9 +73,9 @@ using namespace std;
 #include <m_folders.h>
 #include <m_HTTPServer.h>
 #include <m_ftpfile.h>
-#include <m_popup2.h>
 #include <m_sendss.h>
 #include <m_userinfoex.h>
+#include <m_dropbox.h>
 
 #include "mir_string.h"
 #include "mir_icolib.h"
@@ -89,7 +89,10 @@ using namespace std;
 #include "CSendFile.h"
 #include "CSendFTPFile.h"
 #include "CSendHTTPServer.h"
-#include "CSendImageShack.h"
+#include "CSendDropbox.h"
+#include "CSendHost_ImageShack.h"
+#include "CSendHost_uploadpie.h"
+#include "CSendHost_imgur.h"
 #include "DevKey.h"
 #include "UMainForm.h"
 #include "UAboutForm.h"
@@ -103,11 +106,12 @@ using namespace std;
 #define MSGINFO	(text) MessageBox(NULL, text, _T("SendSS"), MB_OK | MB_ICONINFORMATION)
 
 typedef struct _MGLOBAL {
-	DWORD       mirandaVersion;					// mirandaVersion
+	DWORD		mirandaVersion;					// mirandaVersion
 	BOOLEAN		PopupExist			: 1;		// Popup or MS_POPUP_ADDPOPUP exist
 	BOOLEAN		PopupActionsExist	: 1;		// Popup++ or MS_POPUP_REGISTERACTIONS exist
 	BOOLEAN		PluginHTTPExist		: 1;		// HTTPServer or MS_HTTP_ACCEPT_CONNECTIONS exist
 	BOOLEAN		PluginFTPExist		: 1;		// FTPFile or MS_FTPFILE_SHAREFILE exist
+	BOOLEAN		PluginDropboxExist	: 1;		// Dropbox or MS_DROPBOX_SEND_FILE exists
 
 } MGLOBAL, *LPMGLOBAL;
 
@@ -123,6 +127,7 @@ extern MGLOBAL			myGlobals;
 extern HANDLE			hNetlibUser;
 
 #define PtrIsValid(p)		(((p)!=0)&&(((HANDLE)(p))!=INVALID_HANDLE_VALUE))
+#define MIR_FREE(p)			{if (PtrIsValid(p)){mir_free((void*)p);(p)=NULL;}}
 
 template<class _Elem>
 std::basic_string<_Elem> replace(const std::basic_string<_Elem> & Origninal, const std::basic_string<_Elem> & What, const std::basic_string<_Elem> & With)

@@ -42,8 +42,6 @@ Nastavení
 
 [Close]
 Zavřít
-[OK]
-OK
 [The Variables plugin translates various tokens into a certain value. An example is: I'm running Miranda %mirandaversion%. The substring %mirandaversion% will be translated into the correct version number. The following list shows all available tokens.]
 
 [Notes]
@@ -160,7 +158,7 @@ náhodné číslo
 [x - y - ...]
 x - y - ...
 ;file \plugins\Variables\src\parse_metacontacts.cpp
-[MetaContacts]
+[Metacontacts]
 Metakontakty
 [get parent metacontact of contact x]
 
@@ -207,7 +205,7 @@ informace y kontaktu x
 
 [database profile path]
 
-[database setting z of module y of contact x and return w if z isn't exist (w is optional)]
+[database setting z of module y of contact x and return w if z doesn't exist (w is optional)]
 
 [get event for contact x (optional), according to y,z,w, see documentation]
 
@@ -326,7 +324,7 @@ zkonvertuje x na VELKÁ písmena
 Systémové funkce
 [computer name]
 název počítače
-[cpu load of process x (without extension) (x is optional)]
+[CPU load of process x (without extension) (x is optional)]
 indikuje vytížení CPU procesem x (bez přípony) (x není povinné)
 [current date in format y (y is optional)]
 aktuální datum ve formátu y (y není povinné)
@@ -344,7 +342,7 @@ počet sekund mezi daty x a y (x a y musí být ve formátu M/d/rr H:m:s)
 nastaví TRUE, jestliže existuje soubor x
 [window title of first window of class x]
 záhlaví prvního okna třídy x
-[shows files and directories of directory z, with filter y, separated by z (y and z optional)]
+[shows files and directories of directory x, with filter y, separated by z (y and z optional)]
 
 [TRUE if process x is running]
 nastaví TRUE, jestliže je spuštěný process x

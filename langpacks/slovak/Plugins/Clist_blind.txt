@@ -5,34 +5,63 @@
 ;  Version: 0.8.0.1
 ;  Authors: Ricardo Pescuma Domenecci, based on previous work from Miranda IM project
 ;============================================================
+[A contact list for blind folks.]
+Zoznam kontaktov pre nevidiacich.
+;file \plugins\Clist_blind\res\resource.rc
 [Delete Contact]
 Zmazať kontakt
+[Are you sure you want to delete %s?]
+
+[This will erase all history and settings for this contact!]
+
 [Yes]
 Áno
 [No]
 Nie
+[Hide from list only, in order to keep their history and ignore/visibility settings]
+
+[Use Options->Contacts->Ignore to unhide contacts.]
+
 [Hotkeys]
 Klávesové skratky
 [Show/Hide:]
 Zobraziť/Skryť:
+[Read Message:]
+
+[Web Search:]
+
 [URL:]
 URL:
 [Open in new browser window]
 Otvoríť v novom prehliadacom okne
+[Show Options]
+
 [Hide offline users]
 Skryť nepripojených užívateľov
 [Hide empty groups]
 Skryť prázdne skupiny
 [Disable groups]
 Skryť skupiny
+[Ask before deleting contacts]
+
 [Sort contacts by name]
 Triediť kontakty podľa mena
 [Sort contacts by status]
 Triediť kontakty podľa stavu
+[Sort contacts by protocol]
+
 [Single click interface]
 Nepoužívať dvojklik myšou
+[Always show status in tooltip]
+
+[Disable icon blinking]
+
+[ms delay]
+
 [Show]
 Zobraziť
+[icon when statuses differ]
+
 [Cycle icons every]
 Cyklovať každú ikonu
 [seconds, when statuses differ]
@@ -41,12 +70,14 @@ sekund, ked su stavy rozdielne
 Zobraziť mnohonásobné ikony
 [Only when statuses differ]
 Iba pri rozdielnych stavoch
-[Contact List]
+[Contact list]
 Zoznam kontaktov
 [System tray icon]
 Ikona v oznamovacej oblasti
 [System tray icon when using multiple protocols]
 Ikona v oznamovacej oblasti pri použití viacerých protokolov
+[Contact list sorting]
+
 [Window]
 Okno
 [Always on top]
@@ -69,6 +100,8 @@ maximálne
 Zväčšovať smerom hore
 [Title bar text:]
 Text nadpisu:
+[Translucency options]
+
 [Fade contact list in/out]
 Plynule spriehľadňovať/zobrazovať
 [Transparent contact list]
@@ -83,9 +116,15 @@ Zobraziť menu
 Jednoduchý presun
 [Show title bar]
 Zobraziť nadpis
+[If window is partially covered, bring to front instead of hiding]
+
+[Show drop shadow (restart required)]
+
+[Pin to desktop]
+
 [Items]
 Položky
-['Hide Offline' means to hide:]
+['Hide offline' means to hide:]
 'Skryť nepripojených' = skryť týchto:
 [Groups]
 Skupiny
@@ -97,7 +136,17 @@ Skryť počet kontaktov v skupine ak sú všetci odpojený
 Triediť skupiny podľa abecedy
 [Quicksearch in open groups only]
 Rýchle hľadanie iba v otvorených skupinách
-[Status Bar]
+[Templates]
+
+[Contact:]
+
+[Group:]
+
+[Divider:]
+
+[Info:]
+
+[Status bar]
 Stavový riadok
 [Show status bar]
 Zobraziť stavový riadok
@@ -109,8 +158,16 @@ Zobraziť meno protokolu
 Zobraziť stavový text
 [Right click opens status menu]
 Pravé tlačítko myši otvára stavové menu
+[Right click opens Miranda NG menu]
+
 [Make sections equal width]
 Rovnaká šírka oddielov
+[Show bevels on panels]
+
+[Show resize grip indicator]
+
+[&Main menu]
+
 [E&xit]
 Koniec
 [&Status]
@@ -131,30 +188,39 @@ Nerušiť
 Prístupný k rozhovoru
 [&Invisible\tCtrl+7]
 Neviditelný
-[On the &Phone\tCtrl+8]
+[On the &phone\tCtrl+8]
 Telefonujem
-[Out to &Lunch\tCtrl+9]
+[Out to &lunch\tCtrl+9]
 Na obede
+[Tray]
+
 [&Hide/Show]
 Skryť/Zobraziť
-[&New Group]
+[Nowhere]
+
+[&New group]
 Nová skupina
-[&Hide Offline Users]
+[&Hide offline users]
 Skryť nepripojených užívatelov
-[Hide &Offline Users out here]
+[Hide &offline users out here]
 Skryť nepripojených užívatelov nepatriacich do žiadnej skupiny
-[Hide &Empty Groups]
+[Hide &empty groups]
 Skryť prázdne skupiny
-[Disable &Groups]
+[Disable &groups]
 Skryť názvy skupín
-[&New Subgroup]
+[Hide Miranda]
+
+[Group]
+
+[&New subgroup]
 Nová podskupina
-[&Hide Offline Users in here]
+[&Hide offline users in here]
 Skryť nepripojených užívatelov v tejto skupine
-[&Rename Group]
+[&Rename group]
 Premenovať skupinu
-[&Delete Group]
+[&Delete group]
 Zmazať skupinu
+;file \plugins\Clist_blind\src\clcopts.cpp
 [Not focused]
 Neoznačené
 [Offline]
@@ -177,5 +243,22 @@ Neviditelný
 Na obede
 [On the phone]
 Telefonuje
+[Group: %name% %count% [%mode%]]
+
+[Divider: %s]
+
+[Info: %s]
+
 [List]
 Zoznam
+;file \plugins\Clist_blind\src\clistopts.cpp
+[Global]
+
+;file \plugins\Clist_blind\src\cluiopts.cpp
+;file \plugins\Clist_blind\src\init.cpp
+[Unknown Protocol]
+
+[Expanded]
+
+[Collapsed]
+

@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "..\..\core\commonheaders.h"
 #include "..\plugins\plugins.h"
+#include "..\langpack\langpack.h"
 #include "profilemanager.h"
 #include <sys/stat.h>
 
@@ -73,8 +74,6 @@ struct ProfileEnumData
 	HWND hwnd;
 	TCHAR* szProfile;
 };
-
-extern TCHAR mirandabootini[MAX_PATH];
 
 void SetServiceModePlugin(pluginEntry *p);
 
@@ -393,7 +392,7 @@ static INT_PTR CALLBACK DlgProfileSelect(HWND hwndDlg, UINT msg, WPARAM wParam, 
 			ListView_InsertColumn(hwndList, 0, &col);
 
 			col.pszText = TranslateT("Driver");
-			col.cx = 150;
+			col.cx = 150 - GetSystemMetrics(SM_CXVSCROLL);
 			ListView_InsertColumn(hwndList, 1, &col);
 
 			col.pszText = TranslateT("Size");
@@ -456,11 +455,24 @@ static INT_PTR CALLBACK DlgProfileSelect(HWND hwndDlg, UINT msg, WPARAM wParam, 
 			lvht.pt.x = GET_X_LPARAM(lParam);
 			lvht.pt.y = GET_Y_LPARAM(lParam);
 			ScreenToClient(hwndList, &lvht.pt);
-			if (ListView_HitTest(hwndList, &lvht) < 0)
-				break;
 
-			lvht.pt.x = GET_X_LPARAM(lParam);
-			lvht.pt.y = GET_Y_LPARAM(lParam);
+			if (ListView_HitTest(hwndList, &lvht) < 0) {
+				if (lParam != -1)
+					break;
+
+				lvht.iItem = ListView_GetSelectionMark(hwndList);
+				RECT rc = { 0 };
+				if (!ListView_GetItemRect(hwndList, lvht.iItem, &rc, LVIR_LABEL))
+					break;
+				
+				lvht.pt.x = rc.left;
+				lvht.pt.y = rc.bottom;
+				ClientToScreen(hwndList, &lvht.pt);
+			}
+			else {
+				lvht.pt.x = GET_X_LPARAM(lParam);
+				lvht.pt.y = GET_Y_LPARAM(lParam);
+			}
 
 			HMENU hMenu = CreatePopupMenu();
 			AppendMenu(hMenu, MF_STRING, 1, TranslateT("Run"));
@@ -565,7 +577,7 @@ static INT_PTR CALLBACK DlgProfileManager(HWND hwndDlg, UINT msg, WPARAM wParam,
 			SetWindowLongPtr(hwndDlg, GWLP_USERDATA, (LONG_PTR)dat);
 
 			TCHAR buf[512];
-			mir_sntprintf(buf, SIZEOF(buf), _T("%s\n%s"), TranslateT("Miranda NG Profile Manager"), TranslateT("Manage your Miranda NG profile"));
+			mir_sntprintf(buf, SIZEOF(buf), _T("%s\n%s"), TranslateT("Miranda NG profile manager"), TranslateT("Manage your Miranda NG profile"));
 			SetDlgItemText(hwndDlg, IDC_NAME, buf);
 
 			dat->currentPage = 0;

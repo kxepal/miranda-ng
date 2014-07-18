@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by resource.rc
+// Used by ..\res\resource.rc
 //
 #define IDD_OPT_APPEARANCE              101
 #define IDD_SUBST                       103
@@ -125,6 +125,7 @@
 #define IDC_BTN_APPLYSKIN               1124
 #define IDC_BTN_VARIABLE                1125
 #define IDC_BTN_GETSKINS                1125
+#define IDC_CHK_SHOWTITLE               1126
 
 // Next default values for new objects
 // 

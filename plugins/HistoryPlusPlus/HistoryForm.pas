@@ -209,7 +209,6 @@ type
     FileActions: TMenuItem;
     N10: TMenuItem;
     pmFile: TPopupMenu;
-    SpeakMessage1: TMenuItem;
     procedure tbHistoryClick(Sender: TObject);
     procedure SaveasText2Click(Sender: TObject);
     procedure SaveasMContacts2Click(Sender: TObject);
@@ -322,13 +321,12 @@ type
     procedure hgFilterChange(Sender: TObject);
     procedure OpenFileFolderClick(Sender: TObject);
     procedure BrowseReceivedFilesClick(Sender: TObject);
-    procedure SpeakMessage1Click(Sender: TObject);
     procedure hgOptionsChange(Sender: TObject);
   private
     DelayedFilter: TMessageTypes;
     StartTimestamp: DWord;
     EndTimestamp: DWord;
-    FhContact, FhSubContact: THandle;
+    FhContact, FhSubContact: TMCONTACT;
     FProtocol, FSubProtocol: AnsiString;
     SavedLinkUrl: String;
     SavedFileDir: String;
@@ -359,7 +357,7 @@ type
     procedure OpenDetails(Item: Integer);
     procedure TranslateForm;
 
-    procedure SethContact(const Value: THandle);
+    procedure SethContact(const Value: TMCONTACT);
     procedure LoadInOptions();
     function IsFileEvent(Index: Integer): Boolean;
 
@@ -432,9 +430,9 @@ type
     procedure FillBookmarks;
     procedure HMBookmarkChanged(var M: TMessage); message HM_NOTF_BOOKMARKCHANGED;
 
-    property hContact: THandle read FhContact write SethContact;
+    property hContact: TMCONTACT read FhContact write SethContact;
     property Protocol: AnsiString read FProtocol;
-    property hSubContact: THandle read FhSubContact;
+    property hSubContact: TMCONTACT read FhSubContact;
     property SubProtocol: AnsiString read FSubProtocol;
   published
     procedure AlignControls(Control: TControl; var ARect: TRect); override;
@@ -457,8 +455,6 @@ uses
   hpp_messages, hpp_bookmarks, Checksum, CustomizeFiltersForm, CustomizeToolbar;
 
 {$R *.DFM}
-
-{$include m_speak.inc}
 
 const
   HPP_SESS_YEARFORMAT = 'yyyy';
@@ -593,7 +589,7 @@ procedure THistoryFrm.LoadHistory(Sender: TObject);
     ToRead := Max(0, HistoryLength - hppFirstLoadBlock - 1);
     LineIdx := HistoryLength - 2;
     repeat
-      hDBEvent := db_event_prev(hDBEvent);
+      hDBEvent := db_event_prev(hContact,hDBEvent);
       History[LineIdx] := NotZero(hDBEvent);
       { if NeedhDBEvent = hDbEvent then begin
         Result := HistoryLength-LineIdx-1;
@@ -1062,7 +1058,7 @@ end;
 
 procedure THistoryFrm.HMMetaDefaultChanged(var M: TMessage);
 var
-  newSubContact: THandle;
+  newSubContact: TMCONTACT;
   newSubProtocol: AnsiString;
 begin
   if THandle(M.wParam) <> hContact then
@@ -1490,7 +1486,7 @@ begin
       begin
         if History[ridx] <> 0 then
           break;
-        hDBEvent := db_event_prev(hDBEvent);
+        hDBEvent := db_event_prev(hContact,hDBEvent);
         History[ridx] := NotZero(hDBEvent);
       end;
     end
@@ -1508,7 +1504,7 @@ begin
       begin
         if History[ridx] <> 0 then
           break;
-        hDBEvent := db_event_next(hDBEvent);
+        hDBEvent := db_event_next(hContact,hDBEvent);
         History[ridx] := NotZero(hDBEvent);
       end;
     end;
@@ -1677,7 +1673,6 @@ end;
 
 procedure THistoryFrm.hgPopup(Sender: TObject);
 begin
-  SpeakMessage1.Visible := MeSpeakEnabled;
   Delete1.Visible := False;
   SaveSelected1.Visible := False;
   if hContact = 0 then
@@ -2050,7 +2045,7 @@ begin
   begin
     if Sessions[idx].hDBEventLast = hDBEvent then
     begin
-      hDBEvent := db_event_prev(hDBEvent);
+      hDBEvent := db_event_prev(hContact,hDBEvent);
       if hDBEvent <> 0 then
       begin
         Sessions[idx].hDBEventLast := hDBEvent;
@@ -2109,7 +2104,7 @@ begin
     Sessions[idx].TimestampLast := 0;
     Exit;
   end;
-  hDBEvent := db_event_next(hDBEvent);
+  hDBEvent := db_event_next(hContact,hDBEvent);
   if hDBEvent <> 0 then
   begin
     Sessions[idx].hDBEventFirst := hDBEvent;
@@ -3100,7 +3095,7 @@ begin
   end;
 end;
 
-procedure THistoryFrm.SethContact(const Value: THandle);
+procedure THistoryFrm.SethContact(const Value: TMCONTACT);
 begin
   // if FhContact = Value then exit;
   FhContact := Value;
@@ -3839,24 +3834,6 @@ begin
     Key := 0;
     Exit;
   end;
-  { if (ssCtrl in Shift) then begin
-    if key=Ord('T') then begin
-    InlineCopyAll.Click;
-    key:=0;
-    end;
-    if key=Ord('P') then begin
-    InlineTextFormatting.Click;
-    key:=0;
-    end;
-    if key=Ord('M') then begin
-    SendMessage1.Click;
-    key:=0;
-    end;
-    if key=Ord('R') then begin
-    InlineReplyQuoted.Click;
-    key:=0;
-    end;
-    end; }
 end;
 
 procedure THistoryFrm.ToggleMainMenu(Enabled: Boolean);
@@ -3923,27 +3900,6 @@ begin
   ShellExecuteA(0, 'open', Path, nil, nil, SW_SHOW);
 end;
 
-procedure THistoryFrm.SpeakMessage1Click(Sender: TObject);
-var
-  mesW: String;
-  mesA: AnsiString;
-begin
-  if not MeSpeakEnabled then
-    Exit;
-  if hg.Selected = -1 then
-    Exit;
-  mesW := hg.Items[hg.Selected].Text;
-  if GridOptions.BBCodesEnabled then
-    mesW := DoStripBBCodes(mesW);
-  if Boolean(ServiceExists(MS_SPEAK_SAY_W)) then
-    CallService(MS_SPEAK_SAY_W, hContact, lParam(PChar(mesW)))
-  else
-  begin
-    mesA := WideToAnsiString(mesW, UserCodepage);
-    CallService(MS_SPEAK_SAY_A, hContact, lParam(PAnsiChar(mesA)));
-  end;
-end;
-
 procedure THistoryFrm.hgOptionsChange(Sender: TObject);
 begin
   if Assigned(EventDetailForm) then
@@ -3964,7 +3920,6 @@ begin
     begin
       DBEventInfo := GetEventInfo(hDBEvent);
       DBEventInfo.szModule := nil;
-      DBEventInfo.flags := DBEventInfo.flags and not DBEF_FIRST;
       Item.Size := Cardinal(DBEventInfo.cbSize) + Cardinal(DBEventInfo.cbBlob);
     end;
     if Item.Size > 0 then

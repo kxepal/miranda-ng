@@ -34,12 +34,8 @@ Przywróć poprzedni status
 Skrót
 [Password:]
 Hasło:
-[OK]
-OK
 [Cancel]
 Anuluj
-[EN]
-EN
 [Workstation is locked]
 Komputer jest zablokowany
 [Screen Saver is running]
@@ -70,7 +66,7 @@ Ukryj Mirandę NG
 [Hide]
 Ukryj
 [Hide/Show Miranda]
-Pokaż/ukryj Mirandę
+Pokaż/Ukryj Mirandę
 [get the BossKey name]
 pobierz nazwę BossKey
 ;file \plugins\BossKeyPlus\src\Options.cpp

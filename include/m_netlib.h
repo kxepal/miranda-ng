@@ -258,9 +258,6 @@ __forceinline INT_PTR Netlib_CloseHandle(HANDLE h) {return CallService(MS_NETLIB
 /* pExtra was added during 0.3.4+, prior its just two args, since we use the cdecl convention
 it shouldnt matter */
 
-#define NETLIBBIND_SIZEOF_V1 16 // sizeof(NETLIBBIND) prior to 0.3.4+ (2004/08/05)
-#define NETLIBBIND_SIZEOF_V2 20 // sizeof(NETLIBBIND) prior to 0.6+ (2006/07/03)
-
 typedef void (*NETLIBNEWCONNECTIONPROC_V2)(HANDLE hNewConnection, DWORD dwRemoteIP, void * pExtra);
 typedef void (*NETLIBNEWCONNECTIONPROC)(HANDLE hNewConnection, DWORD dwRemoteIP);
 
@@ -622,7 +619,7 @@ typedef struct {
 
 //Shutdown connection
 //wParam = (WPARAM)(HANDLE)hConnection
-//lParam = (LPARAM)0
+//lParam = 0
 //Returns 0
 #define MS_NETLIB_SHUTDOWN	   "Netlib/Shutdown"
 __forceinline void Netlib_Shutdown(HANDLE h) {CallService(MS_NETLIB_SHUTDOWN, (WPARAM)h, 0);}

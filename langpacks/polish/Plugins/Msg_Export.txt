@@ -6,7 +6,7 @@
 ;  Authors: Kennet Nielsen, mod by ring0
 ;============================================================
 [Exports every message, URL or file you receive to a text file.]
-Eksportuje każdą wiadomość, URL lub plik jaki otrzymasz do pliku tekstowego.
+Eksportuje każdą wiadomość, link lub plik jaki otrzymasz do pliku tekstowego.
 ;file \plugins\Msg_Export\res\resource.rc
 [Browse]
 Przeglądaj
@@ -45,11 +45,11 @@ Eksportowanie starych wiadomości
 [History file for %s (%s format %s)]
 Historia użytkownika %s (%s format %s)
 [&Find...]
-Znajdź...
+&Znajdź...
 [&External]
-Zewnętrzna
+&Zewnętrzna
 [&Close]
-Zamknij
+&Zamknij
 [When filename changes]
 Gdy zmienia się nazwa pliku
 [Prompt for action]
@@ -65,7 +65,7 @@ Usuń plik
 [Debug]
 Analizuj
 [User &details]
-Dane kontaktu
+&Dane kontaktu
 [Export selected]
 Eksportuj zaznaczony
 [Set to default filename]
@@ -75,7 +75,7 @@ Kopiuj
 ;file \plugins\Msg_Export\src\FileViewer.cpp
 [Failed to write to the RichEdit the buffer was to small.]
 Nie udało się zapisać do pola edycji z formatowaniem, zbyt mały bufor.
-[Error: Optimal buffer size decrecied to a to low size!]
+[Error: Optimal buffer size decreased to a too low size!]
 Błąd: optymalny rozmiar bufora został zmniejszony do zbyt małej wartości!
 [Internal error! (lExtraRead >= 0)]
 Błąd wewnętrzny! (lExtraRead >= 0)
@@ -108,13 +108,13 @@ Błąd zapisywania pliku
 [History was saved successfully in file\r\n]
 Historia zapisana pomyślnie w pliku\r\n
 [Failed to create history dialog]
-Nie udało się stworzyć okna historii
+Nie udało się utworzyć okna historii
 ;file \plugins\Msg_Export\src\Glob.h
 [Miranda NG (Message Export Plugin)]
 Wtyczka eksportu wiadomości Mirandy NG
 ;file \plugins\Msg_Export\src\main.cpp
 [Open E&xported History]
-Otwórz eksportowaną historię
+Otwórz e&ksportowaną historię
 [Failed to add menu item Open Exported History\nCallService(MS_CLIST_ADDCONTACTMENUITEM,...)]
 Nie udało się dodać elementu menu Otwórz Wyeksportowaną Historię\nCallService(MS_CLIST_ADDCONTACTMENUITEM,...)
 ;file \plugins\Msg_Export\src\options.cpp
@@ -176,7 +176,7 @@ Nazwa pliku dla kontaktu "%s" zmieniła się!\n\nz:\t%s\nna:\t%s\n\nCzy chcesz z
 [Failed to rename file\n\nfrom:\t%s\nto:\t%s\n\nFailed with error: %s]
 Nie można zmienić nazwy pliku\n\nz:\t%s\nna:\t%s\n\nBłąd: %s
 [\nError: ]
-\nBłąd: 
+\nBłąd:\s
 [\nMessage has not been saved!\n]
 \nWiadomość nie została zapisana!\n
 [Do you wish to save debug information?]
@@ -226,11 +226,11 @@ Nie udało się zapisać daty i nazwy użytkownika do pliku:\n
 [Failed to write message to the file :\n]
 Nie udało się zapisać wiadomości do pliku:\n
 [URL: ]
-URL: 
+Link:\s
 [File: ]
-Plik: 
+Plik:\s
 [Description: ]
-Opis: 
+Opis:\s
 [Failed to write URL/File to the file :\n]
 Nie udało się zapisać Linku/Pliku do pliku:\n
 [Nick      :]

@@ -6,8 +6,8 @@
 ;  Authors: Bethoven
 ;============================================================
 [ToptoolBar adds buttons in top frame for fast access.]
-Плагин добавляет панель кнопок для быстрого доступа к функциям Miranda и Вашим программам.
-[Buttons Order && Visibility]
+Плагин добавляет панель кнопок для быстрого доступа к функциям Miranda и вашим программам.
+[Buttons order and visibility]
 Порядок и видимость кнопок
 [Button height]
 Высота кнопки
@@ -23,11 +23,11 @@
 Панель в одну строку
 [Buttons order:]
 Показывать кнопки:
-[Add Separator]
+[Add separator]
 Добавить разделитель
-[Add Launch]
+[Add launch]
 Добавить кнопку
-[Del Sep/Launch Button]
+[Delete separator/launch button]
 Удалить разделитель/кнопку
 [Name:]
 Имя:
@@ -35,15 +35,53 @@
 Путь:
 [Set]
 Выбрать
+[Show main menu]
+Главное меню
+[Show options page]
+Открыть настройки
+[Show accounts manager]
+Открыть менеджер учётных записей
+[Find/add contacts]
+Найти/Добавить контакты
+[Show status menu]
+Открыть меню статусов
+[Show/hide offline contacts]
+Показать/скрыть отключённых
+[Hide offline contacts]
+Скрыть отключённых
+[Show offline contacts]
+Показать отключённых
+[Enable/disable metacontacts]
+Вкл/Выкл метаконтакты
+[Disable metacontacts]
+Отключить метаконтакты
+[Enable metacontacts]
+Включить метаконтакты
+[Enable/disable groups]
+Вкл/Выкл группы
+[Enable groups]
+Включить группы
+[Disable groups]
+Отключить группы
+[Enable/disable sounds]
+Вкл/Выкл звуки
+[Disable sounds]
+Отключить звуки
+[Enable sounds]
+Включить звуки
+[Minimize contact list]
+Скрыть список контактов
+[Exit]
+Выход
 [Default]
 По умолчанию
-[TopToolBar Background]
+[TopToolBar background]
 Фон панели кнопок
 [Frames service has not been found, so plugin will be disabled.\nTo run it you need to install and / or enable contact list plugin that supports it:\n- Modern contact list\n- MultiWindow (MW)\n- Nicer+\nYou can get them at http://miranda-ng.org/]
 Данный плагин списка контактов не поддерживает сервис фреймов, необходимый для их работы, поэтому плагин панели кнопок был выключен.\nДля работы панели кнопок требуется установить и / или включить один из следующих плагинов списка контактов:\n- Modern contact list\n- MultiWindow (MW)\n- Nicer+\nВы можете скачать их на http://miranda-ng.org/
 [TopToolBar]
 Панель кнопок
-[Contact List]
+[Contact list]
 Список контактов
 [Toolbar]
 Панель кнопок

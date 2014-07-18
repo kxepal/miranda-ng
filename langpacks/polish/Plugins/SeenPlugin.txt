@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: SeenPlugin.dll
 ;  Plugin: Last seen
-;  Version: 5.0.4.8
+;  Version: 5.0.4.9
 ;  Authors: Heiko Schillinger, YB
 ;============================================================
 [Logs when a user was last seen online and which users were online while you were away.]
@@ -10,12 +10,12 @@ Zapisuje kiedy kontakt był ostatnio dostępny oraz jakie kontakty były dostęp
 ;file \plugins\SeenPlugin\res\resource.rc
 [Last seen options]
 Opcje
-[Last seen menuitem]
-Element w menu
+[Last seen menu item]
+Element menu Last Seen
 [Show icon]
 Pokaż ikonę
-[Userinfo tab]
-Karta danych kontaktu
+[User info tab]
+Zakładka danych kontaktu
 [Log to file]
 Zapisuj w pliku
 [Log to history]
@@ -66,12 +66,8 @@ Rozłączony
 Domyślne
 [Last seen plugin]
 Wtyczka Last seen
-[OK]
-OK
 [You missed following contacts:]
 Przegapiłeś następujące kontakty:
-[Test\nTest]
-Test\nTest
 [Alert when user status changes]
 Alarmuj kiedy użytkownik zmieni status
 ;file \plugins\SeenPlugin\src\history.cpp
@@ -118,7 +114,7 @@ Popupy
 [Name:%t%N%bStatus:%t%s%bDay:%t%d.%m.%Y%bTime:%t%H:%M:%S%bPrevious Status:%t%o%b%b%P ID:%t%u%bExternal IP:%t%i%bInternal IP:%t%r%bClient ID: %t%C%b%bStatus Message:%t%T]
 Nazwa:%t%N%bStatus:%t%s%bDzień:%t%d.%m.%Y%bCzas:%t%H:%M:%S%bPoprzedni Status:%t%o%b%b%P ID:%t%u%bIP Zewnętrzne:%t%i%bIP Wewnętrzne:%t%r%bID Klienta: %t%C%b%bOpis:%t%T
 [-- Date --]
--- Data -- 
+-- Data --
 [year (4 digits)]
 rok (4 znaki)
 [year (2 digits)]
@@ -136,7 +132,7 @@ dzień tygodnia (cały)
 [weekday (abbreviated)]
 dzień tygodnia (skrócony)
 [-- Time --]
--- Czas -- 
+-- Czas --
 [hours (24)]
 godziny (24)
 [hours (12)]
@@ -148,13 +144,13 @@ minut
 [seconds]
 s
 [-- User --]
--- Użytkownik -- 
+-- Użytkownik --
 [username]
 nazwa
 [nick]
 Nick
 [UIN/handle]
-UIN/Nazwa użytkonika
+UIN/Nazwa użytkownika
 [Group]
 Grupa
 [Status]
@@ -266,7 +262,7 @@ Gru.
 [<never seen>]
 <nigdy niewidziany>
 [Idle]
-Bezczynność 
+Bezczynność
 [Unknown]
 Nieznany
 [Not Idle]

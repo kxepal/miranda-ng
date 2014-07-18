@@ -9,7 +9,7 @@ This file is part of Send Screenshot Plus, a Miranda IM plugin.
 Copyright (c) 2010 Ing.U.Horn
 
 Parts of this file based on original sorce code
-(c) 2004-2006 Sérgio Vieira Rolanski (portet from Borland C++)
+(c) 2004-2006 Sï¿½rgio Vieira Rolanski (portet from Borland C++)
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 FI_INTERFACE	*FIP = 0;
 HINSTANCE		hInst;			//!< Global reference to the application
 MGLOBAL			myGlobals;
-int            hLangpack;
+int				hLangpack;
 
 
 //Information gathered by Miranda, displayed in the plugin pane of the Option Dialog
@@ -51,8 +51,6 @@ PLUGININFOEX pluginInfo={
 	// {ED39AF7C-BECD-404E-9499-4D04F711B9CB}
 	{0xed39af7c, 0xbecd, 0x404e, {0x94, 0x99, 0x4d, 0x04, 0xf7, 0x11, 0xb9, 0xcb}}
 };
-
-//static char szSendSS[]=SZ_SENDSS;
 
 HANDLE hsvc_SendScreenshot=0;
 HANDLE hsvc_SendDesktop=0;
@@ -114,7 +112,7 @@ extern "C" __declspec(dllexport) int Load(void)
 	HOTKEYDESC hkd={sizeof(hkd)};
 	hkd.pszName="Open SendSS+";
 	hkd.ptszDescription=LPGENT("Open SendSS+");
-	hkd.ptszSection=L"SendSS+";
+	hkd.ptszSection=_T("SendSS+");
 	hkd.pszService=MS_SENDSS_OPENDIALOG;
 	//hkd.DefHotKey=HOTKEYCODE(HOTKEYF_CONTROL, VK_F10) | HKF_MIRANDA_LOCAL;
 	hkd.lParam=0xFFFF;
@@ -129,10 +127,11 @@ extern "C" __declspec(dllexport) int Load(void)
 
 int hook_ModulesLoaded(WPARAM, LPARAM)
 {
-	myGlobals.PopupExist		= ServiceExists(MS_POPUP_ADDPOPUP);
+	myGlobals.PopupExist		= ServiceExists(MS_POPUP_ADDPOPUPT);
 	myGlobals.PopupActionsExist	= ServiceExists(MS_POPUP_REGISTERACTIONS);
 	myGlobals.PluginHTTPExist	= ServiceExists(MS_HTTP_ACCEPT_CONNECTIONS);
 	myGlobals.PluginFTPExist	= ServiceExists(MS_FTPFILE_SHAREFILE);
+	myGlobals.PluginDropboxExist	= ServiceExists(MS_DROPBOX_SEND_FILE);
 
 	// Netlib register
 	NetlibInit();
@@ -158,7 +157,7 @@ extern "C" __declspec(dllexport) int Unload(void)
 	UnRegisterServices();
 	if(g_hookModulesLoaded) UnhookEvent(g_hookModulesLoaded),g_hookModulesLoaded=0;
 	if(g_hookSystemPreShutdown) UnhookEvent(g_hookSystemPreShutdown),g_hookSystemPreShutdown=0;
-	if(g_clsTargetHighlighter) UnregisterClass((LPTSTR)g_clsTargetHighlighter,hInst),g_clsTargetHighlighter=0;
+	if(g_clsTargetHighlighter) UnregisterClass((TCHAR*)g_clsTargetHighlighter,hInst),g_clsTargetHighlighter=0;
 	return 0;
 }
 
@@ -205,13 +204,13 @@ INT_PTR service_CaptureAndSendDesktop(WPARAM wParam, LPARAM lParam) {
 		MessageBoxEx(NULL, TranslateT("Could not create main dialog."), TranslateT("Error"), MB_OK | MB_ICONERROR | MB_APPLMODAL, 0);
 		return -1;
 	}
-	LPTSTR pszPath=GetCustomPath();
+	TCHAR* pszPath=GetCustomPath();
 	if(!pszPath){
 		delete frmMain;
 		return -1;
 	}
 	MCONTACT hContact = (MCONTACT) wParam;
-	LPSTR  pszProto = GetContactProto(hContact);
+	char*  pszProto = GetContactProto(hContact);
 	bool bChatRoom = db_get_b(hContact, pszProto, "ChatRoom", 0) != 0;
 	frmMain->m_opt_chkTimed			= false;
 	frmMain->m_opt_tabCapture		= 1;
@@ -234,7 +233,7 @@ INT_PTR service_OpenCaptureDialog(WPARAM wParam, LPARAM lParam){
 		MessageBoxEx(NULL, TranslateT("Could not create main dialog."), TranslateT("Error"), MB_OK | MB_ICONERROR | MB_APPLMODAL, 0);
 		return -1;
 	}
-	LPTSTR pszPath=GetCustomPath();
+	TCHAR* pszPath=GetCustomPath();
 	if(!pszPath){
 		delete frmMain;
 		return -1;
@@ -275,21 +274,19 @@ INT_PTR service_EditBitmap(WPARAM wParam, LPARAM lParam) {
 // wParam = (char*)filename
 // lParam = (HANDLE)contact (can be null)
 INT_PTR service_Send2ImageShack(WPARAM wParam, LPARAM lParam) {
-	LPSTR result = NULL;
-	CSendImageShack* cSend = new CSendImageShack(NULL, lParam, false);
-	cSend->m_pszFile = mir_a2t((char*)wParam);
-	cSend->m_bDeleteAfterSend = FALSE;
+	char* result = NULL;
+	CSendHost_ImageShack* cSend = new CSendHost_ImageShack(NULL, lParam, false);
+	cSend->m_bDeleteAfterSend = false;
+	cSend->SetFile((char*)wParam);
 	if (lParam != NULL) {
-		cSend->Send();
-		return 0;
+		if(cSend->Send()) delete cSend;
+		return NULL;
 	}
-	cSend->SendSync(TRUE);
-	cSend->Send();
+	cSend->SendSilent();
 	if (cSend->GetURL()) {
-		result = mir_strdup(cSend->GetURL());
-	}
-	else {
-		result = cSend->GetError();
+		result=mir_strdup(cSend->GetURL());
+	}else{
+		result=mir_t2a(cSend->GetErrorMsg());
 	}
 	delete cSend;
 	return (INT_PTR)result;
@@ -307,21 +304,21 @@ void AddMenuItems(void)
 	// Add item to contact menu
 	mi.position		= 1000000;
 	mi.ptszName		= LPGENT("Send Screenshot");
-	mi.hIcon		= IcoLib_GetIcon(ICO_PLUG_SSWINDOW2);
+	mi.hIcon		= Skin_GetIcon(ICO_COMMON_SSWINDOW2);
 	mi.pszService	= MS_SENDSS_OPENDIALOG;
 	Menu_AddContactMenuItem(&mi);
 
 	// Add item to contact menu
 	mi.position		= 1000001;
 	mi.ptszName		= LPGENT("Send desktop screenshot");
-//	mi.hIcon		= IcoLib_GetIcon(ICO_PLUG_SSWINDOW2);
+//	mi.hIcon		= Skin_GetIcon(ICO_COMMON_SSWINDOW2);
 	mi.pszService	= MS_SENDSS_SENDDESKTOP;
 	Menu_AddContactMenuItem(&mi);
 
 	// Add item to main menu
 	mi.position		= 1000001;
 	mi.ptszName		= LPGENT("Take a screenshot");
-//	mi.hIcon		= IcoLib_GetIcon(ICO_PLUG_SSWINDOW2);
+//	mi.hIcon		= Skin_GetIcon(ICO_COMMON_SSWINDOW2);
 	mi.pszService	= MS_SENDSS_OPENDIALOG;
 	Menu_AddMainMenuItem(&mi);
 }
@@ -358,12 +355,12 @@ int UnRegisterServices(){
 }
 
 //---------------------------------------------------------------------------
-LPTSTR GetCustomPath() {
-	LPTSTR pszPath = Utils_ReplaceVarsT(_T("%miranda_userdata%\\Screenshots"));
+TCHAR* GetCustomPath() {
+	TCHAR* pszPath = Utils_ReplaceVarsT(_T("%miranda_userdata%\\Screenshots"));
 	if(hFolderScreenshot){
 		TCHAR szPath[1024]={0};
 		FoldersGetCustomPathT(hFolderScreenshot, szPath, 1024, pszPath);
-		mir_freeAndNil(pszPath);
+		mir_free(pszPath);
 		pszPath = mir_tstrdup(szPath);
 	}
 	if(!pszPath){

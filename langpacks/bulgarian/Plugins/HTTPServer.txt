@@ -91,7 +91,7 @@
 [Share Current Directory]
 
 [All files]
-
+Всички файлове
 [Specify a file to share]
 
 [Failed to share new file]
@@ -130,7 +130,7 @@
 
 [You are browsing from]
 
-[You external ip was detected as %d.%d.%d.%d\r\nby: %s]
+[Your external IP was detected as %d.%d.%d.%d\r\nby: %s]
 
 [You need to restart Miranda to change the main menu]
 

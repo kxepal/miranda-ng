@@ -28,7 +28,6 @@
 [Don't steal focus unless idle]
 [Preview]
 [Alarm]
-[OK]
 [Cancel]
 [Title:]
 [Description:]
@@ -78,6 +77,8 @@
 [Background]
 [Window]
 ;file \plugins\Alarms\src\frame.cpp
+[%dh %dm]
+[%dm]
 [Hide reminders]
 [Show reminders]
 [Frames]

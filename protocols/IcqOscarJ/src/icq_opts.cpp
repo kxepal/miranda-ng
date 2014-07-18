@@ -6,6 +6,7 @@
 // Copyright © 2001-2002 Jon Keating, Richard Hughes
 // Copyright © 2002-2004 Martin Öberg, Sam Kothari, Robert Rainwater
 // Copyright © 2004-2010 Joe Kucera
+// Copyright © 2012-2014 Miranda NG Team
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,13 +21,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-//
 // -----------------------------------------------------------------------------
-//  DESCRIPTION:
-//
-//  Describe me here please...
-//
-// -----------------------------------------------------------------------------
+
 #include "icqoscar.h"
 
 #include <win2k.h>
@@ -153,7 +149,7 @@ static INT_PTR CALLBACK DlgProcIcqOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LP
 			GetDlgItemTextA(hwndDlg, IDC_PASSWORD, str, sizeof(ppro->m_szPassword));
 			if (strlennull(str)) {
 				strcpy(ppro->m_szPassword, str);
-				ppro->m_bRememberPwd = TRUE;
+				ppro->m_bRememberPwd = true;
 			}
 			else ppro->m_bRememberPwd = ppro->getByte("RememberPass", 0);
 			ppro->setString("Password", str);
@@ -169,7 +165,7 @@ static INT_PTR CALLBACK DlgProcIcqOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LP
 			StoreDBCheckState(ppro, hwndDlg, IDC_LEGACY, "LegacyFix");
 			StoreDBCheckState(ppro, hwndDlg, IDC_NOERRMULTI, "IgnoreMultiErrorBox");
 			ppro->setByte("ShowLogLevel", (BYTE)(4 - SendDlgItemMessage(hwndDlg, IDC_LOGLEVEL, TBM_GETPOS, 0, 0)));
-			return TRUE;
+			return true;
 		}
 		break;
 	}
@@ -274,19 +270,17 @@ static INT_PTR CALLBACK DlgProcIcqPrivacyOpts(HWND hwndDlg, UINT msg, WPARAM wPa
 				SAFE_FREE((void**)&buf);
 
 				// Send a status packet to notify the server about the webaware setting
-				{
-					WORD wStatus = MirandaStatusToIcq(ppro->m_iStatus);
+				WORD wStatus = MirandaStatusToIcq(ppro->m_iStatus);
 
-					if (ppro->m_iStatus == ID_STATUS_INVISIBLE) {
-						if (ppro->m_bSsiEnabled)
-							ppro->updateServVisibilityCode(3);
-						ppro->icq_setstatus(wStatus, NULL);
-					}
-					else {
-						ppro->icq_setstatus(wStatus, NULL);
-						if (ppro->m_bSsiEnabled)
-							ppro->updateServVisibilityCode(4);
-					}
+				if (ppro->m_iStatus == ID_STATUS_INVISIBLE) {
+					if (ppro->m_bSsiEnabled)
+						ppro->updateServVisibilityCode(3);
+					ppro->icq_setstatus(wStatus, NULL);
+				}
+				else {
+					ppro->icq_setstatus(wStatus, NULL);
+					if (ppro->m_bSsiEnabled)
+						ppro->updateServVisibilityCode(4);
 				}
 			}
 			return TRUE;
@@ -327,10 +321,7 @@ struct CPTABLE cpTable[] = {
 
 static BOOL CALLBACK FillCpCombo(LPSTR str)
 {
-	int i;
-	UINT cp;
-
-	cp = atoi(str);
+	UINT i, cp = atoi(str);
 	for (i = 0; cpTable[i].cpName != NULL && cpTable[i].cpId != cp; i++);
 	if (cpTable[i].cpName)
 		ComboBoxAddStringUtf(hCpCombo, cpTable[i].cpName, cpTable[i].cpId);
@@ -363,7 +354,6 @@ static INT_PTR CALLBACK DlgProcIcqFeaturesOpts(HWND hwndDlg, UINT msg, WPARAM wP
 			icq_EnableMultipleControls(hwndDlg, icqUnicodeControls, SIZEOF(icqUnicodeControls), byData ? TRUE : FALSE);
 			LoadDBCheckState(ppro, hwndDlg, IDC_TEMPVISIBLE, "TempVisListEnabled", DEFAULT_TEMPVIS_ENABLED);
 			LoadDBCheckState(ppro, hwndDlg, IDC_SLOWSEND, "SlowSend", DEFAULT_SLOWSEND);
-			LoadDBCheckState(ppro, hwndDlg, IDC_ONLYSERVERACKS, "OnlyServerAcks", DEFAULT_ONLYSERVERACKS);
 			byData = ppro->getByte("DirectMessaging", DEFAULT_DCMSG_ENABLED);
 			CheckDlgButton(hwndDlg, IDC_DCENABLE, byData ? TRUE : FALSE);
 			CheckDlgButton(hwndDlg, IDC_DCPASSIVE, byData == 1 ? TRUE : FALSE);
@@ -437,7 +427,6 @@ static INT_PTR CALLBACK DlgProcIcqFeaturesOpts(HWND hwndDlg, UINT msg, WPARAM wP
 			ppro->m_bTempVisListEnabled = (BYTE)IsDlgButtonChecked(hwndDlg, IDC_TEMPVISIBLE);
 			ppro->setByte("TempVisListEnabled", ppro->m_bTempVisListEnabled);
 			StoreDBCheckState(ppro, hwndDlg, IDC_SLOWSEND, "SlowSend");
-			StoreDBCheckState(ppro, hwndDlg, IDC_ONLYSERVERACKS, "OnlyServerAcks");
 			if (IsDlgButtonChecked(hwndDlg, IDC_DCENABLE))
 				ppro->m_bDCMsgEnabled = IsDlgButtonChecked(hwndDlg, IDC_DCPASSIVE) ? 1 : 2;
 			else

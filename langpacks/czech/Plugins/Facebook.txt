@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Facebook.dll
 ;  Plugin: Facebook RM
-;  Version: 0.2.2.1
+;  Version: 0.2.7.0
 ;  Authors: Michal Zelinka, Robert Pösel
 ;============================================================
 [Facebook protocol support for Miranda NG.]
@@ -50,8 +50,10 @@ Oznámení události
 Upozornění
 [News feeds]
 Novinky
-[News Feed types to notify:]
+[News feed types to notify:]
 Upozorňovat na tyto novinky:
+[Don't show advertising posts]
+Nezobrazovat reklamní příspěvky
 [Other events]
 Jiné události
 [Client notifications]
@@ -86,6 +88,10 @@ Komunikace
 Ponechat zprávy na serveru jako nepřečtené (neodesílat informaci o času přečtení)
 [Receive messages from "inbox" folder only]
 Přijímat pouze zprávy ze složky "příchozí"
+[Load last messages on opening message window (EXPERIMENTAL)]
+Načíst poslední zprávy při otevření komunikačního okna (EXPERIMENTÁLNÍ)
+[Number of messages to load:]
+Počet zpráv pro načtení:
 ;file \protocols\FacebookRM\src\chat.cpp
 [&Invite user...]
 Pozvat k d&iskusi...
@@ -124,18 +130,12 @@ Zadejte uživatelské jméno.
 [Please enter a password.]
 Zadejte heslo.
 ;file \protocols\FacebookRM\src\constants.h
-[Most Recent]
-Nejnovější
-[Wall Posts]
-Příspěvky ze zdi
 [Top News]
 Hlavní zprávy
-[Photos]
-Fotografie
-[Links]
-Odkazy
-[Apps and Games]
-Aplikace a hry
+[Most Recent]
+Nejnovější
+[Pages]
+Stránky
 [Classic website]
 Klasické stránky
 [Mobile website]
@@ -193,16 +193,16 @@ soubor
 fotky
 [a photo]
 fotku
-[User sent you %s:]
-Uživatel vám poslal %s:
+[User sent %s:]
+Uživatel odeslal %s:
+[User sent an unsupported attachment. Open your browser to see it.]
+Uživatel odeslal nepodporovanou přílohu. Otevřte webový prohlížeč pro její zobrazení.
 [Message read: %s by %s]
 Zpráva byla přečtena: %s - %s
-[Message read: %s]
-Zpráva byla přečtena: %s
 [This message is no longer available, because it was marked as abusive or spam.]
 Tato zpráva již není dostupná, protože byla označena jako urážlivá nebo spam.
-[%s and more (%d)]
-%s a další (%d)
+[%s is typing a message...]
+%s píše zprávu...
 ;file \protocols\FacebookRM\src\messages.cpp
 [You cannot send messages when you are offline.]
 Ve stavu offline nelze odesílat zprávy.
@@ -238,6 +238,10 @@ Kontrola žádostí o přátelství...
 Obnovování seznamu kontaktů...
 [Do you want to cancel your friendship with '%s'?]
 Přejete si zrušit vaše přátelství s '%s'?
+[Visit profile]
+Zobrazit profil
+[Visit notifications]
+Zobrazit upozornění
 [Show 'Share status' window]
 Zobrazit okno pro sdílení stavu
 [Notification]
@@ -246,6 +250,8 @@ Oznámení
 Novinky
 [Other Event]
 Ostatní události
+[Message read: %s]
+Zpráva byla přečtena: %s
 ;file \protocols\FacebookRM\src\theme.cpp
 [Facebook icon]
 Ikona Facebooku
@@ -257,10 +263,14 @@ Zpráva stavu
 Novinka
 [Friendship details]
 Podrobnosti o přátelství
-[Visit profile]
-Navštívít profil
+[Conversation]
+Konverzace
+[Message read]
+Zpráva přečtena
 [Visit friendship details]
 Zobrazit podrobnosti o přátelství
+[Visit conversation]
+Zobrazit konverzaci
 [Cancel friendship]
 Zrušit přátelství
 [Cancel friendship request]

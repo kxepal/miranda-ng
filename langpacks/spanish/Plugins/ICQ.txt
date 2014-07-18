@@ -1,8 +1,8 @@
 ﻿#muuid {73a9615c-7d4e-4555-badb-ee05dc928eff}
 ;============================================================
 ;  File: ICQ.dll
-;  Plugin: IcqOscarJ Protocol
-;  Version: 0.11.2.0
+;  Plugin: IcqOscarJ protocol
+;  Version: 0.11.2.5
 ;  Authors: Joe Kucera, Bio, Martin Öberg, Richard Hughes, Jon Keating, etc.
 ;============================================================
 [ICQ protocol support for Miranda NG.]
@@ -26,15 +26,11 @@ Contraseña:
 
 [Remember this session password]
 
-[OK]
-Aceptar
 [Cancel]
 Cancelar
-[ICQ]
-
 [ICQ number:]
 
-[Hint: If you don't enter your password here, Miranda will ask for the password everytime you try to go online.]
+[Hint: If you don't enter your password here, Miranda will ask for the password every time you try to go online.]
 
 [Retrieve a lost password or ICQ number]
 
@@ -98,9 +94,7 @@ Mensajería
 
 [Make me temporarily visible to contacts I send message to]
 
-[Notify me when a message delivery has failed (recommended)]
-
-[Never use legacy messaging (server acknowledgements)]
+[Notify me when a message delivery has failed]
 
 [Peer-to-peer Messaging]
 
@@ -402,7 +396,6 @@ Título:
 
 [Error uploading avatar to server, server refused to accept the image.]
 
-;file \protocols\IcqOscarJ\src\icq_constants.h
 ;file \protocols\IcqOscarJ\src\icq_fieldnames.cpp
 [Afghanistan]
 Afganistán
@@ -486,32 +479,32 @@ Camerún
 Canadá
 [Canary Islands]
 
-[Cape Verde Islands]
-
+[Cape Verde]
+Cabo Verde
 [Cayman Islands]
 Islas Caimán
 [Central African Republic]
 República Centroafricana
 [Chad]
 Chad
-[Chile, Republic of]
-
+[Chile]
+Chile
 [China]
 China
 [Colombia]
 Colombia
 [Comoros]
 Comoras
-[Congo, Democratic Republic of (Zaire)]
-
+[Congo, Democratic Republic of the]
+República Democrática del Congo
 [Congo, Republic of the]
 República del Congo
 [Cook Islands]
 Islas Cook
 [Costa Rica]
 Costa Rica
-[Cote d'Ivoire (Ivory Coast)]
-
+[Cote d'Ivoire]
+Cote d'Ivoire
 [Croatia]
 Croacia
 [Cuba]
@@ -546,8 +539,8 @@ Estonia
 Etiopía
 [Europe]
 
-[Faeroe Islands]
-
+[Faroe Islands]
+Islas Feroe
 [Falkland Islands]
 
 [Fiji]
@@ -606,8 +599,8 @@ Islandia
 India
 [Indonesia]
 Indonesia
-[Iran (Islamic Republic of)]
-
+[Iran]
+Irán
 [Iraq]
 Irak
 [Ireland]
@@ -646,8 +639,8 @@ Líbano
 Lesoto
 [Liberia]
 Liberia
-[Libyan Arab Jamahiriya]
-
+[Libya]
+Libia
 [Liechtenstein]
 Liechtenstein
 [Lithuania]
@@ -655,9 +648,9 @@ Lituania
 [Luxembourg]
 Luxemburgo
 [Macau]
-
+Macao
 [Macedonia, Republic of]
-
+Macedonia
 [Madagascar]
 Madagascar
 [Malawi]
@@ -678,14 +671,14 @@ Islas Marshall
 Mauritania
 [Mauritius]
 Mauricio
-[Mayotte Island]
-
+[Mayotte]
+Mayotte
 [Mexico]
 México
 [Micronesia, Federated States of]
 Micronesia, Estados Federados de
-[Moldova, Republic of]
-Moldova, República de
+[Moldova]
+Moldova
 [Monaco]
 Mónaco
 [Mongolia]
@@ -758,8 +751,8 @@ Portugal
 Puerto Rico
 [Qatar]
 Katar
-[Reunion Island]
-
+[Reunion]
+Reunión
 [Romania]
 Rumania
 [Russia]
@@ -822,10 +815,10 @@ Swazilandia
 Suecia
 [Switzerland]
 Suiza
-[Syrian Arab Republic]
-República Árabe Siria
+[Syria]
+Siria
 [Taiwan]
-
+Taiwan
 [Tajikistan]
 Tayikistán
 [Tanzania]
@@ -833,7 +826,7 @@ Tanzania
 [Thailand]
 Tailandia
 [Timor, East]
-
+Timor Oriental
 [Togo]
 Togo
 [Tokelau]
@@ -871,7 +864,7 @@ Uzbekistán
 [Vanuatu]
 Vanuatu
 [Vatican City]
-
+Ciudad del Vaticano
 [Venezuela]
 Venezuela
 [Vietnam]
@@ -882,18 +875,18 @@ Vietnam
 
 [Wales]
 
-[Wallis and Futuna Islands]
-
+[Wallis and Futuna]
+Wallis y Futuna
 [Yemen]
 Yemen
 [Yugoslavia]
 
-[Serbia, Republic of]
-
+[Serbia]
+Serbia
 [Kosovo, Republic of]
 
-[Montenegro, Republic of]
-
+[Montenegro]
+Montenegro
 [Zambia]
 Zambia
 [Zimbabwe]
@@ -1449,7 +1442,7 @@ ID de usuario
 
 [Close]
 Cerrar
-[You have to be online to sychronize the server-list!]
+[You have to be online to synchronize the server-list!]
 
 [** All contacts **]
 ** Todos los contactos **
@@ -1589,7 +1582,7 @@ Escribiendo
 [Broken hearted]
 
 [Free for Chat]
-
+Libre para el chat	
 [@home]
 
 [@work]
@@ -1627,7 +1620,7 @@ Escribiendo
 [None]
 Ninguno
 [Custom Status]
-
+Estado personalizado
 ;file \protocols\IcqOscarJ\src\icq_xtraz.cpp
 [Greeting card:]
 
@@ -1654,10 +1647,10 @@ Ninguno
 [The server to which you are trying to connect does not exist. Check your spelling in M->Options->Network->ICQ.]
 
 [error]
-
+error
 ;file \protocols\IcqOscarJ\src\oscar_filetransfer.cpp
 [%d Files]
-
+%d archivos
 [The file transfer was aborted by the other user.]
 
 [The file transfer failed: Proxy error]
@@ -1677,6 +1670,8 @@ Ninguno
 [File transfer negotiation failed for unknown reason.]
 
 [The checksum of file "%s" does not match, the file is probably damaged.]
+
+[Your file transfer has been aborted (error=%d), because one of the files that you selected to send is no longer readable from the disk. You may have deleted or moved it.]
 
 ;file \protocols\IcqOscarJ\src\utilities.cpp
 [<invalid>]

@@ -1,7 +1,9 @@
 ﻿;  This file is for lines that jpgen.js doesn't add to english templates but nevertheless must be translated.
-;  =CORE=
-[<mixed>]
-<розныя>
+;  Clist_modern
+[Show main menu]
+Галоўнае меню
+[Minimize Miranda]
+Згарнуць
 ;  Popup
 [Flat borders]
 Плоскія межы
@@ -11,6 +13,12 @@
 Паказваць абразок
 [Show avatars]
 Паказваць аватары
+[Error (colors only)]
+Памылка (толькі колеры)
+[Notification (colors only)]
+Абвестка (толькі колеры)
+[Warning (colors only)]
+Папярэджанне (толькі колеры)
 ;  Various actions and tipper items not included in source code.
 [Last seen:]
 Апошняе з'яўленне:

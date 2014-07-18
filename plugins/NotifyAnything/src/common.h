@@ -16,8 +16,6 @@
 #include "m_database.h"
 #include "m_popup.h"
 
-#include "m_LogService.h"
-
 #include "resource.h"
 #include "Version.h"
 
@@ -35,7 +33,7 @@ struct NASettings {
 	bool local_only, debug_messages, log_to_file, use_pcspeaker, allow_execute;
 	sound_t sound;
 	int port;
-	std::string password, log_filename;
+	std::tstring password, log_filename;
 };
 
 extern NASettings g_settings;
@@ -48,6 +46,5 @@ void load_settings();
 
 int OptionsInitialize(WPARAM wParam, LPARAM lParam);
 
-extern std::string g_mirandaDir;
-extern bool IsLogService;
+extern std::tstring g_mirandaDir;
 #define LOG_ID LPGEN("NotifyAnything")

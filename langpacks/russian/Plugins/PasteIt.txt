@@ -18,7 +18,7 @@
 [Show confirmation dialog box]
 Показывать диалоговое окно подтверждения
 [Autosend download link to contact]
-Отослать ссылку автоматически
+Отправить ссылку автоматически
 [Web page settings]
 Настройки web-страницы
 [Web page to configure]
@@ -125,7 +125,7 @@ HTTP подключение Paste It
 Вы можете разместить только 1 файл
 [Cannot get data from clipboard]
 Не возможно получить данные из буфера обмена
-[File size is %d KB, do you realy want to paste such a large file?]
+[File size is %d KB, do you really want to paste such a large file?]
 Размер файла %d KБ, вы действительно хотите разместить такой большой файл?
 [Are You sure?]
 Вы уверены?

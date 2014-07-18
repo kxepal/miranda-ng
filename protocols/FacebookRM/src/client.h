@@ -39,11 +39,11 @@ public:
 	{
 		username_ = password_ = \
 		chat_sequence_num_ = chat_channel_host_ = chat_channel_partition_ = \
-		dtsg_ = logout_hash_ = "";
+		dtsg_ = logout_hash_ = chat_sticky_num_ = chat_conn_num_ = chat_clientid_ = chat_traceid_ = "";
 
 		msgid_ = error_count_ = last_feeds_update_ = last_notification_time_ = 0;
 
-		https_ = is_idle_ = invisible_ = is_typing_ = false;
+		https_ = is_idle_ = is_typing_ = false;
 
 		buddies_lock_ = send_message_lock_ = NULL;
 		hMsgCon = NULL;
@@ -73,7 +73,10 @@ public:
 	std::string chat_channel_partition_;
 	std::string chat_sequence_num_;
 	std::string chat_reconnect_reason_;
-	bool    invisible_;
+	std::string chat_sticky_num_;
+	std::string chat_conn_num_;
+	std::string chat_clientid_;
+	std::string chat_traceid_;
 	bool    is_typing_;
 	bool	is_idle_;
 	bool	https_;
@@ -95,15 +98,22 @@ public:
 
 	std::map<std::string, std::string> cookies;
 	std::map<std::string, std::string> pages;
-	std::map<std::tstring, facebook_chatroom> chat_rooms;
+	std::map<std::tstring, facebook_chatroom*> chat_rooms;
+	std::map<std::string, facebook_notification*> notifications;
 
 	std::string get_newsfeed_type();
 	std::string get_server_type();
 	std::string get_privacy_type();
 
+	std::map<MCONTACT, bool> ignore_read;
+	std::set<MCONTACT> typers;		// store info about typing contacts, because Facebook doesn't send "stopped typing" event when there is actual message being sent
+	std::map<MCONTACT, time_t> readers;
+
 	char*   load_cookies();
 	void    store_headers(http::response* resp, NETLIBHTTPHEADER* headers, int headers_count);
-	void    clear_cookies();	
+	void    clear_cookies();
+	void	clear_notifications();
+	void	clear_chatrooms();
 
 	////////////////////////////////////////////////////////////
 
@@ -144,19 +154,14 @@ public:
 	HANDLE  buddies_lock_;
 	HANDLE  send_message_lock_;
 
-	bool    buddy_list();
-	bool	load_friends();
-	bool	load_pages();
-	bool    feeds();
-
 	////////////////////////////////////////////////////////////
 
 	// Messages handling
 
-	std::map<std::string, bool> messages_ignore;
+	std::map<std::string, int> messages_ignore;
 
 	bool    channel();
-	bool    send_message(std::string message_recipient, std::string message_text, std::string *error_text, MessageMethod method);
+	bool    send_message(MCONTACT, std::string message_recipient, std::string message_text, std::string *error_text, MessageMethod method);
 	////////////////////////////////////////////////////////////
 
 	// Status handling

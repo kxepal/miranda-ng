@@ -43,7 +43,6 @@ static HGENMENU hMainMenuGroup = NULL;
 static HANDLE hListeningInfoChangedEvent = NULL;
 
 static HANDLE hTTB = NULL;
-static char *metacontacts_proto = NULL;
 BOOL loaded = FALSE;
 static UINT hTimer = 0;
 static DWORD lastInfoSetTime = 0;
@@ -279,14 +278,11 @@ int ModulesLoaded(WPARAM, LPARAM)
 {
 	EnableDisablePlayers();
 
-	if (ServiceExists(MS_MC_GETPROTOCOLNAME))
-		metacontacts_proto = (char *) CallService(MS_MC_GETPROTOCOLNAME, 0, 0);
-
 	// icons
 	Icon_Register(hInst, LPGEN("ListeningTo"), iconList, SIZEOF(iconList));
 
 	// Extra icon support
-	hExtraIcon = ExtraIcon_Register(MODULE_NAME, LPGEN("Listening to music"), "listening_to_icon");
+	hExtraIcon = ExtraIcon_Register(MODULE_NAME "_icon", LPGEN("Listening to music"), "listening_to_icon");
 	
 	for (MCONTACT hContact = db_find_first(); hContact; hContact = db_find_next(hContact)) {
 		char *proto = GetContactProto(hContact);
@@ -945,9 +941,8 @@ void SetExtraIcon(MCONTACT hContact, BOOL set)
 	ExtraIcon_SetIcon(hExtraIcon, hContact, set ? "listening_to_icon" : NULL);
 }
 
-int SettingChanged(WPARAM wParam,LPARAM lParam)
+int SettingChanged(WPARAM hContact,LPARAM lParam)
 {
-	MCONTACT hContact = (MCONTACT) wParam;
 	if (hContact == NULL)
 		return 0;
 

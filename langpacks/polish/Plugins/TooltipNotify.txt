@@ -10,8 +10,6 @@ Pokazuje małe podpowiedzi w zasobniku systemowym o zmianach statusu kontaktów.
 ;file \plugins\TooltipNotify\res\main.rc
 [Select protocols]
 Zaznacz protokoły
-[OK]
-OK
 [Choose contacts]
 Wybierz kontakt
 [Allow tooltip notifications for the following users:]
@@ -31,7 +29,7 @@ Pisanie
 [Protocols]
 Protokoły
 [Suppress notifications upon connection for]
-Usuń powiadomienia połączeń do
+Usuń powiadomienia połączeń dla
 [sec]
 s
 [Prefix protocol name]
@@ -55,7 +53,7 @@ Zachowanie
 [Misc]
 Inne
 [Obey 'Suppress online notification' settings]
-Stosuj ustawienia 'Usuń powiadomienia dostępności'
+Stosuj ustawienia "Usuń powiadomienia dostępności"
 [Auto positioning]
 Autopozycjowanie
 [Transparent input]
@@ -69,7 +67,7 @@ Włącz przezroczystość
 [Contacts]
 Kontakty
 [Idle]
-Bezczynność 
+Bezczynność
 ;file \plugins\TooltipNotify\src\TooltipNotify.cpp
 [Tooltip Notify]
 Powiadomienia

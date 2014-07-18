@@ -19,6 +19,9 @@ Boston, MA 02111-1307, USA.
 
 #include "common.h"
 
+static HWND hwndDialog;
+HANDLE hListThread;
+
 static void SelectAll(HWND hDlg, bool bEnable)
 {
 	OBJLIST<FILEINFO> &todo = *(OBJLIST<FILEINFO> *)GetWindowLongPtr(hDlg, GWLP_USERDATA);
@@ -38,7 +41,7 @@ static void ApplyDownloads(void *param)
 	// if we need to escalate priviledges, launch a atub
 
 	if (!PrepareEscalation()) {
-		DestroyWindow(hDlg);
+		EndDialog(hDlg, 0);
 		return;
 	}
 
@@ -68,7 +71,7 @@ static void ApplyDownloads(void *param)
 		ListView_SetItemText(hwndList, i, 2, TranslateT("Downloading..."));
 
 		FILEURL *pFileUrl = &todo[i].File;
-		if (!DownloadFile(pFileUrl->tszDownloadURL, pFileUrl->tszDiskPath, pFileUrl->CRCsum, nlc)) {
+		if (!DownloadFile(pFileUrl, nlc)) {
 			ListView_SetItemText(hwndList, i, 2, TranslateT("Failed!"));
 		}
 		else
@@ -116,9 +119,7 @@ static void ApplyDownloads(void *param)
 	if (rc == IDYES)
 		CallFunctionAsync(OpenPluginOptions, 0);
 
-	CloseWindow(hDlg);
-	DestroyWindow(hDlg);
-	hwndDialog = NULL;
+	EndDialog(hDlg, 0);
 	return;
 }
 
@@ -233,9 +234,13 @@ INT_PTR CALLBACK DlgList(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			lvg.pszHeader = TranslateT("Icons");
 			lvg.iGroupId = 2;
 			ListView_InsertGroup(hwndList, 0, &lvg);
+			
+			lvg.pszHeader = TranslateT("Languages");
+			lvg.iGroupId = 3;
+			ListView_InsertGroup(hwndList, 0, &lvg);
 
 			lvg.pszHeader = TranslateT("Other");
-			lvg.iGroupId = 3;
+			lvg.iGroupId = 4;
 			ListView_InsertGroup(hwndList, 0, &lvg);
 
 			ListView_EnableGroupView(hwndList, TRUE);
@@ -247,12 +252,12 @@ INT_PTR CALLBACK DlgList(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			///
 			OBJLIST<FILEINFO> &todo = *(OBJLIST<FILEINFO> *)lParam;
 			for (int i = 0; i < todo.getCount(); ++i) {
-				int groupId = 3;
 				LVITEM lvi = {0};
 				lvi.mask = LVIF_PARAM | LVIF_GROUPID | LVIF_TEXT | LVIF_IMAGE;
 				
+				int groupId = 4;
 				if (_tcschr(todo[i].tszOldName, L'\\') != NULL)
-					groupId = _tcsstr(todo[i].tszOldName, L"Plugins") != NULL ? 1 : 2;
+					groupId = (_tcsstr(todo[i].tszOldName, _T("Plugins")) != NULL) ? 1 : ((_tcsstr(todo[i].tszOldName, _T("Languages")) != NULL) ? 3 : 2);
 
 				lvi.iItem = i;
 				lvi.lParam = (LPARAM)&todo[i];
@@ -357,6 +362,10 @@ INT_PTR CALLBACK DlgList(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
+	case WM_CLOSE:
+		DestroyWindow(hDlg);
+		break;
+
 	case WM_DESTROY:
 		Utils_SaveWindowPosition(hDlg, NULL, MODNAME, "ListWindow");
 		Skin_ReleaseIcon((HICON)SendMessage(hDlg, WM_SETICON, ICON_BIG, 0));
@@ -453,4 +462,28 @@ void DoGetList(int iFlag)
 	}
 	else if (iFlag)
 		hListThread = mir_forkthread(GetList, 0);
+}
+
+void UninitListNew()
+{
+	if (hwndDialog != NULL)
+		DestroyWindow(hwndDialog);
+}
+
+INT_PTR ShowListCommand(WPARAM,LPARAM)
+{
+	opts.bSilent = false;
+	DoGetList(true);
+	return 0;
+}
+
+void InitListNew()
+{
+	CreateServiceFunction(MODNAME"/ShowList", ShowListCommand);
+}
+
+void UnloadListNew()
+{
+	if (hListThread)
+		hListThread = NULL;
 }

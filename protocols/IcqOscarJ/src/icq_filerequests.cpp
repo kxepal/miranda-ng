@@ -1,32 +1,28 @@
 // ---------------------------------------------------------------------------80
 //                ICQ plugin for Miranda Instant Messenger
 //                ________________________________________
-// 
+//
 // Copyright © 2000-2001 Richard Hughes, Roland Rabien, Tristan Van de Vreede
 // Copyright © 2001-2002 Jon Keating, Richard Hughes
 // Copyright © 2002-2004 Martin Öberg, Sam Kothari, Robert Rainwater
 // Copyright © 2004-2009 Joe Kucera
-// 
+// Copyright © 2012-2014 Miranda NG Team
+//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
 // -----------------------------------------------------------------------------
-//  DESCRIPTION:
-//
-//  Describe me here please...
-//
-// -----------------------------------------------------------------------------
+
 #include "icqoscar.h"
 
 void CIcqProto::handleFileAck(PBYTE buf, WORD wLen, DWORD dwUin, DWORD dwCookie, WORD wStatus, char* pszText)
@@ -38,25 +34,21 @@ void CIcqProto::handleFileAck(PBYTE buf, WORD wLen, DWORD dwUin, DWORD dwCookie,
 	WORD wFilenameLength;
 	filetransfer* ft;
 
-
 	// Find the filetransfer that belongs to this response
-	if (!FindCookie(dwCookie, &hCookieContact, (void**)&ft))
-	{
+	if (!FindCookie(dwCookie, &hCookieContact, (void**)&ft)) {
 		NetLog_Direct("Error: Received unexpected file transfer request response");
 		return;
 	}
 
 	FreeCookie(dwCookie);
 
-	if (hCookieContact != HContactFromUIN(dwUin, NULL))
-	{
+	if (hCookieContact != HContactFromUIN(dwUin, NULL)) {
 		NetLog_Direct("Error: UINs do not match in file transfer request response");
 		return;
 	}
 
 	// If status != 0, a request has been denied
-	if (wStatus != 0)
-	{
+	if (wStatus != 0) {
 		NetLog_Direct("File transfer denied by %u.", dwUin);
 		ProtoBroadcastAck(ft->hContact, ACKTYPE_FILE, ACKRESULT_DENIED, (HANDLE)ft, 0);
 
@@ -65,8 +57,7 @@ void CIcqProto::handleFileAck(PBYTE buf, WORD wLen, DWORD dwUin, DWORD dwCookie,
 		return;
 	}
 
-	if (wLen < 6) 
-	{ // sanity check
+	if (wLen < 6) { // sanity check
 		NetLog_Direct("Ignoring malformed file transfer request response");
 		return;
 	}
@@ -82,18 +73,16 @@ void CIcqProto::handleFileAck(PBYTE buf, WORD wLen, DWORD dwUin, DWORD dwCookie,
 
 	// Filename
 	unpackLEWord(&buf, &wFilenameLength);
-	if (wFilenameLength > 0)
-	{
+	if (wFilenameLength > 0) {
 		if (wFilenameLength > wLen - 2)
 			wFilenameLength = wLen - 2;
-		pszFileName = (char*)_alloca(wFilenameLength+1);
+		pszFileName = (char*)_alloca(wFilenameLength + 1);
 		unpackString(&buf, pszFileName, wFilenameLength);
 		pszFileName[wFilenameLength] = '\0';
 	}
 	wLen = wLen - 2 - wFilenameLength;
 
-	if (wLen >= 4)
-	{ // Total filesize
+	if (wLen >= 4) { // Total filesize
 		unpackLEDWord(&buf, &dwFileSize);
 		wLen -= 4;
 	}
@@ -141,7 +130,7 @@ void CIcqProto::handleFileRequest(PBYTE buf, WORD wLen, DWORD dwUin, DWORD dwCoo
 		NetLog_Direct("Ignoring malformed file send request");
 		return;
 	}
-	
+
 	char *pszFileName = (char*)_alloca(wFilenameLength + 1);
 	unpackString(&buf, pszFileName, wFilenameLength);
 	pszFileName[wFilenameLength] = '\0';
@@ -171,7 +160,7 @@ void CIcqProto::handleFileRequest(PBYTE buf, WORD wLen, DWORD dwUin, DWORD dwCoo
 	// Send chain event
 	TCHAR* ptszFileName = mir_utf8decodeT(pszFileName);
 
-	PROTORECVFILET pre = {0};
+	PROTORECVFILET pre = { 0 };
 	pre.flags = PREF_TCHAR;
 	pre.fileCount = 1;
 	pre.timestamp = time(NULL);
@@ -198,14 +187,12 @@ void CIcqProto::icq_CancelFileTransfer(MCONTACT hContact, filetransfer* ft)
 	if (FindCookieByData(ft, &dwCookie, NULL))
 		FreeCookie(dwCookie);      /* this bit stops a send that's waiting for acceptance */
 
-	if (IsValidFileTransfer(ft))
-	{ // Transfer still out there, end it
+	if (IsValidFileTransfer(ft)) { // Transfer still out there, end it
 		NetLib_CloseConnection(&ft->hConnection, FALSE);
 
 		ProtoBroadcastAck(ft->hContact, ACKTYPE_FILE, ACKRESULT_FAILED, ft, 0);
 
-		if (!FindFileTransferDC(ft))
-		{ // Release orphan structure only
+		if (!FindFileTransferDC(ft)) { // Release orphan structure only
 			SafeReleaseFileTransfer((void**)&ft);
 		}
 	}

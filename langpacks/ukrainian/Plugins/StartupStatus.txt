@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: StartupStatus.dll
 ;  Plugin: StartupStatus
-;  Version: 0.8.0.45
+;  Version: 0.8.0.47
 ;  Authors: P Boon
 ;============================================================
 [StartupStatus, allows you to define the status Miranda should set on startup, configurable per protocol.]
@@ -238,7 +238,7 @@
 [Reconnecting]
 Перепідключення
 [Ignore locked status of accounts]
-Ігнорувати блоковані облікові записи
+Ігнорувати заблоковані облікові записи
 [Consider connection lost after]
 Зв'язок втрачено після
 [failed pings]
@@ -259,6 +259,10 @@
 Праворуч
 [None]
 Немає
+[size: %d x %d]
+розмір: %d x %d
+[loc: %d x %d]
+поз.: %d x %d
 [Hidden]
 Приховане
 [Minimized]

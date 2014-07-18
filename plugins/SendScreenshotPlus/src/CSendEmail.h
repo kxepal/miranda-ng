@@ -33,20 +33,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 class CSendEmail : public CSend {
 	public:
 		// Deklaration Standardkonstruktor/Standarddestructor
-		CSendEmail(HWND Owner, MCONTACT hContact, bool bFreeOnExit);
+		CSendEmail(HWND Owner, MCONTACT hContact, bool bAsync);
 		~CSendEmail();
 
-		void					Send();
+		int Send();
 
 	protected:
-		LPSTR					m_pszFileA;
-		LPSTR					m_pszFileName;
-		LPSTR					m_Email;
-		LPSTR					m_FriendlyName;
-		LPSTR					m_Subject;
+		char*					m_pszFileA;
+		char*					m_pszFileName;
+		char*					m_Email;
+		char*					m_FriendlyName;
+		char*					m_Subject;
 		void					SendThread();
 		static void				SendThreadWrapper(void * Obj);
-
 };
 
 //---------------------------------------------------------------------------

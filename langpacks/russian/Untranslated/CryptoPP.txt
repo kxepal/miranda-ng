@@ -1,2 +1,0 @@
-﻿[OK]
-[GnuPG Plugin - Select public key]

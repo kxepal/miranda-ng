@@ -115,7 +115,7 @@ void LoadOptions(void)
 	opt.eUnit = db_get_w(NULL, WEATHERPROTONAME, "eUnit", 2);
 
 	ptrT szValue(db_get_tsa(NULL, WEATHERPROTONAME, "DegreeSign"));
-	_tcsncpy_s(opt.DegreeSign, SIZEOF(opt.DegreeSign), (szValue == NULL) ? _T("") : szValue, _TRUNCATE);
+	_tcsncpy_s(opt.DegreeSign, (szValue == NULL) ? _T("") : szValue, _TRUNCATE);
 
 	opt.DoNotAppendUnit = db_get_b(NULL, WEATHERPROTONAME, "DoNotAppendUnit", 0);
 	opt.NoFrac = db_get_b(NULL, WEATHERPROTONAME, "NoFractions", 0);
@@ -191,7 +191,7 @@ void LoadOptions(void)
 
 	// misc
 	if (szValue = db_get_tsa(NULL, WEATHERPROTONAME, "Default"))
-		_tcsncpy_s(opt.Default, SIZEOF(opt.Default), szValue, _TRUNCATE);
+		_tcsncpy_s(opt.Default, szValue, _TRUNCATE);
 	else
 		opt.Default[0] = 0;
 }
@@ -472,7 +472,7 @@ INT_PTR CALLBACK DlgProcText(HWND hdlg, UINT msg, WPARAM wParam, LPARAM lParam)
 		SetWindowPos(hdlg, HWND_TOPMOST, rc.left, rc.top, 0, 0, SWP_NOSIZE);
 		TranslateDialogDefault(hdlg);
 		// generate the display text for variable list
-		_tcscpy(str, TranslateT("%c\tcurrent condition\n%d\tcurrent date\n%e\tdewpoint\n%f\tfeel-like temp\n%h\ttoday's high\n%i\twind direction\n%l\ttoday's low\n%m\thumidity\n%n\tstation name\n%p\tpressure\n%r\tsunrise time\n%s\tstation ID\n%t\ttemperature\n%u\tupdate time\n%v\tvisibility\n%w\twind speed\n%y\tsun set"));
+		_tcscpy(str, TranslateT("%c\tcurrent condition\n%d\tcurrent date\n%e\tdewpoint\n%f\tfeel-like temp\n%h\ttoday's high\n%i\twind direction\n%l\ttoday's low\n%m\thumidity\n%n\tstation name\n%p\tpressure\n%r\tsunrise time\n%s\tstation ID\n%t\ttemperature\n%u\tupdate time\n%v\tvisibility\n%w\twind speed\n%y\tsun set\n----------\n\\n\tnew line"));
 		SetDlgItemText(hdlg, IDC_VARLIST, str);
 
 		// make the more variable and other buttons flat

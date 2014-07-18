@@ -169,6 +169,11 @@ int __fastcall ApplyFingerprintImage(MCONTACT hContact, LPTSTR szMirVer)
 
 	if (arMonitoredWindows.getIndex((HANDLE)hContact) != -1)
 		SetSrmmIcon(hContact, szMirVer);
+
+	MCONTACT hMeta = db_mc_getMeta(hContact);
+	if (hMeta && db_mc_getMostOnline(hMeta) == hContact)
+		db_set_ts(hMeta, META_PROTO, "MirVer", szMirVer);
+
 	return 0;
 }
 
@@ -841,16 +846,31 @@ int OnExtraImageApply(WPARAM hContact, LPARAM lParam)
 	if (hContact == NULL)
 		return 0;
 
+	ptrT tszMirver;
 	char *szProto = GetContactProto(hContact);
-	if (szProto != NULL) {
-		DBVARIANT dbvMirVer;
-		if ( !db_get_ts(hContact, szProto, "MirVer", &dbvMirVer)) {
-			ApplyFingerprintImage(hContact, dbvMirVer.ptszVal);
-			db_free(&dbvMirVer);
+	if (szProto != NULL)
+		tszMirver = db_get_tsa(hContact, szProto, "MirVer");
+	
+	ApplyFingerprintImage(hContact, tszMirver);
+	return 0;
+}
+
+/****************************************************************************************
+*	 OnMetaDefaultChanged
+*	 update MC icon according to its default contact
+*/
+
+static int OnMetaDefaultChanged(WPARAM hMeta, LPARAM hSub)
+{
+	if (hSub != NULL) {
+		char *szProto = GetContactProto(hSub);
+		if (szProto != NULL) {
+			ptrT tszMirver(db_get_tsa(hSub, szProto, "MirVer"));
+			if (tszMirver)
+				db_set_ts(hMeta, META_PROTO, "MirVer", tszMirver);
 		}
-		else ApplyFingerprintImage(hContact, NULL);
 	}
-	else ApplyFingerprintImage(hContact, NULL);
+
 	return 0;
 }
 
@@ -864,7 +884,7 @@ static int OnContactSettingChanged(WPARAM hContact, LPARAM lParam)
 	if (hContact == NULL)
 		return 0;
 
-	DBCONTACTWRITESETTING* cws = (DBCONTACTWRITESETTING*)lParam;
+	DBCONTACTWRITESETTING *cws = (DBCONTACTWRITESETTING*)lParam;
 	if (cws && cws->szSetting && !strcmp(cws->szSetting, "MirVer")) {
 		switch (cws->value.type) {
 		case DBVT_UTF8:
@@ -947,6 +967,7 @@ int OnModulesLoaded(WPARAM wParam, LPARAM lParam)
 void InitFingerModule()
 {
 	HookEvent(ME_SYSTEM_MODULESLOADED, OnModulesLoaded);
+	HookEvent(ME_MC_DEFAULTTCHANGED, OnMetaDefaultChanged);
 	
 	CreateServiceFunction(MS_FP_SAMECLIENTSW, ServiceSameClientsW);
 	CreateServiceFunction(MS_FP_GETCLIENTDESCRW, ServiceGetClientDescrW);

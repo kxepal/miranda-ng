@@ -213,8 +213,10 @@ void DestroyGdiPlus(void)
 
 MCONTACT DecodeMetaContact(MCONTACT hContact)
 {
-	if (hContact == NULL) return NULL;
-	MCONTACT hReal = (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, hContact, 0);
+	if (hContact == NULL)
+		return NULL;
+	
+	MCONTACT hReal = db_mc_getMostOnline(hContact);
 	if (hReal == NULL || hReal == (MCONTACT)CALLSERVICE_NOTFOUND)
 		hReal = hContact;
 
@@ -223,8 +225,7 @@ MCONTACT DecodeMetaContact(MCONTACT hContact)
 
 bool IsSmileyProto(char* proto)
 {
-	return proto && (!metaProtoName || strcmp(proto, metaProtoName)) &&
-		(CallProtoService(proto, PS_GETCAPS, PFLAGNUM_1, 0) & (PF1_IM | PF1_CHAT));
+	return proto && strcmp(proto, META_PROTO) && (CallProtoService(proto, PS_GETCAPS, PFLAGNUM_1, 0) & (PF1_IM | PF1_CHAT));
 }
 
 void ReportError(const TCHAR* errmsg)

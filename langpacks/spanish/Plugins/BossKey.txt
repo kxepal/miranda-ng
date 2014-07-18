@@ -34,12 +34,8 @@ Vaya a Personalizar -> Teclas de acceso directo para cambiar la tecla de acceso 
 Tecla de acceso directo
 [Password:]
 Contraseña:
-[OK]
-Aceptar
 [Cancel]
 Cancelar
-[EN]
-
 [Workstation is locked]
 
 [Screen Saver is running]

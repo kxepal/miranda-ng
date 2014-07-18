@@ -2,12 +2,12 @@
 ;============================================================
 ;  File: MyDetails.dll
 ;  Plugin: My details
-;  Version: 0.0.1.11
+;  Version: 0.0.1.12
 ;  Authors: Ricardo Pescuma Domenecci, Drugwash
 ;============================================================
 [Shows and allows you to edit your details for all protocols.]
 Плагін дозволяє показувати і редагувати ваші деталі для всіх протоколів.
-[Set My Nickname]
+[Set my nickname]
 Мій нік
 [Nickname:]
 Нік:
@@ -15,32 +15,36 @@
 Скасувати
 [General]
 Загальні
-[...avatar]
-...аватар
 [Align text to right]
 Вирівняти праворуч
-[...nickname]
-...нік
 [Auto-resize frame]
 Вирівнювати фрейм
 [Use contact list smileys]
 Смайли у списку контактів
-[...status]
-...статус
-[Replace Smileys]
+[Replace smileys]
 Замінювати смайли
-[Resize Smileys]
+[Resize smileys]
 Змінювати розмір смайлів
+[Global on...]
+Глобальний...
+[...avatar]
+аватар
+[...nickname]
+нік
+[...status]
+статус
 [...status message]
-...повідомлення статусу
-[Top:]
-Верх:
-[Bottom:]
-Низ:
-[Left:]
-Ліво:
-[Right:]
-Право:
+повідомлення статусу
+[Account]
+Обліковий запис
+[Show account name]
+Показувати ім'я облікового запису
+[Show account cycle button]
+Кнопки зміни облікових записів
+[Cycle through accounts every:]
+Міняти облікові записи кожні:
+[seconds]
+секунд
 [Avatar]
 Аватар
 [Custom size:]
@@ -56,24 +60,20 @@
 [Custom corner size:]
 Розмір кута:
 [Use free space (under avatar) to other texts]
-Викор. вільне місце (під аватарами) для тексту
-[Global On...]
-Глобальний...
-[Frame Options]
+Викор. вільне місце (під аватаром) для тексту
+[Frame options]
 Опції фрейму
-[Cycle through accounts every:]
-Міняти облікові записи кожні:
-[seconds]
-секунд
-[Account]
-Обліковий запис
-[Show account name]
-Показувати ім'я облікового запису
-[Show account cycle button]
-Кнопки зміни облікових записів
-[Set My Status Message for All Status]
-Статусне повідомлення для ycix статусів
-[Status Message:]
+[Top:]
+Верх:
+[Bottom:]
+Низ:
+[Left:]
+Ліво:
+[Right:]
+Право:
+[Set my status message for all status]
+Статусне повідомлення для yсix статусів
+[Status message:]
 Повідомлення статусу:
 [&Offline]
 Не в &мережі
@@ -91,17 +91,17 @@
 &Готовий до чату
 [&Invisible]
 &Невидимий
-[On the &Phone]
+[On the &phone]
 &Телефоную
-[Out to &Lunch]
+[Out to &lunch]
 &Обідаю
-[Set My Avatar...]
+[Set my avatar...]
 Змінити мій аватар...
-[Set My Nickname...]
+[Set my nickname...]
 Змінити мій нік...
-[Set My Status Message...]
+[Set my status message...]
 Змінити статусне повідомлення...
-[Enable Listening To]
+[Enable listening to]
 Ввімкнути "Слухаю"
 [Show next account]
 Наступний обліковий запис
@@ -117,35 +117,35 @@
 Нік
 [Status]
 Статус
-[Status Message]
+[Status message]
 Статусне повідомлення
-[Listening To]
+[Listening to]
 Слухаю
-[My Details]
+[My details]
 Мої деталі
 [Background]
 Фон
-[Show My Details]
+[Avatar border]
+Рамка аватару
+[Show my details]
 Показати мої деталі
-[Enable Listening To for %s]
+[Enable listening to for %s]
 Ввімкнути "Слухаю" для %s
-[Set My Avatar for %s...]
+[Set my avatar for %s...]
 Змінити мій аватар для %s...
-[Set My Nickname for %s...]
+[Set my nickname for %s...]
 Змінити мій нік для %s...
-[Set My Status Message for %s...]
+[Set my status message for %s...]
 Змінити статусне повідомлення для %s...
-[Hide My Details]
+[Hide my details]
 Сховати мої деталі
-[Listening to]
-Слухаю
-[Previous protocol]
-Попередній протокол
-[Next protocol]
-Наступний протокол
-[Set My Nickname for %s]
+[Previous account]
+Попередній обліковий запис
+[Next account]
+Наступний обліковий запис
+[Set my nickname for %s]
 Змінити мій нік для %s
-[Set My Status Message for %s]
+[Set my status message for %s]
 Встановити статус для %s
-[Contact List]
+[Contact list]
 Список контактів

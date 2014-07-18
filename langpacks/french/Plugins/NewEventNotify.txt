@@ -89,7 +89,11 @@ Demande votre autorisation
 [ICQ Web pager]
 
 [ICQ Email express]
-e-mail express ICQ
+
+[SMS Message]
+
+[SMS Confirmation]
+
 [Unknown Event]
 Évènement inconnu
 [Notify of new events]
@@ -119,4 +123,4 @@ Ceci est un exemple d'évènement  ;-D
 [Plugin Test]
 
 [[b]Number of new message(s): %d[/b]\n]
-[b]Nombre de nouveaux messages: %d[/b]\n
+\[b]Nombre de nouveaux messages: %d[/b]\n

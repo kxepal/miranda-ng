@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Facebook.dll
 ;  Plugin: Facebook RM
-;  Version: 0.2.2.1
+;  Version: 0.2.7.0
 ;  Authors: Michal Zelinka, Robert Pösel
 ;============================================================
 [Facebook protocol support for Miranda NG.]
@@ -50,7 +50,7 @@ URL:
 Абвесткі
 [News feeds]
 Навіны
-[News Feed types to notify:]
+[News feed types to notify:]
 Абвяшчаць пра тыпы навін:
 [Other events]
 Іншыя падзеі
@@ -80,13 +80,19 @@ URL:
 Падтрымка карыстацкіх смайлаў (Эксперыментальна!)
 [Use local time for received messages]
 Выкарыстоўваць мясцовы час для прынятых паведамленняў
+[Message sessions]
+Гутаркі
+[Keep messages as unread on server (don't send "seen" info)]
+Не пазначаць паведамленні прачытанымі
+[Receive messages from "inbox" folder only]
+Прымаць паведамленні толькі з тэчкі "уваходныя"
 ;file \protocols\FacebookRM\src\chat.cpp
 [&Invite user...]
 &Запрасіць кантакт...
 [&Leave chat session]
 &Пакінуць чат
 [User &details]
-Дадзеныя кантакт
+Дадзеныя кантакта
 [User &history]
 Гісторыя кантакта
 ;file \protocols\FacebookRM\src\communication.cpp
@@ -107,7 +113,7 @@ URL:
 [Something happened to Facebook. Maybe there was some major update so you should wait for an update.]
 Нешта здарылася з Facebook. Верагодна, было сур'ёзнае абнаўленне, таму чакайце абнаўлення плагіна.
 [Need confirmation for sending messages to other clients.\nOpen Facebook website and try to send message to this contact again!]
-Маюць патрэбу ў пацверджанні для адпраўкі паведамленняў з іншых кліентаў.\nАдкрыйце сайт Facebook і паспрабуйце адправіць паведамленне гэтаму кантакту зноў!
+Маюць патрэбу ў пацверджанні для адпраўкі паведамленняў з іншых кліентаў.\nАдкрыйце сайт Facebook і паспрабуйце там адправіць паведамленне гэтаму кантакту!
 [Timeout when sending message.]
 Затрымка пры адпраўцы паведамлення.
 [Status update was successful.]
@@ -118,18 +124,10 @@ URL:
 [Please enter a password.]
 Калі ласка, увядзіце пароль.
 ;file \protocols\FacebookRM\src\constants.h
-[Most Recent]
-Нядаўнія абнаўленні
-[Wall Posts]
-Паведамленні са сцяны
 [Top News]
 Папулярныя навіны
-[Photos]
-Фатаграфіі
-[Links]
-Спасылкі
-[Apps and Games]
-Прыкладанні і гульні
+[Most Recent]
+Апошнія абнаўленні
 [Classic website]
 Класічны сайт
 [Mobile website]
@@ -165,7 +163,7 @@ URL:
 [<< Contacts]
 << Кантакты
 [What's on your mind, %s?]
-Што ў цябе ў галаве, %s?
+Пра што думаеш, %s?
 [Note: Make sure you have disabled 'Validate SSL certificates' option in Network options to work properly.]
 Заўвага: Пераканайцеся, што вы адключылі опцыю "Праверыць SSL сертыфікаты" ў функцыі сеціва, каб працаваць належным чынам.
 [Sample event]
@@ -187,16 +185,16 @@ URL:
 фатаграфіі
 [a photo]
 фатаграфію
-[User sent you %s:]
+[User sent %s:]
 Кантакт паслаў вам %s:
+[User sent an unsupported attachment. Open your browser to see it.]
+Кантакт паслаў непадтрымліваемае ўкладанне. Каб прагледзець, перайдзіце на сайт.
 [Message read: %s by %s]
 Паведамленне прачытана ў: %s карытальнікам %s
-[Message read: %s]
-Паведамленне прачытана ў: %s
 [This message is no longer available, because it was marked as abusive or spam.]
 Паведамленне недасяжна,таму што было адзначана як спам.
-[%s and more (%d)]
-%s і больш (%d)
+[%s is typing a message...]
+%s набірае тэкст...
 ;file \protocols\FacebookRM\src\messages.cpp
 [You cannot send messages when you are offline.]
 Вы не можаце адпраўляць паведамленні без далучэння.
@@ -232,14 +230,18 @@ Facebook ID павінна быць лічбавым значэннем.
 Абнаўленне спісу сяброў...
 [Do you want to cancel your friendship with '%s'?]
 Хочаце адмяніць сяброўства з '%s'?
+[Visit profile]
+Профіль
 [Show 'Share status' window]
-Паведамленне статуса Facebook 
+Паведамленне статуса Facebook
 [Notification]
 Абвестка
 [News Feed]
 Навіны
 [Other Event]
 Іншая падзея
+[Message read: %s]
+Паведамленне прачытана ў: %s
 ;file \protocols\FacebookRM\src\theme.cpp
 [Facebook icon]
 Абразок Facebook
@@ -251,10 +253,12 @@ Facebook ID павінна быць лічбавым значэннем.
 Навіны
 [Friendship details]
 Дэталі сяброўства
-[Visit profile]
-Профіль
+[Conversation]
+Гутарка
 [Visit friendship details]
 Дэталі сяброўства
+[Visit conversation]
+Гутарка на сайце
 [Cancel friendship]
 Выдаліць з сяброў
 [Cancel friendship request]

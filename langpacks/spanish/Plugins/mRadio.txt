@@ -1,8 +1,8 @@
 ﻿#muuid {eebc474c-b0ad-470f-99a8-9dd9210ce233}
 ;============================================================
 ;  File: mRadio.dll
-;  Module: mRadio
-;  Version: 0.0.2.1
+;  Plugin: mRadio Mod
+;  Version: 0.0.2.4
 ;  Authors: Awkward
 ;============================================================
 [This plugin plays and records Internet radio streams. Also local media files can be played.]
@@ -122,7 +122,7 @@
 [Currently used decoder]
 
 [connecting]
-
+conectando
 [aborting]
 
 [Can't initialize device]
@@ -163,6 +163,10 @@
 
 [mRadio volume control]
 
+[mRadio off]
+
+[mRadio on]
+
 [Import File]
 
 [Play Station]
@@ -184,7 +188,7 @@ Avanzado
 [Frame background]
 
 [OFF]
-
+APAGADO
 [Volume]
 
 [Device list]

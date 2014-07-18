@@ -8,16 +8,46 @@
 [Internet Relay Chat (IRC) protocol support for Miranda NG.]
 Internet Relay Chat (IRC) protokol pro Mirandu NG.
 ;file \protocols\IRCG\res\IRC.rc
+[Default network]
+Výchozí síť
+[Enable]
+Aktivovat
+[Server name]
+Název serveru
+[Internet address]
+Adresa
+[SSL]
+SSL
+[Port range]
+Rozsah portů
+[Password]
+Heslo
 [&Add]
 Přid&at
 [&Edit]
 Up&ravit
 [&Del]
 &Smaz
-[Enable]
-Aktivovat
+[User info - Required]
+Osobní informace (povinné)
+[Nick]
+Přezdívka
+[Alternative nick]
+Alt. přezdívka
+[Full name (e-mail)]
+Celé jméno (e-mail)
+[User ID (Ident)]
+Identifikátor
+[Ident]
+Ident
+[System]
+Systém
+[Port]
+Port
 [only while connecting]
 Pouze při připojování
+[Other]
+Ostatní
 [Force visible (-i)]
 Vynutit viditelnost (-i)
 [Rejoin channel if kicked]
@@ -40,40 +70,10 @@ Autom. se přidat po pozvání
 Měnit mód 'postaru'
 [Update online statuses for users]
 Aktualizovat stav lidí v seznamu
-[Update statuses in channel nick list]
-Aktualizovat stav účastníků na kanále
-[Internet address]
-Adresa
-[Port range]
-Rozsah portů
-[Nick]
-Přezdívka
-[User ID (Ident)]
-Identifikátor
-[Full name (e-mail)]
-Celé jméno (e-mail)
-[Password]
-Heslo
-[Server name]
-Název serveru
-[Alternative nick]
-Alt. přezdívka
-[Ident]
-Ident
-[System]
-Systém
-[Port]
-Port
-[Default network]
-Výchozí síť
-[User info - Required]
-Osobní informace (povinné)
-[Other]
-Ostatní
 [Check every (s):]
 Zjišťovat stav každých (s):
-[SSL]
-SSL
+[Update statuses in channel nick list]
+Aktualizovat stav účastníků na kanále
 [Don't check if more than (users):]
 Nezjišťovat, překročí-li počet:
 [User information]
@@ -112,8 +112,6 @@ Přehled informací získaný ze serveru. Vezměte na vědomí, že nic z toho n
 Informace CTCP
 [Question]
 Otázka
-[&OK]
-&OK
 [&Cancel]
 &Zrušit
 [Perform]
@@ -226,8 +224,8 @@ Ostatní možnosti CTCP
 Privátní diskuse (DCC Chat)
 [Send mode:]
 Metoda odesílání:
-[Packet size (b):]
-Velikost paketu (B):
+[Packet size (bytes):]
+Velikost paketu (byty):
 [Get IP address from server]
 Zjistit IP adresu ze serveru
 [Auto-accept from:]
@@ -244,7 +242,7 @@ O&dmítnout
 Aktivovat (*)
 [Ignore channel messages by default]
 Ignorovat zprávy kanálu
-[Ignore filetransfer requests]
+[Ignore file transfer requests]
 Ignorovat žádosti o přenos souborů
 [Ignore DCC Chat requests]
 Ignorovat žádosti o privátní diskusi
@@ -264,7 +262,7 @@ Poznámky
 CTCP
 [DCC]
 DCC
-[Ignore mask ( nick!user@host )]
+[Ignore mask (nick!user@host)]
 Maska (přezdívka!uživ_jméno@hostitel)
 [Network (*)]
 Síť (*)
@@ -276,8 +274,6 @@ Události
 Server:
 [Password:]
 Heslo:
-[Alternate nick]
-Alt. přezdívka
 ;file \protocols\IRCG\src\clist.cpp
 [CTCP chat request from %s]
 Žádost CTCP Chat od %s
@@ -392,17 +388,13 @@ Zadejte prosím odpověď
 ;file \protocols\IRCG\src\irclib.cpp
 [Failed to connect to]
 
-[DCC ERROR: Unable to bind local port for passive filetransfer]
+[DCC ERROR: Unable to bind local port for passive file transfer]
 
 ;file \protocols\IRCG\src\ircproto.cpp
 [%s server connection]
 %s - spojení se serverem
 [%s client-to-client connections]
 %s - přímé spojení mezi klienty
-[The IRC protocol depends on another plugin called 'Chat'\n\nDo you want to download it from the Miranda NG web site now?]
-
-[Information]
-Informace
 [Nickname]
 Přezdívka
 [DCC ERROR: No valid files specified]
@@ -500,6 +492,26 @@ Upravit server
 <automaticky>
 [<Local IP: ]
 <lokální IP: 
+[Event: Available]
+
+[Event: Away]
+
+[Event: N/A]
+
+[Event: Occupied]
+
+[Event: DND]
+
+[Event: Free for chat]
+
+[Event: On the phone]
+
+[Event: Out for lunch]
+
+[Event: Disconnect]
+
+[ALL NETWORKS]
+Všechny sítě
 [Click to set commands that will be performed for this event]
 Přidá příkazy k vybrané události
 [Click to delete the commands for this event]
@@ -522,7 +534,7 @@ Přidat mezi ignorované
 Upravit ignorované
 [Account]
 Účet
-[DCC'n CTCP]
+[DCC and CTCP]
 DCC a CTCP
 [Advanced]
 Extra
@@ -572,9 +584,9 @@ Zadejte požadovaný kanál
 Vyberte síť serverů IRC a pokud je to nutné, zadejte heslo.
 [Please enter a unique nickname]
 Vyberte jinou přezdívku
-[Please enter your authentification code]
+[Please enter your authentication code]
 
-[Authentificate nick]
+[Authenticate nick]
 
 [Are you sure you want to unregister your current nick?]
 

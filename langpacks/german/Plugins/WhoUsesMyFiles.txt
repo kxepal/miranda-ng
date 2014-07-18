@@ -10,8 +10,6 @@ Sucht nach Netzwerknutzern Ihrer freigegebenen Dateien und benachrichtigt Sie mi
 ;file \plugins\WhoUsesMyFiles\res\resource.rc
 [WUMF: Current connections]
 WUMF: Aktuelle Verbindungen
-[OK]
-OK
 [Popup delay settings]
 Popup Verzögerung
 [Popup Delay (seconds)]
@@ -57,8 +55,6 @@ Deaktivierte Optionen in nächster Version verfügbar
 [Show current connections]
 Aktuelle Verbindungen zeigen
 ;file \plugins\WhoUsesMyFiles\src\wumf.cpp
-[ID]
-ID
 [User]
 Benutzer
 [File]
@@ -88,7 +84,7 @@ Common Dialog Error 0x%lx
 Noch nicht implementiert...
 [Show connections list]
 Verbindungsliste anzeigen
-[Wumf]
+[Who uses my files]
 WUMF
 [Services]
 Dienste

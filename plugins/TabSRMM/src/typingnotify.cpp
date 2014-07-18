@@ -63,12 +63,12 @@ static INT_PTR EnableDisableMenuCommand(WPARAM wParam,LPARAM lParam)
 	return 0;
 }
 
-static int CALLBACK PopupDlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static LRESULT CALLBACK PopupDlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message) {
 	case WM_COMMAND:
 		if (HIWORD(wParam) == STN_CLICKED) {
-			CallService(MS_MSG_SENDMESSAGE "W", (WPARAM)PUGetContact(hWnd), 0);
+			CallService(MS_MSG_SENDMESSAGET, (WPARAM)PUGetContact(hWnd), 0);
 			PUDeletePopup(hWnd);
 			return 1;
 		}
@@ -176,7 +176,7 @@ void TN_TypingMessage(MCONTACT hContact, int iMode)
 
 	ppd.lchIcon = PluginConfig.g_buttonBarIcons[ICON_DEFAULT_TYPING];
 	ppd.lchContact = hContact;
-	ppd.PluginWindowProc = (WNDPROC) PopupDlgProc;
+	ppd.PluginWindowProc = PopupDlgProc;
 	CallService(MS_POPUP_ADDPOPUPT, (WPARAM)&ppd, APF_NEWDATA);
 }
 
@@ -503,7 +503,7 @@ static INT_PTR CALLBACK DlgProcOpts(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 
 int TN_OptionsInitialize(WPARAM wParam, LPARAM lParam)
 {
-	if ( ServiceExists(MS_POPUP_ADDPOPUP)) {
+	if ( ServiceExists(MS_POPUP_ADDPOPUPT)) {
 		OPTIONSDIALOGPAGE odp = { sizeof(odp) };
 		odp.position = 100000000;
 		odp.hInstance = g_hInst;

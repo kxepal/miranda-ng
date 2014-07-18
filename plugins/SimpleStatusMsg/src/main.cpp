@@ -58,7 +58,7 @@ extern "C" __declspec(dllexport) PLUGININFOEX* MirandaPluginInfoEx(DWORD miranda
 	return &pluginInfo;
 }
 
-extern "C" __declspec(dllexport) const MUUID MirandaInterfaces[] = {MIID_SRAWAY, MIID_LAST};
+extern "C" __declspec(dllexport) const MUUID MirandaInterfaces[] = { MIID_SRAWAY, MIID_LAST };
 
 #ifdef _DEBUG
 void log2file(const char *fmt, ...)
@@ -882,10 +882,9 @@ INT_PTR ShowStatusMessageDialogInternal(WPARAM wParam, LPARAM lParam)
 
 	if (Miranda_Terminated()) return 0;
 
-	if (hTTBButton)
-	{
+	if (hTTBButton) {
 		CallService(MS_TTB_SETBUTTONSTATE, (WPARAM)hTTBButton, (LPARAM)TTBST_RELEASED);
-		CallService(MS_TTB_SETBUTTONOPTIONS, MAKEWPARAM((WORD)TTBO_TIPNAME, (WORD)hTTBButton), (LPARAM)Translate("Change Status Message"));
+		CallService(MS_TTB_SETBUTTONOPTIONS, MAKEWPARAM((WORD)TTBO_TIPNAME, (WORD)hTTBButton), (LPARAM)Translate("Change status message"));
 	}
 
 	box_data = (struct MsgBoxInitData *)mir_alloc(sizeof(struct MsgBoxInitData));
@@ -1184,66 +1183,6 @@ static INT_PTR ChangeStatusMsg(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-static INT_PTR SetOfflineStatus(WPARAM wParam, LPARAM lParam)
-{
-	ChangeStatusMessage((WPARAM)ID_STATUS_OFFLINE, 0);
-	return 0;
-}
-
-static INT_PTR SetOnlineStatus(WPARAM wParam, LPARAM lParam)
-{
-	ChangeStatusMessage((WPARAM)ID_STATUS_ONLINE, 0);
-	return 0;
-}
-
-static INT_PTR SetAwayStatus(WPARAM wParam, LPARAM lParam)
-{
-	ChangeStatusMessage((WPARAM)ID_STATUS_AWAY, 0);
-	return 0;
-}
-
-static INT_PTR SetDNDStatus(WPARAM wParam, LPARAM lParam)
-{
-	ChangeStatusMessage((WPARAM)ID_STATUS_DND, 0);
-	return 0;
-}
-
-static INT_PTR SetNAStatus(WPARAM wParam, LPARAM lParam)
-{
-	ChangeStatusMessage((WPARAM)ID_STATUS_NA, 0);
-	return 0;
-}
-
-static INT_PTR SetOccupiedStatus(WPARAM wParam, LPARAM lParam)
-{
-	ChangeStatusMessage((WPARAM)ID_STATUS_OCCUPIED, 0);
-	return 0;
-}
-
-static INT_PTR SetFreeChatStatus(WPARAM wParam, LPARAM lParam)
-{
-	ChangeStatusMessage((WPARAM)ID_STATUS_FREECHAT, 0);
-	return 0;
-}
-
-static INT_PTR SetInvisibleStatus(WPARAM wParam, LPARAM lParam)
-{
-	ChangeStatusMessage((WPARAM)ID_STATUS_INVISIBLE, 0);
-	return 0;
-}
-
-static INT_PTR SetOnThePhoneStatus(WPARAM wParam, LPARAM lParam)
-{
-	ChangeStatusMessage((WPARAM)ID_STATUS_ONTHEPHONE, 0);
-	return 0;
-}
-
-static INT_PTR SetOutToLunchStatus(WPARAM wParam, LPARAM lParam)
-{
-	ChangeStatusMessage((WPARAM)ID_STATUS_OUTTOLUNCH, 0);
-	return 0;
-}
-
 static int ProcessProtoAck(WPARAM wParam,LPARAM lParam)
 {
 	ACKDATA *ack = (ACKDATA *)lParam;
@@ -1481,7 +1420,7 @@ static int AddTopToolbarButton(WPARAM wParam, LPARAM lParam)
 	ttbb.hIconHandleUp = ttbb.hIconHandleDn = GetIconHandle(IDI_CSMSG);
 	ttbb.pszService = MS_SIMPLESTATUSMSG_SHOWDIALOGINT;
 	ttbb.dwFlags = TTBBF_VISIBLE | TTBBF_SHOWTOOLTIP;
-	ttbb.name = ttbb.pszTooltipUp = LPGEN("Change Status Message");
+	ttbb.name = ttbb.pszTooltipUp = LPGEN("Change status message");
 	hTTBButton = TopToolbar_AddButton(&ttbb);
 
 	ReleaseIconEx("csmsg");
@@ -1495,8 +1434,8 @@ void RegisterHotkey(void)
 	hkd.cbSize = sizeof(hkd);
 	hkd.dwFlags = HKD_TCHAR;
 	hkd.pszName = "SimpleStatusMsg_OpenDialog";
-	hkd.ptszDescription = LPGENT("Open Status Message Dialog");
-	hkd.ptszSection = LPGENT("Status Message");
+	hkd.ptszDescription = LPGENT("Open status message dialog");
+	hkd.ptszSection = LPGENT("Status message");
 	hkd.pszService = MS_SIMPLESTATUSMSG_SHOWDIALOGINT;
 	hkd.DefHotKey = HOTKEYCODE(HOTKEYF_CONTROL, VK_OEM_3);
 	Hotkey_Register(&hkd);
@@ -1536,7 +1475,7 @@ static int ChangeStatusMsgPrebuild(WPARAM wParam, LPARAM lParam)
 		mi.flags |= CMIF_HIDDEN;
 	mi.icolibItem = GetIconHandle(IDI_CSMSG);
 	mi.pszService = MS_SIMPLESTATUSMSG_SHOWDIALOGINT;
-	mi.ptszName = LPGENT("Status Message...");
+	mi.ptszName = LPGENT("Status message...");
 	mi.position = 2000200000;
 	Menu_AddStatusMenuItem(&mi);
 
@@ -1726,8 +1665,7 @@ static TCHAR *ParseWinampSong(ARGUMENTSINFO *ai)
 	ai->flags |= AIF_DONTPARSE;
 	ptszWinampTitle = GetWinampSong();
 
-	if (ptszWinampTitle != NULL)
-	{
+	if (ptszWinampTitle != NULL) {
 		mir_free(g_ptszWinampSong);
 		g_ptszWinampSong = mir_tstrdup(ptszWinampTitle);
 	}
@@ -1752,8 +1690,7 @@ static TCHAR *ParseDate(ARGUMENTSINFO *ai)
 
 int ICQMsgTypeToStatus(int iMsgType)
 {
-	switch (iMsgType)
-	{
+	switch (iMsgType) {
 		case MTYPE_AUTOONLINE: return ID_STATUS_ONLINE;
 		case MTYPE_AUTOAWAY: return ID_STATUS_AWAY;
 		case MTYPE_AUTOBUSY: return ID_STATUS_OCCUPIED;
@@ -1806,17 +1743,16 @@ static int OnAccListChanged(WPARAM wParam, LPARAM lParam)
 	UnhookProtoEvents();
 
 	ProtoEnumAccounts(&accounts->count, &accounts->pa);
-	for (int i = 0; i < accounts->count; ++i)
-	{
+	for (int i = 0; i < accounts->count; ++i) {
 		if (!IsAccountEnabled(accounts->pa[i]))
 			continue;
 
 		if (!strcmp(accounts->pa[i]->szProtoName, "ICQ"))
 			HookProtoEvent(accounts->pa[i]->szModuleName, ME_ICQ_STATUSMSGREQ, OnICQStatusMsgRequest);
 
-		accounts->statusFlags |= (CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_2, 0) &~ CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_5, 0));
+		accounts->statusFlags |= (CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_2, 0) & ~CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_5, 0));
 
-		if (CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_2, 0) &~ CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_5, 0))
+		if (CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_2, 0) & ~CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_5, 0))
 			accounts->statusCount++;
 
 		if (!(CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_1, 0) & PF1_MODEMSGSEND))
@@ -1855,8 +1791,7 @@ static int OnModulesLoaded(WPARAM wParam, LPARAM lParam)
 	HookEvent(ME_CLIST_PREBUILDSTATUSMENU, ChangeStatusMsgPrebuild);
 	ChangeStatusMsgPrebuild(0, 0);
 
-	if (ServiceExists(MS_VARS_REGISTERTOKEN))
-	{
+	if (ServiceExists(MS_VARS_REGISTERTOKEN)) {
 		TOKENREGISTER tr = {0};
 		tr.cbSize = sizeof(TOKENREGISTER);
 		tr.memType = TR_MEM_MIRANDA;
@@ -1866,8 +1801,7 @@ static int OnModulesLoaded(WPARAM wParam, LPARAM lParam)
 		tr.szHelpText = LPGEN("External Applications")"\t"LPGEN("retrieves song name of the song currently playing in Winamp (Simple Status Message compatible)");
 		CallService(MS_VARS_REGISTERTOKEN, 0, (LPARAM)&tr);
 
-		if (db_get_b(NULL, "SimpleStatusMsg", "ExclDateToken", 0) != 0)
-		{
+		if (db_get_b(NULL, "SimpleStatusMsg", "ExclDateToken", 0) != 0) {
 			tr.tszTokenString = _T("date");
 			tr.parseFunctionT = ParseDate;
 			tr.szHelpText = LPGEN("Miranda Related")"\t"LPGEN("get the date (Simple Status Message compatible)");
@@ -1878,8 +1812,7 @@ static int OnModulesLoaded(WPARAM wParam, LPARAM lParam)
 /*	if (db_get_b(NULL, "SimpleStatusMsg", "AmpLeaveTitle", 1))*/ {
 		DBVARIANT dbv;
 
-		if (!db_get_ts(NULL, "SimpleStatusMsg", "AmpLastTitle", &dbv))
-		{
+		if (!db_get_ts(NULL, "SimpleStatusMsg", "AmpLastTitle", &dbv)) {
 			g_ptszWinampSong = mir_tstrdup(dbv.ptszVal);
 			db_free(&dbv);
 		}
@@ -1898,21 +1831,16 @@ static int OnModulesLoaded(WPARAM wParam, LPARAM lParam)
 	if (accounts->statusCount == 0)
 		return 0;
 
-	if (!ServiceExists(MS_SS_GETPROFILECOUNT))
-	{
+	if (!ServiceExists(MS_SS_GETPROFILECOUNT)) {
 		if (db_get_b(NULL, "SimpleStatusMsg", "GlobalStatusDelay", 1))
-		{
 			SetTimer(NULL, 0, db_get_w(NULL, "SimpleStatusMsg", "SetStatusDelay", 300), (TIMERPROC)SetStartupStatusGlobal);
-		}
-		else
-		{
-			g_uSetStatusTimer = (UINT_PTR*)mir_alloc(sizeof(UINT_PTR) * accounts->count);
-			for (int i = 0; i < accounts->count; ++i)
-			{
+		else {
+			g_uSetStatusTimer = (UINT_PTR *)mir_alloc(sizeof(UINT_PTR) * accounts->count);
+			for (int i = 0; i < accounts->count; ++i) {
 				if (!IsAccountEnabled(accounts->pa[i]))
 					continue;
 
-				if (!(CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_2, 0) &~ CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_5, 0)))
+				if (!(CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_2, 0) & ~CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_5, 0)))
 					continue;
 
 				char szSetting[80];
@@ -1927,16 +1855,14 @@ static int OnModulesLoaded(WPARAM wParam, LPARAM lParam)
 
 static int OnOkToExit(WPARAM wParam, LPARAM lParam)
 {
-	if (accounts->statusCount)
-	{
+	if (accounts->statusCount) {
 		char szSetting[80];
 
-		for (int i = 0; i < accounts->count; ++i)
-		{
+		for (int i = 0; i < accounts->count; ++i) {
 			if (!IsAccountEnabled(accounts->pa[i]))
 				continue;
 
-			if (!(CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_2, 0) &~ CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_5, 0)))
+			if (!(CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_2, 0) & ~CallProtoService(accounts->pa[i]->szModuleName, PS_GETCAPS, PFLAGNUM_5, 0)))
 				continue;
 
 			mir_snprintf(szSetting, SIZEOF(szSetting), "Last%sStatus", accounts->pa[i]->szModuleName);
@@ -1965,24 +1891,10 @@ static int OnPreShutdown(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-static INT_PTR IsSARunning(WPARAM wParam, LPARAM lParam)
-{
-	return 1;
-}
-
 //remember to mir_free() the return value
 static INT_PTR sttGetAwayMessageT(WPARAM wParam, LPARAM lParam)
 {
-	return (INT_PTR)GetAwayMessage((int)wParam, (char*)lParam, TRUE, NULL);
-}
-
-
-static INT_PTR sttGetAwayMessage(WPARAM wParam, LPARAM lParam)
-{
-	TCHAR* msg = GetAwayMessage((int)wParam, (char*)lParam, TRUE, NULL);
-	char*  res = mir_t2a(msg);
-	mir_free(msg);
-	return (INT_PTR)res;
+	return (INT_PTR)GetAwayMessage((int)wParam, (char *)lParam, TRUE, NULL);
 }
 
 extern "C" int __declspec(dllexport) Load(void)
@@ -1990,39 +1902,19 @@ extern "C" int __declspec(dllexport) Load(void)
 	mir_getLP(&pluginInfo);
 	mir_getCLI();
 
-	hwndSAMsgDialog	= NULL;
+	hwndSAMsgDialog = NULL;
 	accounts = (PROTOACCOUNTS *)mir_alloc(sizeof(PROTOACCOUNTS));
 
 	db_set_w(NULL, "CList", "Status", (WORD)ID_STATUS_OFFLINE);
 	HookEvent(ME_SYSTEM_MODULESLOADED, OnModulesLoaded);
 	HookEvent(ME_PROTO_ACCLISTCHANGED, OnAccListChanged);
 
-
-	CreateServiceFunction(MS_AWAYMSG_GETSTATUSMSG, sttGetAwayMessage);
 	CreateServiceFunction(MS_AWAYMSG_GETSTATUSMSGW, sttGetAwayMessageT);
 
 	CreateServiceFunction(MS_SIMPLESTATUSMSG_SETSTATUS, SetStatusModeFromExtern);
 	CreateServiceFunction(MS_SIMPLESTATUSMSG_SHOWDIALOG, ShowStatusMessageDialog);
 	CreateServiceFunction(MS_SIMPLESTATUSMSG_CHANGESTATUSMSG, ChangeStatusMsg);
 	CreateServiceFunction(MS_SIMPLESTATUSMSG_SHOWDIALOGINT, ShowStatusMessageDialogInternal); // internal use ONLY
-
-	// Deprecated SimpleAway services
-	CreateServiceFunction(MS_SA_ISSARUNNING, IsSARunning);
-	CreateServiceFunction(MS_SA_CHANGESTATUSMSG, ChangeStatusMsg);
-	CreateServiceFunction(MS_SA_TTCHANGESTATUSMSG, ShowStatusMessageDialogInternal);
-	CreateServiceFunction(MS_SA_SHOWSTATUSMSGDIALOG, ShowStatusMessageDialog);
-	CreateServiceFunction(MS_SA_SETSTATUSMODE, SetStatusModeFromExtern);
-
-	CreateServiceFunction(MS_SA_SETOFFLINESTATUS, SetOfflineStatus);
-	CreateServiceFunction(MS_SA_SETONLINESTATUS, SetOnlineStatus);
-	CreateServiceFunction(MS_SA_SETAWAYSTATUS, SetAwayStatus);
-	CreateServiceFunction(MS_SA_SETDNDSTATUS, SetDNDStatus);
-	CreateServiceFunction(MS_SA_SETNASTATUS, SetNAStatus);
-	CreateServiceFunction(MS_SA_SETOCCUPIEDSTATUS, SetOccupiedStatus);
-	CreateServiceFunction(MS_SA_SETFREECHATSTATUS, SetFreeChatStatus);
-	CreateServiceFunction(MS_SA_SETINVISIBLESTATUS, SetInvisibleStatus);
-	CreateServiceFunction(MS_SA_SETONTHEPHONESTATUS, SetOnThePhoneStatus);
-	CreateServiceFunction(MS_SA_SETOUTTOLUNCHSTATUS, SetOutToLunchStatus);
 
 	HookEvent(ME_SYSTEM_OKTOEXIT, OnOkToExit);
 	HookEvent(ME_SYSTEM_PRESHUTDOWN, OnPreShutdown);

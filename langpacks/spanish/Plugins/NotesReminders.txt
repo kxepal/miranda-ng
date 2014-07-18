@@ -117,7 +117,7 @@ Ninguno
 [Appearance]
 Apariencia
 [Background Color]
-
+Color de fondo
 [Custom...]
 
 [Reset]
@@ -260,6 +260,10 @@ Alertas
 
 [Are you sure you want to delete this note?]
 
+[Visible]
+
+[Top]
+
 [Notes]
 Notas
 [Note text]
@@ -301,7 +305,7 @@ Días
 [Every]
 Cada
 [Seconds]
-
+Segundos
 [Never]
 
 [Default]

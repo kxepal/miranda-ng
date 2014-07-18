@@ -28,8 +28,6 @@ Poslat SMS
 Pro:
 [Add number to list]
 Přidat číslo do seznamu
-[&H]
-&H
 [Save number]
 Uložit číslo
 [Multiple >>]
@@ -38,8 +36,6 @@ Hromadně >>
 Zadejte zprávu:
 [Chars:]
 Znaků:
-[%d/160]
-%d/160
 [&Send]
 Po&slat
 [SMS Message Didn't Send]
@@ -52,7 +48,7 @@ Zkusi&t znovu
 Vypršel čas pro odeslání SMS zprávy
 [SMS Plugin]
 SMS
-[Begining]
+[Beginning]
 Začátek
 [End]
 Konec
@@ -68,8 +64,6 @@ Automaticky zobrazit přijaté zprávy
 Uložit pozici okna pro každý kontakt zvlášť
 [SMS Message Sent]
 Zpráva SMS odeslána
-[&OK]
-&OK
 [Message ID:]
 Identifikátor:
 [Source:]
@@ -123,8 +117,6 @@ Neplatné telefonní číslo
 [<< Single]
 << Jednotlivě
 ;file \plugins\SMS\src\SMSConstans.h
-[SMS]
-SMS
 [Send &SMS...]
 Poslat &SMS
 [&SMS Message]

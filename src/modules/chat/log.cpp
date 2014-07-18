@@ -107,7 +107,7 @@ static void Log_Append(char **buffer, int *cbBufferEnd, int *cbBufferAlloced, co
 static int Log_AppendRTF(LOGSTREAMDATA* streamData, BOOL simpleMode, char **buffer, int *cbBufferEnd, int *cbBufferAlloced, const TCHAR *fmt, ...)
 {
 	va_list va;
-	int lineLen, textCharsCount=0;
+	int lineLen, textCharsCount = 0;
 	TCHAR* line = (TCHAR*)alloca(8001 * sizeof(TCHAR));
 	char* d;
 
@@ -117,10 +117,10 @@ static int Log_AppendRTF(LOGSTREAMDATA* streamData, BOOL simpleMode, char **buff
 	line[lineLen] = 0;
 	va_end(va);
 
-	lineLen = lineLen*20 + 8;
+	lineLen = lineLen * 20 + 8;
 	if (*cbBufferEnd + lineLen > *cbBufferAlloced) {
 		cbBufferAlloced[0] += (lineLen + 1024 - lineLen % 1024);
-		*buffer = (char *) mir_realloc(*buffer, *cbBufferAlloced);
+		*buffer = (char *)mir_realloc(*buffer, *cbBufferAlloced);
 	}
 
 	d = *buffer + *cbBufferEnd;
@@ -135,11 +135,11 @@ static int Log_AppendRTF(LOGSTREAMDATA* streamData, BOOL simpleMode, char **buff
 			CopyMemory(d, "\\line ", 6);
 			d += 6;
 		}
-		else if (*line == '%' && !simpleMode ) {
+		else if (*line == '%' && !simpleMode) {
 			char szTemp[200];
 
 			szTemp[0] = '\0';
-			switch ( *++line ) {
+			switch (*++line) {
 			case '\0':
 			case '%':
 				*d++ = '%';
@@ -150,7 +150,7 @@ static int Log_AppendRTF(LOGSTREAMDATA* streamData, BOOL simpleMode, char **buff
 				if (g_Settings->bStripFormat || streamData->bStripFormat)
 					line += 2;
 
-				else if ( line[1] != '\0' && line[2] != '\0') {
+				else if (line[1] != '\0' && line[2] != '\0') {
 					TCHAR szTemp3[3], c = *line;
 					int col;
 					szTemp3[0] = line[1];
@@ -160,15 +160,15 @@ static int Log_AppendRTF(LOGSTREAMDATA* streamData, BOOL simpleMode, char **buff
 
 					col = _ttoi(szTemp3);
 					col += (OPTIONS_FONTCOUNT + 1);
-					mir_snprintf(szTemp, SIZEOF(szTemp), ( c == 'c' ) ? "\\cf%u " : "\\highlight%u ", col);
+					mir_snprintf(szTemp, SIZEOF(szTemp), (c == 'c') ? "\\cf%u " : "\\highlight%u ", col);
 				}
 				break;
 			case 'C':
 			case 'F':
 				if (!g_Settings->bStripFormat && !streamData->bStripFormat) {
 					int j = streamData->lin->bIsHighlighted ? 16 : EventToIndex(streamData->lin);
-					if ( *line == 'C' )
-						mir_snprintf(szTemp, SIZEOF(szTemp), "\\cf%u ", j+1);
+					if (*line == 'C')
+						mir_snprintf(szTemp, SIZEOF(szTemp), "\\cf%u ", j + 1);
 					else
 						mir_snprintf(szTemp, SIZEOF(szTemp), "\\highlight0 ");
 				}
@@ -176,30 +176,30 @@ static int Log_AppendRTF(LOGSTREAMDATA* streamData, BOOL simpleMode, char **buff
 			case 'b':
 			case 'u':
 			case 'i':
-				if (!streamData->bStripFormat )
-					mir_snprintf(szTemp, SIZEOF(szTemp), (*line == 'u') ? "\\%cl " : "\\%c ", *line );
+				if (!streamData->bStripFormat)
+					mir_snprintf(szTemp, SIZEOF(szTemp), (*line == 'u') ? "\\%cl " : "\\%c ", *line);
 				break;
 
 			case 'B':
 			case 'U':
 			case 'I':
-				if (!streamData->bStripFormat ) {
-					mir_snprintf( szTemp, SIZEOF(szTemp), (*line == 'U') ? "\\%cl0 " : "\\%c0 ", *line );
-					CharLowerA( szTemp );
+				if (!streamData->bStripFormat) {
+					mir_snprintf(szTemp, SIZEOF(szTemp), (*line == 'U') ? "\\%cl0 " : "\\%c0 ", *line);
+					CharLowerA(szTemp);
 				}
 				break;
 
 			case 'r':
-				if (!streamData->bStripFormat ) {
+				if (!streamData->bStripFormat) {
 					int index = EventToIndex(streamData->lin);
 					mir_snprintf(szTemp, SIZEOF(szTemp), "%s ", Log_SetStyle(index));
 				}
 				break;
 			}
 
-			if ( szTemp[0] ) {
+			if (szTemp[0]) {
 				int iLen = lstrlenA(szTemp);
-				memcpy( d, szTemp, iLen );
+				memcpy(d, szTemp, iLen);
 				d += iLen;
 			}
 		}
@@ -209,15 +209,15 @@ static int Log_AppendRTF(LOGSTREAMDATA* streamData, BOOL simpleMode, char **buff
 		}
 		else if ((*line == '\\' || *line == '{' || *line == '}') && !streamData->bStripFormat) {
 			*d++ = '\\';
-			*d++ = (char) *line;
+			*d++ = (char)*line;
 		}
 		else if (*line > 0 && *line < 128) {
-			*d++ = (char) *line;
+			*d++ = (char)*line;
 		}
 		else d += sprintf(d, "\\u%u ?", (WORD)*line); //!!!!!!!!!!!
 	}
 
-	*cbBufferEnd = (int) (d - *buffer);
+	*cbBufferEnd = (int)(d - *buffer);
 	return textCharsCount;
 }
 
@@ -292,7 +292,7 @@ static void AddEventToBuffer(char **buffer, int *bufferEnd, int *bufferAlloced, 
 		break;
 	case GC_EVENT_TOPIC:
 		if (streamData->lin->ptszText)
-			Log_AppendRTF(streamData, FALSE, buffer, bufferEnd, bufferAlloced, TranslateT("The topic is \'%s%s\'"), streamData->lin->ptszText, _T("%r"));
+			Log_AppendRTF(streamData, FALSE, buffer, bufferEnd, bufferAlloced, TranslateT("The topic is '%s%s'"), streamData->lin->ptszText, _T("%r"));
 		if (streamData->lin->ptszNick)
 			Log_AppendRTF(streamData, TRUE, buffer, bufferEnd, bufferAlloced,
 			streamData->lin->ptszUserInfo ? TranslateT(" (set by %s on %s)") : TranslateT(" (set by %s)"),
@@ -304,11 +304,11 @@ static void AddEventToBuffer(char **buffer, int *bufferEnd, int *bufferAlloced, 
 		break;
 	case GC_EVENT_ADDSTATUS:
 		if (streamData->lin->ptszNick && streamData->lin->ptszText && streamData->lin->ptszStatus)
-			Log_AppendRTF(streamData, TRUE, buffer, bufferEnd, bufferAlloced, TranslateT("%s enables \'%s\' status for %s"), streamData->lin->ptszText, streamData->lin->ptszStatus, streamData->lin->ptszNick);
+			Log_AppendRTF(streamData, TRUE, buffer, bufferEnd, bufferAlloced, TranslateT("%s enables '%s' status for %s"), streamData->lin->ptszText, streamData->lin->ptszStatus, streamData->lin->ptszNick);
 		break;
 	case GC_EVENT_REMOVESTATUS:
 		if (streamData->lin->ptszNick && streamData->lin->ptszText && streamData->lin->ptszStatus)
-			Log_AppendRTF(streamData, TRUE, buffer, bufferEnd, bufferAlloced, TranslateT("%s disables \'%s\' status for %s"), streamData->lin->ptszText, streamData->lin->ptszStatus, streamData->lin->ptszNick);
+			Log_AppendRTF(streamData, TRUE, buffer, bufferEnd, bufferAlloced, TranslateT("%s disables '%s' status for %s"), streamData->lin->ptszText, streamData->lin->ptszStatus, streamData->lin->ptszNick);
 		break;
 	}
 }
@@ -342,7 +342,7 @@ char* Log_CreateRTF(LOGSTREAMDATA *streamData)
 	// ### RTF BODY (one iteration per event that should be streamed in)
 	while (lin) {
 		// filter
-		if (streamData->si->iType != GCW_CHATROOM || !streamData->si->bFilterEnabled || (streamData->si->iLogFilterFlags&lin->iType) != 0) {
+		if ((streamData->si->iType != GCW_CHATROOM && streamData->si->iType != GCW_PRIVMESS) || !streamData->si->bFilterEnabled || (streamData->si->iLogFilterFlags&lin->iType) != 0) {
 			// create new line, and set font and color
 			Log_Append(&buffer, &bufferEnd, &bufferAlloced, "\\par%s ", Log_SetStyle(0));
 

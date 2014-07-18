@@ -1,7 +1,7 @@
 ﻿#muuid {a71f8335-7b87-4432-b8a3-81479431c6f5}
 ;============================================================
 ;  File: SkypeClassic.dll
-;  Plugin: Skype Protocol (Classic)
+;  Plugin: Skype protocol (Classic)
 ;  Version: 0.0.0.54
 ;  Authors: leecher, tweety, jls17
 ;============================================================
@@ -56,8 +56,6 @@ Volá: %s
 Zvednout telefon; současný hovor (%s) přidržet
 [Hang up]
 Zavěsit
-[OK]
-OK
 [Dialog]
 Dialog
 [Use Skype proxy connection over network instead of local Skype API]
@@ -179,7 +177,7 @@ Zobrazit &historii
 ;file \protocols\SkypeClassic\src\skype.cpp
 [Do a SkypeOut-call]
 Zavolat přes SkypeOut
-[invited ]
+[invited]
 
 [Phone call]
 Hovor

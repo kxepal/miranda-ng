@@ -8,14 +8,12 @@
 [Mail notifier and browser for Miranda NG. Included POP3 protocol.]
 Mail-Benachrichtigung und -Browser für Miranda NG. Beinhaltet das POP3-Protokoll.
 ;file \plugins\YAMN\res\YAMN.rc
-[OK]
-OK
 [Installed plugins]
 Installierte Plugins
 [Version:]
 Version:
 [Description:]
-Übersicht:
+Beschreibung:
 [Copyright:]
 Copyright:
 [Contact:]
@@ -121,14 +119,14 @@ Allgemeine YAMN-Einstellungen
 [TopToolBar button "Check mail"]
 TopToolbar-Button "E-Mails abrufen"
 [Enable YAMN Main Menu]
-YAMN im Hauptmenu aktivieren
+YAMN im Hauptmenü aktivieren
 [Show YAMN as a Protocol (Require Restart)]
 Zeige YAMN als ein Protokoll (Neustart erforderlich)
 [MailBrowser Options]
 Einstellungen für E-Mail-Browser
 [Enable Close on Delete Button]
 "Schließen beim Löschen"-Button aktivieren
-[Show long localised date]
+[Show long localized date]
 Langes Datumsformat anzeigen
 [Don't show today's date]
 Heutiges Datum nicht anzeigen
@@ -150,7 +148,7 @@ Benutzerdefinierte Farbe
 Keine neue E-Mail - Hinweis
 [Popup if no mail]
 Popup anzeigen
-[Persistant message]
+[Persistent message]
 Dauerhafte Mitteilung
 [Connection failure notifications]
 Verbindungsfehler - Hinweis
@@ -222,7 +220,7 @@ Alles kopieren
 [Run application]
 Programm ausführen
 [Delete selected]
-Markierte E-Mail(s) löschen
+Ausgewählte löschen
 [Select All]
 Alles markieren
 [From]
@@ -360,7 +358,7 @@ Dies ist kein gültiger Zahlenwert
 [Input error]
 Eingabefehler
 [Please select application to run]
-Bitte wählen SIe die auszuführende Anwendung aus
+Bitte wählen Sie die auszuführende Anwendung aus
 [Cannot allocate memory space for new account]
 Kein Speicher für neues Konto verfügbar
 [Memory error]

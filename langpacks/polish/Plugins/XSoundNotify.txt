@@ -24,10 +24,6 @@ Testuj
 Domyślne
 [Ignore sound for this contact]
 Ignoruj dźwięk dla tego kontaktu
-[XSoundNotify]
-XSoundNotify
-[OK]
-OK
 [Cancel]
 Anuluj
 ;file \plugins\XSoundNotify\src\dialog.cpp

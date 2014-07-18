@@ -17,7 +17,7 @@ Użytkownika
 [Password]
 Hasło:
 [URL]
-URL
+Link
 [Directory on server]
 Folder na serwerze
 [Port]
@@ -102,8 +102,6 @@ Usuń z listy
 Usuń z FTP
 [Enter file name]
 Wprowadź nazwę pliku
-[OK]
-OK
 [Cancel]
 Anuluj
 [File exists]

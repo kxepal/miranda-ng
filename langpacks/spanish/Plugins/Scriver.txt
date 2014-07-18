@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Scriver.dll
 ;  Plugin: Scriver
-;  Version: 2.11.0.0
+;  Version: 2.11.0.1
 ;  Authors: Miranda NG Development Team
 ;============================================================
 [Scriver - send and receive instant messages.]
@@ -59,7 +59,7 @@ Pestañas
 [Layout]
 
 [Show title bar]
-
+Mostrar barra de título
 [Show status bar]
 Mostrar barra de estado
 [Show toolbar]
@@ -102,7 +102,7 @@ Mostrar segundos
 Mostrar nombres
 [Enable message grouping]
 
-[Mark follow-up msgs with timestamp]
+[Mark follow-up messages with timestamp]
 
 [Start message text on a new line]
 
@@ -121,7 +121,7 @@ Mostrar nombres
 [Events in the last]
 
 [events]
-
+eventos
 [minutes]
 
 [Typing Notification Options]
@@ -163,8 +163,6 @@ Menú de usuario
 [&History]
 &Historial
 [&Quote]
-
-[&OK]
 
 [Send To All Tabs]
 
@@ -266,8 +264,6 @@ Fondo
 Tiempo de espera (s)
 [(0 means default setting, -1 means indefinite time)]
 
-[OK]
-Aceptar
 [Log]
 Registro
 [&Copy]
@@ -278,8 +274,6 @@ Co&piar todo
 Seleccionar todo
 [Word lookup]
 Palabra de búsqueda
-[Google]
-Google
 [Bing]
 
 [Yandex]
@@ -338,7 +332,7 @@ Añadir contacto
 [User's history]
 
 [Send message]
-
+Enviar mensaje
 [Smiley button]
 Botón de emoticono
 [User is typing]
@@ -595,6 +589,8 @@ URL entrante
 
 [Info bar status message]
 
+[Line between messages]
+
 [Offline]
 Fuera de línea
 [Online]
@@ -653,7 +649,7 @@ El contacto dejó de escribir
 Se ha producido un error desconocido.
 ;file \plugins\Scriver\src\msgwindow.cpp
 [Always On Top]
-
+Siempre en primer plano
 ;file \plugins\Scriver\src\sendqueue.cpp
 [The message send timed out.]
 El mensaje envia el tiempo de espera.
@@ -784,9 +780,11 @@ Mostrar ventana emergente para cambios de estado
 Iconos a mostrar en la bandeja
 [nick of current contact (if defined)]
 
-[protocol name of current contact (if defined). Account name is used when protocol supports multiaccounts]
+[protocol name of current contact (if defined). Account name is used when protocol supports multiple accounts]
 
-[User ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
+[user-defined account name of current contact (if defined).]
+
+[user ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc.]
 
 [path to Miranda root folder]
 

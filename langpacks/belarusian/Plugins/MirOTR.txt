@@ -115,9 +115,9 @@ OTR-шыфраванне: завершана
 Шыфраваная сесія была абноўлена '%s'.
 [OTR encrypted session was refreshed by '%s' (NOT VERIFIED)]
 Шыфраваная сесія была абноўлена '%s' (не правераны)
-[OTR encrypted session with '%s' sucessfully refreshed]
+[OTR encrypted session with '%s' successfully refreshed]
 Шыфраваная сесія з '%s' паспяхова абноўлена.
-[OTR encrypted session with '%s' sucessfully refreshed (NOT VERIFIED)]
+[OTR encrypted session with '%s' successfully refreshed (NOT VERIFIED)]
 Шыфраваная сесія з '%s' паспяхова абноўлена (не правераны).
 [OTR encrypted session has been terminated by '%s'. You should do that, too!]
 Шыфраваная сесія была спынена '%s'. Вы павінны зрабіць таксама самае!
@@ -128,10 +128,10 @@ OTR не можа шыфраваць падчас адпраўкі паведа�
 [OTR Information]
 OTR Інфармацыя
 [[OTR INFO] ]
-OTR INFO 
+OTR INFO\s
 [Authentication from %s]
 Ідэнтыфікацыя ад %s
-[Authenticae %s]
+[Authenticate %s]
 Ідэнтыфікацыя %s
 [Unknown]
 Невядома
@@ -207,10 +207,10 @@ OTR ідэнтыфікацыя: %s (%s)
 Пытанне
 [Password]
 Пароль
-[Authentication sucessful.]
+[Authentication successful.]
 Паспяховая ідэнтыфікацыя.
-[You contact authenticated you sucessful. You can send your own request to authenticate him.]
-Ваш кантакт паспяхова ідэнтыфікаваны. Вы можаце паслаць ваш уласны запыт ідэнтыфікацыі.
+[Your contact authenticated you successfully. You can send your own request to authenticate him.]
+Ваш кантакт паспяхова ідэнтыфікаваў вас. Вы можаце паслаць ваш уласны запыт ідэнтыфікацыі.
 [Error during authentication.]
 Памылка пры ідэнтыфікацыі
 [Authentication failed]
@@ -222,7 +222,7 @@ OTR-Ідэнтыфікацыя з: %s (%s)
 [Authenticating contact:\n%s (%s)]
 Ідэнтыфікацыя кантакту: \n%s (%s)
 [OTR encrypted session with '%s' (UNVERIFIED).\nUse a question only your partner can answer.]
-Шыфраваная сесія з '%s' (неправераны).\n Выкарыстоўвайце пытанне на які можа адказаць толькі Ваш суразмоўца. 
+Шыфраваная сесія з '%s' (неправераны).\n Выкарыстоўвайце пытанне на які можа адказаць толькі Ваш суразмоўца.
 [OTR encrypted session with '%s' (VERIFIED).\nVerify the session again using a question only your partner can answer.]
 Шыфраваная сесія з '%s' (правераны).\n Праверце сесію зноў, выкарыстоўваючы пытанне на які можа адказаць толькі Ваш суразмоўца.
 [OTR encrypted session with '%s' (UNVERIFIED).\nUse a known password.]

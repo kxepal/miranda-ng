@@ -26,7 +26,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "profilemanager.h"
 
 // contains the location of mirandaboot.ini
-extern TCHAR mirandabootini[MAX_PATH];
 bool g_bDbCreated;
 TCHAR g_profileDir[MAX_PATH], g_profileName[MAX_PATH], g_shortProfileName[MAX_PATH];
 TCHAR* g_defaultProfile;
@@ -53,9 +52,9 @@ static void fillProfileName(const TCHAR* ptszFileName)
 	else
 		p++;
 
-	_tcsncpy_s(g_profileName, SIZEOF(g_profileName), p, _TRUNCATE);
+	_tcsncpy_s(g_profileName, p, _TRUNCATE);
 
-	_tcsncpy_s(g_shortProfileName, SIZEOF(g_shortProfileName), p, _TRUNCATE);
+	_tcsncpy_s(g_shortProfileName, p, _TRUNCATE);
 	TCHAR *pos = _tcsrchr(g_shortProfileName, '.');
 	if (lstrcmpi(pos, _T(".dat")) == 0)
 		*pos = 0;

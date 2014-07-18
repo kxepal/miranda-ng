@@ -37,7 +37,7 @@ INT_PTR CALLBACK DlgProcFind(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPara
 	switch (msg) {
 	case WM_INITDIALOG:
 		TranslateDialogDefault(hwndDlg);
-		SetWindowLong(hwndDlg, GWLP_USERDATA, lParam);
+		SetWindowLongPtr(hwndDlg, GWLP_USERDATA, lParam);
 		SetWindowText(hwndDlg, TranslateT("Find"));
 		SendMessage(hwndDlg, WM_SETICON, ICON_SMALL, (LPARAM) LoadIcon(hInst, MAKEINTRESOURCE(IDI_FIND)));
 		return TRUE;
@@ -157,12 +157,12 @@ INT_PTR CALLBACK DlgProcDisplayData(HWND hwndDlg, UINT msg, WPARAM wParam, LPARA
 		{
 			MCONTACT hContact2 = lParam;
 
-			SetWindowLong(hwndDlg, GWLP_USERDATA, (LONG) hContact2);
+			SetWindowLongPtr(hwndDlg, GWLP_USERDATA, (LONG_PTR) hContact2);
 			WindowList_Add(hWindowList, hwndDlg, hContact2);
 
 			url[0] = '\0';
 			if (!db_get_ts(hContact2, MODULENAME, URL_KEY, &dbv)) {
-				_tcsncpy_s(url, SIZEOF(url), dbv.ptszVal, _TRUNCATE);
+				_tcsncpy_s(url, dbv.ptszVal, _TRUNCATE);
 				db_free(&dbv);
 			}
 			SetDlgItemText(hwndDlg, IDC_OPEN_URL, FixButtonText(url, SIZEOF(url)));

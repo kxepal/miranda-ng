@@ -619,7 +619,6 @@ DWORD CMraProto::MraSetContactStatus(MCONTACT hContact, DWORD dwNewStatus)
 			if (dwOldStatus == ID_STATUS_OFFLINE) {
 				DWORD dwTime = (DWORD)_time32(NULL);
 				setDword(hContact, "LogonTS", dwTime);
-				setDword(hContact, "OldLogonTS", dwTime);
 
 				if (bChatAgent)
 					MraChatSessionNew(hContact);
@@ -632,7 +631,7 @@ DWORD CMraProto::MraSetContactStatus(MCONTACT hContact, DWORD dwNewStatus)
 	return dwOldStatus;
 }
 
-void CMraProto::MraUpdateEmailStatus(const CMStringA &pszFrom, const CMStringA &pszSubject, DWORD dwDate, DWORD dwUIDL)
+void CMraProto::MraUpdateEmailStatus(const CMStringA &pszFrom, const CMStringA &pszSubject, DWORD dwDate, DWORD dwUIDL, bool force_display)
 {
 	BOOL bTrayIconNewMailNotify;
 	WCHAR szStatusText[MAX_SECONDLINE];
@@ -685,7 +684,7 @@ void CMraProto::MraUpdateEmailStatus(const CMStringA &pszFrom, const CMStringA &
 		else MraPopupShowFromAgentW(MRA_POPUP_TYPE_EMAIL_STATUS, (MRA_POPUP_ALLOW_ENTER), szStatusText);
 	}
 	else {
-		if (getByte("IncrementalNewMailNotify", MRA_DEFAULT_INC_NEW_MAIL_NOTIFY)) {
+		if ( !force_display && getByte("IncrementalNewMailNotify", MRA_DEFAULT_INC_NEW_MAIL_NOTIFY)) {
 			if (bTrayIconNewMailNotify)
 				CallService(MS_CLIST_REMOVEEVENT, 0, (LPARAM)m_szModuleName);
 			PUDeletePopup(hWndEMailPopupStatus);
@@ -698,10 +697,10 @@ void CMraProto::MraUpdateEmailStatus(const CMStringA &pszFrom, const CMStringA &
 	}
 }
 
-bool IsHTTPSProxyUsed(HANDLE m_hNetlibUser)
+bool IsHTTPSProxyUsed(HANDLE hNetlibUser)
 {
 	NETLIBUSERSETTINGS nlus = { sizeof(nlus) };
-	if (CallService(MS_NETLIB_GETUSERSETTINGS, (WPARAM)m_hNetlibUser, (LPARAM)&nlus))
+	if (CallService(MS_NETLIB_GETUSERSETTINGS, (WPARAM)hNetlibUser, (LPARAM)&nlus))
 	if (nlus.useProxy && nlus.proxyType == PROXYTYPE_HTTPS)
 		return true;
 
@@ -1038,18 +1037,8 @@ INT_PTR CALLBACK SetXStatusDlgProc(HWND hWndDlg, UINT message, WPARAM wParam, LP
 		break;
 
 	case WM_DESTROY:
+		SetWindowLongPtr(hWndDlg, GWLP_USERDATA, 0);
 		if (dat) { // set our xStatus
-			SetWindowLongPtr(hWndDlg, GWLP_USERDATA, 0);
-
-			HWND hWndEdit = GetDlgItem(hWndDlg, IDC_XTITLE);
-			WNDPROC OldMessageEditProc = (WNDPROC)GetWindowLongPtr(hWndEdit, GWLP_USERDATA);
-			SetWindowLongPtr(hWndEdit, GWLP_WNDPROC, (LONG_PTR)OldMessageEditProc);
-			SetWindowLongPtr(hWndEdit, GWLP_USERDATA, 0);
-
-			hWndEdit = GetDlgItem(hWndDlg, IDC_XMSG);
-			OldMessageEditProc = (WNDPROC)GetWindowLongPtr(hWndEdit, GWLP_USERDATA);
-			SetWindowLongPtr(hWndEdit, GWLP_WNDPROC, (LONG_PTR)OldMessageEditProc);
-			SetWindowLongPtr(hWndEdit, GWLP_USERDATA, 0);
 
 			TCHAR szBuff[STATUS_TITLE_MAX + STATUS_DESC_MAX];
 			DWORD dwBuffSize = GetDlgItemText(hWndDlg, IDC_XMSG, szBuff, STATUS_DESC_MAX + 1);
@@ -1113,11 +1102,10 @@ INT_PTR CALLBACK SendReplyBlogStatusDlgProc(HWND hWndDlg, UINT message, WPARAM w
 			SetWindowLongPtr(hWndDlg, GWLP_USERDATA, (LONG_PTR)dat);
 
 			HWND hWndEdit = GetDlgItem(hWndDlg, IDC_MSG_TO_SEND);
-			WNDPROC OldMessageEditProc = (WNDPROC)SetWindowLongPtr(hWndEdit, GWLP_WNDPROC, (LONG_PTR)MessageEditSubclassProc);
-			SetWindowLongPtr(hWndEdit, GWLP_USERDATA, (LONG_PTR)OldMessageEditProc);
+			mir_subclassWindow(GetDlgItem(hWndDlg, IDC_MSG_TO_SEND), MessageEditSubclassProc);
 			SendMessage(hWndEdit, EM_LIMITTEXT, MICBLOG_STATUS_MAX, 0);
 
-			SendMessage(hWndDlg, WM_SETICON, ICON_BIG, (LPARAM)IconLibGetIcon(gdiMenuItems[5].hIcolib));
+			SendMessage(hWndDlg, WM_SETICON, ICON_BIG, (LPARAM)IconLibGetIcon(gdiMenuItems[4].hIcolib));
 
 			// blog status message
 			CMStringW szBuff;
@@ -1191,15 +1179,8 @@ INT_PTR CALLBACK SendReplyBlogStatusDlgProc(HWND hWndDlg, UINT message, WPARAM w
 		break;
 
 	case WM_DESTROY:
-		if (dat) {
-			SetWindowLongPtr(hWndDlg, GWLP_USERDATA, (LONG_PTR)0);
-
-			HWND hWndEdit = GetDlgItem(hWndDlg, IDC_MSG_TO_SEND);
-			WNDPROC OldMessageEditProc = (WNDPROC)GetWindowLongPtr(hWndEdit, GWLP_USERDATA);
-			SetWindowLongPtr(hWndEdit, GWLP_WNDPROC, (LONG_PTR)OldMessageEditProc);
-			SetWindowLongPtr(hWndEdit, GWLP_USERDATA, (LONG_PTR)0);
-			mir_free(dat);
-		}
+		SetWindowLongPtr(hWndDlg, GWLP_USERDATA, 0);
+		mir_free(dat);
 		EndDialog(hWndDlg, NO_ERROR);
 		break;
 	}
@@ -1455,7 +1436,7 @@ static const size_t dwXMLSymbolsCount[] = { sizeof(TCHAR), sizeof(TCHAR), sizeof
 //Decode XML coded string. The function translate special xml code into standard characters.
 CMStringW DecodeXML(const CMStringW &lptszMessage)
 {
-	CMStringW ret('\0', lptszMessage.GetLength());
+	CMStringW ret('\0', (lptszMessage.GetLength() * 4));
 	ReplaceInBuff((void*)lptszMessage.GetString(), lptszMessage.GetLength()*sizeof(TCHAR), SIZEOF(lpszXMLTags), (LPVOID*)lpszXMLTags, (size_t*)dwXMLTagsCount, (LPVOID*)lpszXMLSymbols, (size_t*)dwXMLSymbolsCount, ret);
 	return ret;
 }
@@ -1463,7 +1444,7 @@ CMStringW DecodeXML(const CMStringW &lptszMessage)
 //Encode XML coded string. The function translate special saved xml characters into special characters.
 CMStringW EncodeXML(const CMStringW &lptszMessage)
 {
-	CMStringW ret;
+	CMStringW ret('\0', (lptszMessage.GetLength() * 4));
 	ReplaceInBuff((void*)lptszMessage.GetString(), lptszMessage.GetLength()*sizeof(TCHAR), SIZEOF(lpszXMLTags), (LPVOID*)lpszXMLSymbols, (size_t*)dwXMLSymbolsCount, (LPVOID*)lpszXMLTags, (size_t*)dwXMLTagsCount, ret);
 	return ret;
 }

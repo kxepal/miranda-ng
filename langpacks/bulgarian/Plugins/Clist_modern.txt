@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: Clist_modern.dll
 ;  Plugin: Modern contact list
-;  Version: 0.9.0.12
+;  Version: 0.9.0.13
 ;  Authors: Artem Shpynov, Ricardo Pescuma Domenecci and Anton Senko based on clist_mw by Bethoven
 ;============================================================
 [Displays contacts, event notifications, protocol status with advantage visual modifications. Supported MW modifications, enhanced metacontact cooperation.]
@@ -42,9 +42,9 @@
 Неактивен прозорец:
 [Active opacity:]
 Активен прозорец:
-[Show Avatars]
+[Show avatars]
 Показване на аватари
-[Animate Avatars]
+[Animate avatars]
 Анимирани аватари
 [Show contact time in list]
 Час на контакта в списъка
@@ -76,7 +76,7 @@
 Пропорционално разтягане
 [Tile vertically according to row height]
 
-[Use Windows Colors]
+[Use Windows colors]
 Цветове от Windows
 [Available skins]
 Налични облици
@@ -88,50 +88,14 @@
 Информация
 [\n\n\nPlease select one of available skins. \n\nOr browse for skin not in list.]
 \n\n\nИзберете някой от наличните облици. \n\nИли разгледайте за други облици, които не са в списъка.
-[Skin Preview]
+[Skin preview]
 Образец
 [WARNING: \tSkins can modify your current profile. Rollback is not possible. \n\t\tPlease BACKUP your database before applying skin.]
 ВНИМАНИЕ: \tВъзможно е облика да промени текущия профил. Промените са необратими. \n\t\tМоля, направете резервно копие на базата от данни преди прилагането на облика.
 [* Restart may be required for all changes to take effect]
 *Изисква рестарт за осъществяването на някои промени
-[Available objects]
-Налични обекти
-[Copy]
-Копиране
-[Paste]
-Поставяне
-[Object properties]
-Информация за обекта
-[Type]
-Тип
-[Color]
-Цвят
-[Alpha]
-Алфа
-[Image file and fitting mode]
+[Skin folder]
 
-[File]
-Файл
-[Borders]
-Рамки
-[Fit mode]
-
-[Fragment location]
-
-[Position:]
-Позиция:
-[Left]
-Ляво
-[Top]
-Горе
-[Size:]
-Размер:
-[Width]
-Ширина
-[Height]
-Височина
-[W x H: 0 x 0 pixels]
-Шир х Вис: 0х0 пиксела
 [Available view modes]
 Налични режими за преглед
 [Include protocols]
@@ -144,8 +108,6 @@
 Показване на контактите в групи
 [Include status modes]
 Включени състояния
-[OK]
-ОК
 [Cancel]
 Отказ
 [Sticky contacts]
@@ -168,7 +130,7 @@
 Редактиране на режима за преглед
 [Last message]
 Последно съобщение
-[Status Bar]
+[Status bar]
 Лента за състояние
 [Show status bar]
 Показване на лента за състояние
@@ -176,20 +138,22 @@
 Еднакво широки панели
 [Space between]
 Разстояние помежду им
-[Vertical Align]
+[Borders]
+Рамки
+[Vertical align]
 Вертикално подреждане
-[Horizontal Align]
+[Horizontal align]
 Хоризонтално подреждане
 [Multiline status bar:]
 Лента за състояние на няколко реда:
 [Accounts per line]
 Акаунти на ред
-[* To increase Status Bar height:\nSet in Main menu: Frames->Status Bar->Show title then pull appeared title of status bar up or down.]
+[* To increase status bar height:\nset in Main menu: Frames->Status Bar->Show title then pull appeared title of status bar up or down.]
 * За увеличаване височината на лентата: Главно меню>Рамки >Лента за състояние>Показване на името, след което влачете появилото се име нагоре/надолу.
-[Hold [Shift] to inverse [Right Click] behavior]
+[Hold [Shift] to inverse [Right Click] behavior.]
 "Shift"+"Десен бутон" = Главно меню
-[[Ctrl]+[Left Click] to filter only protocol. Click on empty space to show all]
-"Ctrl"+"Ляв бутон" филтрира протоkола. За отмяна натиснете в/у празно място
+[[Ctrl]+[Left Click] to filter only protocol. Click on empty space to show all.]
+"Ctrl"+"Ляв бутон" филтрира протоkола. За отмяна натиснете в/у празно място.
 [Set options per account]
 Отделни настройки на акаунтите
 [Enable custom account settings]
@@ -218,11 +182,11 @@
 Десен бутон = меню на състоянието
 [Right click opens Miranda menu]
 Десен бутон отваря главното меню
-[Space on Left]
+[Space on left]
 Отстъп отляво
 [Space on right]
 Отстъп отдясно
-[Delete Contact]
+[Delete contact]
 Изтриване на контакта
 [No]
 Не
@@ -246,9 +210,9 @@
 Запитване преди изтриване на контакт
 [Don't move offline user to bottom]
 
-[Contact List]
+[Contact list]
 Списък с контакти
-[Contact List Sorting]
+[Contact list sorting]
 Сортиране на списъка с контакти по:
 [Place offline users out of groups]
 
@@ -262,7 +226,7 @@
 Частично маркиране
 [No selection]
 Без маркиране
-[Selection Mode]
+[Selection mode]
 Режим на маркиране
 [Bring to front if covered]
 Извеждане отпред, ако е покрит
@@ -280,7 +244,7 @@
 Без ръчно оразмеряване
 [Drag to]
 При влачене
-[Easy Scroll]
+[Easy scroll]
 Лесно придвижване
 [Easy move]
 Лесно местене
@@ -304,7 +268,7 @@ x100 ms
 Изключено
 [Show automaticaly]
 Автоматично показване
-[Always Visible]
+[Always visible]
 Винаги видима
 [Dock to sides]
 Загнездване отстрани
@@ -326,7 +290,7 @@ x100 ms
 Полупрозрачност на отличения текст
 [Dim idle contacts]
 Потъмняване на бездействащите контакти
-['Hide Offline' means to hide:]
+['Hide offline' means to hide:]
 Скриване като извън линия:
 [Groups]
 Групи
@@ -374,24 +338,22 @@ ms между две мигания
 Режим на иконата в трея
 [Use xStatus icon]
 Ползване на икона за хСъстояние
-[Ignore Empty Extra icons places (arrange to right).]
+[Ignore empty extra icons places (arrange to right).]
 Заемане мястото на липсващи допълнителни икони (подреждане вдясно).
-[Use 'Meta' protocol icons for Metacontacts]
+[Use 'Meta' protocol icons for metacontacts]
 Ползване на метаикони за метаконтактите
 [Expand metacontacts]
 Разгръщане на метаконтактите
-[Avoid doubleclick expand]
+[Avoid double click expand]
 Без разгръщане при двукратно натискане
-[Hide all 'Extra icons' for subcontacts]
+[Hide all extra icons for subcontacts]
 Без "Допълнителни икони" за подконтактите
-[Hide offline subcontacts.]
+[Hide offline subcontacts]
 Скриване на подконтактите, които са "Извън линия"
-[MetaContacts stuff]
-MetaContacts - настройки
+[Metacontacts stuff]
+Метаконтакти - настройки
 [Additional stuff]
 И още нещо
-[For other stuff MetaContacts plugin should be loaded.\n\nhttp://miranda-ng.org/p/MetaContacts/]
-За още опции е необходима приставката MetaContacts.\n\nhttp://miranda-ng.org/p/MetaContacts/
 [Allow internal requesting of status message text]
 
 [Subcontacts indent:]
@@ -436,13 +398,13 @@ MetaContacts - настройки
 
 [Gaps]
 Пролуки
-[Use Non-Layered mode]
+[Use non-layered mode]
 Режим без слоеве
 [Round corners]
 Закръглени ъгли
 [Non-layered mode]
 Режим без слоеве
-[Disable Skin Engine]
+[Disable skin engine]
 Изключване на машината за облици
 [Enable Aero Glass (Vista+)]
 
@@ -472,6 +434,8 @@ MetaContacts - настройки
 Рамка на аватара
 [Draw overlay icons]
 Наслагване на икони
+[Size:]
+Размер:
 [Round corners of avatars]
 Закръглени ъгли на аватарите
 [Ignore size for row height calcs]
@@ -504,7 +468,7 @@ MetaContacts - настройки
 Икона допълнителното състояние вместо тази на протокола
 [Draw normal status as overlay]
 Състоянието като насложена икона
-[Right-To-Left reading mode (mirror template)]
+[Right-to-left reading mode (mirror template)]
 Режим на четене отдясно наляво (огледален шаблон)
 [Replace smileys in contact list]
 Замяна на усмивките в списъка с контакти
@@ -532,7 +496,7 @@ MetaContacts - настройки
 Състояние
 [Nickname]
 Прякор
-[Status Message]
+[Status message]
 Текст за състояние
 [Listening to]
 Слуша..
@@ -602,6 +566,8 @@ MetaContacts - настройки
 Местене надолу
 [OPTION PAGE IS UNDER CONSTRUCTION Please DO NOT notice about any issues here.\n Only high-level design comments are applicable.]
 Страницата с настройки е в процес на разработване!
+[&Main menu]
+Главно меню
 [E&xit]
 Изход
 [&Status]
@@ -622,9 +588,9 @@ MetaContacts - настройки
 Готов за чат\tCtrl+6
 [&Invisible\tCtrl+7]
 Невидим\tCtrl+7
-[On the &Phone\tCtrl+8]
+[On the &phone\tCtrl+8]
 На телефона\tCtrl+8
-[Out to &Lunch\tCtrl+9]
+[Out to &lunch\tCtrl+9]
 На обяд\tCtrl+9
 [Tray]
 Трей
@@ -632,38 +598,38 @@ MetaContacts - настройки
 Показване/Скриване
 [Nowhere]
 Никъде
-[&New Group]
+[&New group]
 Нова група
-[&Hide Offline Users]
+[&Hide offline users]
 Скриване на контактите "Извън линия"
-[Hide &Offline Users out here]
+[Hide &offline users out here]
 Скриване на контактите "Извън линия" тук
-[Hide &Empty Groups]
+[Hide &empty groups]
 Скриване на празните групи
-[Disable &Groups]
+[Disable &groups]
 Без групи
 [Hide Miranda]
 Скриване на Miranda
-[&New Subgroup]
+[&New subgroup]
 Нова подгрупа
-[&Hide Offline Users in here]
+[&Hide offline users in here]
 Скриване на контактите "Извън линия" тук
-[&Show Offline Users in here]
+[&Show offline users in here]
 Показване на контактите "Извън линия" тук
-[&Rename Group]
+[&Rename group]
 Преименуване на групата
-[&Delete Group]
+[&Delete group]
 Изтриване на групата
 ;file \plugins\Clist_modern\src\modern_clc.cpp
 [Skins]
 Облици
 [Modern contact list]
 Modern contact list
-[Avatar Overlay]
+[Avatar overlay]
 Насложени над аватара икони
-[Status Overlay]
+[Status overlay]
 Насложени над състоянието икони
-[Contact List smileys]
+[Contact list smileys]
 Усмивки в списъка с контакти
 [List background]
 Фон на списъка
@@ -673,25 +639,25 @@ Modern contact list
 
 [Frames title bar background]
 
-[Do you want contact '%s' to be converted to MetaContact and '%s' be added to it?]
+[Do you want contact '%s' to be converted to metacontact and '%s' be added to it?]
 Желаете ли контакта "%s" да бъде превърнат в метаконтакт и "%s" да бъде добавен към него?
-[Converting to MetaContact]
+[Converting to metacontact]
 Превръщане в метаконтакт
-[Do you want contact '%s' to be converted to MetaContact and '%s' be added to it (remove it from '%s')?]
+[Do you want contact '%s' to be converted to metacontact and '%s' be added to it (remove it from '%s')?]
 Желаете ли контакта "%s" да бъде превърнат в метаконтакт и "%s" да бъде добавен към него (премахнете го от "%s")?
-[Converting to MetaContact (Moving)]
-Превръщане в метаконтакт (Местене)
+[Converting to metacontact (moving)]
+Превръщане в метаконтакт (местене)
 [Do you want contact '%s' to be added to metacontact '%s'?]
 Желаете ли контакта "%s" да бъде добавен към метаконтакта "%s"?
-[Adding contact to MetaContact]
+[Adding contact to metacontact]
 Добавяне в метаконтакт
 [Do you want contact '%s' to be default?]
 Желаете ли, стандартният контакт да бъде '%s'?
 [Set default contact]
 Задаване на стандартен контакт
-[Do you want contact '%s' to be removed from MetaContact '%s' and added to '%s'?]
+[Do you want contact '%s' to be removed from metacontact '%s' and added to '%s'?]
 Желаете ли контакта "%s" да бъде премахнат от метаконтакта "%s" и добавен към "%s"?
-[Changing MetaContacts (Moving)]
+[Changing metacontacts (moving)]
 Промяна на метаконтакт (преместване)
 ;file \plugins\Clist_modern\src\modern_clcopts.cpp
 [Contact names]
@@ -792,7 +758,7 @@ Modern contact list
 Име (използват се местните настройки)
 [Last message time]
 Час на посл. съобщение
-[Account Name]
+[Account name]
 Име на акаунта
 [Rate]
 Оценка
@@ -813,12 +779,12 @@ Modern contact list
 [Window]
 Прозорец
 ;file \plugins\Clist_modern\src\modern_clistevents.cpp
-[Event area background]
-
-[Event Area]
-Зона за събития
 [No Events]
 Няма събития
+[Event area background]
+
+[Event area]
+Зона за събития
 ;file \plugins\Clist_modern\src\modern_clistmenus.cpp
 [&Contact rate]
 Оценка на контакта
@@ -830,14 +796,14 @@ Modern contact list
 Средна
 [High]
 Висока
-[Contact rate None]
-Оценка на контакта - няма
-[Contact rate Low]
-Оценка на контакта - ниска
-[Contact rate Medium]
-Оценка на контакта - средна
-[Contact rate High]
-Оценка на контакта - висока
+[Contact rate: none]
+Оценка на контакта: няма
+[Contact rate: low]
+Оценка на контакта: ниска
+[Contact rate: medium]
+Оценка на контакта: средна
+[Contact rate: high]
+Оценка на контакта: висока
 [Show even if offline]
 Показване и когато е извън линия
 ;file \plugins\Clist_modern\src\modern_clistopts.cpp
@@ -861,29 +827,31 @@ Modern contact list
 Ред
 [Row design]
 
-[Second Line]
-Втори ред
-[Third Line]
-Трети ред
 ;file \plugins\Clist_modern\src\modern_clistsettings.cpp
 [(Unknown Contact)]
 (Непознат контакт)
 ;file \plugins\Clist_modern\src\modern_clisttray.cpp
 [Tray menu]
 
-[&Find/Add Contacts...]
+[&Hide/show]
+Показване/Скриване
+[&Find/add contacts...]
 Търсене/Добавяне на контакти
-[&Main menu]
-Главно меню
 [&Options...]
 Настройки...
 [&About]
 Относно
 ;file \plugins\Clist_modern\src\modern_clui.cpp
-[Show Contact &Avatar]
+[Show avatar]
+
+[Hide avatar]
+
+[Show contact &avatar]
 Показване на аватара
-[Hide Contact &Avatar]
+[Hide contact &avatar]
 Скриване на аватара
+[My contacts]
+Моите контакти
 [My Contacts]
 Моите контакти
 ;file \plugins\Clist_modern\src\modern_keyboard.cpp
@@ -910,35 +878,12 @@ Modern contact list
 
 [ layered]
 
-;file \plugins\Clist_modern\src\modern_skineditor.cpp
-[- Empty - (do not draw this object)]
-
-[Solid fill object]
-
-[Image (draw image)]
-
-[Fragment (draw portion of image)]
-
-[Stretch Both directions]
-
-[Stretch Vertical, Tile Horizontal]
-
-[Tile Vertical, Stretch Horizontal]
-
-[Tile Both directions]
-
-[Image size is]
-Размера на изображението е
 ;file \plugins\Clist_modern\src\modern_skinengine.cpp
 [You need an image services plugin to process PNG images.]
 Необходима е услуга за изображенията за обработка на PNG изображения.
 [Error]
 Грешка
 ;file \plugins\Clist_modern\src\modern_skinopt.cpp
-[Load/Save]
-Зареждане/Запис
-[Object Editor]
-Редактор на обекти
 [( unknown )]
 (неизвестно)
 [%s\n\n%s\n\nAuthor(s):\t %s\nContact:\t %s\nWeb:\t %s\n\nFile:\t %s]
@@ -955,12 +900,6 @@ Angeli-Ka (изображения), FYR (шаблон)
 
 [Skin Information]
 Информация за облика
-[Skin editor contains not stored changes.\n\nAll changes will be lost.\n\n Continue to load new skin?]
-Редакторът на облици съдържа несъхранени промени.\n\nВсички промени ще бъдат загубени.\n\n Желаете новият облик да бъде зареден?
-[Warning!]
-Внимание!
-[Current skin was not saved to file.\n\nAll changes will be lost.\n\n Continue to load new skin?]
-Текущият облик не бе запаметен като файл.\n\Всички промени ще бъдат загубени.\n\n Желаете новият облик да бъде зареден?
 [Preview is not available\n\n%s\n----------------------\n\n%s\n\nAUTHOR(S):\n%s\n\nCONTACT:\n%s\n\nHOMEPAGE:\n%s]
 Няма наличен образец\n\n%s\n----------------------\n\n%s\n\nАвтор(и):\n%s\n\nЗа контакти:\n%s\n\nДомашна страница:\n%s
 [%s\n\n%s\n\nAUTHORS:\n%s\n\nCONTACT:\n%s\n\nWEB:\n%s\n\n\n]
@@ -979,10 +918,16 @@ Angeli-Ka (изображения), FYR (шаблон)
 ;file \plugins\Clist_modern\src\modern_statusbar_options.cpp
 [<<Global>>]
 <<Общо>>
+[Left]
+Ляво
 [Center]
 Централно
 [Right]
 Дясно
+[Top]
+Горе
+[Bottom]
+
 ;file \plugins\Clist_modern\src\modern_toolbar.cpp
 [Main menu]
 Главно меню
@@ -1004,8 +949,6 @@ Angeli-Ka (изображения), FYR (шаблон)
 Ползване на групи / Без групи
 [Use groups]
 Ползване на групи
-[Disable Groups]
-Без групи
 [Enable/Disable sounds]
 Включване/Изключване на звука
 [Enable sounds]
@@ -1051,13 +994,11 @@ Angeli-Ka (изображения), FYR (шаблон)
 Наистина ли желаете режимът за преглед да бъде изтрит? Това действие не може да бъде отменено.
 [Delete a view mode]
 Изтриване на режим за преглед
-[A view mode with this name does alredy exist]
+[A view mode with this name does already exist]
 Вече съществува режим за преглед с въведеното име
 [Duplicate name]
 Повтарящо се име
-[All Contacts]
-Всички контакти
-[Setup View Modes...]
+[Setup view modes...]
 Настройване на режимите за преглед...
 [Select a view mode]
 Изберете режим за преглед
@@ -1067,9 +1008,9 @@ Angeli-Ka (изображения), FYR (шаблон)
 Изчистване на режима за преглед и връщане към стандартния
 [Reset view mode]
 Анулиране на режима за преглед
-[View Mode Background]
+[View mode background]
 
-[View Modes]
+[View modes]
 Режими за преглед
 ;file \plugins\Clist_modern\src\CLUIFrames\cluiframes.cpp
 [&Visible]
@@ -1080,7 +1021,7 @@ Angeli-Ka (изображения), FYR (шаблон)
 Заключена
 [&Expanded]
 Разгърнато
-[&Floating Mode]
+[&Floating mode]
 Плаващ режим
 [&Border]
 Рамка
@@ -1098,7 +1039,7 @@ Angeli-Ka (изображения), FYR (шаблон)
 Нагоре
 [&Down]
 Надолу
-[Show All Frames]
+[Show all frames]
 Показване на всички рамки
 [Show all title bars]
 Показване на всички заглавни ленти
@@ -1110,9 +1051,9 @@ Angeli-Ka (изображения), FYR (шаблон)
 [Frame menu]
 
 ;file \plugins\Clist_modern\src\CLUIFrames\groupmenu.cpp
+[New group]
+Нова група
 [Group menu]
 Меню на групите
 [Subgroup menu]
 Меню на подгрупите
-[&New SubGroup]
-Нова подгрупа

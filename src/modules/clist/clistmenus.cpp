@@ -346,7 +346,7 @@ INT_PTR ContactMenuExecService(WPARAM wParam, LPARAM lParam)
 {
 	if (wParam != 0) {
 		lpContactMenuExecParam cmep = (lpContactMenuExecParam)wParam;
-		//call with wParam = (WPARAM)(HANDLE)hContact, lparam = popupposition
+		//call with wParam = (MCONTACT)hContact, lparam = popupposition
 		CallService(cmep->szServiceName, lParam, cmep->param);
 	}
 	return 0;
@@ -606,7 +606,7 @@ INT_PTR StatusMenuExecService(WPARAM wParam, LPARAM)
 				cli.currentDesiredStatusMode = smep->status;
 
 				for (int j=0; j < accounts.getCount(); j++) {
-					PROTOACCOUNT* pa = accounts[j];
+					PROTOACCOUNT *pa = accounts[j];
 					if (!Proto_IsAccountEnabled(pa))
 						continue;
 					if (MenusProtoCount > 1 && Proto_IsAccountLocked(pa))
@@ -866,7 +866,7 @@ void RebuildMenuOrder(void)
 		if (i == -1)
 			continue;
 
-		PROTOACCOUNT* pa = accounts[i];
+		PROTOACCOUNT *pa = accounts[i];
 		int pos = 0;
 		if (!bHideStatusMenu && !cli.pfnGetProtocolVisibility(pa->szModuleName))
 			continue;
@@ -975,7 +975,7 @@ void RebuildMenuOrder(void)
 	//add to root menu
 	for (j = 0; j < SIZEOF(statusModeList); j++) {
 		for (i=0; i < accounts.getCount(); i++) {
-			PROTOACCOUNT* pa = accounts[i];
+			PROTOACCOUNT *pa = accounts[i];
 			if (!bHideStatusMenu && !cli.pfnGetProtocolVisibility(pa->szModuleName))
 				continue;
 
@@ -1000,7 +1000,7 @@ void RebuildMenuOrder(void)
 				TCHAR buf[ 256 ], hotkeyName[ 100 ];
 				WORD hotKey = GetHotkeyValue(statusHotkeys[j]);
 				HotkeyToName(hotkeyName, SIZEOF(hotkeyName), HIBYTE(hotKey), LOBYTE(hotKey));
-				mir_sntprintf(buf, SIZEOF(buf), LPGENT("%s\t%s"),
+				mir_sntprintf(buf, SIZEOF(buf), _T("%s\t%s"),
 					cli.pfnGetStatusModeDescription(statusModeList[j], 0), hotkeyName);
 				tmi.ptszName = buf;
 				tmi.hotKey = MAKELONG(HIBYTE(hotKey), LOBYTE(hotKey));
@@ -1030,7 +1030,7 @@ static int sttRebuildHotkeys(WPARAM, LPARAM)
 		TCHAR buf[ 256 ], hotkeyName[ 100 ];
 		WORD hotKey = GetHotkeyValue(statusHotkeys[j]);
 		HotkeyToName(hotkeyName, SIZEOF(hotkeyName), HIBYTE(hotKey), LOBYTE(hotKey));
-		mir_sntprintf(buf, SIZEOF(buf), LPGENT("%s\t%s"), cli.pfnGetStatusModeDescription(statusModeList[j], 0), hotkeyName);
+		mir_sntprintf(buf, SIZEOF(buf), _T("%s\t%s"), cli.pfnGetStatusModeDescription(statusModeList[j], 0), hotkeyName);
 		tmi.ptszName = buf;
 		tmi.hotKey = MAKELONG(HIBYTE(hotKey), LOBYTE(hotKey));
 		MO_ModifyMenuItem(hStatusMainMenuHandles[j], &tmi);

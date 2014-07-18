@@ -84,8 +84,8 @@ bool EventList::CanShowHistory(DBEVENTINFO* dbei)
 			return true;
 
 		default:
-			DBEVENTTYPEDESCR* et = ( DBEVENTTYPEDESCR* )CallService(MS_DB_EVENT_GETTYPE, ( WPARAM )dbei->szModule, ( LPARAM )dbei->eventType );
-			if ( et && ( et->flags & DETF_HISTORY ))
+			DBEVENTTYPEDESCR *et = (DBEVENTTYPEDESCR*)CallService(MS_DB_EVENT_GETTYPE, ( WPARAM )dbei->szModule, ( LPARAM )dbei->eventType);
+			if (et && ( et->flags & DETF_HISTORY))
 				return true;
 		}
 
@@ -198,8 +198,9 @@ void EventList::GetTempList(std::list<EventTempIndex>& tempList, bool noFilter, 
 	ei.isExternal = false;
 	HANDLE hDbEvent = db_event_first(_hContact);
 	while (hDbEvent != NULL) {
-		if (isWndLocal && !IsWindow( hWnd ))
+		if (isWndLocal && !IsWindow(hWnd))
 			break;
+
 		ei.hEvent = hDbEvent;
 		if (GetEventData(ei, data)) {
 			if (noFilter || CanShowHistory(&gdbei)) {
@@ -208,7 +209,7 @@ void EventList::GetTempList(std::list<EventTempIndex>& tempList, bool noFilter, 
 				tempList.push_back(ti);
 			}
 		}
-		hDbEvent = db_event_next(hDbEvent);
+		hDbEvent = db_event_next(_hContact, hDbEvent);
 	}
 
 	if (!noExt) {
@@ -344,7 +345,7 @@ void EventList::InitNames()
 {
 	TCHAR str[200];
 	if (hContact) {
-		_tcscpy_s(contactName, 256, (TCHAR*)CallService(MS_CLIST_GETCONTACTDISPLAYNAME, (WPARAM) hContact, GCDNF_TCHAR ));
+		_tcscpy_s(contactName, 256, (TCHAR*)CallService(MS_CLIST_GETCONTACTDISPLAYNAME, hContact, GCDNF_TCHAR ));
 		mir_sntprintf(str,200,TranslateT("History for %s"),contactName);
 	}
 	else {
@@ -390,7 +391,7 @@ void EventList::AddGroup(const EventIndex& ev)
 std::wstring EventList::GetContactName()
 {
 	if (hContact)
-		return (TCHAR*)CallService(MS_CLIST_GETCONTACTDISPLAYNAME, (WPARAM) hContact, GCDNF_TCHAR );
+		return (TCHAR*)CallService(MS_CLIST_GETCONTACTDISPLAYNAME, hContact, GCDNF_TCHAR );
 
 	return TranslateT("System");
 }
@@ -491,10 +492,10 @@ std::wstring EventList::GetContactId()
 
 static void GetMessageDescription( DBEVENTINFO *dbei, TCHAR* buf, int cbBuf )
 {
-	TCHAR* msg = DbGetEventTextT( dbei, CP_ACP );
-    _tcsncpy_s(buf, cbBuf, msg ? msg : TranslateT("Invalid Message"), cbBuf - 1 );
-    buf[ cbBuf-1 ] = 0;
-	mir_free( msg );
+	TCHAR *msg = DbGetEventTextT(dbei, CP_ACP);
+	_tcsncpy_s(buf, cbBuf, msg ? msg : TranslateT("Invalid Message"), _TRUNCATE);
+	buf[cbBuf - 1] = 0;
+	mir_free(msg);
 }
 
 void EventList::GetObjectDescription( DBEVENTINFO *dbei, TCHAR* str, int cbStr )
@@ -548,11 +549,10 @@ void EventList::MargeMessages(const std::vector<IImport::ExternalMessage>& messa
 	DBEVENTINFO dbei = { sizeof(dbei) };
 	dbei.szModule = GetContactProto(hContact);
 
-	CallService(MS_DB_SETSAFETYMODE, (WPARAM)FALSE, 0);
+	CallService(MS_DB_SETSAFETYMODE, FALSE, 0);
 	for (std::list<EventTempIndex>::iterator it = tempList.begin(); it != tempList.end(); ++it) {
 		if (it->isExternal) {
 			IImport::ExternalMessage& msg = importedMessages[it->exIdx];
-			dbei.flags = msg.flags & (~(DBEF_FIRST));
 			dbei.flags |= DBEF_READ;
 			dbei.timestamp = msg.timestamp;
 			// For now I do not convert event data from string to blob, and event type must be message to handle it properly
@@ -567,7 +567,7 @@ void EventList::MargeMessages(const std::vector<IImport::ExternalMessage>& messa
 		}
 	}
 
-	CallService(MS_DB_SETSAFETYMODE, (WPARAM)TRUE, 0);
+	CallService(MS_DB_SETSAFETYMODE, TRUE, 0);
 	std::vector<IImport::ExternalMessage> emessages;
 	ImportMessages(emessages);
 }
@@ -603,7 +603,7 @@ bool EventList::GetEventData(const EventIndex& ev, EventData& data)
 void EventList::GetExtEventDBei(const EventIndex& ev)
 {
 	IImport::ExternalMessage& em = importedMessages[ev.exIdx];
-	gdbei.flags = (em.flags & (~(DBEF_FIRST))) | 0x800;
+	gdbei.flags = em.flags | 0x800;
 	gdbei.eventType = em.eventType;
 	gdbei.timestamp = em.timestamp;
 }

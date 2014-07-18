@@ -1,7 +1,7 @@
 ﻿#muuid {9b8e1735-970d-4ce0-930c-a561956bdca2}
 ;============================================================
 ;  File: Xfire.dll
-;  Plugin: Xfire Protocol
+;  Plugin: Xfire protocol
 ;  Version: 0.1.9.0
 ;  Authors: dufte
 ;============================================================
@@ -38,14 +38,14 @@
 [Show people when I type to them]
 Показывать уведомление о моём наборе текста
 [Show nicknames when available]
-Показывать ники если доступно
+Показывать ники, если доступно
 [Show friends of my friends]
 Показывать друзей моих друзей
 [Options]
 Настройки
 [More options]
 Ещё настройки
-[Display Error and Infomessage:]
+[Display Error and Info message:]
 Ошибка и инфосообщение:
 [Main group for clan groups:]
 Группа для группы кланов:
@@ -58,9 +58,9 @@
 [Blocked User List]
 Заблокированный список пользователей
 [This list contains all your blocked Xfire users. You can remove one, if you wanna allow him to send you a friend request.]
-Этот список содержит заблокированных пользователей. Вы можете удалить одного, что позволит ему посылать вам сообщения.
+Этот список содержит заблокированных пользователей. Вы можете удалить одного, что позволит ему отправлять вам сообщения.
 [You can simply block someone, if you right click on his friend request in contact list and choose Block User...]
-Вы можете просто заблокировать кого-нибудь, щелчком правой кнопки по пользователю в списке контактов.
+Вы можете просто заблокировать кого-нибудь, щелчком правой кнопки по пользователю в списке контактов...
 [This file is used for the game search, game detection and game ID resolving. It contains all Xfire supported games.]
 Этот файл используется для поиска и обнаружения игры. Файл содержит поддерживаемые игры Xfire.
 [This file contains all original game icons. You can also activate the option for icon downloading, if you don't have it.]
@@ -71,7 +71,7 @@
 Статусное сообщение
 [Enable]
 Включено
-[With this feature, following status message will be set on your other protocol plugins, if you are ingame. So your other buddies can also see what you play. It will also change the status to occupied, if this option is enabled.]
+[With this feature, following status message will be set on your other protocol plugins, if you are in game. So your other buddies can also see what you play. It will also change the status to occupied, if this option is enabled.]
 С этой возможностью, следующее статусное сообщение будет установлено на другой протокол, если вы в игре. Так ваши друзья будут видеть, что вы играете. Это так же изменит ваш статус на "занят", если вы включили эту функцию.
 [Following Variables are available: %myxfiregame%, %myxfirevoice%, %myxfireserverip%, %myxfirevoiceip%]
 Доступны следующие переменные: %myxfiregame%, %myxfirevoice%, %myxfireserverip%, %myxfirevoiceip%
@@ -99,7 +99,7 @@
 Пользователь:
 [Game]
 Игра
-[Voicechat]
+[Voice chat]
 Голосовой чат
 [Name:]
 Имя:
@@ -124,7 +124,7 @@
 [Search:]
 Искать:
 [Custom...]
-Изменить…
+Изменить...
 [Game exe:]
 exe игры:
 [Browse...]
@@ -144,7 +144,7 @@ exe игры:
 [I've been away since %time%.]
 Отошел в %time%.
 [Give it up, I'm not in!]
-Меня нет.
+Ну нет меня сейчас, нет...
 [Not right now.]
 Не сейчас.
 [Give a guy some peace, would ya?]
@@ -184,7 +184,7 @@ exe игры:
 [&Rescan my games...]
 &Пересканировать мои игры...
 [Set &Nickname]
-&Псевдоним...
+&Псевдоним
 [Protocols]
 Протоколы
 [XFire game icon]
@@ -235,11 +235,11 @@ exe игры:
 Всплывающие окна, если кто-нибудь начинает игру
 [Don't automatically create clan groups]
 Не создавать автоматически группы кланов
-[Gamedetection]
+[Game detection]
 Обнаружение игры
 [Disable game detection]
 Выключить обнаружение игр
-[Use TSRemote.dll to get teamspeak server info]
+[Use TSRemote.dll to get TeamSpeak server info]
 Использовать TSRemote.dll для получения инф. с сервера
 [Disable popups when ingame]
 Выключить всплывающие окна когда в игре
@@ -259,7 +259,7 @@ exe игры:
 Сделанные вами изменения требуют, что бы вы переподключились к сети XFire для вступления их в силу.
 [Hidden]
 Скрытый
-[Messagebox]
+[Message box]
 Окно сообщений
 [Popup]
 Всплывающее окно
@@ -292,7 +292,7 @@ exe игры:
 [StatusMsg]
 Статусные сообщения
 [Please enter server password...]
-Введите пароль сервера.
+Введите пароль сервера...
 [Games found:%s%s]
 Найдены игры:%s%s
 [<not specified>]

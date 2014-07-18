@@ -9,7 +9,7 @@
 Sprawdzanie pisowni w oknie rozmowy. Używa Hunspell'a do sprawdzania.
 ;file \plugins\SpellChecker\res\resource.rc
 [Replacements]
-Zamiennik
+Korekta pisowni
 [Enable auto-replacements]
 Włącz automatyczną zamianę
 [Language:]
@@ -30,8 +30,6 @@ Bez separatorów i wszystkich małych znaków
 Korekta:
 [Use variables in correction]
 Użyj zmiennej w korekcie
-[OK]
-OK
 [Cancel]
 Anuluj
 [Spell Checker]
@@ -84,7 +82,7 @@ Niemcy
 [Message Sessions]
 Okno rozmowy
 [Auto-replacements]
-Automatyczna zamiana
+Korekta pisowni
 [Line]
 Linia
 [Dotted]
@@ -111,16 +109,16 @@ Niestandardowy słownik
 [Flags DLL]
 Flags.dll
 [Enable/disable spell checker]
-Włącz/wyłącz sprawdzanie pisowni
+Włącz/Wyłącz sprawdzanie pisowni
 [Enabled]
 Włączony
 [Disabled]
 Wyłączone
+[Unknown]
+Nieznane
 ;file \plugins\SpellChecker\src\utils.cpp
 [There are %d spelling errors. Are you sure you want to send this message?]
 Znaleziono %d błędów. Czy na pewno chcesz wysłać tę wiadomość?
-[Your message window does not support SpellChecker Plugin.\nIf you use SRMM, TabSRMM or Scriver, please update them to the latest version,\notherwise ask the author of your message window plugin to add support for Spell Checker.]
-Twoje okno rozmowy nie wspiera wtyczki SpellChecker.\nJeśli używasz SRMM, TabSRMM lub Scriver, zaktualizuj je do najnowszej wersji,\nw przeciwnym razie poproś autora twojego okna rozmowy o dodanie wsparcia dla SpellChecker.
 [Other...]
 Inne...
 [Always replace with]

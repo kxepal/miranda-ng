@@ -6,7 +6,7 @@
 ;  Authors: Boris Krasnovskiy, Aaron Myles Landwehr
 ;============================================================
 [AOL Instant Messenger (AIM) protocol support for Miranda NG.]
-
+Support du protocole AOL Instant Messenger (AIM) pour Miranda NG.
 ;file \protocols\AimOscar\res\aim.rc
 [AIM User Details]
 AIM
@@ -15,7 +15,7 @@ AIM
 [Display Name:]
 
 [Password:]
-Passe:
+Passe :
 [Login Server:]
 
 [AIM Options]
@@ -49,7 +49,7 @@ Transfert de fichier par Proxy
 [Connection]
 
 [Port:]
-Port:
+Port :
 [Reset]
 RAZ
 [Disable SSL]
@@ -65,9 +65,9 @@ Enregistrer
 [AIM Instant Idler]
 AIM - configuration de l'inactivité
 [Number of Hours:]
-Nombre d'heure:
+Nombre d'heure :
 [Number of Minutes:]
-Nombre de minutes:
+Nombre de minutes :
 [Set Idle]
 Être inactif
 [Unset Idle]
@@ -142,7 +142,7 @@ Message
 [Others]
 Autres
 [&Invite user...]
-
+&Inviter l'utilisateur...
 [&Leave chat session]
 
 [User &details]
@@ -165,13 +165,13 @@ Limite de taux de serveur dépassée.
 [Client rate limit exceeded]
 
 [Recipient is not logged in.]
-Le destinataire n'est pas connecté. 
+Le destinataire n'est pas connecté.
 [Requested service is unavailable.]
 Le service demandé est indisponible.
 [Requested service is not defined.]
 Le service demandé n'est pas défini.
 [You sent obsolete SNAC.]
-Vous avez envoyé un SNAC obsolète. 
+Vous avez envoyé un SNAC obsolète.
 [Not supported by server.]
 Non supporté par le serveur.
 [Not supported by the client.]
@@ -292,7 +292,7 @@ File du serveur pleine.
 
 ;file \protocols\AimOscar\src\server.cpp
 [[Auto-Response]:]
-{Auto-Response}:
+{Auto-Response} :
 [Contact tried to open an audio/video conference (not currently supported)]
 
 [No information has been provided by the server.]
@@ -338,10 +338,8 @@ Le contact que vous tentez de modifier n'est pas présent dans votre liste.
 [Can't start the confirmation procedure.]
 
 ;file \protocols\AimOscar\src\theme.cpp
-[ICQ]
-
 [Block]
-
+Bloquer
 [Profile]
 Profil
 [AOL Mail]

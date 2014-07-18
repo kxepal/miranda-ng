@@ -42,14 +42,12 @@ Szybkie kontakty
 ;file \plugins\QuickContacts\src\quickcontacts.cpp
 [Open dialog]
 Otwórz okno szybkich kontaktów
-[Make a voice call]
-Nowa rozmowa głosowa
 [Send file]
 Wyślij plik
 [Send URL]
 Wyślij link
-[Open userinfo]
-Otwórz dane użytkownika
+[Open user info]
+Otwórz dane kontaktu
 [Open history]
 Otwórz historię
 [Open contact menu]

@@ -1,10 +1,12 @@
 ﻿#muuid {748f8934-781a-528d-5208-001265404ab3}
 ;============================================================
 ;  File: Tlen.dll
-;  Plugin: Tlen Protocol
+;  Plugin: Tlen protocol
 ;  Version: 2.1.0.0
 ;  Authors: Santithorn Bunchua, Adam Strzelecki, Piotr Piastucki
 ;============================================================
+[Tlen protocol support for Miranda NG.]
+
 ;file \protocols\Tlen\res\tlen.rc
 [Username:]
 Потребител:
@@ -96,8 +98,6 @@
 Преглед
 [Tlen Password]
 
-[OK]
-ОК
 [Cancel]
 Отказ
 [Nickname:]
@@ -148,7 +148,7 @@
 Възраст:
 [to]
 до
-[Extra Search Criterias]
+[Extra Search Criteria]
 
 [Status:]
 Състояние:
@@ -193,8 +193,6 @@
 
 [Alert]
 
-[Tlen Chats]
-
 [Multi-User Conference]
 Конференция
 [Tlen Mail]
@@ -227,33 +225,6 @@
 [Authentication failed for %s@%s.]
 Неуспешно удостоверяване за %s@%s.
 [Tlen Authentication]
-
-;file \protocols\Tlen\src\tlen_muc.cpp
-[You have been kicked. Reason: %s ]
-
-[You cannot join this chat room, because you are banned.]
-
-[Chat room not found.]
-
-[This is a private chat room and you are not one of the members.]
-
-[You cannot send any message unless you join this chat room.]
-
-[Chat room with already created.]
-
-[Nickname '%s' is already registered.]
-
-[Nickname already in use, please try another one. Hint: '%s' is free.]
-
-[You cannot register more than %s nicknames.]
-
-[You cannot create more than %s chat rooms.]
-
-[You cannot join more than %s chat rooms.]
-
-[Anonymous nicknames are not allowed in this chat room.]
-
-[Unknown error code: %d]
 
 ;file \protocols\Tlen\src\tlen_opt.cpp
 [General]
@@ -294,11 +265,7 @@
 
 [Forwarding]
 
-[SOCKS4]
-
-[SOCKS5]
-
-[%s mail]
+[%S mail]
 
 ;file \protocols\Tlen\src\tlen_picture.cpp
 [Image sent file://%s]
@@ -311,26 +278,10 @@
 [You need to be connected to Tlen account to set avatar.]
 
 ;file \protocols\Tlen\src\tlen_thread.cpp
-[Enter password for %s@%s.]
-Въведете парола за %s@%s.
+[Enter password for %s]
+Въведете парола за %s.
 [Tlen Connection Error]
 
-[Windows Server 2003]
-
-[Windows XP]
-
-[Windows 2000]
-
-[Windows NT]
-
-[Windows 95]
-
-[Windows 98]
-
-[Windows ME]
-
-[Windows]
-Windows
 [%s Web Messages]
 
 [Web message]
@@ -342,6 +293,8 @@ Windows
 [An alert has been received.]
 
 [Private conference]
+
+[%s mail]
 
 [Subject]
 

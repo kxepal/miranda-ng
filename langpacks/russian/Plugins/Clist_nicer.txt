@@ -2,17 +2,21 @@
 ;============================================================
 ;  File: Clist_nicer.dll
 ;  Plugin: Clist nicer
-;  Version: 0.9.2.1
+;  Version: 0.9.2.4
 ;  Authors: Pixel, egoDust, cyreve, Nightwish
 ;============================================================
 [Displays contacts, event notifications, protocol status.]
 Показывает контакты, события, статусы протоколов.
+[Clist Nicer exception]
+Исключение в Clist Nicer
 [Copy to clipboard]
 Копировать в буфер обмена
 [Continue]
 Продолжить
 [Exit Miranda]
 Выход из Miranda
+[Although the exception was caught and you may continue working with Miranda, you should restart the program as soon as possible. The exception may have damaged internal data structures and can have a serious impact on stability.]
+Несмотря на то, что программа продолжает работать, её нужно перезапустить как можно скорее. Исключение может повредить внутренние структуры данных и вызвать серьезные проблемы.
 [About CList Nicer+]
 О плагине Nicer+
 [Version]
@@ -33,7 +37,7 @@
 Удалить %s из списка?
 [This will erase all history and settings for this contact!]
 Будет удалена вся история и все настройки для данного контакта!
-[Contact List]
+[Contact list]
 Список контактов
 [Hide offline users]
 Скрыть отключённых
@@ -90,7 +94,7 @@
 [Show number of contacts in a group]
 Показать число контактов в группе
 [Hide numbers when all offline]
-Прятать счётчик когда все отключены
+Прятать счётчик, когда все отключены
 [Sort groups alphabetically]
 Сортировать группы по алфавиту
 [Quicksearch in open groups only]
@@ -111,11 +115,11 @@
 Мин. высота группы
 [Indent groups by:]
 Отступ для групп:
-[Inner Row vertical padding]
+[Inner row vertical padding]
 Вертикальный отступ между рядами
 [Margins and spacing]
 Поля и отступы
-[Contact List Sorting]
+[Contact list sorting]
 Сортировка списка контактов
 [First by]
 Сначала
@@ -152,7 +156,7 @@
 [Second text line]
 Вторая строка текста
 [Display status message when available]
-Показать сообщение статуса когда возможно
+Показать сообщение статуса, когда возможно
 [Show second text line:]
 Показывать вторую строку:
 [Show contacts local time]
@@ -164,12 +168,12 @@
 [Show status icons]
 Значки статуса
 [Centered when possible]
-Центрировать(если возм.)
+Центрировать, если возм.
 [When possible, draw status icons in avatar space]
 Когда возможно, рисовать значки статуса в аватаре
 [Use metacontact protocol icons instead of subcontacts]
 Значок протокола метаконтакта вместо субконтакта
-[Use Overlay icons on avatars]
+[Use overlay icons on avatars]
 Использовать наложение значков на аватары
 [Dim idle contacts]
 Затемнить неактивных пользователей
@@ -190,11 +194,11 @@
 [Title bar text:]
 Заголовок окна:
 [Pin to desktop]
-Прикрепить к столу
+Прикрепить к рабочему столу
 [Show drop shadow (restart required)]
 Тень (нужен перезапуск)
 [Hide contact list after it has been idle for]
-Скрыть список, при неактивности в течение
+Скрыть список, если я неактивен более
 [seconds]
 секунд
 [Automatically resize window to height of list]
@@ -209,8 +213,6 @@
 Поместить окно на передний план, если оно прикрыто другими окнами
 [Client margins]
 Поля списка
-[Embedded frames border]
-Граница фреймов
 [Clip border by]
 Закруглить на
 [Gap between frames]
@@ -224,7 +226,7 @@
 [Active opacity:]
 Окно активно:
 [Fade contact list in/out]
-Плавно скрыть список
+Плавно скрывать список контактов
 [Fully transparent (like TweakUI)]
 Полностью прозрачное (как TweakUI)
 [Items]
@@ -243,7 +245,7 @@
 Полупрозрачное выделение
 [Use full row for selection and hottracking]
 Использовать выделение всей строки
-[Double click on avatar opens userinfo]
+[Double click on avatar opens user info]
 Двойной клик по аватару открывает информацию о контакте
 [Visual]
 Визуальные настройки
@@ -257,12 +259,10 @@
 Скрыть полосу прокрутки
 [Gray out entire list when:]
 Сделать серым, если:
-[Contact List Background]
-Фон списка
+[Contact list background]
+Фон списка контактов
 [Use Windows colors]
 Цвета Windows
-[Background color]
-Цвет фона
 [Use background image]
 Использовать фон
 [Stretch to width]
@@ -281,10 +281,10 @@
 Использовать данные настройки для всего фона
 [If you enable this, the background settings will affect the entire contact list frame.]
 При включении настройки фона будут использованы для всего фрейма списка контактов
-[Status Bar]
-Панель статуса
+[Status bar]
+Панель статусов
 [Show status bar]
-Показывать панель статуса
+Показывать панель статусов
 [Show icons]
 Показывать значки
 [Show protocol names]
@@ -346,7 +346,7 @@
 [< Reload]
 < Перезагрузить
 [Contact list skin]
-Скин списка
+Скин списка контактов
 [Load this skin on startup]
 Загружать этот скин при старте
 [Apply skin now]
@@ -419,7 +419,7 @@
 Опции отображения
 [Show contact with priority]
 Контакт с приоритетом
-[Show Avatar:]
+[Show avatar:]
 Аватар:
 [Show 2nd line:]
 Вторая строка:
@@ -449,9 +449,9 @@
 &Готов болтать\tCtrl+7
 [&Invisible\tCtrl+7]
 &Невидимый\tCtrl+7
-[On the &Phone\tCtrl+8]
+[On the &phone\tCtrl+8]
 На &телефоне\tCtrl+8
-[Out to &Lunch\tCtrl+9]
+[Out to &lunch\tCtrl+9]
 Обед&аю\tCtrl+9
 [Tray]
 Трей
@@ -459,37 +459,35 @@
 С&крыть/Показать
 [Nowhere]
 Нигде
-[&New Group]
-&Новая группа
-[&Hide Offline Users]
+[&New group]
+Со&здать группу
+[&Hide offline users]
 &Скрыть отключённых
-[Hide &Offline Users out here]
+[Hide &offline users out here]
 Скрыть &отключённых вне группы
-[Hide &Empty Groups]
+[Hide &empty groups]
 Скрыть &пустые группы
-[Disable &Groups]
+[Disable &groups]
 Отключить &группы
 [Hide Miranda]
 Скрыть список контактов
-[&New Subgroup]
+[&New subgroup]
 &Создать подгруппу
-[&Hide Offline Users in here]
+[&Hide offline users in here]
 &Скрыть отключённых в группе
-[&Rename Group]
+[&Rename group]
 &Переименовать группу
-[&Delete Group]
+[&Delete group]
 &Удалить группу
-[Move marked Contacts to this Group]
+[Move marked contacts to this group]
 Переместить отмеченные контакты в эту группу
 [Appearance]
 Внешний вид
-[Show Status Icons]
-Значки статуса
-[Show Metacontact proto Icons]
+[Show metacontact proto icons]
 Показывать значки метаконтактов
-[Show additional Buttons]
+[Show additional buttons]
 Показывать дополнительные кнопки
-[Draw sunken Frame]
+[Draw sunken frame]
 Утопленный фрейм
 [Skin items]
 Элементы скина
@@ -553,18 +551,16 @@
 Вытравленный
 [Show menu]
 Меню
-[Show / hide offline contacts]
-Показать/скрыть оффлайн контакты
-[Toggle group mode]
-Показать/скрыть группы
+[Hide offline contacts]
+Скрыть отключённых
 [Find and add contacts]
 Найти и добавить контакты
 [Accounts]
 Учётные записи
 [Open preferences]
 Открыть настройки
-[Toggle sounds]
-Вкл/выкл звуки
+[Disable sounds]
+Выключить звуки
 [Minimize contact list]
 Скрыть список контактов
 [Status menu]
@@ -597,9 +593,9 @@
 Обедаю
 [On the phone]
 На телефоне
-[Always Left]
+[Always left]
 Всегда слева
-[Always Right]
+[Always right]
 Всегда справа
 [Automatic (RTL)]
 Автоматически (RTL)
@@ -623,22 +619,20 @@
 Когда позволяет размер
 [When needed]
 Когда необходимо
-[With Nickname - left]
+[With nickname - left]
 Слева от ника
 [Far left]
 По левому краю
 [Far right]
 По правому краю
-[With Nickname - right]
+[With nickname - right]
 Справа от ника
-[Contact list]
-Список контактов
 [List layout]
 Расположение списка
 [Background]
 Фон
-[Contact rows]
-Строки контактов
+[Row items]
+Элементы строк
 [Contacts]
 Контакты
 [Groups and layout]
@@ -647,6 +641,8 @@
 Дополнительно
 [Skins]
 Скины
+[No events...]
+Событий нет...
 [Add permanently]
 Добавить в список
 [Revert to default]
@@ -654,7 +650,7 @@
 [Default (global setting)]
 По умолчанию (глобально)
 [Show always when available]
-Всегда когда доступно
+Всегда, когда доступно
 [Hide always]
 Всегда прятать
 [When space is available]
@@ -673,6 +669,8 @@
 Вкл/Выкл группы
 [Find contacts]
 Найти контакты
+[Toggle sounds]
+Вкл/выкл звуки
 [Show TabSRMM session list]
 Список сессий TabSRMM
 [Show TabSRMM menu]
@@ -685,18 +683,18 @@
 Настройка режимов вида
 [Setup accounts]
 Учётные записи
-[Event Area]
-Область событий
-[My Contacts]
+[My contacts]
 Мои контакты
+[Default]
+По умолчанию
 [Menu]
 Меню
 [Open main menu]
 Главное меню
 [Set status modes]
 Установить режимы статуса
-[The requested action requires a valid contact selection. Please select a contact from the contact list and repeat]
-Для запрошенного действия необходим правильный выбор контакта. Выберите контакт из списка и повторите
+[The requested action requires a valid contact selection. Please select a contact from the contact list and repeat.]
+Для запрошенного действия необходим правильный выбор контакта. Выберите контакт из списка и повторите.
 [Parameter mismatch]
 Несоответствие параметра
 [Warning]
@@ -719,12 +717,14 @@
 Заголовки фреймов
 [Contact list local time]
 Локальное время контакта
-[Selected Text]
+[Selected text]
 Выделенный текст
-[Hottrack Text]
+[Hottrack text]
 Под курсором
-[Quicksearch Text]
+[Quicksearch text]
 Быстрый поиск
+[Embedded frames border]
+Граница фреймов
 [Title bar]
 Заголовок
 [Tool Window]
@@ -739,8 +739,6 @@
 Парковка списка контактов
 [Load and apply]
 Загрузить и применить
-[No events...]
-Событий нет...
 [Ungrouped contacts]
 Контакты вне групп
 [And]
@@ -769,19 +767,19 @@
 Удаление режима просмотра
 [No view mode]
 Нет режима просмотра
-[A view mode with this name does alredy exist]
+[A view mode with this name does already exist]
 Режим отображения с таким именем уже присутствует
 [Duplicate name]
 Совпадающее имя
-[Setup View Modes...]
+[Setup view modes...]
 Настроить режимы вида...
-[Clear current View Mode]
+[Clear current view mode]
 Очистить текущий режим вида
 [Select a view mode]
 Выбор режима просмотра
 [Clear view mode and return to default display]
 Сбросить режим и перейти в режим по умолчанию
-[View Modes]
+[View modes]
 Режимы вида
 [&FrameTitle]
 &Заголовок фрейма
@@ -793,7 +791,7 @@
 &Закрепить
 [&Collapsed]
 &Свёрнутое
-[&Floating Mode]
+[&Floating mode]
 &Плавающий режим
 [&Border]
 &Рамка
@@ -815,13 +813,13 @@
 В&низ
 [Frames]
 Фреймы
-[Show All Frames]
+[Show all frames]
 Показать все фреймы
 [Show all title bars]
 Показывать названия
 [Hide all title bars]
 Скрыть названия
-[Lock Frame]
+[Lock frame]
 Закрепить фрейм
 [Visible]
 Видимо
@@ -833,15 +831,17 @@
 Плавающее
 [Frame menu]
 Меню фреймов
+[New group]
+Новая группа
 [Group menu]
 Меню групп
-[&Find/Add Contacts...]
-Добавить &контакты
+[&Hide/show]
+С&крыть/Показать
+[&Find/add contacts...]
+Добавить &контакты...
 [&Options...]
 &Настройки...
 [&About the contact list...]
 О &списке контактов...
 [Subgroup menu]
 Меню подгрупп
-[&New SubGroup]
-&Создать подгруппу

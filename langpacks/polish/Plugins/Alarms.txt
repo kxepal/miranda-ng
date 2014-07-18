@@ -35,11 +35,11 @@ Zapętl dźwięk alarmu
 [Period (hours):]
 Okres (godziny):
 [Hide/show with clist]
-Pokaż/ukryj z listą kontaktów
+Pokaż/Ukryj z listą kontaktów
 [Auto size vertically]
 Rozmiar auto w pionie
 [Transparency (%):]
-Przeźroczystość (%):
+Przezroczystość (%):
 [Alert window]
 Okno alarmu
 [Round corners]
@@ -50,8 +50,6 @@ Nie centruj chyba że bezczynny
 Podgląd
 [Alarm]
 Alarm
-[OK]
-OK
 [Cancel]
 Anuluj
 [Title:]
@@ -87,7 +85,7 @@ Dziennie
 [Weekdays]
 W dni robocze
 [Monthly]
-Miesięczie
+Miesięcznie
 [Yearly]
 Rocznie
 [i'm hiding]
@@ -101,21 +99,21 @@ Nie włączaj na starcie
 [No reminder]
 Nie przypominaj
 [Dismiss]
-Zamknij
+Odrzuć
 [Snooze]
 Drzemka
 [Static]
 Statyczne
 [&Suspend]
-Zawieś
+&Zawieś
 [&Edit...]
-Edytuj...
+&Edytuj...
 [&Delete]
-Usuń
+&Usuń
 [&Options...]
-Opcje...
+&Opcje...
 [&New alarm...]
-Nowy alarm...
+&Nowy alarm...
 ;file \plugins\Alarms\src\alarmlist.cpp
 ;file \plugins\Alarms\src\alarms.cpp
 [Unknown command issued: "%s"]
@@ -146,6 +144,10 @@ Tło
 [Window]
 Okno
 ;file \plugins\Alarms\src\frame.cpp
+[%dh %dm]
+%dg. %dmin
+[%dm]
+%dmin
 [Hide reminders]
 Ukryj Przypomnienia
 [Show reminders]
@@ -164,7 +166,7 @@ Przypomnienie: Bardzo szybkie
 [Alarm: System tray]
 Alarm: Zasobnik systemowy
 [Menu: Show/Hide reminders]
-Menu: Pokaż/ukryj przypomnienie
+Menu: Pokaż/Ukryj przypomnienie
 ;file \plugins\Alarms\src\options.cpp
 [Sunday]
 Niedziela

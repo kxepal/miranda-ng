@@ -1,5 +1,4 @@
-﻿[File transfer by using the messaging services - as plain text.]
-[fileAsMessage]
+﻿[fileAsMessage]
 [Filename:]
 [Chunk size]
 [ms]
@@ -37,6 +36,5 @@
 [Revive]
 [Stop]
 [Main]
-[Plugins]
 [File As Message...]
 [File As Message]

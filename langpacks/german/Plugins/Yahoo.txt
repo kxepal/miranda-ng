@@ -1,11 +1,11 @@
 ﻿#muuid {0aa7bfea-1fc7-45f0-906e-2a46b6e119cf}
 ;============================================================
 ;  File: Yahoo.dll
-;  Plugin: Yahoo Protocol
+;  Plugin: Yahoo protocol
 ;  Version: 0.11.0.1
 ;  Authors: Gennady Feldman
 ;============================================================
-[Yahoo Protocol support for Miranda NG.]
+[Yahoo protocol support for Miranda NG.]
 Yahoo-Protokollunterstützung für Miranda NG.
 ;file \protocols\Yahoo\res\Yahoo.rc
 [Yahoo]
@@ -24,7 +24,7 @@ Experte
 Yahoo-Adressbuch (YAB) nutzen
 [Show Avatars]
 Avatare anzeigen
-[AutoLogin to Yahoo Website(s)]
+[Auto login to Yahoo Website(s)]
 Automatisch auf Yahoo-Webseite(n) anmelden
 [Display Yahoo notifications]
 Yahoo-Benachrichtigungen zeigen
@@ -56,8 +56,6 @@ Entfe&rnen
 Setze benutzerdef. Status
 [Show as busy]
 Zeige als beschäftigt
-[OK]
-OK
 [Cancel]
 Abbrechen
 [Protocol:]
@@ -212,9 +210,9 @@ Die ID, die Sie versuchen hinzuzufügen, ist ungültig.
 Unbekannter Fehler.
 [New Mail]
 Neue E-Mail
-[You have %i unread msgs]
+[You have %i unread messages]
 Sie haben %i ungelesene Nachr.
-[New Mail (%i msgs)]
+[New Mail (%i messages)]
 Neue E-Mail (%i Nachr.)
 [From: %s\nSubject: %s]
 Von: %s\nBetreff: %s

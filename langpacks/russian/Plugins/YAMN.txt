@@ -119,7 +119,7 @@
 Настройки просмотра писем
 [Enable Close on Delete Button]
 Закрывать по нажатию "Удалить"
-[Show long localised date]
+[Show long localized date]
 Показывать полную дату
 [Don't show today's date]
 Не показывать сегодняшнюю дату
@@ -141,7 +141,7 @@
 При отсутствии новой почты
 [Popup if no mail]
 Всплывающее окно
-[Persistant message]
+[Persistent message]
 Длительность
 [Connection failure notifications]
 При ошибках подключения
@@ -178,7 +178,7 @@ YAMN: сбой подключения
 [No new mail message]
 Нет новых писем
 [%s - connection error]
-%s  - ошибка соединения
+%s - ошибка соединения
 [An error occurred. Error code: %d]
 Произошла ошибка. Код ошибки: %d
 [Unknown error]
@@ -223,8 +223,12 @@ YAMN: сбой подключения
 Удалить %d писем?
 [Delete confirmation]
 Подтверждение удаления
+[Translate header error]
+Ошибка перевода заголовка
+[Part]
+Часть
 [%s connection]
-%s подключение 
+%s подключение
 [Disconnected]
 Отключён
 [POP3 protocol (internal)]
@@ -236,7 +240,7 @@ YAMN (внутренний POP3) ошибка чтения
 [Error reading account file. Account file corrupted.]
 Ошибка при чтении файла с учётными записями. Файл с учётными записями испорчен.
 [Memory allocation error while data reading]
-Ошибка распределения памяти при чтении данных.
+Ошибка распределения памяти при чтении данных
 [Reading file error. File already in use?]
 Ошибка чтения файла. Файл уже используется?
 [Error while copying data to disk occurred. Is file in use?]
@@ -246,9 +250,11 @@ POP3 плагин - ошибка при записи в файл
 [Connecting to server]
 Соединяюсь с сервером
 [Entering POP3 account]
-Авторизация...
+Авторизация
 [Searching for new mail message]
 Поиск новой почты
+[Reading body %s]
+Чтение тела %s
 [Reading new mail messages (%d%% done)]
 Чтение новых писем (%d%% выполнено)
 [Deleting requested mails]
@@ -256,33 +262,33 @@ POP3 плагин - ошибка при записи в файл
 [Deleting spam]
 Удаление спама
 [Memory allocation error.]
-Ошибка памяти.
+Ошибка выделения памяти.
 [Account is about to be stopped.]
 Учётная запись скоро будет остановлена.
 [Cannot connect to POP3 server.]
-Не могу соединиться с почтовым сервером
+Не могу соединиться с почтовым сервером.
 [Cannot allocate memory for received data.]
-Не могу выделить память для получения данных
+Не могу выделить память для получения данных.
 [Cannot login to POP3 server.]
-Не могу авторизоваться на POP3 сервере
+Не могу авторизоваться на POP3 сервере.
 [Bad user or password.]
-Неправильное имя пользователя или пароль
+Неправильное имя пользователя или пароль.
 [Server does not support APOP authorization.]
-Сервер не поддерживает APOP аутентификацию
+Сервер не поддерживает APOP аутентификацию.
 [Error while executing POP3 command.]
-Ошибка исполнения POP3 команды
+Ошибка исполнения POP3 команды.
 [Cannot connect to server with NetLib.]
 Не могу подключиться к серверу с NetLib.
 [Cannot send data.]
-Не могу отправить данные
+Не могу отправить данные.
 [Cannot receive data.]
-Не могу получить данные
+Не могу получить данные.
 [OpenSSL not loaded.]
-OpenSSL не загружен
+OpenSSL не загружен.
 [Windows socket 2.0 init failed.]
 Инициализация Windows socket 2.0 не удалась.
 [DNS lookup error.]
-Ошибка DNS
+Ошибка DNS.
 [Error while creating base socket.]
 Ошибка создания основного сокета.
 [Error connecting to server with socket.]
@@ -292,7 +298,7 @@ OpenSSL не загружен
 [Error connecting socket with SSL.]
 Ошибка соединения сокета с SSL.
 [Server rejected connection with SSL.]
-Сервер отказал в SSL-соединении
+Сервер отказал в SSL-соединении.
 [Cannot write SSL data.]
 Не могу записать SSL данные.
 [Cannot read SSL data.]
@@ -321,6 +327,8 @@ OpenSSL не загружен
 Все файлы
 [Select executable used for notification]
 Выбор программы для уведомления
+[Dialog box error]
+Ошибка диалогового окна
 [Failed]
 НЕУДАЧА
 [Do you really want to delete this account?]

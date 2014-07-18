@@ -1,9 +1,9 @@
 ﻿#muuid {b92282ac-686b-4541-a12d-6e9971a253b7}
 ;============================================================
 ;  File: HistoryPP.dll
-;  Module: History++
+;  Plugin: History++
 ;  Version: 1.5.1.5
-;  Authors: theMIROn
+;  Authors: theMIROn, Art Fedorov
 ;============================================================
 [Easy, fast and feature complete history viewer.]
 Зручны, хуткі і шматфункцыянальны прагляд гісторыі.
@@ -157,7 +157,7 @@ EMail Express
 Паказаць у &кантэксце
 [Set &Bookmark]
 Паставіць &закладку
-[Rename &Bookmark]
+[&Rename Bookmark]
 Пераназваць закладку
 [Copy &Text]
 Капіяваць &тэкст
@@ -501,8 +501,6 @@ HTML файл
 Не магу загрузіць набор значкоў (%s) з\\r\\n%s\\r\\nЗначкi не будуць адлюстроўвацца.
 [You are using old icon pack from:\\r\\n%s\\r\\nThis can cause missing icons, so update the icon pack.]
 У вас стары набор значкоў:\\r\\n%s\\r\\nМагчымы праблемы са значкамі, абновіце набор.
-[Speak Message]
-Прамовіць паведамленне голасам
 [Next message]
 Наступнае
 [History++ module could not be loaded, richedit 2.0+ module is missing.\\nPress OK to continue loading Miranda.]
@@ -515,8 +513,6 @@ HTML файл
 Вы сапраўды жадаеце выдаліць усе запісы для гэтага кантакту?
 [Note: It can take several minutes for large histories]
 Нататка: гэта можа заняць некалькі хвілін для вялікай гісторыі
-[Empty history of subcontacts also]
-Таксама выдаліць гісторыю субкантактаў
 [Previous message]
 Папярэдняе паведамленне
 [Running version of AniSmiley is not supported]
@@ -719,3 +715,5 @@ Wiki-старонка дадатковых параметраў
 Гісторыя
 [View &History]
 Гісторыя
+[User Menu]
+Меню карыстача

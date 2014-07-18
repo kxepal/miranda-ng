@@ -1,12 +1,12 @@
 ﻿#muuid {0aa7bfea-1fc7-45f0-906e-2a46b6e119cf}
 ;============================================================
 ;  File: Yahoo.dll
-;  Plugin: Yahoo Protocol
+;  Plugin: Yahoo protocol
 ;  Version: 0.11.0.1
 ;  Authors: Gennady Feldman
 ;============================================================
-[Yahoo Protocol support for Miranda NG.]
-
+[Yahoo protocol support for Miranda NG.]
+Support du protocole Yahoo pour Miranda NG.
 ;file \protocols\Yahoo\res\Yahoo.rc
 [Yahoo]
 Yahoo
@@ -24,7 +24,7 @@ Expert
 Utiliser le carnet d'adresses Yahoo (YAB)
 [Show Avatars]
 Montrer les avatars
-[AutoLogin to Yahoo Website(s)]
+[Auto login to Yahoo Website(s)]
 
 [Display Yahoo notifications]
 Afficher les notifications
@@ -51,17 +51,15 @@ Liste des contacts à ignorer
 [&Add]
 &Ajouter
 [&Remove]
-
+&Supprimer
 [Set Custom Status]
 Personnaliser le message d'état
 [Show as busy]
 Signaler comme occupé
-[OK]
-OK
 [Cancel]
 Annuler
 [Protocol:]
-
+Protocole :
 [Client:]
 
 [Chat Room Invitation Request]
@@ -90,7 +88,7 @@ Re&joindre
 Ajouter
 ;file \protocols\Yahoo\src\chat.cpp
 [[miranda] Got conference invite to room: %s with msg: %s]
-{Miranda} Invitation à la conférence ici: %s message: %s
+{Miranda} Invitation à la conférence ici : %s message : %s
 [%s denied invitation with message: %s]
 
 [Me]
@@ -98,7 +96,7 @@ Ajouter
 [Others]
 Autres
 [&Invite user...]
-
+&Inviter l'utilisateur...
 [&Leave chat session]
 
 [User &details]
@@ -117,7 +115,7 @@ e-mail
 [Profile]
 Profil
 [Refresh]
-
+Actualiser
 [Address Book]
 Carnet d'adresses
 [Set Status]
@@ -130,7 +128,7 @@ Erreur Yahoo
 [The message send timed out.]
 Délai d'envoi du message expiré
 [Message is too long: Yahoo messages are limited by 800 UTF8 chars]
-Message trop grand: Les messages de Yahoo sont limités à 800 caractères de type UTF8
+Message trop grand : Les messages de Yahoo sont limités à 800 caractères de type UTF8
 ;file \protocols\Yahoo\src\links.cpp
 [YAHOO Link Protocol]
 Raccourci du protocole Yahoo
@@ -193,17 +191,17 @@ Vous devez vous connecté afin de mettre à jour votre liste de contacts
 [&Calendar]
 &Calendrier
 [Create Conference]
-
+&Créer une conférence
 [&Show Profile]
 &Afficher le profil
 ;file \protocols\Yahoo\src\webcam.cpp
 [[miranda] Got webcam invite. (not currently supported)]
-(miranda) réception d'une demande de webcam. (non actuellement supporté)
+{Miranda} réception d'une demande de webcam. (non actuellement supporté)
 ;file \protocols\Yahoo\src\yahoo.cpp
 [Calendar Reminder]
 
 [%s has rejected your request and sent the following message:]
-%s a rejeté votre requête et vous envoie le message suivant:
+%s a rejeté votre requête et vous envoie le message suivant :
 [Invalid Contact]
 
 [The ID you tried to add is invalid.]
@@ -212,9 +210,9 @@ Vous devez vous connecté afin de mettre à jour votre liste de contacts
 
 [New Mail]
 
-[You have %i unread msgs]
+[You have %i unread messages]
 Vous avez %i msg non lus
-[New Mail (%i msgs)]
+[New Mail (%i messages)]
 Nouveau e-mail (%i msgs)
 [From: %s\nSubject: %s]
 De : %s\nSujet : %s
@@ -233,7 +231,7 @@ Vous avez été déconnecté de Yahoo. Probablement à cause d'un double login.
 [Could not connect to the Yahoo service. Check your server/port and proxy settings.]
 Impossible de se connecter à Yahoo. Vérifier l'adresse, le port du serveur + param proxy
 [Could not log in, unknown reason: %d.]
-Pas de connexion à Yahoo, raison inconnue: %d
+Pas de connexion à Yahoo, raison inconnue : %d
 [Unknown error %s]
 Erreur inconnue %s
 [Custom error %s]

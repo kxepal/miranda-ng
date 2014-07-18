@@ -1,9 +1,9 @@
 ﻿#muuid {e7c48bab-8ace-4cb3-8446-d4b73481f497}
 ;============================================================
 ;  File: MRA.dll
-;  Plugin: MRA
+;  Plugin: MRA protocol
 ;  Version: 2.1.0.8
-;  Authors: Ivan Rozhuk
+;  Authors: Rozhuk Ivan
 ;============================================================
 [Miranda Mail.ru Agent protocol plugin.]
 
@@ -29,6 +29,8 @@ Výchozí
 [Automatically grant authorization to users in contact list]
 
 [Automatically grant authorization to new users]
+
+[Automatic authorization on Mail.ru web services]
 
 [Notify me when a message delivery has failed]
 Upozornit při nedoručení odeslané zprávy
@@ -64,8 +66,8 @@ od:
 pro:
 [Birthday:]
 Narozeniny:
-[Zodiak:]
-
+[Zodiac:]
+Zvěrokruh:
 [Location]
 Umístění
 [Country:]
@@ -148,8 +150,6 @@ Zavře se za %d sek.
 Název:
 [Message:]
 Zpráva:
-[OK]
-OK
 [Cancel]
 Zrušit
 [Notify]
@@ -236,8 +236,6 @@ Tato funkce vyžaduje doplněk 'Chat'. Před použitím je třeba nainstalovat.
 
 [My Album]
 
-[My Blog]
-
 [My Blog Status]
 
 [My Video]
@@ -258,11 +256,11 @@ Tato funkce vyžaduje doplněk 'Chat'. Před použitím je třeba nainstalovat.
 Požádat o autorizaci
 [Grant authorization]
 Udělit autorizaci
+[&Send E-Mail]
+
 [&Send postcard]
 
 [&View Album]
-
-[&Read Blog]
 
 [Reply Blog Status]
 
@@ -373,6 +371,8 @@ Avatary
 [Please, setup e-mail in options]
 
 [Please, setup password in options]
+
+[Thread creation failure]
 
 [Logon error: invalid login/password]
 
@@ -495,3 +495,5 @@ Spím
 
 [Music]
 Hudba
+[Dating]
+

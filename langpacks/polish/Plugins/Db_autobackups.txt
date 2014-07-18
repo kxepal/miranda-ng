@@ -13,7 +13,7 @@ Tworzenie kopii zapasowej profilu...
 [Cancel]
 Anuluj
 [Automatic backups]
-Automatyczne kopie zapasowe
+Kopie zapasowe
 [Backup NOW]
 Utwórz kopię
 [Disabled]
@@ -27,7 +27,7 @@ Twórz co:
 [Number of backups to keep:]
 Liczba trzymanych kopii zapasowych:
 [Backup to folder:]
-Zapisuj kopie do folderu:
+Zapisuj kopię do folderu:
 [Browse...]
 Przeglądaj...
 [Go to the "Customize -> Folders" to change settings]
@@ -40,9 +40,9 @@ Wyłącz okienko ze wskaźnikiem postępu kopiowania
 Wyłącz popupy
 ;file \plugins\Db_autobackups\src\backup.cpp
 [Miranda NG database]
-Baza danych Miranda NG
+Baza danych Mirandy NG
 [Created by:]
-Stworzona przez:
+Utworzona przez:
 [Miranda NG databases]
 Bazy danych Mirandy NG
 [Compressed Miranda NG databases]
@@ -84,7 +84,7 @@ folder "Moje dokumenty" aktualnie zalogowanego użytkownika Windows
 ["Desktop" folder for currently logged-on Windows user]
 folder "Pulpit" aktualnie zalogowanego użytkownika Windows
 [any environment variable defined in current Windows session (like %systemroot%, %allusersprofile%, etc.)]
-dowolna zmienna środowiskowa zdefiniowana w obecnej sesji Windows (jak %systemroot%,%allusersprofile% itp.)
+dowolna zmienna środowiskowa zdefiniowana w obecnej sesji Windows (jak %systemroot%, %allusersprofile% itp.)
 [Variables]
 Zmienne
 [days]

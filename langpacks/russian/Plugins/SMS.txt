@@ -47,7 +47,7 @@ SMS сообщение не послано
 Лимит времени отправки SMS
 [SMS Plugin]
 Плагин SMS
-[Begining]
+[Beginning]
 начало
 [End]
 конец
@@ -112,7 +112,7 @@ SMS подтверждение от %s
 [<< Single]
 <<Одному
 [Send &SMS...]
-Послать SMS
+Отправить SMS...
 [&SMS Message]
 Сообщение SMS
 [Incoming SMS Message]

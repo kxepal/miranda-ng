@@ -1,7 +1,7 @@
 ﻿#muuid {f3ff65f3-250e-416a-bee9-58c93f85ab33}
 ;============================================================
 ;  File: GG.dll
-;  Plugin: Gadu-Gadu Protocol
+;  Plugin: Gadu-Gadu protocol
 ;  Version: 0.11.0.3
 ;  Authors: Bartosz Bialek, Adam Strzelecki
 ;============================================================
@@ -100,8 +100,6 @@ Detalles:
 
 [Enter token to continue]
 
-[OK]
-Aceptar
 [Cancel]
 Cancelar
 [Create Gadu-Gadu account]
@@ -135,7 +133,7 @@ Eliminar
 [Age from:]
 
 [to:]
-
+a:
 [Search online users only]
 
 [&Close]
@@ -369,7 +367,7 @@ Todos los archivos
 [List cannot be imported from file "%s" because of error:\n\t%s (Error: %d)]
 
 [contacts]
-
+contactos
 [List cannot be exported to file "%s" because of error:\n\t%s (Error: %d)]
 
 [List cannot be exported because of error:\n\t%s (Error: %d)]

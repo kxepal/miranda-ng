@@ -2,7 +2,7 @@
 ;============================================================
 ;  File: PluginUpdater.dll
 ;  Plugin: Plugin updater
-;  Version: 0.1.1.7
+;  Version: 0.1.2.1
 ;  Authors: Mataes, George Hazan
 ;============================================================
 [Plugin updater for Miranda NG.]
@@ -33,6 +33,8 @@
 (але тільки 1 раз на день)
 [Every]
 Кожні
+[Silent mode]
+Тихе оновлення
 [Files source]
 Джерело оновлень
 [Stable version]
@@ -43,6 +45,8 @@
 Версія в розробці з символами налагодження
 [Custom version]
 Задана користувачем версія
+[Some component(s) was updated.\nYou need to restart your Miranda to apply installed updates.]
+Оновлено деякі компоненти.\nОновлення будуть застосовані після перезапуску програми.
 [Notifications]
 Сповіщення
 [Message boxes (*)]
@@ -117,6 +121,8 @@
 Плагіни
 [Icons]
 Значки
+[Languages]
+Локалізації
 [Other]
 Інше
 [List is empty.]
@@ -131,6 +137,12 @@
 << Деталі
 [Update failed! One of the components wasn't downloaded correctly. Try it again later.]
 Помилка оновлення! Архів одного з компонентів пошкоджений. Спробуйте ще раз пізніше.
+[You need to restart your Miranda to apply installed updates.]
+Оновлення будуть застосовані після перезапуску програми.
+[Would you like to restart it now?]
+Перезапустити зараз?
+[%d component(s) was updated]
+%d компонентів оновлено.
 [No updates found.]
 Оновлень немає.
 [Update checking already started!]
@@ -147,6 +159,10 @@
 Перевірити оновлення
 [Available components list]
 Список компонентів
+[Update completed]
+Оновлення завершено
+[Update failed]
+Помилка оновлення
 ['Yes' Button]
 Кнопка "Так"
 ['No' Button]

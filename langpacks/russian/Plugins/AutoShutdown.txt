@@ -27,8 +27,6 @@
 Автоматически выключать компьютер при следующих событиях:
 [&Thunderstorm warning is issued (Weather)]
 &Штормовое предупреждение (плагин Weather)
-[&Harddrive overheats (HDD Info)]
-&Перегрев HDD (плагин HDD Info)
 [Automatic Shutdown]
 Автовыключение
 [Select the automatic shutdown event]
@@ -45,7 +43,7 @@
 Переход Miranda NG в режим &ожидания
 [Configure]
 Настроить
-[Shutdown when &prozessor usage drops below:]
+[Shutdown when &processor usage drops below:]
 Выключить, если использование &процессора упадёт до:
 [(current: 0%)]
 (сейчас 0%)
@@ -60,7 +58,7 @@
 [Unsaved data in open applications except Miranda NG might get lost.]
 Все несохрарённые данные в других приложениях могут быть утеряны.
 [Please click "Cancel" if you would like to abort the process.]
-Нажмите "Отмена" если хотите прервать процесс
+Если хотите прервать процесс, нажмите "Отмена".
 [&Now!]
 &Сейчас!
 [Shutdown at:]
@@ -110,15 +108,15 @@
 [Start automatic shutdown]
 Запустить автовыключение
 [Stop automatic shutdown]
-Остановить автовыключение 
+Остановить автовыключение
 [Stop automatic &shutdown]
-Остановить &автовыключение 
+Остановить &автовыключение
 [Automatic &shutdown...]
 &Автовыключение...
 [Miranda NG is going to be automatically closed in %u second(s).]
 Miranda NG автоматически закроется через %u секунд(ы).
 [All Miranda NG protocols are going to be set to offline in %u second(s).]
-Все протоколы 
+Все протоколы
 [You will be logged off automatically in %u second(s).]
 Выход из системы через %u секунд(ы).
 [The computer will automatically be restarted in %u second(s).]
@@ -171,7 +169,7 @@ Miranda NG автоматически закроется через %u секу�
 Закрыть все запущенные программы и завершить работу Windows, чтобы можно было отключить питание.
 [Saves the current Windows session in memory and sets the system to suspend mode.]
 Сохранить текущее состояние Windows в памяти и перевести систему в режим ожидания.
-[Saves the current Windows session on harddisc, so that the power can be turned off.]
+[Saves the current Windows session on hard drive, so that the power can be turned off.]
 Сохранить текущее состояние Windows на жёстком диске, так что питание можно выключить.
 [Locks the computer. To unlock the computer, you must log in.]
 Заблокировать компьютер. Для разблокировки необходимо войти в систему.

@@ -40,6 +40,7 @@ extern int g_IconWidth, g_IconHeight;
 void   fnClcOptionsChanged(void);
 void   fnClcBroadcast(int msg, WPARAM wParam, LPARAM lParam);
 HMENU  fnBuildGroupPopupMenu(ClcGroup* group);
+void   fnInitAutoRebuild(HWND hWnd);
 
 LRESULT CALLBACK fnContactListControlWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -94,6 +95,7 @@ void  fnGetFontSetting(int i, LOGFONT* lf, COLORREF* colour);
 void  fnLoadClcOptions(HWND hwnd, struct ClcData *dat);
 void  fnRecalculateGroupCheckboxes(HWND hwnd, struct ClcData *dat);
 void  fnSetGroupChildCheckboxes(ClcGroup *group, int checked);
+void  fnSetContactCheckboxes(ClcContact *cc, int checked);
 void  fnInvalidateItem(HWND hwnd, struct ClcData *dat, int iItem);
 
 int fnGetRowBottomY(struct ClcData *dat, int item);

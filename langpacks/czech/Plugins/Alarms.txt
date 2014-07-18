@@ -50,8 +50,6 @@ Okno do popředí pouze v nečinnosti
 Náhled
 [Alarm]
 Připomínka
-[OK]
-OK
 [Cancel]
 Zrušit
 [Title:]
@@ -146,6 +144,10 @@ Pozadí
 [Window]
 Okno
 ;file \plugins\Alarms\src\frame.cpp
+[%dh %dm]
+%d hod. %d min.
+[%dm]
+%d min.
 [Hide reminders]
 Skrýt připomínky
 [Show reminders]

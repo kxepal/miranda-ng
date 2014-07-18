@@ -164,7 +164,7 @@ INT_PTR svcEnableDisableMenuCommand(WPARAM, LPARAM)
 		//The module is enabled.
 		//The action to do is "disable popups" (show disabled) and we must write "enable popup" in the new item.
 		PopupOptions.ModuleIsEnabled = FALSE;
-		db_set_b(NULL, MODULNAME, "ModuleIsEnabled", FALSE);
+		db_set_b(NULL, "Popup", "ModuleIsEnabled", FALSE);
 		mi.ptszName = LPGENT("Enable Popups");
 		mi.hIcon = IcoLib_GetIcon(ICO_POPUP_OFF,0);
 	}
@@ -172,7 +172,7 @@ INT_PTR svcEnableDisableMenuCommand(WPARAM, LPARAM)
 		//The module is disabled.
 		//The action to do is enable popups (show enabled), then write "disable popup" in the new item.
 		PopupOptions.ModuleIsEnabled = TRUE;
-		db_set_b(NULL, MODULNAME, "ModuleIsEnabled", TRUE);
+		db_set_b(NULL, "Popup", "ModuleIsEnabled", TRUE);
 		mi.ptszName = LPGENT("Disable Popups");
 		mi.hIcon = IcoLib_GetIcon(ICO_POPUP_ON,0);
 	}
@@ -263,11 +263,6 @@ static int ModulesLoaded(WPARAM,LPARAM)
 		htuTitle	= MText.Register("Popup Plus/Title",MTEXT_FANCY_DEFAULT);
 	}
 	else htuTitle = htuText = NULL;
-
-	// init meta contacts
-	INT_PTR ptr = CallService(MS_MC_GETPROTOCOLNAME, 0, 0);
-	if (ptr != CALLSERVICE_NOTFOUND)
-		gszMetaProto = (LPCSTR)ptr;
 
 	//check if OptionLoaded
 	if (!OptionLoaded)
@@ -392,7 +387,6 @@ MIRAPI int Load(void)
 
 	CreateServiceFunction(MS_POPUP_GETCONTACT,           Popup_GetContact);
 	CreateServiceFunction(MS_POPUP_GETPLUGINDATA,        Popup_GetPluginData);
-	CreateServiceFunction(MS_POPUP_ISSECONDLINESHOWN,    Popup_IsSecondLineShown);
 
 	CreateServiceFunction(MS_POPUP_SHOWMESSAGE,          Popup_ShowMessage);
 	CreateServiceFunction(MS_POPUP_SHOWMESSAGEW,         Popup_ShowMessageW);
@@ -448,12 +442,12 @@ MIRAPI int Unload(void)
 	PopupHistoryUnload();
 	SrmmMenu_Unload();
 
-	UnregisterClass (MAKEINTATOM(g_wndClass.cPopupWnd2),hInst);
-	UnregisterClassW(L"PopupEditBox",hInst);
-	UnregisterClass (MAKEINTATOM(g_wndClass.cPopupMenuHostWnd),hInst);
-	UnregisterClass (MAKEINTATOM(g_wndClass.cPopupThreadManagerWnd),hInst);
-	UnregisterClass (MAKEINTATOM(g_wndClass.cPopupPreviewBoxWndclass),hInst);
-	UnregisterClass (MAKEINTATOM(g_wndClass.cPopupPlusDlgBox),hInst);
+	UnregisterClass(MAKEINTATOM(g_wndClass.cPopupWnd2), hInst);
+	UnregisterClass(_T("PopupEditBox"), hInst);
+	UnregisterClass(MAKEINTATOM(g_wndClass.cPopupMenuHostWnd), hInst);
+	UnregisterClass(MAKEINTATOM(g_wndClass.cPopupThreadManagerWnd), hInst);
+	UnregisterClass(MAKEINTATOM(g_wndClass.cPopupPreviewBoxWndclass), hInst);
+	UnregisterClass(MAKEINTATOM(g_wndClass.cPopupPlusDlgBox), hInst);
 
 	UnloadGDIPlus();
 

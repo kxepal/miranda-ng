@@ -1,4 +1,4 @@
-﻿#muuid  {e4058506-6494-4d60-9cf4-40bf545f78bd}
+﻿#muuid {e4058506-6494-4d60-9cf4-40bf545f78bd}
 ;============================================================
 ;  File: QuickSearch.dll
 ;  Module: Quick Search
@@ -112,7 +112,7 @@ Horodateur
 [Module:]
 Module :
 [Setting:]
-Paramètre:
+Paramètre :
 [Service:]
 Service :
 [Param]
@@ -142,7 +142,7 @@ Sauver
 [Close]
 Fermer
 [Refresh]
-
+Actualiser
 [QuickSearch]
 Recherche rapide
 [Show Offline contacts]
@@ -152,7 +152,7 @@ Nouvelle colonne
 [Save Item]
 Sauver
 [InfoType:]
-InfoType:
+InfoType :
 [New Column]
 Nouvelle colonne
 [Column Up]
@@ -199,9 +199,9 @@ Contacts
 
 [Metacontact foreground]
 
-[SubMetacontact background]
+[Subcontact background]
 
-[SubMetacontact foreground]
+[Subcontact foreground]
 
 [&Delete]
 &Effacer
@@ -212,7 +212,7 @@ Contacts
 [Attach to &Tab container]
 
 [&Move to Group]
-
+&Déplacer vers le groupe
 [Some of selected contacts in different metacontacts already]
 
 [Do you really want to delete selected contacts?]

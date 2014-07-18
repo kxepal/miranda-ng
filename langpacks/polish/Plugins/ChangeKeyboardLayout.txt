@@ -30,8 +30,6 @@ Kopiuj rezultat do schowka
 Pokaż wynik w popupie
 [Strings for keyboard layouts]
 Ciągi dla układów klawiatur
-[EN]
-EN
 [Default]
 Domyślny
 [Invert current state]
@@ -47,13 +45,13 @@ Zmień aktywny układ klawiatury w systemie
 [Colors]
 Kolory
 [Popup colors]
-Kolory popupów
+Z wtyczki Popup
 [Windows colors]
-Kolory Windows
+Windows
 [Custom colors]
-Niestandardowe kolory
+Niestandardowe
 [Back]
-Wstecz
+Tło
 [Text]
 Tekst
 [Timeout]
@@ -67,16 +65,16 @@ Niestandardowe
 [On left click]
 LPM
 [Copy to clipboard]
-Kopiuj do schowka 
+Kopiuj do schowka
 [Dismiss]
-Zamknij
+Odrzuć
 [On right click]
 PPM
 [Preview]
 Podgląd
 ;file \plugins\ChangeKeyboardLayout\src\commonheaders.h
 [ChangeKeyboardLayout]
-ChangeKeyboardLayout
+Układ klawiatury
 ;file \plugins\ChangeKeyboardLayout\src\hook_events.cpp
 [Popup]
 Popup

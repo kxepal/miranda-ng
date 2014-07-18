@@ -15,7 +15,7 @@ CMraProto::CMraProto(const char* _module, const TCHAR* _displayName) :
 	InitializeCriticalSectionAndSpinCount(&csCriticalSectionSend, 0);
 	MraSendQueueInitialize(0, &hSendQueueHandle);
 	MraFilesQueueInitialize(0, &hFilesQueueHandle);
-	MraMPopSessionQueueInitialize(&hMPopSessionQueue);
+	MraMPopSessionQueueInitialize(&hMPopSessionQueue);//getByte("AutoAuthOnWebServices", MRA_DEFAULT_AUTO_AUTH_ON_WEB_SVCS)
 	MraAvatarsQueueInitialize(&hAvatarsQueueHandle);
 
 	CreateProtoService(PS_SETCUSTOMSTATUSEX,   &CMraProto::MraSetXStatusEx);
@@ -31,6 +31,7 @@ CMraProto::CMraProto(const char* _module, const TCHAR* _displayName) :
 
 	CreateProtoService(MS_ICQ_SENDSMS,         &CMraProto::MraSendSMS);
 	CreateProtoService(PS_SEND_NUDGE,          &CMraProto::MraSendNudge);
+	CreateProtoService(PS_GETUNREADEMAILCOUNT, &CMraProto::GetUnreadEmailCount);
 
 	if ( ServiceExists(MS_NUDGE_SEND))
 		m_heNudgeReceived = CreateProtoEvent(PE_NUDGE);
@@ -54,7 +55,7 @@ CMraProto::CMraProto(const char* _module, const TCHAR* _displayName) :
 	HookProtoEvent(ME_CLIST_PREBUILDSTATUSMENU, &CMraProto::MraRebuildStatusMenu);
 
 	hExtraXstatusIcon = ExtraIcon_Register("MRAXstatus", LPGEN("Mail.ru Xstatus"), "mra_xstatus25");
-	hExtraInfo = ExtraIcon_Register("MRAStatus", LPGEN("Mail.ru extra info"), "mra_xstatus49");
+	hExtraInfo = ExtraIcon_Register("MRAStatus", LPGEN("Mail.ru extra info"), MRA_XSTATUS_UNKNOWN_STR);
 
 	bHideXStatusUI = FALSE;
 	m_iXStatus = getByte(DBSETTING_XSTATUSID, MRA_MIR_XSTATUS_NONE);
@@ -284,7 +285,7 @@ DWORD_PTR CMraProto::GetCaps(int type, MCONTACT hContact)
 		return PF2_ONLINE | PF2_INVISIBLE | PF2_SHORTAWAY | PF2_HEAVYDND | PF2_FREECHAT | PF2_ONTHEPHONE;
 
 	case PFLAGNUM_3:
-		return PF2_ONLINE | PF2_INVISIBLE | PF2_SHORTAWAY | PF2_HEAVYDND | PF2_FREECHAT;
+		return PF2_ONLINE | PF2_INVISIBLE | PF2_SHORTAWAY | PF2_HEAVYDND | PF2_FREECHAT | PF2_ONTHEPHONE;
 
 	case PFLAGNUM_4:
 		return PF4_FORCEAUTH | PF4_FORCEADDED | PF4_SUPPORTTYPING | PF4_AVATARS | PF4_IMSENDUTF;
@@ -421,7 +422,7 @@ int CMraProto::SendMsg(MCONTACT hContact, int flags, const char *lpszMessage)
 	int iRet = 0;
 
 	if (flags & PREF_UNICODE)
-		lpwszMessage = (LPWSTR)(lpszMessage + lstrlenA(lpszMessage)+1 );
+		lpwszMessage = (LPWSTR)(lpszMessage + lstrlenA(lpszMessage) + 1);
 	else if (flags & PREF_UTF)
 		lpwszMessage = mir_utf8decodeT(lpszMessage);
 	else
@@ -511,7 +512,7 @@ int CMraProto::SetStatus(int iNewStatus)
 			for (MCONTACT hContact = db_find_first(m_szModuleName); hContact; hContact = db_find_next(hContact, m_szModuleName))
 				SetContactBasicInfoW(hContact, SCBIFSI_LOCK_CHANGES_EVENTS, (SCBIF_ID|SCBIF_GROUP_ID|SCBIF_SERVER_FLAG|SCBIF_STATUS), -1, -1, 0, 0, ID_STATUS_OFFLINE, 0, 0, 0);
 
-		Netlib_CloseHandle(m_hConnection);
+		NETLIB_CLOSEHANDLE(m_hConnection);
 	}
 	else {
 		// если offline то сразу ставим connecting, но обработка как offline
@@ -551,7 +552,7 @@ HANDLE CMraProto::GetAwayMsg(MCONTACT hContact)
 	if (!m_bLoggedIn || ! hContact)
 		return 0;
 
-	TCHAR szStatusDesc[MICBLOG_STATUS_MAX+MICBLOG_STATUS_MAX+MAX_PATH], szTime[64];
+	TCHAR szStatusDesc[MICBLOG_STATUS_MAX + MICBLOG_STATUS_MAX + MAX_PATH], szTime[64];
 	DWORD dwTime;
 	int iRet = 0;
 
@@ -590,11 +591,11 @@ int CMraProto::SetAwayMsg(int m_iStatus, const TCHAR* msg)
 
 int CMraProto::UserIsTyping(MCONTACT hContact, int type)
 {
-	if (!m_bLoggedIn || !hContact || type == PROTOTYPE_SELFTYPING_OFF)
+	if (!m_bLoggedIn || m_iStatus == ID_STATUS_INVISIBLE || !hContact || type == PROTOTYPE_SELFTYPING_OFF)
 		return 1;
 
 	CMStringA szEmail;
-	if ( MraGetContactStatus(hContact) != ID_STATUS_OFFLINE && m_iStatus != ID_STATUS_INVISIBLE)
+	if ( MraGetContactStatus(hContact) != ID_STATUS_OFFLINE)
 	if ( mraGetStringA(hContact, "e-mail", szEmail))
 		if ( MraMessage(FALSE, hContact, 0, MESSAGE_FLAG_NOTIFY, szEmail, L" ", NULL, 0))
 			return 0;

@@ -304,7 +304,7 @@ static INT_PTR CALLBACK ShutdownDlgProc(HWND hwndDlg,UINT msg,WPARAM wParam,LPAR
 	switch(msg) {
 	case WM_INITDIALOG:
 		hwndShutdownDlg=hwndDlg;
-		SetWindowLongPtr(hwndDlg, DWLP_USER, (LONG)lParam);
+		SetWindowLongPtr(hwndDlg, DWLP_USER, (LONG_PTR)lParam);
 		TranslateDialogDefault(hwndDlg);
 
 		if (lParam==SDSDT_SHUTDOWN || lParam==SDSDT_REBOOT || lParam==SDSDT_LOGOFF)
@@ -319,7 +319,7 @@ static INT_PTR CALLBACK ShutdownDlgProc(HWND hwndDlg,UINT msg,WPARAM wParam,LPAR
 			}
 			else hBoldFont=NULL;
 			SendDlgItemMessage(hwndDlg,IDC_TEXT_HEADER,WM_SETFONT,(WPARAM)hBoldFont,FALSE);
-			SetWindowLongPtr(GetDlgItem(hwndDlg, IDC_TEXT_HEADER), GWLP_USERDATA, (LONG)hBoldFont);
+			SetWindowLongPtr(GetDlgItem(hwndDlg, IDC_TEXT_HEADER), GWLP_USERDATA, (LONG_PTR)hBoldFont);
 		}
 		{
 			WORD countdown=db_get_w(NULL,"AutoShutdown","ConfirmDlgCountdown",SETTING_CONFIRMDLGCOUNTDOWN_DEFAULT);
@@ -466,7 +466,7 @@ const TCHAR *apszLong[] = {
 	LPGENT("Shuts down Windows and then restarts Windows."),
 	LPGENT("Closes all running programs and shuts down Windows to a point at which it is safe to turn off the power."),
 	LPGENT("Saves the current Windows session in memory and sets the system to suspend mode."),
-	LPGENT("Saves the current Windows session on harddisc, so that the power can be turned off."),
+	LPGENT("Saves the current Windows session on hard drive, so that the power can be turned off."),
 	LPGENT("Locks the computer. To unlock the computer, you must log in."),
 	LPGENT("Sets all protocols to offline and closes all RAS connections.")
 };

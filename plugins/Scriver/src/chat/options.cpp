@@ -45,7 +45,7 @@ static struct branch_t branch1[] = {
 	{ LPGENT("Show and hide by double clicking in the contact list"), "ToggleVisibility", 0, 0, NULL },
 	{ LPGENT("Show contact statuses (if supported)"), "ShowContactStatus", 0, 0, NULL },
 	{ LPGENT("Display contact status icon before role icon"), "ContactStatusFirst", 0, 0, NULL },
-	{ LPGENT("Add \':\' to auto-completed names"), "AddColonToAutoComplete", 0, 1, NULL }
+	{ LPGENT("Add ':' to auto-completed names"), "AddColonToAutoComplete", 0, 1, NULL }
 };
 
 static struct branch_t branch2[] = {
@@ -58,7 +58,7 @@ static struct branch_t branch2[] = {
 	{ LPGENT("Indent the second line of a message"), "LogIndentEnabled", 0, 1, NULL },
 	{ LPGENT("Limit user names to 20 characters"), "LogLimitNames", 0, 1, NULL },
 	{ LPGENT("Strip colors from messages"), "StripFormatting", 0, 0, NULL },
-	{ LPGENT("Enable \'event filter\' for new rooms"), "FilterEnabled", 0, 0, NULL }
+	{ LPGENT("Enable 'event filter' for new rooms"), "FilterEnabled", 0, 0, NULL }
 };
 
 static struct branch_t branch3[] = {
@@ -366,13 +366,14 @@ INT_PTR CALLBACK DlgProcOptions2(HWND hwndDlg,UINT uMsg,WPARAM wParam,LPARAM lPa
 			RECT rect;
 
 			mir_sntprintf(tszTooltipText, SIZEOF(tszTooltipText),
-				_T("%s - %s\n%s - %s\n%s - %s\n\n")
+				_T("%s - %s\n%s - %s\n%s - %s\n%s - %s\n\n")
 				_T("%s - %s\n%s - %s\n%s - %s\n%s - %s\n%s - %s\n%s - %s\n%s - %s\n%s - %s\n%s - %s\n%s - %s\n\n")
 				_T("%s - %s\n%s - %s\n%s - %s\n%s - %s\n%s - %s\n%s - %s\n%s - %s\n%s - %s\n%s - %s\n%s - %s"),
 				// contact vars
 				_T("%nick%"),					TranslateT("nick of current contact (if defined)"),
-				_T("%proto%"),					TranslateT("protocol name of current contact (if defined). Account name is used when protocol supports multiaccounts"),
-				_T("%userid%"),					TranslateT("User ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc."),
+				_T("%proto%"),					TranslateT("protocol name of current contact (if defined). Account name is used when protocol supports multiple accounts"),
+				_T("%accountname%"),			TranslateT("user-defined account name of current contact (if defined)."),
+				_T("%userid%"),					TranslateT("user ID of current contact (if defined). It is like UIN Number for ICQ, JID for Jabber, etc."),
 				// global vars
 				_T("%miranda_path%"),			TranslateT("path to Miranda root folder"),
 				_T("%miranda_profile%"),		TranslateT("path to current Miranda profile"),
@@ -415,7 +416,7 @@ INT_PTR CALLBACK DlgProcOptions2(HWND hwndDlg,UINT uMsg,WPARAM wParam,LPARAM lPa
 		EnableWindow(GetDlgItem(hwndDlg, IDC_CHAT_LIMITTEXT2), g_Settings.bLoggingEnabled ? TRUE : FALSE);
 
 		hListHeading2 = InsertBranch(GetDlgItem(hwndDlg, IDC_CHAT_CHECKBOXES), TranslateT("Appearance"), db_get_b(NULL, CHAT_MODULE, "Branch2Exp", 0) ? TRUE : FALSE);
-		hListHeading3 = InsertBranch(GetDlgItem(hwndDlg, IDC_CHAT_CHECKBOXES), TranslateT("Default events to show in new chat rooms if the \'event filter\' is enabled"), db_get_b(NULL, CHAT_MODULE, "Branch3Exp", 0) ? TRUE : FALSE);
+		hListHeading3 = InsertBranch(GetDlgItem(hwndDlg, IDC_CHAT_CHECKBOXES), TranslateT("Default events to show in new chat rooms if the 'event filter' is enabled"), db_get_b(NULL, CHAT_MODULE, "Branch3Exp", 0) ? TRUE : FALSE);
 		FillBranch(GetDlgItem(hwndDlg, IDC_CHAT_CHECKBOXES), hListHeading2, branch2, SIZEOF(branch2), 0x0);
 		FillBranch(GetDlgItem(hwndDlg, IDC_CHAT_CHECKBOXES), hListHeading3, branch3, SIZEOF(branch3), 0x03E0);
 		SendMessage(hwndDlg, OPT_FIXHEADINGS, 0, 0);

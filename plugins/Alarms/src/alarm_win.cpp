@@ -53,7 +53,7 @@ INT_PTR CALLBACK DlgProcAlarm(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 				Utils_SaveWindowPosition(hwndDlg, 0, MODULE, "Notify");
 			}
 
-			SetWindowLongPtr(hwndDlg, GWLP_USERDATA, (LONG)wd);
+			SetWindowLongPtr(hwndDlg, GWLP_USERDATA, (LONG_PTR)wd);
 
 			// options
 			SendMessage(hwndDlg, WMU_SETOPT, 0, 0);
@@ -90,9 +90,9 @@ INT_PTR CALLBACK DlgProcAlarm(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 	case WMU_SETFONTS:
 		// fonts
 		if (hWindowFont)
-			SendMessage(hwndDlg, WM_SETFONT, (WPARAM)hWindowFont, (LPARAM)TRUE);
+			SendMessage(hwndDlg, WM_SETFONT, (WPARAM)hWindowFont, TRUE);
 		if (hTitleFont)
-			SendDlgItemMessage(hwndDlg, IDC_TITLE, WM_SETFONT, (WPARAM)hTitleFont, (LPARAM)TRUE);
+			SendDlgItemMessage(hwndDlg, IDC_TITLE, WM_SETFONT, (WPARAM)hTitleFont, TRUE);
 
 		if (hBackgroundBrush) {
 			SetClassLong(hwndDlg, GCLP_HBRBACKGROUND, (LONG)hBackgroundBrush);

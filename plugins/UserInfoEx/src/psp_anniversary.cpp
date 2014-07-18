@@ -33,11 +33,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  **/
 static INT_PTR CALLBACK DlgProc_AnniversaryEditor(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	MAnnivDate* pDlgEditAnniv = (MAnnivDate*)GetUserData(hDlg);
+	MAnnivDate *pDlgEditAnniv = (MAnnivDate *)GetUserData(hDlg);
 
 	switch (uMsg) {
 	case WM_INITDIALOG:
-		pDlgEditAnniv = (MAnnivDate*)lParam;
+		pDlgEditAnniv = (MAnnivDate *)lParam;
 		if (!PtrIsValid(pDlgEditAnniv))
 			break;
 
@@ -71,20 +71,17 @@ static INT_PTR CALLBACK DlgProc_AnniversaryEditor(HWND hDlg, UINT uMsg, WPARAM w
 				EnableWindow(GetDlgItem(hDlg, IDOK), GetWindowTextLength((HWND)lParam) > 0);
 			break;
 
-		case IDCANCEL:
-			return EndDialog(hDlg, LOWORD(wParam));
-
-		case IDOK:
+		case IDOK: {
 			// read new description
 			HWND hEdit = GetDlgItem(hDlg, EDIT_CATEGORY);
 			int len = Edit_GetTextLength(hEdit);
 			LPTSTR pszText;
 
-			if (len == 0 || 
-				(pszText = (LPTSTR)_alloca((len + 1) * sizeof(TCHAR))) == NULL ||
-				!Edit_GetText(hEdit, pszText, len + 1))
+			if (len == 0
+				|| (pszText = (LPTSTR)_alloca((len + 1) * sizeof(TCHAR))) == NULL
+				|| !Edit_GetText(hEdit, pszText, len + 1))
 			{
-				MsgErr(hDlg, LPGENT("Please enter a valid Description first!"));
+				MsgErr(hDlg, LPGENT("Please enter a valid description first!"));
 				break;
 			}
 
@@ -92,6 +89,11 @@ static INT_PTR CALLBACK DlgProc_AnniversaryEditor(HWND hDlg, UINT uMsg, WPARAM w
 				pDlgEditAnniv->Description(pszText);
 				pDlgEditAnniv->SetFlags(MAnnivDate::MADF_HASCUSTOM | MAnnivDate::MADF_CHANGED);
 			}
+		}
+		// fall through
+		case IDCANCEL:
+			return EndDialog(hDlg, LOWORD(wParam));
+
 		}
 	}
 	return FALSE;

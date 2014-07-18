@@ -15,7 +15,6 @@
 #define IDD_OPT_AVATRS                  109
 #define IDI_MAIL_NOTIFY                 111
 #define IDI_MRA_WEB_SEARCH              112
-#define IDI_MRA_BLOGS                   113
 #define IDI_MRA_POSTCARD                114
 #define IDI_MRA_PHOTO                   117
 #define IDI_DELETED                     118
@@ -66,6 +65,7 @@
 #define IDC_FILE_SEND_ENABLE_MRIMPROXY_CONS 1015
 #define IDC_AUTO_AUTH_GRAND_IN_CLIST    1015
 #define IDC_AUTO_AUTH_GRAND_NEW_USERS   1016
+#define IDC_AUTO_AUTH_ON_WEB_SVCS	1017
 #define IDC_OPTIONSTAB                  1017
 #define IDC_NEW_ACCOUNT_LINK            1018
 #define IDC_LOOKUPLINK                  1019

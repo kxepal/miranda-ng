@@ -438,8 +438,8 @@ static INT_PTR CALLBACK TlenAdvOptDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam,
 			EnableWindow(GetDlgItem(hwndDlg, IDC_FILE_PROXY_PASSWORD), bChecked);
 
 			SendDlgItemMessage(hwndDlg, IDC_FILE_PROXY_TYPE, CB_ADDSTRING, 0, (LPARAM)TranslateT("Forwarding"));
-			SendDlgItemMessage(hwndDlg, IDC_FILE_PROXY_TYPE, CB_ADDSTRING, 0, (LPARAM)TranslateT("SOCKS4"));
-			SendDlgItemMessage(hwndDlg, IDC_FILE_PROXY_TYPE, CB_ADDSTRING, 0, (LPARAM)TranslateT("SOCKS5"));
+			SendDlgItemMessage(hwndDlg, IDC_FILE_PROXY_TYPE, CB_ADDSTRING, 0, (LPARAM)_T("SOCKS4"));
+			SendDlgItemMessage(hwndDlg, IDC_FILE_PROXY_TYPE, CB_ADDSTRING, 0, (LPARAM)_T("SOCKS5"));
 			SendDlgItemMessage(hwndDlg, IDC_FILE_PROXY_TYPE, CB_SETCURSEL, db_get_w(NULL, proto->m_szModuleName, "FileProxyType", 0), 0);
 			if (!db_get_ts(NULL, proto->m_szModuleName, "FileProxyHost", &dbv)) {
 				SetDlgItemText(hwndDlg, IDC_FILE_PROXY_HOST, dbv.ptszVal);
@@ -563,19 +563,19 @@ static INT_PTR CALLBACK TlenAdvOptDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam,
 #define POPUP_DEFAULT_COLORBKG 0xDCBDA5
 #define POPUP_DEFAULT_COLORTXT 0x000000
 
-static void MailPopupPreview(DWORD colorBack, DWORD colorText, char *title, char *emailInfo, int delay)
+static void MailPopupPreview(DWORD colorBack, DWORD colorText, TCHAR *title, TCHAR *emailInfo, int delay)
 {
-	POPUPDATA ppd = { 0 };
+	POPUPDATAT ppd = { 0 };
 	HICON hIcon = GetIcolibIcon(IDI_MAIL);
 	ppd.lchIcon = CopyIcon(hIcon);
 	ReleaseIcolibIcon(hIcon);
-	strcpy(ppd.lpzContactName, title);
-	strcpy(ppd.lpzText, emailInfo);
+	_tcscpy(ppd.lptzContactName, title);
+	_tcscpy(ppd.lptzText, emailInfo);
 	ppd.colorBack = colorBack;
 	ppd.colorText = colorText;
 	ppd.iSeconds = delay;
-	if ( ServiceExists(MS_POPUP_ADDPOPUP))
-		PUAddPopup(&ppd);
+	if ( ServiceExists(MS_POPUP_ADDPOPUPT))
+		PUAddPopupT(&ppd);
 }
 
 static INT_PTR CALLBACK TlenPopupsDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -616,7 +616,7 @@ static INT_PTR CALLBACK TlenPopupsDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam,
 			case IDC_PREVIEW:
 				{
 					int delay;
-					char title[256];
+					TCHAR title[256];
 					if (IsDlgButtonChecked(hwndDlg, IDC_DELAY_POPUP)) {
 						delay=0;
 					} else if (IsDlgButtonChecked(hwndDlg, IDC_DELAY_PERMANENT)) {
@@ -624,11 +624,11 @@ static INT_PTR CALLBACK TlenPopupsDlgProc(HWND hwndDlg, UINT msg, WPARAM wParam,
 					} else {
 						delay=GetDlgItemInt(hwndDlg, IDC_DELAY, NULL, FALSE);
 					}
-					mir_snprintf(title, sizeof(title), Translate("%s mail"), proto->m_szModuleName);
+					mir_sntprintf(title, SIZEOF(title), TranslateT("%S mail"), proto->m_szModuleName);
 					MailPopupPreview((DWORD) SendDlgItemMessage(hwndDlg,IDC_COLORBKG,CPM_GETCOLOUR,0,0),
 									(DWORD) SendDlgItemMessage(hwndDlg,IDC_COLORTXT,CPM_GETCOLOUR,0,0),
 									title,
-									"From: test@test.test\nSubject: test",
+									_T("From: test@test.test\nSubject: test"),
 									delay);
 				}
 

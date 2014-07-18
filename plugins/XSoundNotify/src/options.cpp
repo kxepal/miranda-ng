@@ -9,7 +9,7 @@ There is no warranty.
 
 #include "Common.h"
 
-bool IsSuitableProto(PROTOACCOUNT* pa)
+bool IsSuitableProto(PROTOACCOUNT *pa)
 {
 	if (pa == NULL)
 		return false;
@@ -73,7 +73,7 @@ static INT_PTR CALLBACK OptsProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM l
 							TCHAR *nick = (TCHAR *)CallService(MS_CLIST_GETCONTACTDISPLAYNAME, hContact, GCDNF_TCHAR);
 							TCHAR *value = (TCHAR *)mir_alloc(sizeof(TCHAR) * (_tcslen(uid) + _tcslen(nick) + 4));
 							mir_sntprintf(value, _tcslen(uid) + _tcslen(nick) + 4, _T("%s (%s)"), nick, uid);
-							SendMessage(GetDlgItem(hwndDlg, IDC_OPT_COMBO_USERS), CB_SETITEMDATA, SendMessage(GetDlgItem(hwndDlg, IDC_OPT_COMBO_USERS), CB_ADDSTRING, 0, (LPARAM)value), (LPARAM)hContact);
+							SendMessage(GetDlgItem(hwndDlg, IDC_OPT_COMBO_USERS), CB_SETITEMDATA, SendMessage(GetDlgItem(hwndDlg, IDC_OPT_COMBO_USERS), CB_ADDSTRING, 0, (LPARAM)value), hContact);
 							mir_free(value);
 							db_free(&dbvuid);
 						}
@@ -228,7 +228,7 @@ static INT_PTR CALLBACK OptsProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM l
 	return FALSE;
 }
 
-INT OptInit(WPARAM wParam, LPARAM lParam)
+INT OptInit(WPARAM wParam, LPARAM)
 {
 	OPTIONSDIALOGPAGE odp = { sizeof(odp) };
 	odp.position = 100000000;

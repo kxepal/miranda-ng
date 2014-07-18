@@ -21,7 +21,7 @@ fichier
 [URL]
 Lien
 [Update URL every]
-Màj toutes les 
+Màj toutes les
 [Intervals]
 Intervalle
 [If the protocol timer is disabled web pages won't be updated]
@@ -37,7 +37,7 @@ Autres réglages
 [Link]
 Lien
 [Program parameters:]
-Paramètres:
+Paramètres :
 [O&pen File]
 Ouvrir &fichier
 [O&pen Folder]
@@ -47,7 +47,7 @@ Ouvrir &répertoire
 [Contact list settings]
 Options de la liste de contacts
 [Group:]
-Groupe:
+Groupe :
 [Status Icon]
 Icône d'état
 [Group\\Sub-Group]
@@ -63,7 +63,7 @@ Sauf si le protocole Non-IM est Hors ligne
 [Timer Intervals.  ]
 
 [Dialog]
-
+Dialogue
 [Away as another status]
 
 [Disable timer]
@@ -100,8 +100,6 @@ Faire un ligne
 
 [Help]
 Aide
-[OK]
-OK
 [Copy / Export contact]
 Copier/Exporter le contact
 [&Export Non-IM Contact]
@@ -111,7 +109,7 @@ Copier/Exporter le contact
 [Type one replace string per line in the format "original text,new text"]
 
 [EXAMPLE: %fn1,%fn2]
-EXEMPLE: %fn1,%fn2
+EXEMPLE : %fn1,%fn2
 ;file \plugins\Non-IM Contact\src\contactinfo.cpp
 [Select Folder]
 Sélectionnez un répertoire

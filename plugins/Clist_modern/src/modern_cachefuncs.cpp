@@ -204,8 +204,8 @@ void CSmileyString::ReplaceSmileys(struct SHORTDATA *dat, ClcCacheEntry *pdnce, 
 	if (dat->text_use_protocol_smileys) {
 		sp.Protocolname = pdnce->m_cache_cszProto;
 
-		if ( db_get_b(NULL,"CLC","Meta",SETTING_USEMETAICON_DEFAULT) != 1 && pdnce->m_cache_cszProto != NULL && g_szMetaModuleName && strcmp(pdnce->m_cache_cszProto, g_szMetaModuleName) == 0) {
-			MCONTACT hContact = (MCONTACT)CallService(MS_MC_GETMOSTONLINECONTACT, (LPARAM)pdnce->hContact, 0);
+		if (db_get_b(NULL,"CLC","Meta",SETTING_USEMETAICON_DEFAULT) != 1 && pdnce->m_cache_cszProto != NULL && strcmp(pdnce->m_cache_cszProto, META_PROTO) == 0) {
+			MCONTACT hContact = db_mc_getMostOnline(pdnce->hContact);
 			if (hContact != 0)
 				sp.Protocolname = GetContactProto(hContact);
 		}
@@ -290,16 +290,16 @@ int GetStatusName(TCHAR *text, int text_size, ClcCacheEntry *pdnce, BOOL xstatus
 	BOOL noAwayMsg = FALSE;
 	BOOL noXstatus = FALSE;
 	// Hide status text if Offline  /// no offline
-	WORD nStatus = pdnce___GetStatus( pdnce );
+	WORD nStatus = pdnce___GetStatus(pdnce);
 	if ((nStatus == ID_STATUS_OFFLINE || nStatus == 0) && g_CluiData.bRemoveAwayMessageForOffline) noAwayMsg = TRUE;
 	if (nStatus == ID_STATUS_OFFLINE || nStatus == 0) noXstatus = TRUE;
 	text[0] = '\0';
 	// Get XStatusName
-	if (!noAwayMsg &&  !noXstatus &&  xstatus_has_priority && pdnce->hContact && pdnce->m_cache_cszProto) {
-		DBVARIANT dbv = {0};
+	if (!noAwayMsg && !noXstatus &&  xstatus_has_priority && pdnce->hContact && pdnce->m_cache_cszProto) {
+		DBVARIANT dbv = { 0 };
 		if (!db_get_ts(pdnce->hContact, pdnce->m_cache_cszProto, "XStatusName", &dbv)) {
 			//lstrcpyn(text, dbv.pszVal, text_size);
-			CopySkipUnprintableChars(text, dbv.ptszVal, text_size-1);
+			CopySkipUnprintableChars(text, dbv.ptszVal, text_size - 1);
 			db_free(&dbv);
 
 			if (text[0] != '\0')
@@ -316,9 +316,9 @@ int GetStatusName(TCHAR *text, int text_size, ClcCacheEntry *pdnce, BOOL xstatus
 
 	// Get XStatusName
 	if (!noAwayMsg && !noXstatus && !xstatus_has_priority && pdnce->hContact && pdnce->m_cache_cszProto) {
-		DBVARIANT dbv = {0};
+		DBVARIANT dbv = { 0 };
 		if (!db_get_ts(pdnce->hContact, pdnce->m_cache_cszProto, "XStatusName", &dbv)) {
-			CopySkipUnprintableChars(text, dbv.ptszVal, text_size-1);
+			CopySkipUnprintableChars(text, dbv.ptszVal, text_size - 1);
 			db_free(&dbv);
 
 			if (text[0] != '\0')
@@ -333,17 +333,17 @@ int GetStatusName(TCHAR *text, int text_size, ClcCacheEntry *pdnce, BOOL xstatus
 * Get Listening to information
 */
 
-void GetListeningTo(TCHAR *text, int text_size,  ClcCacheEntry *pdnce)
+void GetListeningTo(TCHAR *text, int text_size, ClcCacheEntry *pdnce)
 {
-	DBVARIANT dbv = {0};
-	WORD wStatus = pdnce___GetStatus( pdnce );
+	DBVARIANT dbv = { 0 };
+	WORD wStatus = pdnce___GetStatus(pdnce);
 	text[0] = _T('\0');
 
 	if (wStatus == ID_STATUS_OFFLINE || wStatus == 0)
 		return;
 
 	if (!db_get_ts(pdnce->hContact, pdnce->m_cache_cszProto, "ListeningTo", &dbv)) {
-		CopySkipUnprintableChars(text, dbv.ptszVal, text_size-1);
+		CopySkipUnprintableChars(text, dbv.ptszVal, text_size - 1);
 		db_free(&dbv);
 	}
 }
@@ -353,11 +353,11 @@ void GetListeningTo(TCHAR *text, int text_size,  ClcCacheEntry *pdnce)
 *  -1 for XStatus, 1 for Status
 */
 
-int GetStatusMessage(TCHAR *text, int text_size,  ClcCacheEntry *pdnce, BOOL xstatus_has_priority)
+int GetStatusMessage(TCHAR *text, int text_size, ClcCacheEntry *pdnce, BOOL xstatus_has_priority)
 {
-	DBVARIANT dbv = {0};
+	DBVARIANT dbv = { 0 };
 	BOOL noAwayMsg = FALSE;
-	WORD wStatus = pdnce___GetStatus( pdnce );
+	WORD wStatus = pdnce___GetStatus(pdnce);
 	text[0] = '\0';
 	// Hide status text if Offline  /// no offline
 
@@ -367,7 +367,7 @@ int GetStatusMessage(TCHAR *text, int text_size,  ClcCacheEntry *pdnce, BOOL xst
 		// Try to get XStatusMsg
 		if (!db_get_ts(pdnce->hContact, pdnce->m_cache_cszProto, "XStatusMsg", &dbv)) {
 			//lstrcpyn(text, dbv.pszVal, text_size);
-			CopySkipUnprintableChars(text, dbv.ptszVal, text_size-1);
+			CopySkipUnprintableChars(text, dbv.ptszVal, text_size - 1);
 			db_free(&dbv);
 
 			if (text[0] != '\0')
@@ -379,7 +379,7 @@ int GetStatusMessage(TCHAR *text, int text_size,  ClcCacheEntry *pdnce, BOOL xst
 	if (pdnce->hContact && text[0] == '\0') {
 		if (!db_get_ts(pdnce->hContact, "CList", "StatusMsg", &dbv)) {
 			//lstrcpyn(text, dbv.pszVal, text_size);
-			CopySkipUnprintableChars(text, dbv.ptszVal, text_size-1);
+			CopySkipUnprintableChars(text, dbv.ptszVal, text_size - 1);
 			db_free(&dbv);
 
 			if (text[0] != '\0')
@@ -392,7 +392,7 @@ int GetStatusMessage(TCHAR *text, int text_size,  ClcCacheEntry *pdnce, BOOL xst
 		// Try to get XStatusMsg
 		if (!db_get_ts(pdnce->hContact, pdnce->m_cache_cszProto, "XStatusMsg", &dbv)) {
 			//lstrcpyn(text, dbv.pszVal, text_size);
-			CopySkipUnprintableChars(text, dbv.ptszVal, text_size-1);
+			CopySkipUnprintableChars(text, dbv.ptszVal, text_size - 1);
 			db_free(&dbv);
 
 			if (text[0] != '\0')
@@ -517,9 +517,9 @@ void Cache_GetFirstLineText(ClcData *dat, ClcContact *contact)
 		return;
 
 	ClcCacheEntry *pdnce = pcli->pfnGetCacheEntry(contact->hContact);
-	TCHAR *name = pcli->pfnGetContactDisplayName(contact->hContact,0);
+	TCHAR *name = pcli->pfnGetContactDisplayName(contact->hContact, 0);
 	if (dat->first_line_append_nick && (!dat->force_in_dialog)) {
-		DBVARIANT dbv = {0};
+		DBVARIANT dbv = { 0 };
 		if (!db_get_ts(pdnce->hContact, pdnce->m_cache_cszProto, "Nick", &dbv)) {
 			TCHAR nick[SIZEOF(contact->szText)];
 			lstrcpyn(nick, dbv.ptszVal, SIZEOF(contact->szText));
@@ -537,8 +537,8 @@ void Cache_GetFirstLineText(ClcData *dat, ClcContact *contact)
 	else lstrcpyn(contact->szText, name, SIZEOF(contact->szText));
 
 	if (!dat->force_in_dialog) {
-		struct SHORTDATA data = {0};
-		Sync(CLUI_SyncGetShortData,(WPARAM)pcli->hwndContactTree,(LPARAM)&data);
+		struct SHORTDATA data = { 0 };
+		Sync(CLUI_SyncGetShortData, (WPARAM)pcli->hwndContactTree, (LPARAM)&data);
 		contact->ssText.ReplaceSmileys(&data, pdnce, contact->szText, dat->first_line_draw_smileys);
 	}
 }
@@ -604,7 +604,7 @@ void Cache_GetThirdLineText(struct SHORTDATA *dat, ClcCacheEntry *pdnce)
 
 void RemoveTag(TCHAR *to, TCHAR *tag)
 {
-	TCHAR * st = to;
+	TCHAR *st = to;
 	int len = (int)_tcslen(tag);
 	int lastsize = (int)_tcslen(to)+1;
 	while (st = _tcsstr(st,tag)) {
@@ -685,7 +685,7 @@ static BOOL ExecuteOnAllContactsOfGroup(ClcGroup *group, ExecuteOnAllContactsFun
 				for (int i=0 ; i < group->cl.items[scanIndex]->SubAllocated ; i++)
 					if (!func(&group->cl.items[scanIndex]->subcontacts[i], TRUE, param))
 						return FALSE;
-			}
+		}
 		}
 		else if (group->cl.items[scanIndex]->type == CLCIT_GROUP)
 			if (!ExecuteOnAllContactsOfGroup(group->cl.items[scanIndex]->group, func, param))

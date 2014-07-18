@@ -8,70 +8,70 @@
 [Tool Tip notification windows.]
 
 ;file \plugins\TipperYM\res\resource.rc
-[Options]
-Paramètres
 [Layout]
 Disposition
 [Text indent:]
 
-[Window]
-Fenêtre
-[Max width:]
-Largeur max :
-[Max height:]
-Hauteur max :
-[Avatar size:]
+[Title indent:]
 
-[Show if list not focused]
-Afficher si liste couverte
+[Value indent:]
+
 [General padding:]
 Remplissage général :
-[Hover time:]
+[Text padding:]
 
-[Status bar tips]
-Barre de popup d'états
+[Outer avatar padding:]
+
+[Inner avatar padding:]
+
 [Alignment]
 Alignement
 [Labels:]
 Nom :
 [Values:]
 Valeur :
+[Window]
+Fenêtre
+[Max width:]
+Largeur max :
 [Min width:]
 Largeur mini :
+[Max height:]
+Hauteur max :
 [Min height:]
 Hauteur mini :
+[Avatar size:]
+
 [Sidebar width:]
 
-[Text padding:]
+[Hover time:]
 
-[Outer avatar padding:]
+[Show if list not focused]
+Afficher si liste couverte
+[Options]
+Paramètres
+[Show title]
+Voir le titre
+[Status bar tips]
+Barre de popup d'états
+[Avatar border]
 
 [Round corners (avatar)]
 
 [Keep original avatar size]
 Conserver la taille de l'avatar
-[Avatar border]
-
-[Title indent:]
-
-[Value indent:]
-
-[Inner avatar padding:]
-
 [Substitution]
 
 [Label:]
 
-[Contact protocol module]
-
 [Module:]
 Module :
+[Contact protocol module]
+
 [Setting or prefix:]
 
 [Translation:]
 Traduction :
-[OK]
-OK
 [Cancel]
 Annuler
 [Item]
@@ -104,25 +104,27 @@ Bas
 Éditer
 [Separator]
 Séparateur
-[Advanced options]
-Options avancées
-[Retrieve XStatus details if auto-retrieve is disabled]
-
 [Extra icons]
 Icônes d'accès rapide
 [Smileys support]
 
 [Enable SmileyAdd support]
 Activer le support de SmileyAdd
-[Resize smileys]
-Redimensionner les avatars
 [Use protocol smileys]
 
+[Resize smileys]
+Redimensionner les avatars
 [Replace only isolated smileys]
+
+[Advanced options]
+Options avancées
+[Show tooltip after all content is ready (avatar && status message)]
 
 [Retrieve new status message]
 
-[Show tooltip after all content is ready (avatar && status message)]
+[Disable in invisible status]
+
+[Retrieve XStatus details if auto-retrieve is disabled]
 
 [Status bar and tray tooltip]
 
@@ -130,49 +132,47 @@ Redimensionner les avatars
 
 [characters]
 caractères
-[Disable in invisible status]
-
 [Skins]
 Skins
-[Opacity (%):]
+[Reload skin list]
 
-[Transparency]
+[Apply skin]
 
-[Effects]
-Effets
-[Border]
-Bordures
-[Shadow]
-
-[Round corners (window)]
-
-[Aero Glass (Vista+)]
-
-[Animation speed:]
+[Get more skins]
 
 [Preview]
 Aperçu
 [No preview]
 
-[Skin option]
+[Effects]
+Effets
+[Animation speed:]
 
-[Load fonts and colors]
+[Shadow]
+
+[Border]
+Bordures
+[Round corners (window)]
+
+[Skin option]
 
 [Enable skin coloring]
 
-[Reload skin list]
-
-[Apply skin]
-
 [Load tooltip proportions]
 
-[Get more skins]
+[Load fonts and colors]
+
+[Transparency]
+
+[Opacity (%):]
+
+[Aero Glass (Vista+)]
 
 [Enable tray tooltips]
 
 [Handle tray tooltips by Tipper]
 
-[Favorite contacts]
+[Hide offline protocols]
 
 [Expand to second level after:]
 
@@ -182,7 +182,7 @@ ms
 
 [Second level tooltip]
 
-[Hide offline protocols]
+[Favorite contacts]
 
 [Hide offline]
 
@@ -206,14 +206,12 @@ Ajouter
 
 [Move down]
 
+[No icon]
+Sans icône
 [Icon on left]
 
 [Icon on right]
 
-[No icon]
-Sans icône
-[No title]
-Sans titre
 [Bottom right]
 
 [Bottom left]
@@ -280,7 +278,7 @@ E-mails non-lus
 [Extra status]
 
 [Listening to]
-
+Écoute
 [Miranda uptime]
 
 [Contact list event]
@@ -303,11 +301,11 @@ E-mails non-lus
 [Unread emails:]
 
 [Status:]
-
+État :
 [Status message:]
 Message d'état :
 [Mood:]
-
+Humeur :
 [XStatus:]
 
 [Activity:]
@@ -357,10 +355,6 @@ Page web :
 Inactif
 [Idle:]
 Inactivité :
-[IP]
-
-[IP:]
-
 [IP internal]
 
 [IP internal:]
@@ -452,13 +446,20 @@ Aurore :
 [[weather.dll] Visibility]
 
 [Visibility:]
-
+Visibilité :
 [[weather.dll] Wind]
 
 [Wind:]
 
 ;file \plugins\TipperYM\src\skin_parser.cpp
 [# Solid color fill]
+
+;file \plugins\TipperYM\src\subst.cpp
+[%dd %dh %dm]
+
+[%dh %dm]
+
+[%dm]
 
 ;file \plugins\TipperYM\src\tipper.cpp
 [Background]
@@ -482,6 +483,10 @@ Valeurs
 Femme
 [Male]
 Homme
+[%dy %dd %dh %dm]
+
+[%dd]
+
 [[No translation]]
 
 [WORD to status description]
@@ -496,7 +501,7 @@ Homme
 
 [WORD to country name]
 
-[DWORD to ip address]
+[DWORD to IP address]
 
 [<prefix>Day|Month|Year to date]
 
@@ -530,9 +535,9 @@ Homme
 
 ;file \plugins\TipperYM\src\translations.h
 [Afrikaans]
-
+Afrikaans
 [Albanian]
-
+Albanais
 [Arabic]
 Arabe
 [Armenian]
@@ -546,9 +551,9 @@ Arabe
 [Bosnian]
 
 [Bulgarian]
-
+Bulgare
 [Burmese]
-
+Birman
 [Cantonese]
 
 [Catalan]
@@ -556,31 +561,31 @@ Arabe
 [Chamorro]
 
 [Chinese]
-
+Chinois
 [Croatian]
-
+Croate
 [Czech]
-
+Tchèque
 [Danish]
-
+Danois
 [Dutch]
 
 [English]
-
+Anglais
 [Esperanto]
-
+Esperanto
 [Estonian]
-
+Estonien
 [Farsi]
 
 [Finnish]
-
+Finnois
 [French]
-
+Français
 [Gaelic]
 
 [German]
-
+Allemand
 [Greek]
 Grecque
 [Gujarati]
@@ -588,15 +593,15 @@ Grecque
 [Hebrew]
 Hébreux
 [Hindi]
-
+Hindi
 [Hungarian]
-
+Hongrois
 [Icelandic]
-
+Islandais
 [Indonesian]
-
+Indonésien
 [Italian]
-
+Italien
 [Japanese]
 Japonais
 [Khmer]
@@ -604,51 +609,51 @@ Japonais
 [Korean]
 Coréen
 [Kurdish]
-
+Kurde
 [Lao]
 
 [Latvian]
-
+Letton
 [Lithuanian]
-
+Lituanien
 [Macedonian]
-
+Macédonien
 [Malay]
-
+Malais
 [Mandarin]
 
 [Mongolian]
-
+Mongol
 [Norwegian]
-
+Norvégien
 [Persian]
-
+Perse
 [Polish]
-
+Polonais
 [Portuguese]
-
+Portugais
 [Punjabi]
 
 [Romanian]
-
+Roumain
 [Russian]
-
+Russe
 [Serbo-Croatian]
 
 [Sindhi]
 
 [Slovak]
-
+Slovaque
 [Slovenian]
-
+Slovène
 [Somali]
-
+Somali
 [Spanish]
 
 [Swahili]
 
 [Swedish]
-
+Suédois
 [Tagalog]
 
 [Taiwanese]
@@ -662,7 +667,7 @@ Thaïlandais
 [Turkish]
 Turque
 [Ukrainian]
-
+Ukrainien
 [Urdu]
 
 [Vietnamese]
@@ -670,7 +675,7 @@ Vietnamien
 [Welsh]
 
 [Yiddish]
-
+Yiddish
 [Yoruba]
 
 [Sunday]

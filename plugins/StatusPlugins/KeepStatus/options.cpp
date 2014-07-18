@@ -306,7 +306,7 @@ static INT_PTR CALLBACK DlgProcKsTabs(HWND hwndDlg, UINT msg, WPARAM wParam, LPA
 		break;
 
 	case KS_ISENABLED:
-		SetWindowLongPtr(hwndDlg, DWLP_MSGRESULT, (LPARAM)IsDlgButtonChecked(hBasicTab, wParam));
+		SetWindowLongPtr(hwndDlg, DWLP_MSGRESULT, (LONG_PTR)IsDlgButtonChecked(hBasicTab, wParam));
 		return TRUE;
 
 	case PSM_CHANGED:
@@ -390,14 +390,14 @@ INT_PTR CALLBACK PopupOptDlgProc(HWND hwndDlg,UINT msg,WPARAM wParam,LPARAM lPar
 			break;
 		}
 		// delay
-		EnableWindow(GetDlgItem(hwndDlg, IDC_DELAYCUSTOM), ServiceExists(MS_POPUP_ADDPOPUP));
-		EnableWindow(GetDlgItem(hwndDlg, IDC_DELAYFROMPU), ServiceExists(MS_POPUP_ADDPOPUP));
-		EnableWindow(GetDlgItem(hwndDlg, IDC_DELAYPERMANENT), ServiceExists(MS_POPUP_ADDPOPUP));
-		EnableWindow(GetDlgItem(hwndDlg, IDC_DELAY), ServiceExists(MS_POPUP_ADDPOPUP));
+		EnableWindow(GetDlgItem(hwndDlg, IDC_DELAYCUSTOM), ServiceExists(MS_POPUP_ADDPOPUPT));
+		EnableWindow(GetDlgItem(hwndDlg, IDC_DELAYFROMPU), ServiceExists(MS_POPUP_ADDPOPUPT));
+		EnableWindow(GetDlgItem(hwndDlg, IDC_DELAYPERMANENT), ServiceExists(MS_POPUP_ADDPOPUPT));
+		EnableWindow(GetDlgItem(hwndDlg, IDC_DELAY), ServiceExists(MS_POPUP_ADDPOPUPT));
 		switch ( db_get_b(NULL, MODULENAME, SETTING_POPUP_DELAYTYPE, POPUP_DELAYFROMPU)) {
 		case POPUP_DELAYCUSTOM:
 			CheckDlgButton(hwndDlg, IDC_DELAYCUSTOM, BST_CHECKED);
-			EnableWindow(GetDlgItem(hwndDlg, IDC_DELAY), ServiceExists(MS_POPUP_ADDPOPUP));
+			EnableWindow(GetDlgItem(hwndDlg, IDC_DELAY), ServiceExists(MS_POPUP_ADDPOPUPT));
 			break;
 
 		case POPUP_DELAYPERMANENT:
