@@ -129,10 +129,8 @@ void CSteamProto::ParsePollData(JSONNODE *data)
 
 					//RaiseAuthRequestThread((void*)hContact);
 
-					ptrA token(getStringA("ApiToken"));
-
 					PushRequest(
-						new SteamWebApi::GetUserSummariesRequest(token, steamId),
+						new SteamWebApi::GetPlayerSummariesRequest(steamId),
 						&CSteamProto::OnAuthRequested,
 						mir_strdup(steamId));
 				}
@@ -158,11 +156,10 @@ void CSteamProto::ParsePollData(JSONNODE *data)
 	if (!steamIds.empty())
 	{
 		steamIds.pop_back();
-		ptrA token(getStringA("ApiToken"));
 
 		PushRequest(
-			new SteamWebApi::GetUserSummariesRequest(token, steamIds.c_str()),
-			&CSteamProto::OnGotUserSummaries);
+			new SteamWebApi::GetPlayerSummariesRequest(steamIds.c_str()),
+			&CSteamProto::OnGotPlayerSummaries);
 	}
 }
 
@@ -170,7 +167,7 @@ void CSteamProto::PollingThread(void*)
 {
 	debugLogA("CSteamProto::PollingThread: entering");
 
-	ptrA token(getStringA("ApiToken"));
+	ptrA token(getStringA("TokenApi"));
 	ptrA umqId(getStringA("UMQID"));
 	UINT32 messageId = getDword("MessageID", 0);
 

@@ -57,13 +57,8 @@ MCONTACT __cdecl CSteamProto::AddToList(int flags, PROTOSEARCHRESULT* psr)
 	{
 		if (!FindContact(steamId))
 		{
-			//hContact = AddContact(steamId, true);
-			//ForkThread(&CSteamProto::UpdateContactsThread, (void*)mir_strdup(steamId));
-
-			ptrA token(getStringA("TokenSecret"));
-
 			PushRequest(
-				new SteamWebApi::GetUserSummariesRequest(token, steamId),
+				new SteamWebApi::GetPlayerSummariesRequest(steamId),
 				&CSteamProto::OnGotUserSummaries);
 		}
 	}
@@ -215,13 +210,10 @@ HANDLE __cdecl CSteamProto::SearchBasic(const TCHAR* id)
 	if (!this->IsOnline())
 		return 0;
 
-	//ForkThread(&CSteamProto::SearchByIdThread, mir_wstrdup(id));
-
-	ptrA token(getStringA("TokenSecret"));
 	ptrA steamId(mir_u2a(id));
 
 	PushRequest(
-		new SteamWebApi::GetUserSummariesRequest(token, steamId),
+		new SteamWebApi::GetPlayerSummariesRequest(steamId),
 		&CSteamProto::OnSearchByIdEnded,
 		mir_wstrdup(id));
 

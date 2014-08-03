@@ -180,20 +180,21 @@ void CSteamProto::OnAuthorization(const NETLIBHTTPREQUEST *response, void *arg)
 	ptrA steamId(mir_u2a(json_as_string(node)));
 	setString("SteamID", steamId);
 
+	node = json_get(root, "auth");
+	ptrA auth(mir_u2a(json_as_string(node)));
+	setString("TokenAuth", auth);
+
 	node = json_get(root, "token");
 	ptrA token(mir_u2a(json_as_string(node)));
 	setString("TokenSecret", token);
 
-	node = json_get(root, "auth");
-	ptrA auth(mir_u2a(json_as_string(node)));
-	setString("AuthToken", auth);
+	node = json_get(root, "token_secure");
+	ptrA tokenSecure(mir_u2a(json_as_string(node)));
+	setString("TokenSecure", tokenSecure);
 
 	node = json_get(root, "webcookie");
 	ptrA webcookie(mir_u2a(json_as_string(node)));
 	setString("WebCookie", webcookie);
-
-	delSetting("Timestamp");
-	delSetting("EncryptedPassword");
 
 	PushRequest(
 		new SteamWebApi::TransferRequest(token, steamId, auth, webcookie),
@@ -231,7 +232,7 @@ void CSteamProto::OnGotSession(const NETLIBHTTPREQUEST *response, void *arg)
 	ptrA steamId(getStringA("SteamID"));
 
 	PushRequest(
-		new SteamWebApi::GetChatRequest(token, steamId, sessionId.c_str()),
+		new SteamWebApi::GetChatPageRequest(token, steamId, sessionId.c_str()),
 		&CSteamProto::OnGotChatPage);
 }
 
@@ -243,11 +244,12 @@ void CSteamProto::OnGotChatPage(const NETLIBHTTPREQUEST *response, void *arg)
 
 	const std::string content = response->pData;
 
-	if (std::regex_search(content, match, regex)) {
+	if (std::regex_search(content, match, regex))
+	{
 		chatToken = match[1];
-		setString("ApiToken", chatToken.c_str());
+		setString("TokenApi", chatToken.c_str());
 	}
-	
+
 	PushRequest(
 		new SteamWebApi::LogonRequest(chatToken.c_str()),
 		&CSteamProto::OnLoggedOn);
@@ -261,9 +263,6 @@ void CSteamProto::OnLoggedOn(const NETLIBHTTPREQUEST *response, void *arg)
 	ptrW error(json_as_string(node));
 	if (lstrcmpi(error, L"OK")/* || response->resultCode == HTTP_STATUS_UNAUTHORIZED*/)
 	{
-		//delSetting("TokenSecret");
-		//delSetting("Cookie");
-
 		// set status to offline
 		m_iStatus = m_iDesiredStatus = ID_STATUS_OFFLINE;
 		ProtoBroadcastAck(NULL, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)ID_STATUS_CONNECTING, ID_STATUS_OFFLINE);
@@ -277,11 +276,10 @@ void CSteamProto::OnLoggedOn(const NETLIBHTTPREQUEST *response, void *arg)
 	setDword("MessageID", json_as_int(node));
 
 	// load contact list
-	ptrA token(getStringA("ApiToken"));
 	ptrA steamId(getStringA("SteamID"));
 
 	PushRequest(
-		new SteamWebApi::GetFriendListRequest(token, steamId),
+		new SteamWebApi::GetFriendListRequest(steamId),
 		&CSteamProto::OnGotFriendList);
 
 	// start polling thread

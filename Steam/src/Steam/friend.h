@@ -3,13 +3,13 @@
 
 namespace SteamWebApi
 {
-	class GetUserSummariesRequest : public HttpsGetRequest
+	class GetPlayerSummariesRequest : public HttpsGetRequest
 	{
 	public:
-		GetUserSummariesRequest(const char *token, const char *steamIds) :
-			HttpsGetRequest(STEAM_API_URL "/ISteamUserOAuth/GetUserSummaries/v0001")
+		GetPlayerSummariesRequest(const char *steamIds) :
+			HttpsGetRequest(STEAM_API_URL "/ISteamUser/GetPlayerSummaries/v0002")
 		{
-			AddParameter("access_token", token);
+			AddParameter("key", STEAM_API_KEY);
 			AddParameter("steamids", steamIds);
 		}
 	};

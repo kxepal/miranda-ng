@@ -8,6 +8,8 @@ namespace SteamWebApi
 	#define STEAM_API_URL "https://api.steampowered.com"
 	#define STEAM_WEB_URL "https://steamcommunity.com"
 
+	#include "..\..\..\miranda-private-keys\Steam\api_key.h"
+
 	class HttpRequest : protected NETLIBHTTPREQUEST, public MZeroedObject
 	{
 	protected:

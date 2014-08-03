@@ -55,9 +55,10 @@ void CSteamProto::StopQueue()
 	ptrA token(getStringA("ApiToken"));
 	ptrA umqid(getStringA("UMQID"));
 
-	mir_ptr<SteamWebApi::HttpRequest> request(new SteamWebApi::LogoffRequest(token, umqid));
+	SteamWebApi::HttpRequest* request = new SteamWebApi::LogoffRequest(token, umqid);
 	NETLIBHTTPREQUEST *response = request->Send(m_hNetlibUser);
 	CallService(MS_NETLIB_FREEHTTPREQUESTSTRUCT, 0, (LPARAM)response);
+	delete request;
 
 	m_hQueueThread = NULL;
 }

@@ -3,10 +3,10 @@
 
 namespace SteamWebApi
 {
-	class GetChatRequest : public HttpGetRequest
+	class GetChatPageRequest : public HttpGetRequest
 	{
 	public:
-		GetChatRequest(const char *token, const char *steamId, const char *sessionId) :
+		GetChatPageRequest(const char *token, const char *steamId, const char *sessionId) :
 			HttpGetRequest(STEAM_WEB_URL "/chat")
 		{
 			char login[MAX_PATH];
@@ -16,15 +16,6 @@ namespace SteamWebApi
 			mir_snprintf(cookie, SIZEOF(cookie), "steamLogin=%s; sessionid=%s; forceMobile=0", login, sessionId);
 
 			AddHeader("Cookie", cookie);
-		}
-	};
-
-	class GetFriendStateRequest : public HttpsGetRequest
-	{
-	public:
-		GetFriendStateRequest(const char *steamId) :
-			HttpsGetRequest(STEAM_WEB_URL "chat/friendstate/%s", steamId)
-		{
 		}
 	};
 }

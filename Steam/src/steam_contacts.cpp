@@ -189,7 +189,7 @@ void CSteamProto::OnGotFriendList(const NETLIBHTTPREQUEST *response, void *arg)
 
 	std::string steamIds;
 
-	node = json_get(root, "friends");
+	node = json_get(json_get(root, "friendslist"), "friends");
 	root = json_as_array(node);
 	if (root != NULL)
 	{
@@ -213,11 +213,11 @@ void CSteamProto::OnGotFriendList(const NETLIBHTTPREQUEST *response, void *arg)
 			ptrA relationship(mir_u2a(json_as_string(node)));
 			/*if (!lstrcmpiA(relationship, "friend"))
 			{
-				if (!FindContact(steamId))
-				{
-					AddContact(steamId);
-					steamIds.append(steamId).append(",");
-				}
+			if (!FindContact(steamId))
+			{
+			AddContact(steamId);
+			steamIds.append(steamId).append(",");
+			}
 			}
 			else */if (!lstrcmpiA(relationship, "ignoredfriend"))
 			{
@@ -236,11 +236,10 @@ void CSteamProto::OnGotFriendList(const NETLIBHTTPREQUEST *response, void *arg)
 	if (!steamIds.empty())
 	{
 		steamIds.pop_back();
-		ptrA token(getStringA("ApiToken"));
 
 		PushRequest(
-			new SteamWebApi::GetUserSummariesRequest(token, steamIds.c_str()),
-			&CSteamProto::OnGotUserSummaries);
+			new SteamWebApi::GetPlayerSummariesRequest(steamIds.c_str()),
+			&CSteamProto::OnGotPlayerSummaries);
 	}
 }
 
@@ -285,11 +284,11 @@ void CSteamProto::OnGotBlockList(const NETLIBHTTPREQUEST *response, void *arg)
 	}
 }
 
-void CSteamProto::OnGotUserSummaries(const NETLIBHTTPREQUEST *response, void *arg)
+void CSteamProto::OnGotPlayerSummaries(const NETLIBHTTPREQUEST *response, void *arg)
 {
 	JSONNODE *root = json_parse(response->pData), *node, *item;
 
-	node = json_get(root, "players");
+	node = json_get(json_get(root, "response"), "players");
 	root = json_as_array(node);
 	if (root != NULL)
 	{
