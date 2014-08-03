@@ -74,7 +74,10 @@ void CSteamProto::ParsePollData(JSONNODE *data)
 			
 			MCONTACT hContact = FindContact(steamId);
 			if (hContact == NULL)
+			{
 				hContact = AddContact(steamId);
+				steamIds.append(steamId).append(",");
+			}
 
 			setWord(hContact, "Status", status);
 
@@ -82,7 +85,7 @@ void CSteamProto::ParsePollData(JSONNODE *data)
 			setWString(hContact, "Nick", json_as_string(node));
 
 			// todo: find difference between state changing and info changing
-			steamIds.append(steamId).append(",");
+			//steamIds.append(steamId).append(",");
 		}
 		else if (!lstrcmpi(type, L"personarelationship"))
 		{

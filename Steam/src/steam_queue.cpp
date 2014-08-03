@@ -19,7 +19,7 @@ void CSteamProto::StartQueue()
 
 	if (m_hQueueThread == NULL)
 	{
-		ptrA token(getStringA("ApiToken"));
+		ptrA token(getStringA("TokenApi"));
 		if (token && lstrlenA(token) > 0)
 		{
 			PushRequest(

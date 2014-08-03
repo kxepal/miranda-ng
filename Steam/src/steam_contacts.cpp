@@ -137,9 +137,9 @@ void CSteamProto::UpdateContact(MCONTACT hContact, JSONNODE *data)
 		}
 		else
 		{
-			node = json_get(data, "personastate");
+			/*node = json_get(data, "personastate");
 			WORD status = SteamToMirandaStatus(json_as_int(node));
-			setWord(hContact, "Status", status);
+			setWord(hContact, "Status", status);*/
 
 			db_unset(hContact, "CList", "StatusMsg");
 			delSetting(hContact, "GameID");

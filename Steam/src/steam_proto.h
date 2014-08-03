@@ -209,7 +209,7 @@ protected:
 
 	void OnGotFriendList(const NETLIBHTTPREQUEST *response, void *arg);
 	void OnGotBlockList(const NETLIBHTTPREQUEST *response, void *arg);
-	void OnGotUserSummaries(const NETLIBHTTPREQUEST *response, void *arg);
+	void OnGotPlayerSummaries(const NETLIBHTTPREQUEST *response, void *arg);
 	void OnGotAvatar(const NETLIBHTTPREQUEST *response, void *arg);
 
 	void OnFriendAdded(const NETLIBHTTPREQUEST *response, void *arg);

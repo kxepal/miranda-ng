@@ -59,7 +59,7 @@ MCONTACT __cdecl CSteamProto::AddToList(int flags, PROTOSEARCHRESULT* psr)
 		{
 			PushRequest(
 				new SteamWebApi::GetPlayerSummariesRequest(steamId),
-				&CSteamProto::OnGotUserSummaries);
+				&CSteamProto::OnGotPlayerSummaries);
 		}
 	}
 	else if (psr->cbSize == sizeof(STEAM_SEARCH_RESULT))
@@ -288,7 +288,7 @@ int __cdecl CSteamProto::SendMsg(MCONTACT hContact, int flags, const char *msg)
 
 	//ForkThread(&CSteamProto::SendMessageThread, param);
 
-	ptrA token(getStringA("TokenSecret"));
+	ptrA token(getStringA("TokenApi"));
 	ptrA umqid(getStringA("UMQID"));
 	ptrA steamId(getStringA(hContact, "SteamID"));
 
@@ -316,9 +316,6 @@ int CSteamProto::SetStatus(int new_status)
 
 	if (new_status == ID_STATUS_OFFLINE)
 	{
-		//isTerminated = true;
-		//ForkThread(&CSteamProto::LogOutThread, NULL);
-
 		m_iStatus = m_iDesiredStatus = ID_STATUS_OFFLINE;
 		ProtoBroadcastAck(NULL, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)old_status, m_iStatus);
 
@@ -332,7 +329,6 @@ int CSteamProto::SetStatus(int new_status)
 		m_iStatus = ID_STATUS_CONNECTING;
 		ProtoBroadcastAck(NULL, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)old_status, m_iStatus);
 
-		//ForkThread(&CSteamProto::LogInThread, NULL);
 		StartQueue();
 	}
 
