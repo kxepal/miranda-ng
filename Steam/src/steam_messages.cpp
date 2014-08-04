@@ -19,11 +19,14 @@ void CSteamProto::OnMessageSent(const NETLIBHTTPREQUEST *response, void *arg)
 
 	bool result = false;
 
-	ptrA steamId((char*)arg);
+	ptrA steamId(getStringA(param->hContact, "SteamID"));
 
 	if (response != NULL && response->resultCode == HTTP_STATUS_OK)
 	{
-		JSONNODE *root = json_parse(response->pData), *node;
+		std::string json = strchr(response->pData, '(') + 1;
+		json.erase(json.end() - 1);
+
+		JSONNODE *root = json_parse(json.c_str()), *node;
 
 		node = json_get(root, "error");
 		ptrA error(mir_utf8encodeW(json_as_string(node)));

@@ -23,7 +23,8 @@ void CSteamProto::ParsePollData(JSONNODE *data)
 			!lstrcmpi(type, L"my_saytext") || !lstrcmpi(type, L"my_emote"))
 		{
 			node = json_get(item, "text");
-			const wchar_t *text = json_as_string(node);
+			wchar_t *uText = json_as_string(node);
+			char *text = mir_utf8encodeW(uText);
 
 			if (_tcsstr(type, L"my_") == NULL)
 			{
@@ -33,7 +34,7 @@ void CSteamProto::ParsePollData(JSONNODE *data)
 					PROTORECVEVENT recv = { 0 };
 					recv.flags = PREF_UTF;
 					recv.timestamp = timestamp;
-					recv.szMessage = mir_utf8encodeW(text);
+					recv.szMessage = text;
 
 					ProtoChainRecvMsg(hContact, &recv);
 				}
@@ -42,7 +43,7 @@ void CSteamProto::ParsePollData(JSONNODE *data)
 			{
 				MCONTACT hContact = FindContact(steamId);
 				if (hContact)
-					AddDBEvent(hContact, EVENTTYPE_MESSAGE, timestamp, DBEF_UTF | DBEF_SENT, lstrlen(text), (BYTE*)mir_utf8encodeW(text));
+					AddDBEvent(hContact, EVENTTYPE_MESSAGE, timestamp, DBEF_UTF | DBEF_SENT, strlen(text), (BYTE*)text);
 			}
 		}
 		/*else if (!lstrcmpi(type, L"typing"))
@@ -178,7 +179,7 @@ void CSteamProto::PollingThread(void*)
 	bool breaked = false;
 	while (!isTerminated && !breaked)
 	{
-		SteamWebApi::PollRequest *request  = new SteamWebApi::PollRequest(m_pollingConnection, token, umqId, messageId);
+		SteamWebApi::PollRequest *request = new SteamWebApi::PollRequest(m_pollingConnection, token, umqId, messageId);
 		NETLIBHTTPREQUEST *response = request->Send(m_hNetlibUser);
 		delete request;
 

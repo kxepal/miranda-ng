@@ -135,7 +135,7 @@ namespace SteamWebApi
 			this->HttpRequest::HttpRequest(REQUEST_POST, urlFormat, args);
 			va_end(args);
 
-			AddHeader("Content-Type", "application/x-www-form-urlencoded");
+			AddHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
 		}
 	};
 
@@ -145,7 +145,7 @@ namespace SteamWebApi
 		HttpsRequest() : HttpRequest() { }
 
 	public:
-		HttpsRequest(int type, LPCSTR urlFormat, ...) : HttpsRequest()
+		HttpsRequest(int type, LPCSTR urlFormat, ...) : HttpRequest()
 		{
 			va_list args;
 			va_start(args, urlFormat);
@@ -178,7 +178,7 @@ namespace SteamWebApi
 			this->HttpRequest::HttpRequest(REQUEST_POST, urlFormat, args);
 			va_end(args);
 
-			AddHeader("Content-Type", "application/x-www-form-urlencoded");
+			AddHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
 		}
 	};
 }
