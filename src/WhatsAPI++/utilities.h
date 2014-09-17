@@ -78,9 +78,6 @@ namespace Utilities{
 	std::vector<unsigned char>* getChallengeData(const std::string& file);
 	bool saveChallengeData(const std::vector<unsigned char>& data, const std::string& file);
 	std::string utf8_to_utf16(const std::string& utf8);
-	std::string string_format(const std::string fmt, ...);
-	std::string string_format(const std::string fmt, va_list ap);
-	std::string string_format(const char* fmt, va_list ap);
 }
 #endif
 
