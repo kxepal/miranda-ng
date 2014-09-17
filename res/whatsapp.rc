@@ -159,12 +159,6 @@ IDI_CHANGE_GROUP_SUBJECT ICON                    "change-group-subject.ico"
 IDI_LEAVE_GROUP         ICON                    "leave-group.ico"
 IDI_REMOVE_USER_FROM_GROUP ICON                    "remove-user-from-group.ico"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// BIN
-//
-
-IDR_REGISTERUTILITY     BIN                     "WART-1.7.1.0.exe"
 #endif    // German (Germany) resources
 /////////////////////////////////////////////////////////////////////////////
 
