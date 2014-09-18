@@ -2,7 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by d:\miranda-ng\protocols\WhatsApp\res\whatsapp.rc
 //
-#define IDD_WHATSAPPACCOUNT             101
 #define IDD_INPUTBOX                    102
 #define IDR_REGISTERUTILITY             103
 #define IDD_WHATSAPOPTIONS              104

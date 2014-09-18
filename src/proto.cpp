@@ -201,7 +201,6 @@ string WhatsAppProto::Register(int state, const string &cc, const string &number
 	}
 
 	debugLogA("Server response: %s", pnlhr->pData);
-	MessageBoxA(NULL, pnlhr->pData, "Debug", MB_OK);
 
 	JSONROOT resp(pnlhr->pData);
 	if (resp == NULL) {
@@ -250,7 +249,7 @@ string WhatsAppProto::Register(int state, const string &cc, const string &number
 
 INT_PTR WhatsAppProto::SvcCreateAccMgrUI(WPARAM wParam, LPARAM lParam)
 {
-	return (INT_PTR)CreateDialogParam(g_hInstance, MAKEINTRESOURCE(IDD_WHATSAPPACCOUNT),
+	return (INT_PTR)CreateDialogParam(g_hInstance, MAKEINTRESOURCE(IDD_WHATSAPOPTIONS),
 		(HWND)lParam, WhatsAppAccountProc, (LPARAM)this);
 }
 

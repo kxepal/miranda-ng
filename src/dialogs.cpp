@@ -29,16 +29,13 @@ INT_PTR CALLBACK WhatsAppAccountProc(HWND hwnd, UINT message, WPARAM wparam, LPA
 			db_free(&dbv);
 		}
 
-		if (!db_get_s(0, proto->ModuleName(), WHATSAPP_KEY_PASS, &dbv, DBVT_ASCIIZ)) {
-			SetDlgItemTextA(hwnd, IDC_PW, dbv.pszVal);
-			db_free(&dbv);
-		}
+		EnableWindow(GetDlgItem(hwnd, IDC_PW), FALSE);
 
 		if (!proto->isOffline()) {
-			SendMessage(GetDlgItem(hwnd, IDC_CC), EM_SETREADONLY, 1, 0);
-			SendMessage(GetDlgItem(hwnd, IDC_LOGIN), EM_SETREADONLY, 1, 0);
-			SendMessage(GetDlgItem(hwnd, IDC_NICK), EM_SETREADONLY, 1, 0);
-			SendMessage(GetDlgItem(hwnd, IDC_PW), EM_SETREADONLY, 1, 0);
+			SendDlgItemMessage(hwnd, IDC_CC, EM_SETREADONLY, 1, 0);
+			SendDlgItemMessage(hwnd, IDC_LOGIN, EM_SETREADONLY, 1, 0);
+			SendDlgItemMessage(hwnd, IDC_NICK, EM_SETREADONLY, 1, 0);
+			SendDlgItemMessage(hwnd, IDC_PW, EM_SETREADONLY, 1, 0);
 			EnableWindow(GetDlgItem(hwnd, IDC_SSL), FALSE);
 		}
 

@@ -56,27 +56,10 @@ public:
 
 std::string getLastErrorMsg();
 
-void UnixTimeToFileTime(time_t t, LPFILETIME pft);
-
 namespace utils
 {
-	namespace debug
-	{
-		int log(std::string file_name, std::string text);
-	};
-
-	namespace conversion
-	{
-		DWORD to_timestamp(std::string data);
-	};
-
-	namespace text
-	{
-		std::string source_get_value(std::string* data, unsigned int argument_count, ...);
-	};
-
 	BYTE* md5string(const BYTE*, int, BYTE* digest);
-	__forceinline BYTE* md5string(const std::string& str, BYTE* digest)
+	__forceinline BYTE* md5string(const std::string &str, BYTE* digest)
 	{
 		return md5string((BYTE*)str.data(), (int)str.length(), digest);
 	}
