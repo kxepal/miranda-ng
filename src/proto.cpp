@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "WhatsAPI++\WARegister.h"
+
 WhatsAppProto::WhatsAppProto(const char* proto_name, const TCHAR* username) :
 	PROTO<WhatsAppProto>(proto_name, username)
 {
@@ -148,12 +150,12 @@ HANDLE WhatsAppProto::SearchBasic(const PROTOCHAR* id)
 
 static NETLIBHTTPHEADER s_registerHeaders[] =
 {
-	{ "User-Agent", ACCOUNT_USER_AGENT_REGISTRATION },
+	{ "User-Agent", ACCOUNT_USER_AGENT },
 	{ "Accept", "text/json" },
 	{ "Content-Type", "application/x-www-form-urlencoded" }
 };
 
-string WhatsAppProto::Register(int state, string cc, string number, string code)
+string WhatsAppProto::Register(int state, const string &cc, const string &number, const string &code)
 {
 	string idx;
 	string ret;
@@ -178,22 +180,13 @@ string WhatsAppProto::Register(int state, string cc, string number, string code)
 		setString(WHATSAPP_KEY_IDX, idx.c_str());
 	}
 
-	string url;
-	if (state == REG_STATE_REQ_CODE) {
-		unsigned char digest[16];
-		utils::md5string(std::string(ACCOUNT_TOKEN_PREFIX1) + ACCOUNT_TOKEN_PREFIX2 + number, digest);
-		url = string(ACCOUNT_URL_CODEREQUESTV2);
-		url += "?lc=US&lg=en&mcc=000&mnc=000&method=sms&token=" + Utilities::bytesToHex(digest, 16);
-	}
-	else if (state == REG_STATE_REG_CODE) {
-		url = string(ACCOUNT_URL_REGISTERREQUESTV2);
-		url += "?code=" + code;
-	}
-	url += "&cc=" + cc + "&in=" + number + "&id=" + idx;
+	CMStringA url = WARegister::RequestCodeUrl(cc + number, code);
+	if (url.IsEmpty())
+		return ret;
 
 	NETLIBHTTPREQUEST nlhr = { sizeof(NETLIBHTTPREQUEST) };
 	nlhr.requestType = REQUEST_POST;
-	nlhr.szUrl = (char*)url.c_str();
+	nlhr.szUrl = url.GetBuffer();
 	nlhr.headers = s_registerHeaders;
 	nlhr.headersCount = SIZEOF(s_registerHeaders);
 	nlhr.flags = NLHRF_HTTP11 | NLHRF_GENERATEHOST | NLHRF_REMOVEHOST | NLHRF_SSL;
@@ -230,16 +223,18 @@ string WhatsAppProto::Register(int state, string cc, string number, string code)
 			CMString tmp(FORMAT, TranslateT("Please try again in %i seconds"), json_as_int(tmpVal));
 			this->NotifyEvent(ptszTitle, tmp, NULL, WHATSAPP_EVENT_OTHER);
 		}
+		return ret;
 	}
 
 	//  Request code
-	else if (state == REG_STATE_REQ_CODE) {
+	if (state == REG_STATE_REQ_CODE) {
 		if (!lstrcmp(ptrT(json_as_string(val)), _T("sent")))
 			this->NotifyEvent(ptszTitle, TranslateT("Registration code has been sent to your phone."), NULL, WHATSAPP_EVENT_OTHER);
+		return "ok";
 	}
 
 	// Register
-	else if (state == REG_STATE_REG_CODE) {
+	if (state == REG_STATE_REG_CODE) {
 		val = json_get(resp, "pw");
 		if (val == NULL)
 			this->NotifyEvent(ptszTitle, TranslateT("Registration failed."), NULL, WHATSAPP_EVENT_CLIENT);
@@ -247,7 +242,6 @@ string WhatsAppProto::Register(int state, string cc, string number, string code)
 			ret = _T2A(ptrT(json_as_string(val)));
 	}
 
-	json_delete(resp);
 	return ret;
 }
 

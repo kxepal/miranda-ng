@@ -13,10 +13,10 @@ struct PhoneNumber
 	PhoneNumber(const std::string &number);
 
 	std::string Country;
-	std::string CC;
 	std::string Number;
 	
 	const char *ISO3166, *ISO639;
+	int countryCode;
 	int mcc, mnc;
 };
 

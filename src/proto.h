@@ -118,15 +118,15 @@ public:
 	void __cdecl SendCreateGroupWorker(void*);
 
 	// Contacts handling
-	MCONTACT AddToContactList(const std::string& jid, BYTE type = 0, bool dont_check = false,
+	MCONTACT AddToContactList(const std::string &jid, BYTE type = 0, bool dont_check = false,
 		const char *new_name = NULL, bool isChatRoom = false, bool isHidden = false);
 	bool     IsMyContact(MCONTACT hContact, bool include_chat = false);
 	MCONTACT ContactIDToHContact(const std::string&);
 	void     SetAllContactStatuses(int status, bool reset_client = false);
 	void     UpdateStatusMsg(MCONTACT hContact);
-	TCHAR*   GetContactDisplayName(const string& jid);
+	TCHAR*   GetContactDisplayName(const string &jid);
 	void     InitContactMenus();
-	void     HandleReceiveGroups(const std::vector<string>& groups, bool isOwned);
+	void     HandleReceiveGroups(const std::vector<string> &groups, bool isOwned);
 
 	bool IsGroupChat(MCONTACT hC, bool checkIsAdmin = false)
 	{
@@ -134,7 +134,7 @@ public:
 	}
 
 	// Registration
-	string Register(int state, string cc, string number, string code);
+	string Register(int state, const string &cc, const string &number, const string &code);
 
 	// Helpers
 	std::tstring GetAvatarFolder();

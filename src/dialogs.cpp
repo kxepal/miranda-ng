@@ -10,8 +10,7 @@ INT_PTR CALLBACK WhatsAppAccountProc(HWND hwnd, UINT message, WPARAM wparam, LPA
 
 		proto = reinterpret_cast<WhatsAppProto*>(lparam);
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, lparam);
-		SendDlgItemMessage(hwnd, IDC_REG_CODE_1, EM_LIMITTEXT, 3, 0);
-		SendDlgItemMessage(hwnd, IDC_REG_CODE_2, EM_LIMITTEXT, 3, 0);
+		SendDlgItemMessage(hwnd, IDC_PW, EM_LIMITTEXT, 6, 0);
 		CheckDlgButton(hwnd, IDC_SSL, db_get_b(NULL, proto->ModuleName(), WHATSAPP_KEY_SSL, 0));
 		DBVARIANT dbv;
 
@@ -57,17 +56,16 @@ INT_PTR CALLBACK WhatsAppAccountProc(HWND hwnd, UINT message, WPARAM wparam, LPA
 			if (LOWORD(wparam) == IDC_BUTTON_REQUEST_CODE) {
 				if (MessageBox(NULL, TranslateT("An SMS with registration-code will be sent to your mobile phone.\nNotice that you are not able to use the real WhatsApp and this plugin simultaneously!\nContinue?"),
 					PRODUCT_NAME, MB_YESNO) == IDYES) {
-					proto->Register(REG_STATE_REQ_CODE, string(cc), string(number), string());
+					string res = proto->Register(REG_STATE_REQ_CODE, string(cc), string(number), string());
+					if (!res.empty())
+						EnableWindow(GetDlgItem(hwnd, IDC_PW), TRUE);
 				}
 			}
 			else if (LOWORD(wparam) == IDC_BUTTON_REGISTER) {
-				char code[7];
-				if (SendDlgItemMessage(hwnd, IDC_REG_CODE_1, WM_GETTEXTLENGTH, 0, 0) == 3 &&
-					SendDlgItemMessage(hwnd, IDC_REG_CODE_2, WM_GETTEXTLENGTH, 0, 0) == 3) {
-					GetDlgItemTextA(hwnd, IDC_REG_CODE_1, code, 4);
-					GetDlgItemTextA(hwnd, IDC_REG_CODE_2, &(code[3]), 4);
-				}
-				else {
+				char code[100];
+				GetDlgItemTextA(hwnd, IDC_PW, code, sizeof(code));
+
+				if (strlen(code) != 6) {
 					MessageBox(NULL, TranslateT("Please correctly specify your registration code received by SMS"),
 						PRODUCT_NAME, MB_ICONEXCLAMATION);
 					return TRUE;
@@ -107,10 +105,6 @@ INT_PTR CALLBACK WhatsAppAccountProc(HWND hwnd, UINT message, WPARAM wparam, LPA
 			db_set_s(0, proto->ModuleName(), WHATSAPP_KEY_NICK, str);
 
 			db_set_b(0, proto->ModuleName(), WHATSAPP_KEY_SSL, IsDlgButtonChecked(hwnd, IDC_SSL));
-
-			GetDlgItemTextA(hwnd, IDC_PW, str, sizeof(str));
-			db_set_s(0, proto->ModuleName(), WHATSAPP_KEY_PASS, str);
-
 			return TRUE;
 		}
 		break;

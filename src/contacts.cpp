@@ -113,10 +113,7 @@ MCONTACT WhatsAppProto::ContactIDToHContact(const std::string& phoneNumber)
 	const char* idForContact = "ID";
 	const char* idForChat = "ChatRoomID";
 
-	for (MCONTACT hContact = db_find_first(); hContact; hContact = db_find_next(hContact)) {
-		if (!IsMyContact(hContact, true))
-			continue;
-
+	for (MCONTACT hContact = db_find_first(m_szModuleName); hContact; hContact = db_find_next(hContact, m_szModuleName)) {
 		const char* id = isChatRoom(hContact) ? idForChat : idForContact;
 
 		DBVARIANT dbv;
@@ -136,8 +133,8 @@ MCONTACT WhatsAppProto::ContactIDToHContact(const std::string& phoneNumber)
 
 void WhatsAppProto::SetAllContactStatuses(int status, bool reset_client)
 {
-	for (MCONTACT hContact = db_find_first(); hContact; hContact = db_find_next(hContact)) {
-		if (!IsMyContact(hContact))
+	for (MCONTACT hContact = db_find_first(m_szModuleName); hContact; hContact = db_find_next(hContact, m_szModuleName)) {
+		if (isChatRoom(hContact))
 			continue;
 
 		if (reset_client) {
@@ -160,8 +157,8 @@ void WhatsAppProto::ProcessBuddyList(void*)
 {
 	std::vector<std::string> jids;
 	DBVARIANT dbv;
-	for (MCONTACT hContact = db_find_first(); hContact; hContact = db_find_next(hContact)) {
-		if (!IsMyContact(hContact))
+	for (MCONTACT hContact = db_find_first(m_szModuleName); hContact; hContact = db_find_next(hContact, m_szModuleName)) {
+		if (isChatRoom(hContact))
 			continue;
 
 		if (!getString(hContact, WHATSAPP_KEY_ID, &dbv)) {
@@ -537,13 +534,11 @@ INT_PTR __cdecl WhatsAppProto::OnRemoveContactFromGroup(WPARAM wParam, LPARAM, L
 
 void WhatsAppProto::onOwningGroups(const std::vector<string>& paramVector)
 {
-	
 	this->HandleReceiveGroups(paramVector, true);
 }
 
 void WhatsAppProto::onParticipatingGroups(const std::vector<string>& paramVector)
 {
-	
 	this->HandleReceiveGroups(paramVector, false);
 }
 
@@ -567,8 +562,8 @@ void WhatsAppProto::HandleReceiveGroups(const std::vector<string>& groups, bool 
 
 	// Mark as non-meber if group only exists locally
 	if (!isOwned)
-		for (hContact = db_find_first(); hContact; hContact = db_find_next(hContact))
-			if (IsMyContact(hContact) && getByte(hContact, "SimpleChatRoom", 0) > 0)
+		for (hContact = db_find_first(m_szModuleName); hContact; hContact = db_find_next(hContact, m_szModuleName))
+			if (!isChatRoom(hContact) && getByte(hContact, "SimpleChatRoom", 0) > 0)
 				setByte(hContact, "IsGroupMember", isMember.find(hContact) == isMember.end() ? 0 : 1);
 }
 
@@ -584,7 +579,6 @@ void WhatsAppProto::onGroupCreated(const std::string& paramString1, const std::s
 // Menu-handler
 INT_PTR __cdecl WhatsAppProto::OnCreateGroup(WPARAM wParam, LPARAM lParam)
 {
-	
 	input_box* ib = new input_box;
 	ib->defaultValue = _T("");
 	ib->limit = WHATSAPP_GROUP_NAME_LIMIT;
@@ -592,8 +586,7 @@ INT_PTR __cdecl WhatsAppProto::OnCreateGroup(WPARAM wParam, LPARAM lParam)
 	ib->text = _T("Enter group subject");
 	ib->title = _T("WhatsApp - Create Group");
 	ib->thread = &WhatsAppProto::SendCreateGroupWorker;
-	HWND hDlg = CreateDialogParam(g_hInstance, MAKEINTRESOURCE(IDD_INPUTBOX), 0, WhatsAppInputBoxProc,
-		reinterpret_cast<LPARAM>(ib));
+	HWND hDlg = CreateDialogParam(g_hInstance, MAKEINTRESOURCE(IDD_INPUTBOX), 0, WhatsAppInputBoxProc, LPARAM(ib));
 	ShowWindow(hDlg, SW_SHOW);
 	return FALSE;
 }
@@ -621,12 +614,11 @@ void __cdecl WhatsAppProto::SendCreateGroupWorker(void* data)
 		this->connection->sendCreateGroupChat(groupName);
 }
 
-INT_PTR __cdecl WhatsAppProto::OnChangeGroupSubject(WPARAM wParam, LPARAM lParam)
+INT_PTR __cdecl WhatsAppProto::OnChangeGroupSubject(WPARAM hContact, LPARAM lParam)
 {
-	DBVARIANT dbv;
-	MCONTACT hContact = MCONTACT(wParam);
 	input_box* ib = new input_box;
 
+	DBVARIANT dbv;
 	if (getTString(hContact, WHATSAPP_KEY_PUSH_NAME, &dbv))
 		ib->defaultValue = _T("");
 	else {
@@ -636,22 +628,19 @@ INT_PTR __cdecl WhatsAppProto::OnChangeGroupSubject(WPARAM wParam, LPARAM lParam
 	ib->limit = WHATSAPP_GROUP_NAME_LIMIT;
 	ib->text = _T("Enter new group subject");
 	ib->title = _T("WhatsApp - Change Group Subject");
-
 	ib->thread = &WhatsAppProto::SendSetGroupNameWorker;
 	ib->proto = this;
 	MCONTACT *hContactPtr = new MCONTACT(hContact);
 	ib->userData = (void*)hContactPtr;
 
-	HWND hDlg = CreateDialogParam(g_hInstance, MAKEINTRESOURCE(IDD_INPUTBOX), 0, WhatsAppInputBoxProc,
-		reinterpret_cast<LPARAM>(ib));
+	HWND hDlg = CreateDialogParam(g_hInstance, MAKEINTRESOURCE(IDD_INPUTBOX), 0, WhatsAppInputBoxProc, LPARAM(ib));
 	ShowWindow(hDlg, SW_SHOW);
 	return 0;
 }
 
-INT_PTR __cdecl WhatsAppProto::OnLeaveGroup(WPARAM wParam, LPARAM)
+INT_PTR __cdecl WhatsAppProto::OnLeaveGroup(WPARAM hContact, LPARAM)
 {
 	DBVARIANT dbv;
-	MCONTACT hContact = MCONTACT(wParam);
 	if (this->isOnline() && !getString(hContact, WHATSAPP_KEY_ID, &dbv)) {
 		setByte(hContact, "IsGroupMember", 0);
 		this->connection->sendLeaveGroup(dbv.pszVal);

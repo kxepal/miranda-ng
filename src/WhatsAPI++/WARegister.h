@@ -15,8 +15,9 @@ struct WAToken
 class WARegister
 {
 	static std::string GenerateIdentity(const std::string &phone);
-	
-	static CMStringA RequestCodeUrl(const std::string &phone);
+
+public:
+	static CMStringA RequestCodeUrl(const std::string &phone, const std::string &code);
 };
 
 #endif /* WAREGISTER_H_ */

@@ -9,11 +9,13 @@
 struct CountryDescr
 {
 	char *name;
-	int i1, mcc, mnc;
+	int countryCode, mcc, mnc;
 	char *ISO3166, *ISO639;
 }
 static countries[] =
 {
+	{ "Russia", 7, 250, 20, "RU", "ru" },
+	{ "Kazakhstan", 7, 401, 77, "KZ", "kk" },
 	{ "Afghanistan", 93, 412, 1, "AF", "ps" },
 	{ "Albania", 355, 276, 1, "AL", "sq" },
 	{ "Alberta", 1403, 302, 720, "CA", "en" },
@@ -124,7 +126,6 @@ static countries[] =
 	{ "Jamaica", 1876, 338, 50, "JM", "en" },
 	{ "Japan", 81, 440, 1, "JP", "ja" },
 	{ "Jordan", 962, 416, 77, "JO", "ar" },
-	{ "Kazakhstan", 7, 401, 77, "KZ", "kk" },
 	{ "Kenya", 254, 639, 7, "KE", "sw" },
 	{ "Kiribati", 686, 545, 1, "KI", "en" },
 	{ "Kuwait", 965, 419, 4, "KW", "ar" },
@@ -206,7 +207,6 @@ static countries[] =
 	{ "Quebec", 1819, 302, 720, "CA", "en" },
 	{ "Reunion", 262, 647, 0, "RE", "fr" },
 	{ "Romania", 40, 226, 1, "RO", "ro" },
-	{ "Russia", 7, 250, 20, "RU", "ru" },
 	{ "Rwanda", 250, 635, 10, "RW", "rw" },
 	{ "Saint-Barthelemy", 590, 340, 1, "BL", "fr" },
 	{ "Saint Helena", 290, 658, 1, "SH", "en" },
@@ -272,16 +272,20 @@ static countries[] =
 
 PhoneNumber::PhoneNumber(const std::string &szNumber)
 {
-	int i1 = atoi(szNumber.substr(0, 2).c_str()), i2 = atoi(szNumber.substr(0, 2).c_str()), i3 = atoi(szNumber.substr(0, 2).c_str());
+	int cc1 = atoi(szNumber.substr(0, 1).c_str()), cc2 = atoi(szNumber.substr(0, 2).c_str()), cc3 = atoi(szNumber.substr(0, 3).c_str());
 
 	for (int i = 0; i < _countof(countries); i++) {
 		CountryDescr &p = countries[i];
-		if (p.i1 != i1 && p.i1 != i2 && p.i1 != i3)
+		if (p.countryCode != cc1 && p.countryCode != cc2 && p.countryCode != cc3)
 			continue;
 
+		if (p.countryCode == 7)
+			if (i == 0 && (cc2 == '77' || cc2 == '76'))
+				continue;
+
 		this->Country = p.name;
-		this->CC = p.i1;
-		this->Number = szNumber.substr(CC.length());
+		this->countryCode = p.countryCode;
+		this->Number = szNumber.substr(1 + (size_t)floor(log10(double(p.countryCode))));
 		this->ISO3166 = p.ISO3166;
 		this->ISO639 = p.ISO639;
 		this->mcc = p.mcc;
