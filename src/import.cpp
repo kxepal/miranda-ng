@@ -199,7 +199,7 @@ void CopySettings(MCONTACT srcID, const char *szSrcModule, MCONTACT dstID, const
 
 static HWND hwndList, hwndCombo;
 
-static INT_PTR CALLBACK ComboWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+static LRESULT CALLBACK ComboWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (uMsg == WM_KILLFOCUS && LPARAM(hwnd) == lParam) {
 		DestroyWindow(hwnd);
@@ -208,7 +208,7 @@ static INT_PTR CALLBACK ComboWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 	return mir_callNextSubclass(hwnd, ComboWndProc, uMsg, wParam, lParam);
 }
 
-static INT_PTR CALLBACK ListWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+static LRESULT CALLBACK ListWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (uMsg == WM_LBUTTONDOWN) {
 		long x = (long)LOWORD(lParam), y = (long)HIWORD(lParam);
