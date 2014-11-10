@@ -195,6 +195,116 @@ void CopySettings(MCONTACT srcID, const char *szSrcModule, MCONTACT dstID, const
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
+// accounts matcher dialog
+
+static HWND hwndList, hwndCombo;
+
+static INT_PTR CALLBACK ComboWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	if (uMsg == WM_KILLFOCUS && LPARAM(hwnd) == lParam) {
+		DestroyWindow(hwnd);
+		hwndCombo = 0;
+	}
+	return mir_callNextSubclass(hwnd, ComboWndProc, uMsg, wParam, lParam);
+}
+
+static INT_PTR CALLBACK ListWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	if (uMsg == WM_LBUTTONDOWN) {
+		long x = (long)LOWORD(lParam), y = (long)HIWORD(lParam);
+
+		LVHITTESTINFO itemclicked;
+		itemclicked.pt.x = x;
+		itemclicked.pt.y = y;
+		int lResult = ListView_SubItemHitTest(hwnd, &itemclicked);
+		if (lResult != -1) {
+			RECT r;
+			ListView_GetSubItemRect(hwnd, itemclicked.iItem, itemclicked.iSubItem, LVIR_BOUNDS, &r);
+
+			hwndCombo = CreateWindowEx(WS_EX_CLIENTEDGE, WC_COMBOBOX, _T(""), WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | CBS_SORT,
+				r.left, r.top, r.right - r.left, r.bottom - r.top, hwnd, 0, GetModuleHandle(NULL), NULL);
+
+			SendMessage(hwndCombo, CB_ADDSTRING, 0, (LPARAM)TranslateT("<New account>"));
+
+			int protoCount;
+			PROTOACCOUNT **accs;
+			ProtoEnumAccounts(&protoCount, &accs);
+
+			for (int i = 0; i < protoCount; i++) {
+				int idx = SendMessage(hwndCombo, CB_ADDSTRING, 0, (LPARAM)accs[i]->tszAccountName);
+				SendMessage(hwndCombo, CB_SETITEMDATA, idx, (LPARAM)accs[i]);
+			}
+
+			SetFocus(hwndCombo);
+			mir_subclassWindow(hwndCombo, ComboWndProc);
+		}
+		else SendMessage(hwndCombo, WM_KILLFOCUS, 0, (LPARAM)hwndCombo);
+	}
+
+	return mir_callNextSubclass(hwnd, ListWndProc, uMsg, wParam, lParam);
+}
+
+static INT_PTR CALLBACK AccountsMatcherProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg) {
+	case WM_INITDIALOG:
+		TranslateDialogDefault(hwndDlg);
+		hwndList = GetDlgItem(hwndDlg, IDC_LIST);
+		{
+			LVCOLUMN col = { 0 };
+			col.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_FMT | LVCF_SUBITEM;
+			col.fmt = LVCFMT_LEFT;
+			col.cx = 100;
+			col.pszText = TranslateT("Old account");
+			ListView_InsertColumn(hwndList, 0, &col);
+
+			col.iSubItem = 1;
+			col.pszText = TranslateT("New account");
+			ListView_InsertColumn(hwndList, 1, &col);
+
+			LVITEMA lvi = { 0 };
+			lvi.mask = LVIF_TEXT | LVIF_PARAM;
+			for (int i = 0; i < arAccountMap.getCount(); i++) {
+				AccountMap &p = arAccountMap[i];
+				lvi.pszText = p.szSrcAcc;
+				lvi.lParam = (LPARAM)&p;
+				int idx = SendMessageA(hwndList, LVM_INSERTITEMA, 0, (LPARAM)&lvi);
+
+				lvi.iSubItem = 1;
+				lvi.pszText = p.szDstAcc;
+				SendMessageA(hwndList, LVM_SETITEMTEXTA, 0, (LPARAM)&lvi);
+			}
+			mir_subclassWindow(hwndList, ListWndProc);
+		}
+		return TRUE;
+
+	case WM_COMMAND:
+		if (HIWORD(wParam) != BN_CLICKED)
+			break;	// Only clicks of buttons are relevant, let other COMMANDs through
+
+		switch (LOWORD(wParam)) {
+		case IDOK:
+		case IDCANCEL:
+			DestroyWindow(hwndDlg);
+		}
+		break;
+
+	case WM_NOTIFY:
+		LPNMHDR hdr = (LPNMHDR)lParam;
+		if (hdr->idFrom != IDC_LIST)
+			break;
+
+		switch (hdr->code) {
+		case LVN_ITEMCHANGED:
+		case LVN_ITEMACTIVATE:
+			;
+		}
+	}
+
+	return FALSE;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
 
 static bool FindDestAccount(const char *szProto)
 {
@@ -317,6 +427,8 @@ void ImportAccounts()
 
 		CopySettings(NULL, szProto, NULL, pa->szModuleName);
 	}
+
+	DialogBox(hInst, MAKEINTRESOURCE(IDD_ACCMERGE), NULL, AccountsMatcherProc);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
