@@ -96,7 +96,7 @@ INT_PTR CALLBACK MirandaPageProc(HWND hwndDlg,UINT message,WPARAM wParam,LPARAM 
 				MessageBox(hwndDlg, TranslateT("The given file does not exist. Please check that you have entered the name correctly."), TranslateT("Miranda Import"), MB_OK);
 				break;
 			}
-			lstrcpy(importFile, filename);
+			mir_tstrcpy(importFile, filename);
 			PostMessage(GetParent(hwndDlg), WIZM_GOTOPAGE, IDD_OPTIONS, (LPARAM)MirandaOptionsPageProc);
 			break;
 
