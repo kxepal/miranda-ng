@@ -76,7 +76,7 @@ INT_PTR CALLBACK MirandaPageProc(HWND hwndDlg,UINT message,WPARAM wParam,LPARAM 
 
 			SearchForLists(hwndDlg, pfd2, pfn);
 			SearchForLists(hwndDlg, pfd1, NULL);
-			if (lstrcmpi(pfd, pfd2))
+			if (mir_tstrcmpi(pfd, pfd2))
 				SearchForLists(hwndDlg, pfd, NULL);
 		}
 		SendDlgItemMessage(hwndDlg, IDC_LIST, LB_SETCURSEL, 0, 0);

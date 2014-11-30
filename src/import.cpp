@@ -126,7 +126,7 @@ static MCONTACT HContactFromNumericID(char *pszProtoName, char *pszSetting, DWOR
 	for (MCONTACT hContact = dstDb->FindFirstContact(); hContact; hContact = dstDb->FindNextContact(hContact)) {
 		if (db_get_dw(hContact, pszProtoName, pszSetting, 0) == dwID) {
 			char* szProto = GetContactProto(hContact);
-			if (szProto != NULL && !lstrcmpA(szProto, pszProtoName))
+			if (szProto != NULL && !mir_strcmp(szProto, pszProtoName))
 				return hContact;
 		}
 	}
@@ -137,9 +137,9 @@ static MCONTACT HContactFromID(char *pszProtoName, char *pszSetting, TCHAR *pwsz
 {
 	for (MCONTACT hContact = dstDb->FindFirstContact(); hContact; hContact = dstDb->FindNextContact(hContact)) {
 		char *szProto = GetContactProto(hContact);
-		if (!lstrcmpA(szProto, pszProtoName)) {
+		if (!mir_strcmp(szProto, pszProtoName)) {
 			ptrW id(db_get_tsa(hContact, pszProtoName, pszSetting));
-			if (!lstrcmp(pwszID, id))
+			if (!mir_tstrcmp(pwszID, id))
 				return hContact;
 		}
 	}
@@ -334,7 +334,7 @@ static PROTOACCOUNT* FindMyAccount(const char *szProto, const char *szBaseProto,
 			continue;
 
 		// different base protocotol type -> skip
-		if (lstrcmpA(pa->szProtoName, szBaseProto))
+		if (mir_strcmp(pa->szProtoName, szBaseProto))
 			continue;
 
 		// these protocols have no accounts, and their name match -> success
