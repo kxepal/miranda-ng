@@ -26,14 +26,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 struct AccountMap
 {
-	AccountMap(const char *_src, const char *_dst) :
+	AccountMap(const char *_src, const TCHAR *_srcName, PROTOACCOUNT *_dst) :
 		szSrcAcc(mir_strdup(_src)),
-		szDstAcc(mir_strdup(_dst))
+		tszSrcName(mir_tstrdup(_srcName)),
+		szDstAcc(mir_strdup(_dst->szModuleName)),
+		pa(_dst)
 	{}
 
 	~AccountMap() {}
 
 	ptrA szSrcAcc, szDstAcc;
+	ptrT tszSrcName;
+	PROTOACCOUNT *pa;
 };
 
 static int CompareAccs(const AccountMap *p1, const AccountMap *p2)
@@ -198,10 +202,33 @@ void CopySettings(MCONTACT srcID, const char *szSrcModule, MCONTACT dstID, const
 // accounts matcher dialog
 
 static HWND hwndList, hwndCombo;
+static int iPrevIndex = -1;
+
+static void SetAccountName(int idx, PROTOACCOUNT *pa)
+{
+	ListView_SetItemText(hwndList, idx, 1, (pa == NULL) ? TranslateT("<New account>") : pa->tszAccountName);
+}
 
 static LRESULT CALLBACK ComboWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (uMsg == WM_KILLFOCUS && LPARAM(hwnd) == lParam) {
+		if (iPrevIndex != -1) {
+			AccountMap *pMap = (AccountMap*)SendMessage(hwnd, CB_GETITEMDATA, 0, 0);
+
+			int idx = SendMessage(hwnd, CB_GETCURSEL, 0, 0);
+			if (idx == 0) {
+				pMap->tszSrcName = NULL;
+				pMap->pa = NULL;
+			}
+			else {
+				PROTOACCOUNT *pa = (PROTOACCOUNT*)SendMessage(hwnd, CB_GETITEMDATA, idx, 0);
+				pMap->pa = pa;
+				pMap->tszSrcName = mir_tstrdup(pa->tszAccountName);
+			}
+			SetAccountName(iPrevIndex, pMap->pa);
+			iPrevIndex = -1;
+		}
+
 		DestroyWindow(hwnd);
 		hwndCombo = 0;
 	}
@@ -210,45 +237,62 @@ static LRESULT CALLBACK ComboWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 
 static LRESULT CALLBACK ListWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	if (uMsg == WM_LBUTTONDOWN) {
+	switch (uMsg) {
+	case WM_LBUTTONDOWN:
 		long x = (long)LOWORD(lParam), y = (long)HIWORD(lParam);
 
-		LVHITTESTINFO itemclicked;
-		itemclicked.pt.x = x;
-		itemclicked.pt.y = y;
-		int lResult = ListView_SubItemHitTest(hwnd, &itemclicked);
-		if (lResult != -1) {
-			RECT r;
-			ListView_GetSubItemRect(hwnd, itemclicked.iItem, itemclicked.iSubItem, LVIR_LABEL, &r);
-
-			TCHAR tszText[100];
-			ListView_GetItemText(hwnd, itemclicked.iItem, itemclicked.iSubItem, tszText, SIZEOF(tszText));
-
-			hwndCombo = CreateWindowEx(WS_EX_CLIENTEDGE, WC_COMBOBOX, _T(""), WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | CBS_SORT,
-				r.left, r.top, r.right - r.left, r.bottom - r.top, hwnd, 0, hInst, NULL);
-
-			HFONT hFont = (HFONT)SendMessage(hwnd, WM_GETFONT, 0, 0);
-			SendMessage(hwndCombo, WM_SETFONT, (WPARAM)hFont, 0);
-
-			SendMessage(hwndCombo, CB_ADDSTRING, 0, (LPARAM)TranslateT("<New account>"));
-
-			int protoCount, iSel = 0;
-			PROTOACCOUNT **accs;
-			ProtoEnumAccounts(&protoCount, &accs);
-			for (int i = 0; i < protoCount; i++) {
-				int idx = SendMessage(hwndCombo, CB_ADDSTRING, 0, (LPARAM)accs[i]->tszAccountName);
-				SendMessage(hwndCombo, CB_SETITEMDATA, idx, (LPARAM)accs[i]);
-
-				if (!mir_tstrcmpi(accs[i]->tszAccountName, tszText))
-					iSel = idx;
-			}
-
-			SendMessage(hwndCombo, CB_SETCURSEL, iSel, 0);
-
-			SetFocus(hwndCombo);
-			mir_subclassWindow(hwndCombo, ComboWndProc);
+		LVHITTESTINFO hit;
+		hit.pt.x = x;
+		hit.pt.y = y;
+		int lResult = ListView_SubItemHitTest(hwnd, &hit);
+		if (lResult == -1 || hit.iSubItem != 1) {
+			SendMessage(hwndCombo, WM_KILLFOCUS, 0, (LPARAM)hwndCombo);
+			break;
 		}
-		else SendMessage(hwndCombo, WM_KILLFOCUS, 0, (LPARAM)hwndCombo);
+
+		RECT r;
+		ListView_GetSubItemRect(hwnd, hit.iItem, 1, LVIR_BOUNDS, &r);
+		r.top--; r.bottom--;
+
+		TCHAR tszText[100];
+		ListView_GetItemText(hwnd, hit.iItem, 1, tszText, SIZEOF(tszText));
+
+		LVITEM lvitem;
+		lvitem.iItem = hit.iItem;
+		lvitem.iSubItem = 0;
+		lvitem.mask = LVIF_PARAM;
+		ListView_GetItem(hwnd, &lvitem);
+
+		if (hwndCombo != NULL)
+			SendMessage(hwndCombo, WM_KILLFOCUS, 0, (LPARAM)hwndCombo);
+
+		hwndCombo = CreateWindowEx(WS_EX_CLIENTEDGE, WC_COMBOBOX, _T(""), WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST,
+			r.left+3, r.top, r.right - r.left - 3, r.bottom - r.top, hwnd, 0, hInst, NULL);
+
+		// copy a font from listview
+		HFONT hFont = (HFONT)SendMessage(hwnd, WM_GETFONT, 0, 0);
+		SendMessage(hwndCombo, WM_SETFONT, (WPARAM)hFont, 0);
+
+		SendMessage(hwndCombo, CB_ADDSTRING, 0, (LPARAM)TranslateT("<New account>"));
+		SendMessage(hwndCombo, CB_SETITEMDATA, 0, lvitem.lParam);
+
+		int protoCount, iSel = 0;
+		PROTOACCOUNT **accs;
+		ProtoEnumAccounts(&protoCount, &accs);
+		for (int i = 0; i < protoCount; i++) {
+			int idx = SendMessage(hwndCombo, CB_ADDSTRING, 0, (LPARAM)accs[i]->tszAccountName);
+			SendMessage(hwndCombo, CB_SETITEMDATA, idx, (LPARAM)accs[i]);
+
+			if (!mir_tstrcmpi(accs[i]->tszAccountName, tszText))
+				iSel = idx;
+		}
+
+		SendMessage(hwndCombo, CB_SETCURSEL, iSel, 0);
+
+		SetFocus(hwndCombo);
+		mir_subclassWindow(hwndCombo, ComboWndProc);
+
+		iPrevIndex = hit.iItem;
 	}
 
 	return mir_callNextSubclass(hwnd, ListWndProc, uMsg, wParam, lParam);
@@ -272,17 +316,17 @@ static INT_PTR CALLBACK AccountsMatcherProc(HWND hwndDlg, UINT uMsg, WPARAM wPar
 			col.pszText = TranslateT("New account");
 			ListView_InsertColumn(hwndList, 1, &col);
 
-			LVITEMA lvi = { 0 };
+			LVITEM lvi = { 0 };
 			lvi.mask = LVIF_TEXT | LVIF_PARAM;
 			for (int i = 0; i < arAccountMap.getCount(); i++) {
 				AccountMap &p = arAccountMap[i];
-				lvi.pszText = p.szSrcAcc;
+				lvi.iItem = i;
+				lvi.iSubItem = 0;
+				lvi.pszText = p.tszSrcName;
 				lvi.lParam = (LPARAM)&p;
-				int idx = SendMessageA(hwndList, LVM_INSERTITEMA, 0, (LPARAM)&lvi);
+				ListView_InsertItem(hwndList, &lvi);
 
-				lvi.iSubItem = 1;
-				lvi.pszText = p.szDstAcc;
-				SendMessageA(hwndList, LVM_SETITEMTEXTA, 0, (LPARAM)&lvi);
+				SetAccountName(i, p.pa);
 			}
 			mir_subclassWindow(hwndList, ListWndProc);
 		}
@@ -294,8 +338,11 @@ static INT_PTR CALLBACK AccountsMatcherProc(HWND hwndDlg, UINT uMsg, WPARAM wPar
 
 		switch (LOWORD(wParam)) {
 		case IDOK:
+			EndDialog(hwndDlg, IDOK);
+			break;
+
 		case IDCANCEL:
-			DestroyWindow(hwndDlg);
+			EndDialog(hwndDlg, IDCANCEL);
 		}
 		break;
 
@@ -330,7 +377,7 @@ static bool FindDestAccount(const char *szProto)
 	return false;
 }
  
-static PROTOACCOUNT* FindMyAccount(const char *szProto, const char *szBaseProto, const TCHAR *ptszName)
+static PROTOACCOUNT* FindMyAccount(const char *szProto, const char *szBaseProto, const TCHAR *ptszName, bool bStrict)
 {
 	int destProtoCount;
 	PROTOACCOUNT **destAccs;
@@ -376,12 +423,13 @@ static PROTOACCOUNT* FindMyAccount(const char *szProto, const char *szBaseProto,
 		if (bEqual)
 			return pa;
 	}
-	return pProto;
+	return (bStrict) ? NULL : pProto;
 }
 
-void ImportAccounts()
+bool ImportAccounts()
 {
 	int protoCount = myGetD(NULL, "Protocols", "ProtoCount", 0);
+	bool bNeedManualMerge = false;
 
 	for (int i = 0; i < protoCount; i++) {
 		char szSetting[100], szProto[100];
@@ -389,19 +437,28 @@ void ImportAccounts()
 		if (myGetS(NULL, "Protocols", szSetting, szProto))
 			continue;
 
+		itoa(800 + i, szSetting, 10);
+		ptrT tszName(myGetWs(NULL, "Protocols", szSetting));
+
 		// check if it's an account-based proto or an old style proto
 		char szBaseProto[100];
 		if (myGetS(NULL, szProto, "AM_BaseProto", szBaseProto)) {
-			arAccountMap.insert(new AccountMap(szProto, NULL));
+			arAccountMap.insert(new AccountMap(szProto, tszName, NULL));
+			bNeedManualMerge = true;
 			continue;
 		}
 
-		itoa(800+i, szSetting, 10);
-		ptrT tszName(myGetWs(NULL, "Protocols", szSetting));
-
-		PROTOACCOUNT *pa = FindMyAccount(szProto, szBaseProto, tszName);
+		// try the precise match first
+		PROTOACCOUNT *pa = FindMyAccount(szProto, szBaseProto, tszName, true);
 		if (pa) {
-			arAccountMap.insert(new AccountMap(szProto, pa->szModuleName));
+			arAccountMap.insert(new AccountMap(szProto, tszName, pa));
+			continue;
+		}
+
+		// if fail, try to found an account by its name
+		if (pa = FindMyAccount(szProto, szBaseProto, tszName, false)) {
+			arAccountMap.insert(new AccountMap(szProto, tszName, pa));
+			bNeedManualMerge = true;
 			continue;
 		}
 
@@ -417,11 +474,12 @@ void ImportAccounts()
 
 		pa = ProtoCreateAccount(&newacc);
 		if (pa == NULL) {
-			arAccountMap.insert(new AccountMap(szProto, NULL));
+			arAccountMap.insert(new AccountMap(szProto, tszName, NULL));
+			bNeedManualMerge = true;
 			continue;
 		}
 
-		arAccountMap.insert(new AccountMap(szProto, pa->szModuleName));
+		arAccountMap.insert(new AccountMap(szProto, tszName, pa));
 
 		itoa(400 + i, szSetting, 10);
 		int iVal = myGetD(NULL, "Protocols", szSetting, 1);
@@ -438,7 +496,11 @@ void ImportAccounts()
 		CopySettings(NULL, szProto, NULL, pa->szModuleName);
 	}
 
-	DialogBox(hInst, MAKEINTRESOURCE(IDD_ACCMERGE), NULL, AccountsMatcherProc);
+	// all accounts to be converted automatically, no need to raise a dialog
+	if (!bNeedManualMerge)
+		return true;
+	
+	return DialogBox(hInst, MAKEINTRESOURCE(IDD_ACCMERGE), NULL, AccountsMatcherProc) == IDOK;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -667,8 +729,11 @@ void ImportMeta(DBCachedContact *ccSrc)
 		else AddMessage(LPGENT("Added metacontact"));
 	}
 
-	AccountMap pda(META_PROTO, META_PROTO);
-	ImportContactSettings(&pda, ccSrc->contactID, ccDst->contactID);
+	PROTOACCOUNT *pa = ProtoGetAccount(META_PROTO);
+	if (pa) {
+		AccountMap pda(META_PROTO, _T(META_PROTO), pa);
+		ImportContactSettings(&pda, ccSrc->contactID, ccDst->contactID);
+	}
 
 	arContactMap.insert(new ContactMap(ccSrc->contactID, ccDst->contactID));
 }
@@ -921,7 +986,10 @@ void MirandaImport(HWND hdlg)
 	// Start benchmark timer
 	DWORD dwTimer = time(NULL);
 
-	ImportAccounts();
+	if (!ImportAccounts()) {
+		AddMessage(LPGENT("Error mapping accounts, exiting."));
+		return;
+	}
 
 	// Import Groups
 	if (nImportOption == IMPORT_ALL || (nCustomOptions & IOPT_GROUPS)) {
