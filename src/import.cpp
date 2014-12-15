@@ -219,21 +219,31 @@ static LRESULT CALLBACK ListWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 		int lResult = ListView_SubItemHitTest(hwnd, &itemclicked);
 		if (lResult != -1) {
 			RECT r;
-			ListView_GetSubItemRect(hwnd, itemclicked.iItem, itemclicked.iSubItem, LVIR_BOUNDS, &r);
+			ListView_GetSubItemRect(hwnd, itemclicked.iItem, itemclicked.iSubItem, LVIR_LABEL, &r);
+
+			TCHAR tszText[100];
+			ListView_GetItemText(hwnd, itemclicked.iItem, itemclicked.iSubItem, tszText, SIZEOF(tszText));
 
 			hwndCombo = CreateWindowEx(WS_EX_CLIENTEDGE, WC_COMBOBOX, _T(""), WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | CBS_SORT,
-				r.left, r.top, r.right - r.left, r.bottom - r.top, hwnd, 0, GetModuleHandle(NULL), NULL);
+				r.left, r.top, r.right - r.left, r.bottom - r.top, hwnd, 0, hInst, NULL);
+
+			HFONT hFont = (HFONT)SendMessage(hwnd, WM_GETFONT, 0, 0);
+			SendMessage(hwndCombo, WM_SETFONT, (WPARAM)hFont, 0);
 
 			SendMessage(hwndCombo, CB_ADDSTRING, 0, (LPARAM)TranslateT("<New account>"));
 
-			int protoCount;
+			int protoCount, iSel = 0;
 			PROTOACCOUNT **accs;
 			ProtoEnumAccounts(&protoCount, &accs);
-
 			for (int i = 0; i < protoCount; i++) {
 				int idx = SendMessage(hwndCombo, CB_ADDSTRING, 0, (LPARAM)accs[i]->tszAccountName);
 				SendMessage(hwndCombo, CB_SETITEMDATA, idx, (LPARAM)accs[i]);
+
+				if (!mir_tstrcmpi(accs[i]->tszAccountName, tszText))
+					iSel = idx;
 			}
+
+			SendMessage(hwndCombo, CB_SETCURSEL, iSel, 0);
 
 			SetFocus(hwndCombo);
 			mir_subclassWindow(hwndCombo, ComboWndProc);
