@@ -23,15 +23,17 @@ class BinTreeNodeWriter;
 class KeyStream {
 private:
 	RC4_KEY rc4;
+	unsigned char key[20], keyMac[20];
+	int seq;
 	HMAC_CTX hmac;
-	unsigned char* key;
-	int keyLength;
 
 	void hmacsha1(unsigned char* text, int textLength, unsigned char *out);
 
 public:
-	KeyStream(unsigned char* key, size_t keyLegnth);
-	virtual ~KeyStream();
+	KeyStream();
+	~KeyStream();
+
+	void init(unsigned char *_key, unsigned char *_keyMac);
 
 	static void keyFromPasswordAndNonce(const std::string& pass, const std::vector<unsigned char>& nonce, unsigned char *out);
 	void decodeMessage(unsigned char* buffer, int macOffset, int offset, const int length);
@@ -41,36 +43,25 @@ public:
 
 class WALogin {
 private:
-	static const std::string NONCE_KEY;
-	KeyStream* outputKey;
-	WAConnection* connection;
-	BinTreeNodeReader* inn;
-	BinTreeNodeWriter* out;
+	WAConnection *m_pConnection;
 
 	std::vector<unsigned char>* getAuthBlob(const std::vector<unsigned char>& nonce);
 	void sendResponse(const std::vector<unsigned char>& challengeData);
 	void sendFeatures();
 	void sendAuth(const std::vector<unsigned char>& nonce);
-	std::vector<unsigned char>* readFeaturesUntilChallengeOrSuccess();
-	void parseSuccessNode(ProtocolTreeNode* node);
+	std::vector<unsigned char> readFeaturesUntilChallengeOrSuccess();
+	void parseSuccessNode(ProtocolTreeNode *node);
 	std::vector<unsigned char> readSuccess();
-	std::string getResponse(const std::string& challenge);
 
 public:
-	std::string user;
-	std::string domain;
-	std::string password;
-	std::string resource;
-	std::string push_name;
-	bool supports_receipt_acks;
-	time_t expire_date;
-	int account_kind;
+	time_t      m_tExpireDate;
+	int         m_iAccountKind;
+	std::string m_szPassword;
 
-	WALogin(WAConnection* connection, BinTreeNodeReader *reader, BinTreeNodeWriter *writer, const std::string& domain, const std::string& user, const std::string& resource, const std::string& password, const std::string& push_name);
-	std::vector<unsigned char>* login(const std::vector<unsigned char>& blobLength);
-	BinTreeNodeReader *getTreeNodeReader();
-	BinTreeNodeWriter *getTreeNodeWriter();
-	virtual ~WALogin();
+	WALogin(WAConnection* connection, const std::string& password);
+	~WALogin();
+
+	std::vector<unsigned char> login(const std::vector<unsigned char> &blob);
 };
 
 #endif /* WALOGIN_H_ */

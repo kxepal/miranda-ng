@@ -122,6 +122,12 @@
     <ClCompile Include="src\WhatsAPI++\PhoneNumber.cpp">
       <Filter>WhatsAPI++\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\WhatsAPI++\KeyStream.cpp">
+      <Filter>WhatsAPI++\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\avatars.cpp">
+      <Filter>Miranda Plugin\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.h">
@@ -216,18 +222,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\add-group.ico">
-      <Filter>Resources\Icons</Filter>
-    </Image>
-    <Image Include="res\add-user-to-group.ico">
-      <Filter>Resources\Icons</Filter>
-    </Image>
-    <Image Include="res\change-group-subject.ico">
-      <Filter>Resources\Icons</Filter>
-    </Image>
-    <Image Include="res\leave-group.ico">
-      <Filter>Resources\Icons</Filter>
-    </Image>
-    <Image Include="res\remove-user-from-group.ico">
       <Filter>Resources\Icons</Filter>
     </Image>
     <Image Include="res\whatsapp.ico">

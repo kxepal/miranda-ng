@@ -20,9 +20,8 @@ WASocketConnection::WASocketConnection(const std::string& dir, int port) throw (
 	noc.flags = NLOCF_V2; // | NLOCF_SSL;
 	this->hConn = (HANDLE)CallService(MS_NETLIB_OPENCONNECTION, reinterpret_cast<WPARAM>(this->hNetlibUser),
 												 reinterpret_cast<LPARAM>(&noc));
-	if (this->hConn == NULL) {
+	if (this->hConn == NULL)
 		throw WAException(getLastErrorMsg(), WAException::SOCKET_EX, WAException::SOCKET_EX_OPEN);
-	}
 
 	this->connected = true;
 }
@@ -45,7 +44,6 @@ void WASocketConnection::write(int i)
 
 void WASocketConnection::makeNonBlock()
 {
-	//if (fcntl(socket->channel, F_SETFL, O_NONBLOCK) == -1) // #TODO !?
 	throw WAException("Error setting socket nonblocking!", WAException::SOCKET_EX, WAException::SOCKET_EX_OPEN);
 }
 
@@ -60,15 +58,10 @@ int WASocketConnection::waitForRead()
 	int fd = 0;
 
 	FD_ZERO(&rfds);
-	// _LOGDATA("preparando select");
-	//fd = (this->socket)->channel; //#!?
-	// _LOGDATA("socket %d", fd);
 	FD_SET(fd, &rfds);
 	tv.tv_sec = 600; //ApplicationData::SELECT_TIMEOUT;
 	tv.tv_usec = 0; // 5000000;
 	tvp = &tv;
-	//if (ApplicationData::SELECT_TIMEOUT == -1) #TODO
-	//	tvp = NULL;
 
 	int retval = select(/*fd + 1*/ 0, &rfds, NULL, NULL, tvp);
 	if (!FD_ISSET(fd, &rfds))
@@ -85,7 +78,7 @@ void WASocketConnection::write(const std::vector<unsigned char>& bytes, int offs
 	std::string tmpBuf = std::string(bytes.begin(), bytes.end());
 	nlb.buf = (char*)&(tmpBuf.c_str()[offset]);
 	nlb.len = length;
-	nlb.flags = 0; //MSG_NOHTTPGATEWAYWRAP | MSG_NODUMP;
+	nlb.flags = MSG_NODUMP;
 
 	int result = CallService(MS_NETLIB_SEND, reinterpret_cast<WPARAM>(this->hConn),
 									 reinterpret_cast<LPARAM>(&nlb));
@@ -101,35 +94,37 @@ void WASocketConnection::write(const std::vector<unsigned char>& bytes, int leng
 
 unsigned char WASocketConnection::read()
 {
-	char c;
-
 	SetLastError(0);
-	int result;
-	//do {
-	result = Netlib_Recv(this->hConn, &c, 1, 0 /*MSG_NOHTTPGATEWAYWRAP | MSG_NODUMP*/);
-	//} while  (WSAGetLastError() == EINTR);
-	if (result <= 0) {
+
+	char c;
+	int result = Netlib_Recv(this->hConn, &c, 1, 0);
+	if (result <= 0)
 		throw WAException(getLastErrorMsg(), WAException::SOCKET_EX, WAException::SOCKET_EX_RECV);
-	}
+
 	return c;
+}
+
+int WASocketConnection::read(unsigned char *buf, int length)
+{
+	int result = Netlib_Recv(this->hConn, (char*)buf, length, 0);
+	if (result <= 0)
+		throw WAException(getLastErrorMsg(), WAException::SOCKET_EX, WAException::SOCKET_EX_RECV);
+
+	return result;
 }
 
 int WASocketConnection::read(std::vector<unsigned char>& b, int off, int length)
 {
-	if (off < 0 || length < 0) {
+	if (off < 0 || length < 0)
 		throw new WAException("Out of bounds", WAException::SOCKET_EX, WAException::SOCKET_EX_RECV);
-	}
-	char* buffer = new char[length];
-	int result = Netlib_Recv(this->hConn, buffer, length, MSG_NOHTTPGATEWAYWRAP | MSG_NODUMP);
 
-	if (result <= 0) {
+	char* buffer = (char*)_alloca(length);
+	int result = Netlib_Recv(this->hConn, buffer, length, MSG_NOHTTPGATEWAYWRAP | MSG_NODUMP);
+	if (result <= 0)
 		throw WAException(getLastErrorMsg(), WAException::SOCKET_EX, WAException::SOCKET_EX_RECV);
-	}
 
 	for (int i = 0; i < result; i++)
 		b[off + i] = buffer[i];
-
-	delete[] buffer;
 
 	return result;
 }
@@ -137,6 +132,26 @@ int WASocketConnection::read(std::vector<unsigned char>& b, int off, int length)
 void WASocketConnection::forceShutdown()
 {
 	Netlib_Shutdown(this->hConn);
+}
+
+void WASocketConnection::dump(const void *pData, int length)
+{
+	BYTE *pBuf = (BYTE*)pData;
+	while (length > 0) {
+		int portion = (length < 16) ? length : 16;
+
+		char str[100];
+		for (int i = 0; i < portion; i++)
+			sprintf(str + i * 3, "%02X ", *pBuf++);
+		Netlib_Logf(WASocketConnection::hNetlibUser, "DATA: %s", str);
+
+		length -= portion;
+	}
+}
+
+void WASocketConnection::log(const char *str)
+{
+	Netlib_Logf(WASocketConnection::hNetlibUser, "STR: %s", str);
 }
 
 WASocketConnection::~WASocketConnection()

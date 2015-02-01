@@ -81,6 +81,7 @@ extern "C" int __declspec(dllexport) Load(void)
 	WORD v[4];
 	CallService(MS_SYSTEM_GETFILEVERSION, 0, LPARAM(&v));
 
+	WAConnection::globalInit();
 	return 0;
 }
 
@@ -91,7 +92,6 @@ extern "C" int __declspec(dllexport) Unload(void)
 {
 	g_Instances.destroy();
 
-	delete FMessage::generating_lock;
 	WASocketConnection::quitNetwork();
 
 	return 0;

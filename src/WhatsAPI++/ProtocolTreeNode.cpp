@@ -5,54 +5,59 @@
  *      Author: Antonio
  */
 
+#include "../common.h" // #TODO Remove Miranda-dependency
+
 #include "WAException.h"
 #include "ProtocolTreeNode.h"
 
-ProtocolTreeNode::ProtocolTreeNode(const string& tag, map<string, string> *attributes, vector<unsigned char>* data, vector<ProtocolTreeNode*> *children) {
-	this->tag = tag;
-	this->data = data;
-	this->attributes = attributes;
-	this->children = children;
+static std::string nilstr;
+
+ProtocolTreeNode::ProtocolTreeNode(const string &_tag, vector<unsigned char>* _data, vector<ProtocolTreeNode*> *_children) :
+	tag(_tag)
+{
+	data = _data;
+	attributes = NULL;
+	children = _children;
 }
 
-ProtocolTreeNode::ProtocolTreeNode(const string& tag, map<string, string> *attributes, ProtocolTreeNode* child) {
-	this->tag = tag;
+ProtocolTreeNode::ProtocolTreeNode(const string &_tag, ProtocolTreeNode *_child) :
+	tag(_tag)
+{
 	this->data = NULL;
-	this->attributes = attributes;
-	this->children = new std::vector<ProtocolTreeNode*>(1);
-	(*this->children)[0] = child;
+	this->attributes = NULL;
+	this->children = new std::vector<ProtocolTreeNode*>();
+	children->push_back(_child);
 }
 
-ProtocolTreeNode::~ProtocolTreeNode() {
-	if (this->attributes != NULL)
-		delete this->attributes;
+ProtocolTreeNode::~ProtocolTreeNode()
+{
+	delete this->attributes;
+
 	if (this->children != NULL) {
 		for (size_t i = 0; i < this->children->size(); i++)
 			if (this->children->at(i) != NULL)
 				delete this->children->at(i);
 		delete this->children;
 	}
-	if (this->data != NULL)
-		delete data;
+
+	delete data;
 }
 
 
-string ProtocolTreeNode::toString() {
+string ProtocolTreeNode::toString() const
+{
 	string out;
 	out += "<" + this->tag;
 	if (this->attributes != NULL) {
-		map<string,string>::iterator ii;
+		map<string, string>::iterator ii;
 		for (ii = attributes->begin(); ii != attributes->end(); ii++)
-			out += "" + ii->first + "=\"" + ii->second + "\"";
+			out += " " + ii->first + "=\"" + ii->second + "\"";
 	}
 	out += ">\n";
-	std::string* data = getDataAsString();
-	out += (this->data != NULL? *data:"");
-	delete data;
+	out += getDataAsString();
 
 	if (this->children != NULL) {
 		vector<ProtocolTreeNode*>::iterator ii;
-
 		for (ii = children->begin(); ii != children->end(); ii++)
 			out += (*ii)->toString();
 	}
@@ -62,7 +67,8 @@ string ProtocolTreeNode::toString() {
 	return out;
 }
 
-ProtocolTreeNode* ProtocolTreeNode::getChild(const string& id) {
+ProtocolTreeNode* ProtocolTreeNode::getChild(const string& id)
+{
 	if (this->children == NULL || this->children->size() == 0)
 		return NULL;
 
@@ -73,7 +79,8 @@ ProtocolTreeNode* ProtocolTreeNode::getChild(const string& id) {
 	return NULL;
 }
 
-ProtocolTreeNode* ProtocolTreeNode::getChild(size_t id) {
+ProtocolTreeNode* ProtocolTreeNode::getChild(size_t id)
+{
 	if (this->children == NULL || this->children->size() == 0)
 		return NULL;
 
@@ -83,51 +90,94 @@ ProtocolTreeNode* ProtocolTreeNode::getChild(size_t id) {
 	return NULL;
 }
 
-string* ProtocolTreeNode::getAttributeValue(const string& attribute) {
+const string& ProtocolTreeNode::getAttributeValue(const string& attribute)
+{
 	if (this->attributes == NULL)
-		return NULL;
+		return nilstr;
 
-	map<string,string>::iterator it = attributes->find(attribute);
+	map<string, string>::iterator it = attributes->find(attribute);
 	if (it == attributes->end())
-		return NULL;
+		return nilstr;
 
-	return &it->second;
+	return it->second;
 }
 
-vector<ProtocolTreeNode*>* ProtocolTreeNode::getAllChildren() {
-	vector<ProtocolTreeNode*>* ret = new vector<ProtocolTreeNode*>();
-
+vector<ProtocolTreeNode*> ProtocolTreeNode::getAllChildren()
+{
 	if (this->children == NULL)
-		return ret;
+		return vector<ProtocolTreeNode*>();
 
-	return this->children;
+	return *this->children;
 }
 
-std::string* ProtocolTreeNode::getDataAsString() {
+std::string ProtocolTreeNode::getDataAsString() const
+{
 	if (this->data == NULL)
-		return NULL;
-	return new std::string(this->data->begin(), this->data->end());
+		return nilstr;
+	return std::string(this->data->begin(), this->data->end());
 }
 
-vector<ProtocolTreeNode*>* ProtocolTreeNode::getAllChildren(const string& tag) {
-	vector<ProtocolTreeNode*>* ret = new vector<ProtocolTreeNode*>();
+vector<ProtocolTreeNode*> ProtocolTreeNode::getAllChildren(const string &tag)
+{
+	vector<ProtocolTreeNode*> ret;
 
-	if (this->children == NULL)
-		return ret;
-
-	for (size_t i = 0; i < this->children->size(); i++)
-		if (tag.compare((*children)[i]->tag) == 0)
-			ret->push_back((*children)[i]);
+	if (this->children != NULL)
+		for (size_t i = 0; i < this->children->size(); i++)
+			if (tag.compare((*children)[i]->tag) == 0)
+				ret.push_back((*children)[i]);
 
 	return ret;
 }
 
-
-bool ProtocolTreeNode::tagEquals(ProtocolTreeNode *node, const string& tag) {
+bool ProtocolTreeNode::tagEquals(ProtocolTreeNode *node, const string& tag)
+{
 	return (node != NULL && node->tag.compare(tag) == 0);
 }
 
-void ProtocolTreeNode::require(ProtocolTreeNode *node, const string& tag) {
-   if (!tagEquals(node, tag))
-	   throw WAException("failed require. node:" + node->toString() + "tag: " + tag, WAException::CORRUPT_STREAM_EX, 0);
+void ProtocolTreeNode::require(ProtocolTreeNode *node, const string& tag)
+{
+	if (!tagEquals(node, tag))
+		throw WAException("failed require. node:" + node->toString() + "tag: " + tag, WAException::CORRUPT_STREAM_EX, 0);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+ProtocolTreeNode& operator<<(ProtocolTreeNode &node, const XATTR &attr)
+{
+	if (node.attributes == NULL)
+		node.attributes = new map<string, string>;
+
+	(*node.attributes)[attr.name] = attr.value;
+	return node;
+}
+
+ProtocolTreeNode* operator<<(ProtocolTreeNode *node, const XATTR &attr)
+{
+	if (node->attributes == NULL)
+		node->attributes = new map<string, string>;
+
+	(*node->attributes)[attr.name] = attr.value;
+	return node;
+}
+
+ProtocolTreeNode& operator<<(ProtocolTreeNode &node, const XATTRI &attr)
+{
+	if (node.attributes == NULL)
+		node.attributes = new map<string, string>;
+
+	char szValue[100];
+	_itoa_s(attr.value, szValue, 10);
+	(*node.attributes)[attr.name] = szValue;
+	return node;
+}
+
+ProtocolTreeNode* operator<<(ProtocolTreeNode *node, const XATTRI &attr)
+{
+	if (node->attributes == NULL)
+		node->attributes = new map<string, string>;
+
+	char szValue[100];
+	_itoa_s(attr.value, szValue, 10);
+	(*node->attributes)[attr.name] = szValue;
+	return node;
 }

@@ -47,6 +47,7 @@ Copyright © 2013-14 Uli Hecht
 #include <m_database.h>
 #include <m_history.h>
 #include <m_idle.h>
+#include <m_imgsrvc.h>
 #include <m_ignore.h>
 #include <m_langpack.h>
 #include <m_message.h>
@@ -68,9 +69,6 @@ Copyright © 2013-14 Uli Hecht
 #include <m_hotkeys.h>
 #include <m_folders.h>
 #include <m_json.h>
-#include "WhatsAPI++/WAConnection.h"
-
-class WhatsAppProto;
 
 #include "constants.h"
 #include "utils.h"

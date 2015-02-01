@@ -5,70 +5,34 @@
  *      Author: Antonio
  */
 
-#include <ctime>
-#include <stdlib.h>
-#include <algorithm>
-#include "FMessage.h"
+#include "../common.h" // #TODO Remove Miranda-dependency
+
 #include "utilities.h"
 
-//SDL_mutex* FMessage::generating_lock = SDL_CreateMutex();
-IMutex* FMessage::generating_lock = NULL;
-int FMessage::generating_id = 0;
-std::string FMessage::generating_header = Utilities::intToStr(static_cast<int> (time(NULL))).append("-");
-
-
-FMessage::FMessage() {
-	this->key = NULL;
+FMessage::FMessage() :
+	key("", false, "")
+{
 	this->timestamp = 0;
 	this->media_wa_type = 0;
 	this->longitude = 0;
 	this->latitude = 0;
 	this->media_duration_seconds = 0;
 	this->media_size = 0;
-	this->media_name = "";
-	this->media_url = "";
-	this->data = "";
 }
 
-FMessage::FMessage(const std::string& remote_jid, bool from_me, const std::string& data) {
-	Key* local_key;
-	FMessage::generating_lock->lock();
-	FMessage::generating_id++;
-	local_key = new Key(remote_jid, from_me, generating_header + Utilities::intToStr(generating_id));
-	this->key = local_key;
-	FMessage::generating_lock->unlock();
-	this->data = data;
+FMessage::FMessage(const std::string &remote_jid, bool from_me, const std::string &id) :
+	key(remote_jid, from_me, id)
+{
 	this->timestamp = time(NULL);
 	this->media_wa_type = 0;
 	this->longitude = 0;
 	this->latitude = 0;
 	this->media_duration_seconds = 0;
 	this->media_size = 0;
-	this->media_name = "";
-	this->media_url = "";
 }
 
-std::string FMessage::nextKeyIdNumber() {
-	int id = 0;
-	FMessage::generating_lock->lock();
-	id = (FMessage::generating_id++);
-	FMessage::generating_lock->unlock();
-	return generating_header + (Utilities::intToStr(id));
-}
-
-FMessage::FMessage(Key* key) {
-	this->key = key;
-	this->timestamp = 0;
-	this->media_wa_type = 0;
-	this->longitude = 0;
-	this->latitude = 0;
-	this->media_duration_seconds = 0;
-	this->media_size = 0;
-	this->media_name = "";
-	this->media_url = "";
-}
-
-std::string FMessage::getMessage_WA_Type_StrValue(unsigned char type) {
+std::string FMessage::getMessage_WA_Type_StrValue(unsigned char type)
+{
 	switch (type) {
 	case FMessage::WA_TYPE_UNDEFINED:
 		return "";
@@ -89,26 +53,29 @@ std::string FMessage::getMessage_WA_Type_StrValue(unsigned char type) {
 	return "";
 }
 
-FMessage::~FMessage() {
-	if (this->key != NULL)
-		delete key;
+FMessage::~FMessage()
+{
 }
 
-Key::Key(const std::string& remote_jid, bool from_me, const std::string& id) {
+Key::Key(const std::string& remote_jid, bool from_me, const std::string& id)
+{
 	this->remote_jid = remote_jid;
 	this->from_me = from_me;
 	this->id = id;
 }
 
-std::string Key::toString() {
-	return "Key[id=" + id + ", from_me=" + (from_me ? "true":"false") + ", remote_jid=" + remote_jid + "]";
+std::string Key::toString()
+{
+	return "Key[id=" + id + ", from_me=" + (from_me ? "true" : "false") + ", remote_jid=" + remote_jid + "]";
 }
 
 
-unsigned char FMessage::getMessage_WA_Type(std::string* type) {
-	if ((type == NULL) || (type->length() == 0))
+unsigned char FMessage::getMessage_WA_Type(const std::string& type)
+{
+	if (type.empty())
 		return WA_TYPE_UNDEFINED;
-	std::string typeLower = *type;
+
+	std::string typeLower = type;
 	std::transform(typeLower.begin(), typeLower.end(), typeLower.begin(), ::tolower);
 	if (typeLower.compare("system") == 0)
 		return WA_TYPE_SYSTEM;
