@@ -884,7 +884,7 @@ void WAConnection::sendGetGroupInfo(const std::string &gjid) throw (WAException)
 		<< XATTR("id", id) << XATTR("type", "get") << XATTR("to", gjid));
 }
 
-void WAConnection::sendGetParticipants(const std::string &gjid) throw (WAException)
+void WAConnection::sendGetParticipants(const char *gjid) throw (WAException)
 {
 	std::string id = makeId("iq_");
 	this->pending_server_requests[id] = new IqResultGetGroupParticipantsHandler(this);

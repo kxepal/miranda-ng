@@ -397,7 +397,7 @@ public:
 	void sendCreateGroupChat(const std::string &subject) throw (WAException);
 	void sendEndGroupChat(const std::string &gjid) throw (WAException);
 	void sendGetGroupInfo(const std::string &gjid) throw (WAException);
-	void sendGetParticipants(const std::string &gjid) throw (WAException);
+	void sendGetParticipants(const char *gjid) throw (WAException);
 	void sendClearDirty(const std::string &category) throw (WAException);
 	void sendJoinLeaveGroup(const char *gjid, bool bJoin) throw (WAException);
 	void sendAddParticipants(const std::string &gjid, const std::vector<std::string>& participants) throw (WAException);

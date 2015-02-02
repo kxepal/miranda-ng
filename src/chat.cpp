@@ -60,39 +60,9 @@ void WhatsAppProto::InitChat(const TCHAR *jid, const TCHAR *nick)
 	gcd.iType = GC_EVENT_CONTROL;
 	CallServiceSync(MS_GC_EVENT, (m_pConnection) ? WINDOW_HIDDEN : SESSION_INITDONE, (LPARAM)&gce);
 	CallServiceSync(MS_GC_EVENT, SESSION_ONLINE, (LPARAM)&gce);
-}
 
-void WhatsAppProto::onGroupMessage(const FMessage &msg)
-{
-	WAChatInfo *pInfo;
-	{
-		mir_cslock lck(m_csChats);
-		pInfo = m_chats[msg.key.remote_jid];
-		if (pInfo == NULL) {
-			pInfo = new WAChatInfo(msg.key.remote_jid.c_str(), msg.notifyname.c_str());
-			m_chats[msg.key.remote_jid] = pInfo;
-
-			InitChat(pInfo->tszJid, pInfo->tszNick);
-			pInfo->bActive = true;
-
-			if (m_pConnection)
-				m_pConnection->sendGetParticipants(msg.key.remote_jid);
-		}
-	}
-
-	ptrT tszText(mir_utf8decodeT(msg.data.c_str()));
-	ptrT tszUID(mir_utf8decodeT(msg.remote_resource.c_str()));
-
-	GCDEST gcd = { m_szModuleName, pInfo->tszJid, 0 };
-
-	GCEVENT gce = { sizeof(gce), &gcd };
-	gce.dwFlags = GCEF_ADDTOLOG;
-	gce.ptszUID = tszUID;
-	gce.ptszNick = pInfo->tszNick;
-	gce.time = msg.timestamp;
-	gce.ptszText = tszText;
-	gce.bIsMe = m_szJid == msg.remote_resource;
-	CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
+	if (m_pConnection)
+		m_pConnection->sendGetParticipants(_T2A(jid));
 }
 
 int WhatsAppProto::OnChatOutgoing(WPARAM wParam, LPARAM lParam)
@@ -202,9 +172,36 @@ void WhatsAppProto::onGroupInfo(const std::string &jid, const std::string &owner
 		gce.ptszText = tszSubject;
 		CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
 	}
+}
 
-	if (isOnline())
-		m_pConnection->sendGetParticipants(jid);
+void WhatsAppProto::onGroupMessage(const FMessage &msg)
+{
+	WAChatInfo *pInfo;
+	{
+		mir_cslock lck(m_csChats);
+		pInfo = m_chats[msg.key.remote_jid];
+		if (pInfo == NULL) {
+			pInfo = new WAChatInfo(msg.key.remote_jid.c_str(), msg.notifyname.c_str());
+			m_chats[msg.key.remote_jid] = pInfo;
+
+			InitChat(pInfo->tszJid, pInfo->tszNick);
+			pInfo->bActive = true;
+		}
+	}
+
+	ptrT tszText(mir_utf8decodeT(msg.data.c_str()));
+	ptrT tszUID(mir_utf8decodeT(msg.remote_resource.c_str()));
+
+	GCDEST gcd = { m_szModuleName, pInfo->tszJid, 0 };
+
+	GCEVENT gce = { sizeof(gce), &gcd };
+	gce.dwFlags = GCEF_ADDTOLOG;
+	gce.ptszUID = tszUID;
+	gce.ptszNick = pInfo->tszNick;
+	gce.time = msg.timestamp;
+	gce.ptszText = tszText;
+	gce.bIsMe = m_szJid == msg.remote_resource;
+	CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
 }
 
 void WhatsAppProto::onGroupNewSubject(const std::string &from, const std::string &author, const std::string &newSubject, int paramInt)
