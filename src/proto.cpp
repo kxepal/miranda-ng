@@ -17,6 +17,9 @@ WhatsAppProto::WhatsAppProto(const char* proto_name, const TCHAR* username) :
 {
 	update_loop_lock_ = CreateEvent(NULL, false, false, NULL);
 
+	db_set_resident(m_szModuleName, "Status");
+	db_set_resident(m_szModuleName, "StatusMsg");
+
 	CreateProtoService(PS_CREATEACCMGRUI, &WhatsAppProto::SvcCreateAccMgrUI);
 	CreateProtoService(PS_JOINCHAT, &WhatsAppProto::OnJoinChat);
 	CreateProtoService(PS_LEAVECHAT, &WhatsAppProto::OnLeaveChat);
