@@ -192,7 +192,7 @@ void WhatsAppProto::onGroupMessage(const FMessage &msg)
 	ptrT tszText(mir_utf8decodeT(msg.data.c_str()));
 	ptrT tszUID(mir_utf8decodeT(msg.remote_resource.c_str()));
 
-	GCDEST gcd = { m_szModuleName, pInfo->tszJid, 0 };
+	GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_MESSAGE };
 
 	GCEVENT gce = { sizeof(gce), &gcd };
 	gce.dwFlags = GCEF_ADDTOLOG;
