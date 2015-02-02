@@ -202,6 +202,9 @@ void WhatsAppProto::onGroupMessage(const FMessage &msg)
 	gce.ptszText = tszText;
 	gce.bIsMe = m_szJid == msg.remote_resource;
 	CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
+
+	if (isOnline())
+		m_pConnection->sendMessageReceived(msg);
 }
 
 void WhatsAppProto::onGroupNewSubject(const std::string &from, const std::string &author, const std::string &newSubject, int paramInt)

@@ -166,7 +166,7 @@ MCONTACT WhatsAppProto::AddToList(int flags, PROTOSEARCHRESULT* psr)
 	std::string phone(ptrA(mir_utf8encodeT(psr->id)));
 	std::string jid(phone + "@s.whatsapp.net");
 
-	MCONTACT hContact = AddToContactList(jid, false, phone.c_str());
+	MCONTACT hContact = AddToContactList(jid, phone.c_str());
 	if (!(flags & PALF_TEMPORARY))
 		db_unset(hContact, "CList", "NotOnList");
 

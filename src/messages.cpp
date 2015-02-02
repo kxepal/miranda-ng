@@ -11,7 +11,7 @@ void WhatsAppProto::onMessageForMe(const FMessage &pMsg)
 {
 	// someone sent us a contact. launch contact addition dialog
 	if (pMsg.media_wa_type == FMessage::WA_TYPE_CONTACT) {
-		MCONTACT hContact = AddToContactList(pMsg.remote_resource, false, pMsg.media_name.c_str());
+		MCONTACT hContact = AddToContactList(pMsg.remote_resource, pMsg.media_name.c_str());
 
 		ADDCONTACTSTRUCT acs = { 0 };
 		acs.handleType = HANDLE_CONTACT;
@@ -20,8 +20,6 @@ void WhatsAppProto::onMessageForMe(const FMessage &pMsg)
 		CallServiceSync(MS_ADDCONTACT_SHOW, 0, (LPARAM)&acs);
 	}
 	else {
-		bool isChatRoom = !pMsg.remote_resource.empty();
-
 		std::string msg(pMsg.data);
 		if (!pMsg.media_url.empty()) {
 			if (!msg.empty())
@@ -29,10 +27,7 @@ void WhatsAppProto::onMessageForMe(const FMessage &pMsg)
 			msg += pMsg.media_url;
 		}
 
-		if (isChatRoom)
-			msg.insert(0, std::string("[").append(pMsg.notifyname).append("]: "));
-
-		MCONTACT hContact = this->AddToContactList(pMsg.key.remote_jid, false, pMsg.notifyname.c_str());
+		MCONTACT hContact = this->AddToContactList(pMsg.key.remote_jid, pMsg.notifyname.c_str());
 
 		PROTORECVEVENT recv = { 0 };
 		recv.flags = PREF_UTF;
@@ -41,7 +36,8 @@ void WhatsAppProto::onMessageForMe(const FMessage &pMsg)
 		ProtoChainRecvMsg(hContact, &recv);
 	}
 
-	m_pConnection->sendMessageReceived(pMsg);
+	if (isOnline())
+		m_pConnection->sendMessageReceived(pMsg);
 }
 
 int WhatsAppProto::SendMsg(MCONTACT hContact, int flags, const char *msg)
@@ -85,7 +81,7 @@ int WhatsAppProto::SendMsg(MCONTACT hContact, int flags, const char *msg)
 
 void WhatsAppProto::onIsTyping(const std::string &paramString, bool paramBoolean)
 {
-	MCONTACT hContact = this->AddToContactList(paramString, 0, false);
+	MCONTACT hContact = this->AddToContactList(paramString);
 	if (hContact != NULL) {
 		CallService(MS_PROTO_CONTACTISTYPING, (WPARAM)hContact, (LPARAM)
 			paramBoolean ? PROTOTYPE_CONTACTTYPING_INFINITE : PROTOTYPE_CONTACTTYPING_OFF);

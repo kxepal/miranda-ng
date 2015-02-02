@@ -1,42 +1,39 @@
 #include "common.h"
 
-MCONTACT WhatsAppProto::AddToContactList(const std::string &jid, bool dont_check, const char *new_name, bool isHidden)
+MCONTACT WhatsAppProto::AddToContactList(const std::string &jid, const char *new_name)
 {
 	if (jid == m_szJid)
 		return NULL;
 
-	if (!dont_check) {
-		// First, check if this contact exists
-		MCONTACT hContact = ContactIDToHContact(jid);
-		if (hContact) {
-			if (new_name != NULL) {
-				DBVARIANT dbv;
-				string oldName;
-				if (db_get_utf(hContact, m_szModuleName, WHATSAPP_KEY_NICK, &dbv))
-					oldName = jid.c_str();
-				else {
-					oldName = dbv.pszVal;
-					db_free(&dbv);
-				}
-
-				if (oldName.compare(string(new_name)) != 0) {
-					db_set_utf(hContact, m_szModuleName, WHATSAPP_KEY_NICK, new_name);
-
-					CMString tmp(FORMAT, TranslateT("is now known as '%s'"), ptrT(mir_utf8decodeT(new_name)));
-					this->NotifyEvent(_A2T(oldName.c_str()), tmp, hContact, WHATSAPP_EVENT_OTHER);
-				}
+	// First, check if this contact exists
+	MCONTACT hContact = ContactIDToHContact(jid);
+	if (hContact) {
+		if (new_name != NULL) {
+			DBVARIANT dbv;
+			string oldName;
+			if (db_get_utf(hContact, m_szModuleName, WHATSAPP_KEY_NICK, &dbv))
+				oldName = jid.c_str();
+			else {
+				oldName = dbv.pszVal;
+				db_free(&dbv);
 			}
 
-			if (db_get_b(hContact, "CList", "Hidden", 0) > 0)
-				db_unset(hContact, "CList", "Hidden");
+			if (oldName.compare(string(new_name)) != 0) {
+				db_set_utf(hContact, m_szModuleName, WHATSAPP_KEY_NICK, new_name);
 
-			return hContact;
+				CMString tmp(FORMAT, TranslateT("is now known as '%s'"), ptrT(mir_utf8decodeT(new_name)));
+				this->NotifyEvent(_A2T(oldName.c_str()), tmp, hContact, WHATSAPP_EVENT_OTHER);
+			}
 		}
+
+		if (db_get_b(hContact, "CList", "Hidden", 0) > 0)
+			db_unset(hContact, "CList", "Hidden");
+
+		return hContact;
 	}
 
 	// If not, make a new contact!
-	MCONTACT hContact = CallService(MS_DB_CONTACT_ADD, 0, 0);
-	if (hContact == 0)
+	if ((hContact = CallService(MS_DB_CONTACT_ADD, 0, 0)) == 0)
 		return INVALID_CONTACT_ID;
 
 	CallService(MS_PROTO_ADDTOCONTACT, (WPARAM)hContact, (LPARAM)m_szModuleName);

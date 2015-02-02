@@ -115,7 +115,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////
 	// Contacts handling
 
-	MCONTACT AddToContactList(const std::string &jid, bool dont_check = false, const char *new_name = NULL, bool isHidden = false);
+	MCONTACT AddToContactList(const std::string &jid, const char *new_name = NULL);
 
 	MCONTACT ContactIDToHContact(const std::string&);
 	void     SetAllContactStatuses(int status, bool reset_client = false);
