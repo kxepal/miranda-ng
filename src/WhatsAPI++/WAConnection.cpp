@@ -230,7 +230,7 @@ void WAConnection::readGroupList(ProtocolTreeNode *node, std::vector<std::string
 		const string &subject_owner = groupNode->getAttributeValue("s_o");
 		const string &creation = groupNode->getAttributeValue("creation");
 		if (m_pGroupEventHandler != NULL)
-			m_pGroupEventHandler->onGroupInfoFromList(gjid, owner, subject, subject_owner, atoi(subject_t.c_str()), atoi(creation.c_str()));
+			m_pGroupEventHandler->onGroupInfo(gjid, owner, subject, subject_owner, atoi(subject_t.c_str()), atoi(creation.c_str()));
 		groups.push_back(gjid);
 	}
 }
@@ -886,11 +886,11 @@ void WAConnection::sendGetGroupInfo(const std::string &gjid) throw (WAException)
 
 void WAConnection::sendGetParticipants(const std::string &gjid) throw (WAException)
 {
-	std::string id = makeId("get_participants_");
+	std::string id = makeId("iq_");
 	this->pending_server_requests[id] = new IqResultGetGroupParticipantsHandler(this);
 
 	ProtocolTreeNode *listNode = new ProtocolTreeNode("list");
-	out.write(ProtocolTreeNode("iq", listNode) << XATTR("xmlns", "w:g2")
+	out.write(ProtocolTreeNode("iq", listNode) << XATTR("xmlns", "w:g")
 		<< XATTR("id", id) << XATTR("type", "get") << XATTR("to", gjid));
 }
 

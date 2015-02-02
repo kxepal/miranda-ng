@@ -14,7 +14,7 @@ struct WAChatInfo
 		bActive = false;
 	}
 
-	ptrT tszJid, tszNick;
+	ptrT tszJid, tszNick, tszOwner;
 	bool bActive;
 };
 
@@ -127,9 +127,9 @@ public:
 	// Group chats
 
 	map<std::string, WAChatInfo*> m_chats;
+	mir_cs   m_csChats;
 
 	void     InitChat(const TCHAR *jid, const TCHAR *nick);
-	void     HandleReceiveGroups(const std::vector<string> &groups, bool isOwned);
 
 	INT_PTR __cdecl OnJoinChat(WPARAM, LPARAM);
 	INT_PTR __cdecl OnLeaveChat(WPARAM, LPARAM);
@@ -212,14 +212,11 @@ protected:
 	virtual void onGroupMessage(const FMessage &paramFMessage);
 	virtual void onServerProperties(std::map<std::string, std::string>* nameValueMap) {}
 	virtual void onGroupCreated(const std::string &paramString1, const std::string &paramString2);
-	virtual void onGroupInfo(const std::string &paramString1, const std::string &paramString2, const std::string &paramString3, const std::string &paramString4, int paramInt1, int paramInt2);
-	virtual void onGroupInfoFromList(const std::string &paramString1, const std::string &paramString2, const std::string &paramString3, const std::string &paramString4, int paramInt1, int paramInt2);
-	virtual void onOwningGroups(const std::vector<string>& paramVector);
+	virtual void onGroupInfo(const std::string &jid, const std::string &owner, const std::string &subject, const std::string &subject_owner, int time_subject, int time_created);
 	virtual void onSetSubject(const std::string &paramString) {  }
-	virtual void onAddGroupParticipants(const std::string &paramString, const std::vector<string>& paramVector, int paramHashtable) {  }
-	virtual void onRemoveGroupParticipants(const std::string &paramString, const std::vector<string>& paramVector, int paramHashtable) {  }
-	virtual void onGetParticipants(const std::string &gjid, const std::vector<string>& participants);
-	virtual void onParticipatingGroups(const std::vector<string>& paramVector);
+	virtual void onAddGroupParticipants(const std::string &paramString, const std::vector<string> &paramVector, int paramHashtable) {  }
+	virtual void onRemoveGroupParticipants(const std::string &paramString, const std::vector<string> &paramVector, int paramHashtable) {  }
+	virtual void onGetParticipants(const std::string &gjid, const std::vector<string> &participants);
 	virtual void onLeaveGroup(const std::string &paramString);
 
 	//////////////////////////////////////////////////////////////////////////////////////

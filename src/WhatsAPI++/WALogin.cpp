@@ -17,7 +17,7 @@
 
 using namespace Utilities;
 
-WALogin::WALogin(WAConnection* connection, const std::string& password)
+WALogin::WALogin(WAConnection* connection, const std::string &password)
 {
 	m_pConnection = connection;
 	m_szPassword = password;

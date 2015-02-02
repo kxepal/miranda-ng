@@ -83,7 +83,7 @@ int WhatsAppProto::SendMsg(MCONTACT hContact, int flags, const char *msg)
 	return msgId;
 }
 
-void WhatsAppProto::onIsTyping(const std::string& paramString, bool paramBoolean)
+void WhatsAppProto::onIsTyping(const std::string &paramString, bool paramBoolean)
 {
 	MCONTACT hContact = this->AddToContactList(paramString, 0, false);
 	if (hContact != NULL) {

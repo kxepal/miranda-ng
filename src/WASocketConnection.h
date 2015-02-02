@@ -17,7 +17,7 @@ private:
 	HANDLE hConn;
 
 public:
-	WASocketConnection(const std::string& dir, int port) throw (WAException);
+	WASocketConnection(const std::string &dir, int port) throw (WAException);
 	virtual ~WASocketConnection();
 
 	void write(int i);

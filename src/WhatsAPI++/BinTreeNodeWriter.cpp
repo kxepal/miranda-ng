@@ -134,7 +134,7 @@ void BinTreeNodeWriter::writeAttributes(std::map<string, string>* attributes)
 	}
 }
 
-void BinTreeNodeWriter::writeString(const std::string& tag)
+void BinTreeNodeWriter::writeString(const std::string &tag)
 {
 	int token = WAConnection::tokenLookup(tag);
 	if (token != -1)
@@ -151,7 +151,7 @@ void BinTreeNodeWriter::writeString(const std::string& tag)
 	}
 }
 
-void BinTreeNodeWriter::writeJid(std::string* user, const std::string& server)
+void BinTreeNodeWriter::writeJid(std::string* user, const std::string &server)
 {
 	out->write(250);
 	if (user != NULL && !user->empty())

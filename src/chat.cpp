@@ -64,16 +64,20 @@ void WhatsAppProto::InitChat(const TCHAR *jid, const TCHAR *nick)
 
 void WhatsAppProto::onGroupMessage(const FMessage &msg)
 {
-	WAChatInfo *pInfo = m_chats[msg.key.remote_jid];
-	if (pInfo == NULL) {
-		pInfo = new WAChatInfo(msg.key.remote_jid.c_str(), msg.notifyname.c_str());
-		m_chats[msg.key.remote_jid] = pInfo;
+	WAChatInfo *pInfo;
+	{
+		mir_cslock lck(m_csChats);
+		pInfo = m_chats[msg.key.remote_jid];
+		if (pInfo == NULL) {
+			pInfo = new WAChatInfo(msg.key.remote_jid.c_str(), msg.notifyname.c_str());
+			m_chats[msg.key.remote_jid] = pInfo;
 
-		InitChat(pInfo->tszJid, pInfo->tszNick);
-		pInfo->bActive = true;
+			InitChat(pInfo->tszJid, pInfo->tszNick);
+			pInfo->bActive = true;
 
-		if (m_pConnection)
-			m_pConnection->sendGetParticipants(msg.key.remote_jid);
+			if (m_pConnection)
+				m_pConnection->sendGetParticipants(msg.key.remote_jid);
+		}
 	}
 
 	ptrT tszText(mir_utf8decodeT(msg.data.c_str()));
@@ -165,165 +169,93 @@ void WhatsAppProto::SendGetGroupInfoWorker(void* data)
 ///////////////////////////////////////////////////////////////////////////////
 // WAConnection members
 
-void WhatsAppProto::onGroupInfo(const std::string& gjid, const std::string& ownerJid, const std::string& subject, const std::string& createrJid, int paramInt1, int paramInt2)
+void WhatsAppProto::onGroupInfo(const std::string &jid, const std::string &owner, const std::string &subject, const std::string &subject_owner, int time_subject, int time_created)
 {
-	debugLogA("'%s', '%s', '%s', '%s'", gjid.c_str(), ownerJid.c_str(), subject.c_str(), createrJid.c_str());
-	MCONTACT hContact = ContactIDToHContact(gjid);
-	if (!hContact) {
-		debugLogA("Group info requested for non existing contact '%s'", gjid.c_str());
-		return;
+	WAChatInfo *pInfo;
+	{
+		mir_cslock lck(m_csChats);
+		pInfo = m_chats[jid];
+		if (pInfo == NULL) {
+			pInfo = new WAChatInfo(jid.c_str(), subject.c_str());
+			m_chats[jid] = pInfo;
+
+			InitChat(pInfo->tszJid, pInfo->tszNick);
+			pInfo->bActive = true;
+		}
 	}
-	setByte(hContact, "SimpleChatRoom", ownerJid.compare(m_szJid) == 0 ? 2 : 1);
-	if (isOnline())
-		m_pConnection->sendGetParticipants(gjid);
-}
 
-void WhatsAppProto::onGroupInfoFromList(const std::string& paramString1, const std::string& paramString2, const std::string& paramString3, const std::string& paramString4, int paramInt1, int paramInt2)
-{
-	// Called before onOwningGroups() or onParticipatingGroups() is called!
-}
+	if (!subject.empty()) {
+		GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_TOPIC };
 
-void WhatsAppProto::onGroupNewSubject(const std::string& from, const std::string& author, const std::string& newSubject, int paramInt)
-{
-	debugLogA("'%s', '%s', '%s'", from.c_str(), author.c_str(), newSubject.c_str());
-	AddToContactList(from, false, newSubject.c_str());
-}
+		pInfo->tszOwner = mir_utf8decodeT(owner.c_str());
 
-void WhatsAppProto::onGroupAddUser(const std::string& paramString1, const std::string& paramString2)
-{
-	debugLogA("%s - user: %s", paramString1.c_str(), paramString2.c_str());
-	MCONTACT hContact = this->AddToContactList(paramString1);
-	TCHAR *ptszGroupName = pcli->pfnGetContactDisplayName(hContact, 0);
+		ptrT tszSubject(mir_utf8decodeT(subject.c_str()));
+		ptrT tszSubjectOwner(mir_utf8decodeT(subject_owner.c_str()));
+		TCHAR *p = _tcschr(tszSubjectOwner, '@');
+		if (p) *p = 0;
 
-	if (paramString2.compare(m_szJid) == 0) {
-		this->NotifyEvent(ptszGroupName, TranslateT("You have been added to the group"), hContact, WHATSAPP_EVENT_OTHER);
-		setByte(hContact, "IsGroupMember", 1);
-	}
-	else {
-		CMString tmp(FORMAT, TranslateT("User '%s' has been added to the group"), this->GetContactDisplayName(paramString2));
-		this->NotifyEvent(ptszGroupName, tmp, hContact, WHATSAPP_EVENT_OTHER);
+		GCEVENT gce = { sizeof(gce), &gcd };
+		gce.ptszUID = pInfo->tszOwner;
+		gce.ptszNick = tszSubjectOwner;
+		gce.time = time_subject;
+		gce.dwFlags = GCEF_ADDTOLOG;
+		gce.ptszText = tszSubject;
+		CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
 	}
 
 	if (isOnline())
-		m_pConnection->sendGetGroupInfo(paramString1);
+		m_pConnection->sendGetParticipants(jid);
+}
+
+void WhatsAppProto::onGroupNewSubject(const std::string &from, const std::string &author, const std::string &newSubject, int paramInt)
+{
+}
+
+void WhatsAppProto::onGroupAddUser(const std::string &paramString1, const std::string &paramString2)
+{
 }
 
 void WhatsAppProto::onGroupRemoveUser(const std::string &paramString1, const std::string &paramString2)
 {
-	debugLogA("%s - user: %s", paramString1.c_str(), paramString2.c_str());
-	MCONTACT hContact = this->ContactIDToHContact(paramString1);
-	if (!hContact)
-		return;
-
-	TCHAR *ptszGroupName = pcli->pfnGetContactDisplayName(hContact, 0);
-
-	if (paramString2.compare(m_szJid) == 0) {
-		//db_set_b(hContact, "CList", "Hidden", 1);
-		setByte(hContact, "IsGroupMember", 0);
-
-		this->NotifyEvent(ptszGroupName, TranslateT("You have been removed from the group"), hContact, WHATSAPP_EVENT_OTHER);
-	}
-	else if (isOnline()) {
-		CMString tmp(FORMAT, TranslateT("User '%s' has been removed from the group"), this->GetContactDisplayName(paramString2));
-		this->NotifyEvent(ptszGroupName, tmp, hContact, WHATSAPP_EVENT_OTHER);
-
-		m_pConnection->sendGetGroupInfo(paramString1);
-	}
 }
 
 void WhatsAppProto::onLeaveGroup(const std::string &paramString)
 {
-	// Won't be called for unknown reasons!
-	debugLogA("%s", this->GetContactDisplayName(paramString));
-	MCONTACT hContact = this->ContactIDToHContact(paramString);
-	if (hContact)
-		setByte(hContact, "IsGroupMember", 0);
 }
 
-void WhatsAppProto::onGetParticipants(const std::string& gjid, const std::vector<string>& participants)
+void WhatsAppProto::onGetParticipants(const std::string &gjid, const std::vector<string> &participants)
 {
-	debugLogA("%s", this->GetContactDisplayName(gjid));
+	mir_cslock lck(m_csChats);
 
-	MCONTACT hUserContact, hContact = this->ContactIDToHContact(gjid);
-	if (!hContact)
+	WAChatInfo *pInfo = m_chats[gjid];
+	if (pInfo == NULL)
 		return;
 
-	if (db_get_b(hContact, "CList", "Hidden", 0) == 1)
-		return;
+	for (size_t i = 0; i < participants.size(); i++) {
+		std::string curr = participants[i];
 
-	bool isHidden = true;
-	bool isOwningGroup = getByte(hContact, "SimpleChatRoom", 0) == 2;
+		ptrT ujid(mir_utf8decodeT(curr.c_str())), nick;
+		bool bIsOwner = !mir_tstrcmp(ujid, pInfo->tszOwner);
+		TCHAR *p = _tcschr(ujid, '@');
+		if (p) *p = 0;
 
-	if (isOwningGroup)
-		this->isMemberByGroupContact[hContact].clear();
-
-	for (std::vector<string>::const_iterator it = participants.begin(); it != participants.end(); ++it) {
-		// Hide, if we are not member of the group
-		// Sometimes the group is shown shortly after hiding it again, due to other threads which stored the contact
-		//	 in a cache before it has been removed (E.g. picture-id list in processBuddyList)
-		if (isHidden && m_szJid.compare(*it) == 0) {
-			isHidden = false;
-			if (!isOwningGroup) {
-				// Break, as we don't need to collect group-members
-				break;
-			}
+		if (m_szNick == curr)
+			nick = getTStringA("Nick");
+		else {
+			MCONTACT hContact = ContactIDToHContact(curr);
+			nick = mir_tstrdup((hContact == 0) ? ujid : pcli->pfnGetContactDisplayName(hContact, 0));
 		}
 
-		// #TODO Slow for big count of participants
-		// #TODO If a group is hidden it has been deleted from the local contact list
-		//			 => don't allow to add users anymore
-		if (isOwningGroup) {
-			hUserContact = this->ContactIDToHContact(*it);
-			if (hUserContact)
-				this->isMemberByGroupContact[hContact][hUserContact] = true;
-		}
-	}
-	if (isHidden) {
-		//db_set_b(hContact, "CList", "Hidden", 1);
-		// #TODO Check if it's possible to reach this point at all
-		setByte(hContact, "IsGroupMember", 0);
+		GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_JOIN };
+
+		GCEVENT gce = { sizeof(gce), &gcd };
+		gce.ptszNick = nick;
+		gce.ptszUID = ujid;
+		gce.ptszStatus = (bIsOwner) ? _T("Owners") : _T("Members");
+		CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
 	}
 }
 
-void WhatsAppProto::onOwningGroups(const std::vector<string>& paramVector)
+void WhatsAppProto::onGroupCreated(const std::string &paramString1, const std::string &paramString2)
 {
-	HandleReceiveGroups(paramVector, true);
-}
-
-void WhatsAppProto::onParticipatingGroups(const std::vector<string>& paramVector)
-{
-	HandleReceiveGroups(paramVector, false);
-}
-
-void WhatsAppProto::HandleReceiveGroups(const std::vector<string>& groups, bool isOwned)
-{
-	map<MCONTACT, bool> isMember; // at the moment, only members of owning groups are stored
-
-	// This could take long time if there are many new groups which aren't
-	//	 yet stored to the database. But that should be a rare case
-	for (std::vector<string>::const_iterator it = groups.begin(); it != groups.end(); ++it) {
-		MCONTACT hContact = AddToContactList(*it);
-		setByte(hContact, "IsGroupMember", 1);
-		if (isOwned) {
-			this->isMemberByGroupContact[hContact]; // []-operator creates entry, if it doesn't exist
-			setByte(hContact, "SimpleChatRoom", 2);
-			m_pConnection->sendGetParticipants(*it);
-		}
-		else isMember[hContact] = true;
-	}
-
-	// Mark as non-meber if group only exists locally
-	if (!isOwned)
-		for (MCONTACT hContact = db_find_first(m_szModuleName); hContact; hContact = db_find_next(hContact, m_szModuleName))
-			if (!isChatRoom(hContact) && getByte(hContact, "SimpleChatRoom", 0) > 0)
-				setByte(hContact, "IsGroupMember", isMember.find(hContact) == isMember.end() ? 0 : 1);
-}
-
-void WhatsAppProto::onGroupCreated(const std::string& paramString1, const std::string& paramString2)
-{
-	// Must be received after onOwningGroups()
-	debugLogA("%s / %s", paramString1.c_str(), paramString2.c_str());
-	string jid = paramString2 + string("@") + paramString1;
-	MCONTACT hContact = this->AddToContactList(jid);
-	setByte(hContact, "SimpleChatRoom", 2);
 }

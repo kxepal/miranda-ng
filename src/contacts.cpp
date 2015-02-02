@@ -1,6 +1,6 @@
 #include "common.h"
 
-MCONTACT WhatsAppProto::AddToContactList(const std::string& jid, bool dont_check, const char *new_name, bool isHidden)
+MCONTACT WhatsAppProto::AddToContactList(const std::string &jid, bool dont_check, const char *new_name, bool isHidden)
 {
 	if (jid == m_szJid)
 		return NULL;
@@ -56,7 +56,7 @@ MCONTACT WhatsAppProto::AddToContactList(const std::string& jid, bool dont_check
 	return hContact;
 }
 
-MCONTACT WhatsAppProto::ContactIDToHContact(const std::string& phoneNumber)
+MCONTACT WhatsAppProto::ContactIDToHContact(const std::string &phoneNumber)
 {
 	// Cache
 	std::map<string, MCONTACT>::iterator it = this->hContactByJid.find(phoneNumber);
@@ -128,7 +128,7 @@ void WhatsAppProto::ProcessBuddyList(void*)
 	CODE_BLOCK_CATCH_ALL
 }
 
-void WhatsAppProto::onAvailable(const std::string& paramString, bool paramBoolean)
+void WhatsAppProto::onAvailable(const std::string &paramString, bool paramBoolean)
 {
 	MCONTACT hContact = this->AddToContactList(paramString);
 	if (hContact != NULL) {
@@ -144,7 +144,7 @@ void WhatsAppProto::onAvailable(const std::string& paramString, bool paramBoolea
 	this->UpdateStatusMsg(hContact);
 }
 
-void WhatsAppProto::onLastSeen(const std::string& paramString1, int paramInt, const string &paramString2)
+void WhatsAppProto::onLastSeen(const std::string &paramString1, int paramInt, const string &paramString2)
 {
 	MCONTACT hContact = this->AddToContactList(paramString1);
 	setDword(hContact, WHATSAPP_KEY_LAST_SEEN, paramInt);
@@ -167,17 +167,17 @@ void WhatsAppProto::UpdateStatusMsg(MCONTACT hContact)
 	db_set_ws(hContact, "CList", "StatusMsg", ss.str().c_str());
 }
 
-void WhatsAppProto::onContactChanged(const std::string& jid, bool added)
+void WhatsAppProto::onContactChanged(const std::string &jid, bool added)
 {
 }
 
-void WhatsAppProto::onPictureChanged(const std::string& jid, const std::string& id, bool set)
+void WhatsAppProto::onPictureChanged(const std::string &jid, const std::string &id, bool set)
 {
 	if (isOnline())
 		m_pConnection->sendGetPicture(jid, "image");
 }
 
-void WhatsAppProto::onSendGetPicture(const std::string& jid, const std::vector<unsigned char>& data, const std::string& id)
+void WhatsAppProto::onSendGetPicture(const std::string &jid, const std::vector<unsigned char>& data, const std::string &id)
 {
 	MCONTACT hContact = this->ContactIDToHContact(jid);
 	if (hContact) {
