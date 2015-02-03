@@ -2,6 +2,7 @@
 
 static const TCHAR *sttStatuses[] = { LPGENT("Members"), LPGENT("Owners") };
 
+/////////////////////////////////////////////////////////////////////////////////////////
 // protocol menu handler - create a new group
 
 INT_PTR __cdecl WhatsAppProto::OnCreateGroup(WPARAM wParam, LPARAM lParam)
@@ -20,6 +21,9 @@ INT_PTR __cdecl WhatsAppProto::OnCreateGroup(WPARAM wParam, LPARAM lParam)
 
 	return FALSE;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// join/leave services for the standard contact list popup menu
 
 INT_PTR WhatsAppProto::OnJoinChat(WPARAM hContact, LPARAM)
 {
@@ -40,6 +44,70 @@ INT_PTR WhatsAppProto::OnLeaveChat(WPARAM hContact, LPARAM)
 	}
 	return 0;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// handler to pass events from SRMM to WAConnection
+
+int WhatsAppProto::OnChatOutgoing(WPARAM wParam, LPARAM lParam)
+{
+	GCHOOK *hook = (GCHOOK*)lParam;
+	if (mir_strcmp(hook->pDest->pszModule, m_szModuleName))
+		return 0;
+
+	std::string chat_id(ptrA(mir_utf8encodeT(hook->pDest->ptszID)));
+	WAChatInfo *pInfo;
+	{
+		mir_cslock lck(m_csChats);
+		pInfo = m_chats[chat_id];
+		if (pInfo == NULL)
+			return 0;
+	}
+
+	switch (hook->pDest->iType) {
+	case GC_USER_LEAVE:
+	case GC_SESSION_TERMINATE:
+		break;
+
+	case GC_USER_MESSAGE:
+		if (isOnline()) {
+			std::string msg(ptrA(mir_utf8encodeT(hook->ptszText)));
+			
+			try {
+				int msgId = GetSerial();
+				time_t now = time(NULL);
+				std::string id = Utilities::intToStr(now) + "-" + Utilities::intToStr(msgId);
+
+				FMessage fmsg(chat_id, true, id);
+				fmsg.timestamp = now;
+				fmsg.data = msg;
+				m_pConnection->sendMessage(&fmsg);
+
+				pInfo->m_unsentMsgs[id] = hook->ptszText;
+			}
+			CODE_BLOCK_CATCH_ALL
+		}
+		break;
+	}
+
+	return 0;
+}
+
+void __cdecl WhatsAppProto::SendSetGroupNameWorker(void* data)
+{
+	input_box_ret* ibr(static_cast<input_box_ret*>(data));
+	string groupName(ibr->value);
+	mir_free(ibr->value);
+
+	ptrA jid(getStringA(*((MCONTACT*)ibr->userData), WHATSAPP_KEY_ID));
+	if (jid && isOnline())
+		m_pConnection->sendSetNewSubject((char*)jid, groupName);
+
+	delete ibr->userData;
+	delete ibr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// chat helpers
 
 void WhatsAppProto::InitChat(const TCHAR *jid, const TCHAR *nick)
 {
@@ -65,79 +133,17 @@ void WhatsAppProto::InitChat(const TCHAR *jid, const TCHAR *nick)
 		m_pConnection->sendGetParticipants(_T2A(jid));
 }
 
-int WhatsAppProto::OnChatOutgoing(WPARAM wParam, LPARAM lParam)
+TCHAR* WhatsAppProto::GetChatUserNick(const std::string &jid)
 {
-	GCHOOK *hook = reinterpret_cast<GCHOOK*>(lParam);
-	char *text;
+	if (m_szJid == jid)
+		return mir_utf8decodeT(m_szNick.c_str());
 
-	if (strcmp(hook->pDest->pszModule, m_szModuleName))
-		return 0;
-
-	switch (hook->pDest->iType) {
-	case GC_USER_MESSAGE:
-		text = mir_t2a_cp(hook->ptszText, CP_UTF8);
-		{
-			std::string msg = text;
-
-			char *id = mir_t2a_cp(hook->pDest->ptszID, CP_UTF8);
-			std::string chat_id = id;
-
-			mir_free(text);
-			mir_free(id);
-
-			if (isOnline()) {
-				MCONTACT hContact = this->ContactIDToHContact(chat_id);
-				if (hContact) {
-					debugLogA("**Chat - Outgoing message: %s", text);
-					this->SendMsg(hContact, IS_CHAT, msg.c_str());
-
-					GCDEST gcd = { m_szModuleName, hook->pDest->ptszID, GC_EVENT_MESSAGE };
-					GCEVENT gce = { sizeof(gce), &gcd };
-					gce.dwFlags = GCEF_ADDTOLOG;
-					gce.ptszNick = mir_a2t(m_szNick.c_str());
-					gce.ptszUID = mir_a2t(m_szJid.c_str());
-					gce.time = time(NULL);
-					gce.ptszText = hook->ptszText;
-					gce.bIsMe = TRUE;
-					CallServiceSync(MS_GC_EVENT, 0, (LPARAM)&gce);
-
-					mir_free((void*)gce.ptszUID);
-					mir_free((void*)gce.ptszNick);
-				}
-			}
-		}
-		break;
-
-	case GC_USER_LEAVE:
-	case GC_SESSION_TERMINATE:
-		break;
-	}
-
-	return 0;
-}
-
-void __cdecl WhatsAppProto::SendSetGroupNameWorker(void* data)
-{
-	input_box_ret* ibr(static_cast<input_box_ret*>(data));
-	string groupName(ibr->value);
-	mir_free(ibr->value);
-
-	ptrA jid(getStringA(*((MCONTACT*)ibr->userData), WHATSAPP_KEY_ID));
-	if (jid && isOnline())
-		m_pConnection->sendSetNewSubject((char*)jid, groupName);
-
-	delete ibr->userData;
-	delete ibr;
-}
-
-void WhatsAppProto::SendGetGroupInfoWorker(void* data)
-{
-	if (isOnline())
-		m_pConnection->sendGetGroupInfo(*((std::string*) data));
+	MCONTACT hContact = ContactIDToHContact(jid);
+	return (hContact == 0) ? utils::removeA(mir_utf8decodeT(jid.c_str())) : mir_tstrdup(pcli->pfnGetContactDisplayName(hContact, 0));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// WAConnection members
+// WAGroupListener members
 
 void WhatsAppProto::onGroupInfo(const std::string &jid, const std::string &owner, const std::string &subject, const std::string &subject_owner, int time_subject, int time_created)
 {
@@ -154,24 +160,26 @@ void WhatsAppProto::onGroupInfo(const std::string &jid, const std::string &owner
 		}
 	}
 
+	GCDEST gcd = { m_szModuleName, pInfo->tszJid, 0 };
 	if (!subject.empty()) {
-		GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_TOPIC };
-
+		gcd.iType = GC_EVENT_TOPIC;
 		pInfo->tszOwner = mir_utf8decodeT(owner.c_str());
 
 		ptrT tszSubject(mir_utf8decodeT(subject.c_str()));
 		ptrT tszSubjectOwner(mir_utf8decodeT(subject_owner.c_str()));
-		TCHAR *p = _tcschr(tszSubjectOwner, '@');
-		if (p) *p = 0;
 
 		GCEVENT gce = { sizeof(gce), &gcd };
 		gce.ptszUID = pInfo->tszOwner;
-		gce.ptszNick = tszSubjectOwner;
+		gce.ptszNick = utils::removeA(tszSubjectOwner);
 		gce.time = time_subject;
 		gce.dwFlags = GCEF_ADDTOLOG;
 		gce.ptszText = tszSubject;
 		CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
 	}
+
+	gcd.iType = GC_EVENT_CONTROL;
+	GCEVENT gce = { sizeof(gce), &gcd };
+	CallServiceSync(MS_GC_EVENT, SESSION_INITDONE, (LPARAM)&gce);
 }
 
 void WhatsAppProto::onGroupMessage(const FMessage &msg)
@@ -234,23 +242,14 @@ void WhatsAppProto::onGetParticipants(const std::string &gjid, const std::vector
 	for (size_t i = 0; i < participants.size(); i++) {
 		std::string curr = participants[i];
 
-		ptrT ujid(mir_utf8decodeT(curr.c_str())), nick;
+		ptrT ujid(mir_utf8decodeT(curr.c_str())), nick(GetChatUserNick(curr));
 		bool bIsOwner = !mir_tstrcmp(ujid, pInfo->tszOwner);
-		TCHAR *p = _tcschr(ujid, '@');
-		if (p) *p = 0;
-
-		if (m_szNick == curr)
-			nick = getTStringA("Nick");
-		else {
-			MCONTACT hContact = ContactIDToHContact(curr);
-			nick = mir_tstrdup((hContact == 0) ? ujid : pcli->pfnGetContactDisplayName(hContact, 0));
-		}
 
 		GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_JOIN };
 
 		GCEVENT gce = { sizeof(gce), &gcd };
 		gce.ptszNick = nick;
-		gce.ptszUID = ujid;
+		gce.ptszUID = utils::removeA(ujid);
 		gce.ptszStatus = (bIsOwner) ? _T("Owners") : _T("Members");
 		CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
 	}
@@ -258,4 +257,35 @@ void WhatsAppProto::onGetParticipants(const std::string &gjid, const std::vector
 
 void WhatsAppProto::onGroupCreated(const std::string &paramString1, const std::string &paramString2)
 {
+}
+
+void WhatsAppProto::onGroupMessageReceived(const FMessage &msg)
+{
+	WAChatInfo *pInfo;
+	{
+		mir_cslock lck(m_csChats);
+		pInfo = m_chats[msg.key.remote_jid];
+		if (pInfo == NULL)
+			return;
+	}
+	
+	auto p = pInfo->m_unsentMsgs.find(msg.key.id);
+	if (p == pInfo->m_unsentMsgs.end())
+		return;
+
+	ptrT tszUID(mir_utf8decodeT(m_szJid.c_str()));
+	ptrT tszNick(mir_utf8decodeT(m_szNick.c_str()));
+
+	GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_MESSAGE };
+
+	GCEVENT gce = { sizeof(gce), &gcd };
+	gce.dwFlags = GCEF_ADDTOLOG;
+	gce.ptszUID = tszUID;
+	gce.ptszNick = tszNick;
+	gce.time = msg.timestamp;
+	gce.ptszText = p->second.c_str();
+	gce.bIsMe = m_szJid == msg.remote_resource;
+	CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
+
+	pInfo->m_unsentMsgs.erase(p);
 }

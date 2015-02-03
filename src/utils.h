@@ -29,6 +29,8 @@ std::string getLastErrorMsg();
 
 namespace utils
 {
+	TCHAR* removeA(TCHAR *str);
+	
 	void setStatusMessage(MCONTACT hContact, const TCHAR *ptszMessage);
 		
 	BYTE* md5string(const BYTE*, int, BYTE* digest);

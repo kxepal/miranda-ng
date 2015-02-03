@@ -1,5 +1,15 @@
 #include "common.h"
 
+TCHAR* utils::removeA(TCHAR *str)
+{
+	if (str == NULL)
+		return NULL;
+
+	TCHAR *p = _tcschr(str, '@');
+	if (p) *p = 0;
+	return str;
+}
+
 std::string getLastErrorMsg()
 {
 	LPVOID lpMsgBuf;

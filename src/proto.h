@@ -14,6 +14,7 @@ struct WAChatInfo
 		bActive = false;
 	}
 
+	map<std::string, std::tstring> m_unsentMsgs;
 	ptrT tszJid, tszNick, tszOwner;
 	bool bActive;
 };
@@ -22,7 +23,7 @@ class WhatsAppProto : public PROTO<WhatsAppProto>, public WAListener, public WAG
 {
 public:
 	WhatsAppProto(const char *proto_name, const TCHAR *username);
-	~WhatsAppProto( );
+	~WhatsAppProto();
 
 	inline bool isOnline() const
 	{	return (m_pConnection != NULL);
@@ -36,20 +37,20 @@ public:
 	{	return (m_iStatus == ID_STATUS_INVISIBLE);
 	}
 
-	// PROTO_INTERFACE
+	// PROTO_INTERFACE ///////////////////////////////////////////////////////////////////
 
-	virtual	MCONTACT __cdecl AddToList(int flags, PROTOSEARCHRESULT* psr);
-	virtual	MCONTACT __cdecl AddToListByEvent(int flags, int iContact, MEVENT hDbEvent) { return NULL; }
+	virtual	MCONTACT  __cdecl AddToList(int flags, PROTOSEARCHRESULT* psr);
+	virtual	MCONTACT  __cdecl AddToListByEvent(int flags, int iContact, MEVENT hDbEvent) { return NULL; }
 
-	virtual	int      __cdecl Authorize(MEVENT hDbEvent);
-	virtual	int      __cdecl AuthDeny(MEVENT hDbEvent, const PROTOCHAR* szReason) { return 1; }
-	virtual	int      __cdecl AuthRecv(MCONTACT hContact, PROTORECVEVENT*) { return 1; }
-	virtual	int      __cdecl AuthRequest(MCONTACT hContact, const PROTOCHAR* szMessage);
+	virtual	int       __cdecl Authorize(MEVENT hDbEvent);
+	virtual	int       __cdecl AuthDeny(MEVENT hDbEvent, const PROTOCHAR* szReason) { return 1; }
+	virtual	int       __cdecl AuthRecv(MCONTACT hContact, PROTORECVEVENT*) { return 1; }
+	virtual	int       __cdecl AuthRequest(MCONTACT hContact, const PROTOCHAR* szMessage);
 
-	virtual	HANDLE   __cdecl FileAllow(MCONTACT hContact, HANDLE hTransfer, const PROTOCHAR* szPath) { return NULL; }
-	virtual	int      __cdecl FileCancel(MCONTACT hContact, HANDLE hTransfer) { return 1; }
-	virtual	int      __cdecl FileDeny(MCONTACT hContact, HANDLE hTransfer, const PROTOCHAR* szReason) { return 1; }
-	virtual	int      __cdecl FileResume(HANDLE hTransfer, int* action, const PROTOCHAR** szFilename) { return 1; }
+	virtual	HANDLE    __cdecl FileAllow(MCONTACT hContact, HANDLE hTransfer, const PROTOCHAR* szPath) { return NULL; }
+	virtual	int       __cdecl FileCancel(MCONTACT hContact, HANDLE hTransfer) { return 1; }
+	virtual	int       __cdecl FileDeny(MCONTACT hContact, HANDLE hTransfer, const PROTOCHAR* szReason) { return 1; }
+	virtual	int       __cdecl FileResume(HANDLE hTransfer, int* action, const PROTOCHAR** szFilename) { return 1; }
 
 	virtual	DWORD_PTR __cdecl GetCaps(int type, MCONTACT hContact = NULL);
 	virtual	int       __cdecl GetInfo(MCONTACT hContact, int infoType) { return 1; }
@@ -82,38 +83,30 @@ public:
 
 	virtual	int       __cdecl OnEvent(PROTOEVENTTYPE iEventType, WPARAM wParam, LPARAM lParam) { return 1; }
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	// Services
+	// Services //////////////////////////////////////////////////////////////////////////
 
 	INT_PTR __cdecl SvcCreateAccMgrUI(WPARAM, LPARAM);
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	// Events
+	// Events ////////////////////////////////////////////////////////////////////////////
 
 	int __cdecl OnOptionsInit(WPARAM, LPARAM);
 	int __cdecl OnModulesLoaded(WPARAM, LPARAM);
 	int __cdecl OnBuildStatusMenu(WPARAM, LPARAM);
 	int __cdecl OnChatOutgoing(WPARAM, LPARAM);
 
-	// Loops
-	bool NegotiateConnection();
+	// Worker Threads ////////////////////////////////////////////////////////////////////
+
 	void __cdecl stayConnectedLoop(void*);
 	void __cdecl sentinelLoop(void*);
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	// Processing Threads
+	// Processing Threads ////////////////////////////////////////////////////////////////
 
 	void __cdecl ProcessBuddyList(void*);
 	void __cdecl SearchAckThread(void*);
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	// Worker Threads
-
-	void __cdecl SendGetGroupInfoWorker(void*);
 	void __cdecl SendSetGroupNameWorker(void*);
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	// Contacts handling
+	// Contacts handling /////////////////////////////////////////////////////////////////
 
 	MCONTACT AddToContactList(const std::string &jid, const char *new_name = NULL);
 
@@ -123,27 +116,26 @@ public:
 	TCHAR*   GetContactDisplayName(const string &jid);
 	void     RequestFriendship(MCONTACT hContact);
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	// Group chats
+	// Group chats ///////////////////////////////////////////////////////////////////////
 
 	map<std::string, WAChatInfo*> m_chats;
 	mir_cs   m_csChats;
 
 	void     InitChat(const TCHAR *jid, const TCHAR *nick);
+	TCHAR*   GetChatUserNick(const std::string &jid);
+
+	void     onGroupMessageReceived(const FMessage &fmsg);
 
 	INT_PTR __cdecl OnJoinChat(WPARAM, LPARAM);
 	INT_PTR __cdecl OnLeaveChat(WPARAM, LPARAM);
 	INT_PTR __cdecl OnCreateGroup(WPARAM, LPARAM);
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	// Registration
+	// Registration //////////////////////////////////////////////////////////////////////
 
 	bool Register(int state, const string &cc, const string &number, const string &code, string &password);
 
 private:
-
-	//////////////////////////////////////////////////////////////////////////////////////
-	// Helpers
+	// Helpers 	//////////////////////////////////////////////////////////////////////////
 
 	LONG m_iSerial;
 	__forceinline LONG GetSerial()
@@ -152,8 +144,7 @@ private:
 
 	void ToggleStatusMenuItems(BOOL bEnable);
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	// Avatars
+	/// Avatars //////////////////////////////////////////////////////////////////////////
 
 	std::tstring GetAvatarFileName(MCONTACT);
 	std::tstring m_tszAvatarFolder;
@@ -163,9 +154,8 @@ private:
 	INT_PTR __cdecl GetMyAvatar(WPARAM, LPARAM);
 	INT_PTR __cdecl SetMyAvatar(WPARAM, LPARAM);
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	// Handles, Locks
-
+	// Private data //////////////////////////////////////////////////////////////////////
+	
 	HGENMENU m_hMenuRoot;
 	HANDLE  m_hMenuCreateGroup;
 
@@ -182,10 +172,8 @@ private:
 	std::map<string, MCONTACT> hContactByJid;
 	map<MCONTACT, map<MCONTACT, bool>> isMemberByGroupContact;
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	// WhatsApp Events
-
 protected:
+	// WAListener methods ////////////////////////////////////////////////////////////////
 	virtual void onMessageForMe(const FMessage &paramFMessage);
 	virtual void onMessageStatusUpdate(const FMessage &paramFMessage);
 	virtual void onMessageError(const FMessage &message, int paramInt) { ; }
@@ -206,6 +194,7 @@ protected:
 	virtual void onContactChanged(const std::string &jid, bool added);
 	virtual void onDeleteAccount(bool result) {}
 
+	// WAGroupListener methods ///////////////////////////////////////////////////////////
 	virtual void onGroupAddUser(const std::string &paramString1, const std::string &paramString2);
 	virtual void onGroupRemoveUser(const std::string &paramString1, const std::string &paramString2);
 	virtual void onGroupNewSubject(const std::string &from, const std::string &author, const std::string &newSubject, int paramInt);
@@ -219,8 +208,7 @@ protected:
 	virtual void onGetParticipants(const std::string &gjid, const std::vector<string> &participants);
 	virtual void onLeaveGroup(const std::string &paramString);
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	// Information providing
+	// Information providing /////////////////////////////////////////////////////////////
 
 	void NotifyEvent(const TCHAR *title, const TCHAR *info, MCONTACT contact, DWORD flags, TCHAR *url = NULL);
 	void NotifyEvent(const std::string &title, const std::string &info, MCONTACT contact, DWORD flags, TCHAR *url = NULL);

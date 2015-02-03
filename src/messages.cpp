@@ -51,11 +51,6 @@ int WhatsAppProto::SendMsg(MCONTACT hContact, int flags, const char *msg)
 		return 0;
 	}
 
-	if (getByte(hContact, "SimpleChatRoom", 0) > 0 && getByte(hContact, "IsGroupMember", 0) == 0) {
-		debugLogA("not a group member");
-		return 0;
-	}
-	
 	int msgId = GetSerial();
 	try {
 		time_t now = time(NULL);
@@ -108,6 +103,11 @@ void WhatsAppProto::onMessageStatusUpdate(const FMessage &fmsg)
 	MCONTACT hContact = this->ContactIDToHContact(fmsg.key.remote_jid);
 	if (hContact == 0)
 		return;
+
+	if (isChatRoom(hContact)) {
+		onGroupMessageReceived(fmsg);
+		return;
+	}
 
 	const TCHAR *ptszBy;
 	switch (fmsg.status) {
