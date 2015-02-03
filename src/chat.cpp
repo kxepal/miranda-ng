@@ -92,6 +92,64 @@ int WhatsAppProto::OnChatOutgoing(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+// handler to customize chat menus
+
+enum
+{
+	IDM_CANCEL,
+
+	IDM_DESTROY, IDM_INVITE, IDM_LEAVE, IDM_TOPIC,
+
+	IDM_MESSAGE, IDM_KICK,
+	IDM_RJID_ADD, IDM_RJID_COPY,
+
+	IDM_CPY_NICK, IDM_CPY_TOPIC, IDM_CPY_RJID
+};
+
+static gc_item sttLogListItems[] =
+{
+	{ LPGENT("&Invite a user"), IDM_INVITE, MENU_ITEM },
+	{ LPGENT("View/change &topic"), IDM_TOPIC, MENU_POPUPITEM },
+	{ NULL, 0, MENU_SEPARATOR },
+	{ LPGENT("Copy room &JID"), IDM_CPY_RJID, MENU_ITEM },
+	{ LPGENT("Copy room topic"), IDM_CPY_TOPIC, MENU_ITEM },
+	{ NULL, 0, MENU_SEPARATOR },
+	{ LPGENT("&Leave chat session"), IDM_LEAVE, MENU_ITEM }
+};
+
+static gc_item sttListItems[] =
+{
+	{ LPGENT("&Add to roster"), IDM_RJID_ADD, MENU_POPUPITEM },
+	{ LPGENT("&Copy to clipboard"), IDM_RJID_COPY, MENU_POPUPITEM },
+	{ NULL, 0, MENU_SEPARATOR },
+	{ LPGENT("&Kick"), IDM_KICK, MENU_ITEM },
+	{ NULL, 0, MENU_SEPARATOR },
+	{ LPGENT("Copy &nickname"), IDM_CPY_NICK, MENU_ITEM },
+	{ LPGENT("Copy real &JID"), IDM_CPY_RJID, MENU_ITEM },
+};
+
+int WhatsAppProto::OnChatMenu(WPARAM wParam, LPARAM lParam)
+{
+	GCMENUITEMS *gcmi = (GCMENUITEMS*)lParam;
+	if (gcmi == NULL)
+		return 0;
+
+	if (mir_strcmpi(gcmi->pszModule, m_szModuleName))
+		return 0;
+
+	if (gcmi->Type == MENU_ON_LOG) {
+		gcmi->nItems = SIZEOF(sttLogListItems);
+		gcmi->Item = sttLogListItems;
+	}
+	else if (gcmi->Type == MENU_ON_NICKLIST) {
+		gcmi->nItems = SIZEOF(sttListItems);
+		gcmi->Item = sttListItems;
+	}
+
+	return 0;
+}
+
 void __cdecl WhatsAppProto::SendSetGroupNameWorker(void* data)
 {
 	input_box_ret* ibr(static_cast<input_box_ret*>(data));

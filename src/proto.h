@@ -81,7 +81,7 @@ public:
 
 	virtual	int       __cdecl UserIsTyping(MCONTACT hContact, int type);
 
-	virtual	int       __cdecl OnEvent(PROTOEVENTTYPE iEventType, WPARAM wParam, LPARAM lParam) { return 1; }
+	virtual	int       __cdecl OnEvent(PROTOEVENTTYPE iEventType, WPARAM wParam, LPARAM lParam);
 
 	// Services //////////////////////////////////////////////////////////////////////////
 
@@ -90,9 +90,7 @@ public:
 	// Events ////////////////////////////////////////////////////////////////////////////
 
 	int __cdecl OnOptionsInit(WPARAM, LPARAM);
-	int __cdecl OnModulesLoaded(WPARAM, LPARAM);
 	int __cdecl OnBuildStatusMenu(WPARAM, LPARAM);
-	int __cdecl OnChatOutgoing(WPARAM, LPARAM);
 
 	// Worker Threads ////////////////////////////////////////////////////////////////////
 
@@ -126,9 +124,12 @@ public:
 
 	void     onGroupMessageReceived(const FMessage &fmsg);
 
-	INT_PTR __cdecl OnJoinChat(WPARAM, LPARAM);
-	INT_PTR __cdecl OnLeaveChat(WPARAM, LPARAM);
-	INT_PTR __cdecl OnCreateGroup(WPARAM, LPARAM);
+	int      __cdecl OnChatOutgoing(WPARAM, LPARAM);
+	int      __cdecl OnChatMenu(WPARAM, LPARAM);
+
+	INT_PTR  __cdecl OnJoinChat(WPARAM, LPARAM);
+	INT_PTR  __cdecl OnLeaveChat(WPARAM, LPARAM);
+	INT_PTR  __cdecl OnCreateGroup(WPARAM, LPARAM);
 
 	// Registration //////////////////////////////////////////////////////////////////////
 

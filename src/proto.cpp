@@ -30,7 +30,6 @@ WhatsAppProto::WhatsAppProto(const char* proto_name, const TCHAR* username) :
 	CreateProtoService(PS_SETMYAVATART, &WhatsAppProto::SetMyAvatar);
 
 	HookProtoEvent(ME_OPT_INITIALISE, &WhatsAppProto::OnOptionsInit);
-	HookProtoEvent(ME_SYSTEM_MODULESLOADED, &WhatsAppProto::OnModulesLoaded);
 	HookProtoEvent(ME_CLIST_PREBUILDSTATUSMENU, &WhatsAppProto::OnBuildStatusMenu);
 
 	// Create standard network connection
@@ -60,16 +59,19 @@ WhatsAppProto::~WhatsAppProto()
 	CloseHandle(update_loop_lock_);
 }
 
-int WhatsAppProto::OnModulesLoaded(WPARAM wParam, LPARAM lParam)
+int WhatsAppProto::OnEvent(PROTOEVENTTYPE evType, WPARAM wParam, LPARAM lParam)
 {
-	// Register group chat
-	GCREGISTER gcr = { sizeof(gcr) };
-	gcr.dwFlags = GC_TYPNOTIF | GC_CHANMGR;
-	gcr.ptszDispName = m_tszUserName;
-	gcr.pszModule = m_szModuleName;
-	CallServiceSync(MS_GC_REGISTER, 0, (LPARAM)&gcr);
+	if (evType == EV_PROTO_ONLOAD) {
+		// Register group chat
+		GCREGISTER gcr = { sizeof(gcr) };
+		gcr.dwFlags = GC_TYPNOTIF | GC_CHANMGR;
+		gcr.ptszDispName = m_tszUserName;
+		gcr.pszModule = m_szModuleName;
+		CallServiceSync(MS_GC_REGISTER, 0, (LPARAM)&gcr);
 
-	HookProtoEvent(ME_GC_EVENT, &WhatsAppProto::OnChatOutgoing);
+		HookProtoEvent(ME_GC_EVENT, &WhatsAppProto::OnChatOutgoing);
+		HookProtoEvent(ME_GC_BUILDMENU, &WhatsAppProto::OnChatMenu);
+	}
 	return 0;
 }
 
