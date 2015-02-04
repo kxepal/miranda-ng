@@ -27,6 +27,10 @@ public:
 
 std::string getLastErrorMsg();
 
+__forceinline TCHAR* str2t(const std::string &str)
+{	return mir_utf8decodeT(str.c_str());
+}
+
 namespace utils
 {
 	TCHAR* removeA(TCHAR *str);

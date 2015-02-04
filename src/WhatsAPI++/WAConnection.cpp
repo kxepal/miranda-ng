@@ -390,22 +390,6 @@ void WAConnection::parseMessage(ProtocolTreeNode *messageNode) throw (WAExceptio
 		if (m_pEventHandler != NULL)
 			m_pEventHandler->onMessageError(message, errorCode);
 	}
-	else if (typeAttribute == "subject") {
-		bool receiptRequested = false;
-		std::vector<ProtocolTreeNode*> requestNodes(messageNode->getAllChildren("request"));
-		for (size_t i = 0; i < requestNodes.size(); i++) {
-			ProtocolTreeNode *requestNode = requestNodes[i];
-			if (requestNode->getAttributeValue("xmlns") == "urn:xmpp:receipts")
-				receiptRequested = true;
-		}
-
-		ProtocolTreeNode *bodyNode = messageNode->getChild("body");
-		if (bodyNode != NULL&& m_pGroupEventHandler != NULL)
-			m_pGroupEventHandler->onGroupNewSubject(from, author, bodyNode->getDataAsString(), atoi(attribute_t.c_str()));
-
-		if (receiptRequested)
-			sendSubjectReceived(from, id);
-	}
 	else if (typeAttribute == "text") {
 		ProtocolTreeNode *body = messageNode->getChild("body");
 		if (from.empty() || body == NULL || body->data == NULL || body->data->empty())
@@ -506,6 +490,9 @@ void WAConnection::parseNotification(ProtocolTreeNode *node) throw(WAException)
 	if (type.empty() || from.empty() || m_pEventHandler == NULL)
 		return;
 
+	const string &participant = node->getAttributeValue("participant");
+	int ts = atoi(node->getAttributeValue("t").c_str());
+
 	if (type == "contacts") {
 		std::vector<ProtocolTreeNode*> children(node->getAllChildren());
 		for (size_t i = 0; i < children.size(); i++) {
@@ -548,13 +535,18 @@ void WAConnection::parseNotification(ProtocolTreeNode *node) throw(WAException)
 			// to do: add a user on the fly
 		}
 	}
+	else if (type == "subject") {
+		ProtocolTreeNode *bodyNode = node->getChild("body");
+		if (bodyNode != NULL && m_pGroupEventHandler != NULL)
+			m_pGroupEventHandler->onGroupNewSubject(from, participant, bodyNode->getDataAsString(), ts);
+		return; // don't set ack
+	}
 
 	ProtocolTreeNode sendNode("ack");
 	sendNode << XATTR("to", from) << XATTR("id", id) << XATTR("type", type) << XATTR("class", "notification");
 	const string &to = node->getAttributeValue("to");
 	if (!to.empty())
 		sendNode << XATTR("from", to);
-	const string &participant = node->getAttributeValue("participant");
 	if (!participant.empty())
 		sendNode << XATTR("participant", participant);
 	out.write(sendNode);
@@ -863,14 +855,6 @@ void WAConnection::sendStatusUpdate(std::string& status) throw (WAException)
 	delete n;
 }
 
-void WAConnection::sendSubjectReceived(const std::string &to, const std::string &id)throw(WAException)
-{
-	ProtocolTreeNode *receivedNode = new ProtocolTreeNode("received") << XATTR("xmlns", "urn:xmpp:receipts");
-
-	out.write(ProtocolTreeNode("message", receivedNode) 
-		<< XATTR("to", to) << XATTR("type", "subject") << XATTR("id", id));
-}
-
 /////////////////////////////////////////////////////////////////////////////////////////
 // Group chats
 
@@ -884,7 +868,7 @@ void WAConnection::sendGetGroupInfo(const std::string &gjid) throw (WAException)
 		<< XATTR("id", id) << XATTR("type", "get") << XATTR("to", gjid));
 }
 
-void WAConnection::sendGetParticipants(const char *gjid) throw (WAException)
+void WAConnection::sendGetParticipants(const std::string &gjid) throw (WAException)
 {
 	std::string id = makeId("iq_");
 	this->pending_server_requests[id] = new IqResultGetGroupParticipantsHandler(this);
@@ -972,9 +956,10 @@ void WAConnection::sendVerbParticipants(const std::string &gjid, const std::vect
 
 void WAConnection::sendSetNewSubject(const std::string &gjid, const std::string &subject) throw (WAException)
 {
-	std::string id = this->makeId("set_group_subject_");
+	std::string id = this->makeId("iq_");
 
-	ProtocolTreeNode *subjectNode = new ProtocolTreeNode("subject") << XATTR("value", subject);
+	std::vector<unsigned char> *data = new std::vector<unsigned char>(subject.begin(), subject.end());
+	ProtocolTreeNode *subjectNode = new ProtocolTreeNode("subject", data);
 
 	out.write(ProtocolTreeNode("iq", subjectNode) << XATTR("xmlns", "w:g2")
 		<< XATTR("id", id) << XATTR("type", "set") << XATTR("to", gjid));

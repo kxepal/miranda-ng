@@ -384,7 +384,6 @@ public:
 	void sendActive() throw(WAException);
 	void sendInactive() throw(WAException);
 	void sendPaused(const std::string &to) throw(WAException);
-	void sendSubjectReceived(const std::string &to, const std::string &id) throw(WAException);
 	void sendMessageReceived(const FMessage &message) throw(WAException);
 	void sendPresenceSubscriptionRequest(const std::string &to) throw (WAException);
 	void sendClientConfig(const std::string &sound,  const std::string &pushID, bool preview, const std::string &platform) throw(WAException);
@@ -397,7 +396,7 @@ public:
 	void sendCreateGroupChat(const std::string &subject) throw (WAException);
 	void sendEndGroupChat(const std::string &gjid) throw (WAException);
 	void sendGetGroupInfo(const std::string &gjid) throw (WAException);
-	void sendGetParticipants(const char *gjid) throw (WAException);
+	void sendGetParticipants(const std::string &gjid) throw (WAException);
 	void sendClearDirty(const std::string &category) throw (WAException);
 	void sendJoinLeaveGroup(const char *gjid, bool bJoin) throw (WAException);
 	void sendAddParticipants(const std::string &gjid, const std::vector<std::string>& participants) throw (WAException);

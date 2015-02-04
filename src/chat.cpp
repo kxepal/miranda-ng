@@ -163,11 +163,13 @@ void __cdecl WhatsAppProto::ChatMenutHook(struct WAChatInfo *pInfo, struct GCHOO
 	switch (gch->dwData) {
 	case IDM_TOPIC:
 		CMString title(FORMAT, TranslateT("Set new subject for %s"), pInfo->tszNick);
+		ptrT tszOldValue(getTStringA(pInfo->hContact, "Nick"));
 		
 		ENTER_STRING es = { 0 };
 		es.cbSize = sizeof(es);
 		es.type = ESF_RICHEDIT;
 		es.szModuleName = m_szModuleName;
+		es.ptszInitVal = tszOldValue;
 		es.caption = title;
 		es.szDataPrefix = "es_";
 		if (EnterString(&es)) {
@@ -180,33 +182,26 @@ void __cdecl WhatsAppProto::ChatMenutHook(struct WAChatInfo *pInfo, struct GCHOO
 	}
 }
 
-void __cdecl WhatsAppProto::SendSetGroupNameWorker(void* data)
-{
-	input_box_ret* ibr(static_cast<input_box_ret*>(data));
-	string groupName(ibr->value);
-	mir_free(ibr->value);
-
-	ptrA jid(getStringA(*((MCONTACT*)ibr->userData), WHATSAPP_KEY_ID));
-	if (jid && isOnline())
-		m_pConnection->sendSetNewSubject((char*)jid, groupName);
-
-	delete ibr->userData;
-	delete ibr;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // chat helpers
 
-void WhatsAppProto::InitChat(const TCHAR *jid, const TCHAR *nick)
+WAChatInfo* WhatsAppProto::InitChat(const std::string &jid, const std::string &nick)
 {
+	TCHAR *ptszJid = str2t(jid), *ptszNick = str2t(nick);
+
+	WAChatInfo *pInfo = new WAChatInfo(ptszJid, ptszNick);
+	m_chats[jid] = pInfo;
+
 	GCSESSION gcw = { sizeof(GCSESSION) };
 	gcw.iType = GCW_CHATROOM;
 	gcw.pszModule = m_szModuleName;
-	gcw.ptszName = nick;
-	gcw.ptszID = jid;
+	gcw.ptszName = ptszNick;
+	gcw.ptszID = ptszJid;
 	CallServiceSync(MS_GC_NEWSESSION, NULL, (LPARAM)&gcw);
 
-	GCDEST gcd = { m_szModuleName, jid, GC_EVENT_ADDGROUP };
+	pInfo->hContact = ContactIDToHContact(jid);
+
+	GCDEST gcd = { m_szModuleName, ptszJid, GC_EVENT_ADDGROUP };
 	GCEVENT gce = { sizeof(gce), &gcd };
 	for (int i = SIZEOF(sttStatuses) - 1; i >= 0; i--) {
 		gce.ptszStatus = TranslateTS(sttStatuses[i]);
@@ -218,16 +213,18 @@ void WhatsAppProto::InitChat(const TCHAR *jid, const TCHAR *nick)
 	CallServiceSync(MS_GC_EVENT, SESSION_ONLINE, (LPARAM)&gce);
 
 	if (m_pConnection)
-		m_pConnection->sendGetParticipants(_T2A(jid));
+		m_pConnection->sendGetParticipants(jid);
+
+	return pInfo;
 }
 
 TCHAR* WhatsAppProto::GetChatUserNick(const std::string &jid)
 {
 	if (m_szJid == jid)
-		return mir_utf8decodeT(m_szNick.c_str());
+		return str2t(m_szNick);
 
 	MCONTACT hContact = ContactIDToHContact(jid);
-	return (hContact == 0) ? utils::removeA(mir_utf8decodeT(jid.c_str())) : mir_tstrdup(pcli->pfnGetContactDisplayName(hContact, 0));
+	return (hContact == 0) ? utils::removeA(str2t(jid)) : mir_tstrdup(pcli->pfnGetContactDisplayName(hContact, 0));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -240,10 +237,7 @@ void WhatsAppProto::onGroupInfo(const std::string &jid, const std::string &owner
 		mir_cslock lck(m_csChats);
 		pInfo = m_chats[jid];
 		if (pInfo == NULL) {
-			pInfo = new WAChatInfo(jid.c_str(), subject.c_str());
-			m_chats[jid] = pInfo;
-
-			InitChat(pInfo->tszJid, pInfo->tszNick);
+			pInfo = InitChat(jid, subject);
 			pInfo->bActive = true;
 		}
 	}
@@ -251,10 +245,10 @@ void WhatsAppProto::onGroupInfo(const std::string &jid, const std::string &owner
 	GCDEST gcd = { m_szModuleName, pInfo->tszJid, 0 };
 	if (!subject.empty()) {
 		gcd.iType = GC_EVENT_TOPIC;
-		pInfo->tszOwner = mir_utf8decodeT(owner.c_str());
+		pInfo->tszOwner = str2t(owner);
 
-		ptrT tszSubject(mir_utf8decodeT(subject.c_str()));
-		ptrT tszSubjectOwner(mir_utf8decodeT(subject_owner.c_str()));
+		ptrT tszSubject(str2t(subject));
+		ptrT tszSubjectOwner(str2t(subject_owner));
 
 		GCEVENT gce = { sizeof(gce), &gcd };
 		gce.ptszUID = pInfo->tszOwner;
@@ -277,16 +271,13 @@ void WhatsAppProto::onGroupMessage(const FMessage &msg)
 		mir_cslock lck(m_csChats);
 		pInfo = m_chats[msg.key.remote_jid];
 		if (pInfo == NULL) {
-			pInfo = new WAChatInfo(msg.key.remote_jid.c_str(), NULL);
-			m_chats[msg.key.remote_jid] = pInfo;
-
-			InitChat(pInfo->tszJid, pInfo->tszNick);
+			pInfo = InitChat(msg.key.remote_jid, "");
 			pInfo->bActive = true;
 		}
 	}
 
-	ptrT tszText(mir_utf8decodeT(msg.data.c_str()));
-	ptrT tszUID(mir_utf8decodeT(msg.remote_resource.c_str()));
+	ptrT tszText(str2t(msg.data));
+	ptrT tszUID(str2t(msg.remote_resource));
 	ptrT tszNick(GetChatUserNick(msg.remote_resource));
 
 	GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_MESSAGE };
@@ -304,8 +295,31 @@ void WhatsAppProto::onGroupMessage(const FMessage &msg)
 		m_pConnection->sendMessageReceived(msg);
 }
 
-void WhatsAppProto::onGroupNewSubject(const std::string &from, const std::string &author, const std::string &newSubject, int paramInt)
+void WhatsAppProto::onGroupNewSubject(const std::string &gjid, const std::string &author, const std::string &newSubject, int ts)
 {
+	WAChatInfo *pInfo;
+	{
+		mir_cslock lck(m_csChats);
+		pInfo = m_chats[gjid];
+		if (pInfo == NULL)
+			return;
+	}
+
+	ptrT tszUID(str2t(author));
+	ptrT tszNick(GetChatUserNick(author));
+	ptrT tszText(str2t(newSubject));
+
+	GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_TOPIC };
+
+	GCEVENT gce = { sizeof(gce), &gcd };
+	gce.dwFlags = GCEF_ADDTOLOG;
+	gce.ptszUID = tszUID;
+	gce.ptszNick = tszNick;
+	gce.time = ts;
+	gce.ptszText = tszText;
+	CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
+
+	setTString(pInfo->hContact, "Nick", tszText);
 }
 
 void WhatsAppProto::onGroupAddUser(const std::string &paramString1, const std::string &paramString2)
@@ -331,7 +345,7 @@ void WhatsAppProto::onGetParticipants(const std::string &gjid, const std::vector
 	for (size_t i = 0; i < participants.size(); i++) {
 		std::string curr = participants[i];
 
-		ptrT ujid(mir_utf8decodeT(curr.c_str())), nick(GetChatUserNick(curr));
+		ptrT ujid(str2t(curr)), nick(GetChatUserNick(curr));
 		bool bIsOwner = !mir_tstrcmp(ujid, pInfo->tszOwner);
 
 		GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_JOIN };
@@ -362,8 +376,8 @@ void WhatsAppProto::onGroupMessageReceived(const FMessage &msg)
 	if (p == pInfo->m_unsentMsgs.end())
 		return;
 
-	ptrT tszUID(mir_utf8decodeT(m_szJid.c_str()));
-	ptrT tszNick(mir_utf8decodeT(m_szNick.c_str()));
+	ptrT tszUID(str2t(m_szJid));
+	ptrT tszNick(str2t(m_szNick));
 
 	GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_MESSAGE };
 

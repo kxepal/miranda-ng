@@ -7,9 +7,8 @@ class WASocketConnection;
 
 struct WAChatInfo
 {
-	WAChatInfo(const char *_jid, const char *_nick) :
-		tszJid(mir_utf8decodeT(_jid)),
-		tszNick(mir_utf8decodeT(_nick))
+	WAChatInfo(TCHAR *_jid, TCHAR *_nick) :
+		tszJid(_jid), tszNick(_nick)
 	{
 		bActive = false;
 	}
@@ -17,6 +16,8 @@ struct WAChatInfo
 	map<std::string, std::tstring> m_unsentMsgs;
 	ptrT tszJid, tszNick, tszOwner;
 	bool bActive;
+
+	MCONTACT hContact;
 };
 
 class WhatsAppProto : public PROTO<WhatsAppProto>, public WAListener, public WAGroupListener
@@ -102,8 +103,6 @@ public:
 	void __cdecl ProcessBuddyList(void*);
 	void __cdecl SearchAckThread(void*);
 
-	void __cdecl SendSetGroupNameWorker(void*);
-
 	// Contacts handling /////////////////////////////////////////////////////////////////
 
 	MCONTACT AddToContactList(const std::string &jid, const char *new_name = NULL);
@@ -120,10 +119,11 @@ public:
 	mir_cs   m_csChats;
 
 	void     ChatMenutHook(WAChatInfo *pInfo, GCHOOK *gch);
-	void     InitChat(const TCHAR *jid, const TCHAR *nick);
 	TCHAR*   GetChatUserNick(const std::string &jid);
 
 	void     onGroupMessageReceived(const FMessage &fmsg);
+
+	WAChatInfo* InitChat(const std::string &jidjid, const std::string &nick);
 
 	int      __cdecl onGroupChatEvent(WPARAM, LPARAM);
 	int      __cdecl OnChatMenu(WPARAM, LPARAM);
@@ -199,7 +199,7 @@ protected:
 	// WAGroupListener methods ///////////////////////////////////////////////////////////
 	virtual void onGroupAddUser(const std::string &paramString1, const std::string &paramString2);
 	virtual void onGroupRemoveUser(const std::string &paramString1, const std::string &paramString2);
-	virtual void onGroupNewSubject(const std::string &from, const std::string &author, const std::string &newSubject, int paramInt);
+	virtual void onGroupNewSubject(const std::string &from, const std::string &author, const std::string &newSubject, int ts);
 	virtual void onGroupMessage(const FMessage &paramFMessage);
 	virtual void onServerProperties(std::map<std::string, std::string>* nameValueMap) {}
 	virtual void onGroupCreated(const std::string &paramString1, const std::string &paramString2);
