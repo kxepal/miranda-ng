@@ -2,6 +2,17 @@
 
 static const TCHAR *sttStatuses[] = { LPGENT("Members"), LPGENT("Owners") };
 
+enum
+{
+	IDM_CANCEL,
+
+	IDM_DESTROY, IDM_INVITE, IDM_LEAVE, IDM_TOPIC,
+
+	IDM_MESSAGE, IDM_KICK,
+	IDM_CPY_NICK, IDM_CPY_TOPIC,
+	IDM_ADD_RJID, IDM_CPY_RJID
+};
+
 /////////////////////////////////////////////////////////////////////////////////////////
 // protocol menu handler - create a new group
 
@@ -69,8 +80,11 @@ int WhatsAppProto::onGroupChatEvent(WPARAM wParam, LPARAM lParam)
 		break;
 
 	case GC_USER_LOGMENU:
+		ChatLogMenuHook(pInfo, gch);
+		break;
+
 	case GC_USER_NICKLISTMENU:
-		ChatMenutHook(pInfo, gch);
+		NickListMenuHook(pInfo, gch);
 		break;
 
 	case GC_USER_MESSAGE:
@@ -98,19 +112,7 @@ int WhatsAppProto::onGroupChatEvent(WPARAM wParam, LPARAM lParam)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
-// handler to customize chat menus
-
-enum
-{
-	IDM_CANCEL,
-
-	IDM_DESTROY, IDM_INVITE, IDM_LEAVE, IDM_TOPIC,
-
-	IDM_MESSAGE, IDM_KICK,
-	IDM_RJID_ADD, IDM_RJID_COPY,
-
-	IDM_CPY_NICK, IDM_CPY_TOPIC, IDM_CPY_RJID
-};
+// chat log menu event handler
 
 static gc_item sttLogListItems[] =
 {
@@ -123,16 +125,113 @@ static gc_item sttLogListItems[] =
 	{ LPGENT("&Leave chat session"), IDM_LEAVE, MENU_ITEM }
 };
 
+void WhatsAppProto::ChatLogMenuHook(WAChatInfo *pInfo, struct GCHOOK *gch)
+{
+	switch (gch->dwData) {
+	case IDM_TOPIC:
+		SetChatSubject(pInfo);
+		break;
+
+	case IDM_CPY_NICK:
+		break;
+
+	case IDM_CPY_TOPIC:
+		utils::copyText(pcli->hwndContactList, pInfo->tszNick);
+		break;
+
+	case IDM_CPY_RJID:
+		utils::copyText(pcli->hwndContactList, pInfo->tszJid);
+		break;
+	}
+}
+
+void WhatsAppProto::SetChatSubject(WAChatInfo *pInfo)
+{
+	CMString title(FORMAT, TranslateT("Set new subject for %s"), pInfo->tszNick);
+	ptrT tszOldValue(getTStringA(pInfo->hContact, "Nick"));
+
+	ENTER_STRING es = { 0 };
+	es.cbSize = sizeof(es);
+	es.type = ESF_RICHEDIT;
+	es.szModuleName = m_szModuleName;
+	es.ptszInitVal = tszOldValue;
+	es.caption = title;
+	es.szDataPrefix = "setSubject_";
+	if (EnterString(&es)) {
+		ptrA gjid(mir_utf8encodeT(pInfo->tszJid));
+		ptrA gsubject(mir_utf8encodeT(es.ptszResult));
+		m_pConnection->sendSetNewSubject(std::string(gjid), std::string(gsubject));
+		mir_free(es.ptszResult);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// nicklist menu event handler
+
 static gc_item sttListItems[] =
 {
-	{ LPGENT("&Add to roster"), IDM_RJID_ADD, MENU_POPUPITEM },
-	{ LPGENT("&Copy to clipboard"), IDM_RJID_COPY, MENU_POPUPITEM },
+	{ LPGENT("&Add to roster"), IDM_ADD_RJID, MENU_POPUPITEM },
 	{ NULL, 0, MENU_SEPARATOR },
 	{ LPGENT("&Kick"), IDM_KICK, MENU_ITEM },
 	{ NULL, 0, MENU_SEPARATOR },
 	{ LPGENT("Copy &nickname"), IDM_CPY_NICK, MENU_ITEM },
 	{ LPGENT("Copy real &JID"), IDM_CPY_RJID, MENU_ITEM },
 };
+
+void WhatsAppProto::NickListMenuHook(WAChatInfo *pInfo, struct GCHOOK *gch)
+{
+	switch (gch->dwData) {
+	case IDM_ADD_RJID:
+		AddChatUser(pInfo, gch->ptszUID);
+		break;
+
+	case IDM_KICK:
+		KickChatUser(pInfo, gch->ptszUID);
+		break;
+
+	case IDM_CPY_NICK:
+		utils::copyText(pcli->hwndContactList, GetChatUserNick(std::string((char*)_T2A(gch->ptszUID))));
+		break;
+
+	case IDM_CPY_RJID:
+		utils::copyText(pcli->hwndContactList, gch->ptszUID);
+		break;
+	}
+}
+
+void WhatsAppProto::AddChatUser(WAChatInfo *pInfo, const TCHAR *ptszJid)
+{
+	std::string jid((char*)_T2A(ptszJid));
+	MCONTACT hContact = ContactIDToHContact(jid);
+	if (hContact && !db_get_b(hContact, "CList", "NotInList", 0))
+		return;
+
+	PROTOSEARCHRESULT sr = { 0 };
+	sr.cbSize = sizeof(sr);
+	sr.flags = PSR_TCHAR;
+	sr.id = (TCHAR*)ptszJid;
+	sr.nick = GetChatUserNick(jid);
+
+	ADDCONTACTSTRUCT acs = { 0 };
+	acs.handleType = HANDLE_SEARCHRESULT;
+	acs.szProto = m_szModuleName;
+	acs.psr = (PROTOSEARCHRESULT*)&sr;
+	CallService(MS_ADDCONTACT_SHOW, (WPARAM)CallService(MS_CLUI_GETHWND, 0, 0), (LPARAM)&acs);
+}
+
+void WhatsAppProto::KickChatUser(WAChatInfo *pInfo, const TCHAR *ptszJid)
+{
+	if (!isOnline())
+		return;
+
+	std::string gjid((char*)_T2A(pInfo->tszJid));
+	std::vector<std::string> jids(1);
+	jids[0] = (char*)_T2A(ptszJid);
+	m_pConnection->sendRemoveParticipants(gjid, jids);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// handler to customize chat menus
 
 int WhatsAppProto::OnChatMenu(WPARAM wParam, LPARAM lParam)
 {
@@ -153,33 +252,6 @@ int WhatsAppProto::OnChatMenu(WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////
-// chat menu event handler
-
-void __cdecl WhatsAppProto::ChatMenutHook(struct WAChatInfo *pInfo, struct GCHOOK *gch)
-{
-	switch (gch->dwData) {
-	case IDM_TOPIC:
-		CMString title(FORMAT, TranslateT("Set new subject for %s"), pInfo->tszNick);
-		ptrT tszOldValue(getTStringA(pInfo->hContact, "Nick"));
-		
-		ENTER_STRING es = { 0 };
-		es.cbSize = sizeof(es);
-		es.type = ESF_RICHEDIT;
-		es.szModuleName = m_szModuleName;
-		es.ptszInitVal = tszOldValue;
-		es.caption = title;
-		es.szDataPrefix = "es_";
-		if (EnterString(&es)) {
-			ptrA gjid(mir_utf8encodeT(pInfo->tszJid));
-			ptrA gsubject(mir_utf8encodeT(es.ptszResult));
-			m_pConnection->sendSetNewSubject(std::string(gjid), std::string(gsubject));
-			mir_free(es.ptszResult);
-		}
-		break;
-	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -339,8 +339,8 @@ private:
 	std::string makeId(const std::string &prefix);
 	void readGroupList(ProtocolTreeNode* node, std::vector<std::string>& groups) throw (WAException);
 	std::string gidToGjid(const std::string &gid);
-	void readAttributeList(ProtocolTreeNode* node, std::vector<std::string>& vector, const std::string &tag, const std::string &attribute) throw (WAException);
-	void sendVerbParticipants(const std::string &gjid, const std::vector<std::string>& participants, const std::string &inner_tag) throw (WAException);
+	void readAttributeList(ProtocolTreeNode* node, std::vector<std::string> &vector, const std::string &tag, const std::string &attribute) throw (WAException);
+	void sendVerbParticipants(const std::string &gjid, const std::vector<std::string> &participants, const std::string &inner_tag) throw (WAException);
 	bool supportsReceiptAcks();
 	static ProtocolTreeNode* getMessageNode(FMessage* message, ProtocolTreeNode* node);
 	std::vector<ProtocolTreeNode*>* processGroupSettings(const std::vector<GroupSetting>& gruops);
@@ -399,8 +399,8 @@ public:
 	void sendGetParticipants(const std::string &gjid) throw (WAException);
 	void sendClearDirty(const std::string &category) throw (WAException);
 	void sendJoinLeaveGroup(const char *gjid, bool bJoin) throw (WAException);
-	void sendAddParticipants(const std::string &gjid, const std::vector<std::string>& participants) throw (WAException);
-	void sendRemoveParticipants(const std::string &gjid, const std::vector<std::string>& participants) throw (WAException);
+	void sendAddParticipants(const std::string &gjid, const std::vector<std::string> &participants) throw (WAException);
+	void sendRemoveParticipants(const std::string &gjid, const std::vector<std::string> &participant) throw (WAException);
 	void sendSetNewSubject(const std::string &gjid, const std::string &subject) throw (WAException);
 	void sendStatusUpdate(std::string& status) throw (WAException);
 	void sendGetPicture(const std::string &jid, const std::string &type) throw (WAException);

@@ -118,8 +118,13 @@ public:
 	map<std::string, WAChatInfo*> m_chats;
 	mir_cs   m_csChats;
 
-	void     ChatMenutHook(WAChatInfo *pInfo, GCHOOK *gch);
+	void     ChatLogMenuHook(WAChatInfo *pInfo, GCHOOK *gch);
+	void     NickListMenuHook(WAChatInfo *pInfo, GCHOOK *gch);
+
+	void     AddChatUser(WAChatInfo *pInfo, const TCHAR *ptszJid);
+	void     KickChatUser(WAChatInfo *pInfo, const TCHAR *ptszJid);
 	TCHAR*   GetChatUserNick(const std::string &jid);
+	void     SetChatSubject(WAChatInfo *pInfo);
 
 	void     onGroupMessageReceived(const FMessage &fmsg);
 

@@ -929,17 +929,17 @@ void WAConnection::sendJoinLeaveGroup(const char *gjid, bool bJoin) throw (WAExc
 		<< XATTR("id", id) << XATTR("type", "set") << XATTR("to", "g.us"));
 }
 
-void WAConnection::sendAddParticipants(const std::string &gjid, const std::vector<std::string>& participants) throw (WAException)
+void WAConnection::sendAddParticipants(const std::string &gjid, const std::vector<std::string> &participants) throw (WAException)
 {
-	this->sendVerbParticipants(gjid, participants, "add");
+	sendVerbParticipants(gjid, participants, "add");
 }
 
-void WAConnection::sendRemoveParticipants(const std::string &gjid, const std::vector<std::string>& participants) throw (WAException)
+void WAConnection::sendRemoveParticipants(const std::string &gjid, const std::vector<std::string> &participants) throw (WAException)
 {
-	this->sendVerbParticipants(gjid, participants, "remove");
+	sendVerbParticipants(gjid, participants, "remove");
 }
 
-void WAConnection::sendVerbParticipants(const std::string &gjid, const std::vector<std::string>& participants, const std::string &inner_tag) throw (WAException)
+void WAConnection::sendVerbParticipants(const std::string &gjid, const std::vector<std::string> &participants, const std::string &inner_tag) throw (WAException)
 {
 	std::string id = makeId("iq_");
 
@@ -950,7 +950,7 @@ void WAConnection::sendVerbParticipants(const std::string &gjid, const std::vect
 
 	ProtocolTreeNode *innerNode = new ProtocolTreeNode(inner_tag, NULL, children);
 
-	out.write(ProtocolTreeNode("iq", innerNode) << XATTR("xmlns", "w:g2")
+	out.write(ProtocolTreeNode("iq", innerNode) << XATTR("xmlns", "w:g")
 		<< XATTR("id", id) << XATTR("type", "set") << XATTR("to", gjid));
 }
 
