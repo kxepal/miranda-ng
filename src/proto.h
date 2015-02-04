@@ -122,6 +122,7 @@ public:
 	void     NickListMenuHook(WAChatInfo *pInfo, GCHOOK *gch);
 
 	void     AddChatUser(WAChatInfo *pInfo, const TCHAR *ptszJid);
+	void     InviteChatUser(WAChatInfo *pInfo);
 	void     KickChatUser(WAChatInfo *pInfo, const TCHAR *ptszJid);
 	TCHAR*   GetChatUserNick(const std::string &jid);
 	void     SetChatSubject(WAChatInfo *pInfo);

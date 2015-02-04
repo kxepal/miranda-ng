@@ -128,21 +128,32 @@ static gc_item sttLogListItems[] =
 void WhatsAppProto::ChatLogMenuHook(WAChatInfo *pInfo, struct GCHOOK *gch)
 {
 	switch (gch->dwData) {
+	case IDM_INVITE:
+		InviteChatUser(pInfo);
+		break;
+
 	case IDM_TOPIC:
 		SetChatSubject(pInfo);
 		break;
 
-	case IDM_CPY_NICK:
+	case IDM_CPY_RJID:
+		utils::copyText(pcli->hwndContactList, pInfo->tszJid);
 		break;
 
 	case IDM_CPY_TOPIC:
 		utils::copyText(pcli->hwndContactList, pInfo->tszNick);
 		break;
 
-	case IDM_CPY_RJID:
-		utils::copyText(pcli->hwndContactList, pInfo->tszJid);
+	case IDM_LEAVE:
+		if (isOnline())
+			m_pConnection->sendJoinLeaveGroup(_T2A(pInfo->tszJid), false);
 		break;
 	}
+}
+
+void WhatsAppProto::InviteChatUser(WAChatInfo *pInfo)
+{
+
 }
 
 void WhatsAppProto::SetChatSubject(WAChatInfo *pInfo)
