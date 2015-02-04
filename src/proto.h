@@ -203,8 +203,8 @@ protected:
 	virtual void onDeleteAccount(bool result) {}
 
 	// WAGroupListener methods ///////////////////////////////////////////////////////////
-	virtual void onGroupAddUser(const std::string &paramString1, const std::string &paramString2);
-	virtual void onGroupRemoveUser(const std::string &paramString1, const std::string &paramString2);
+	virtual void onGroupAddUser(const std::string &gjid, const std::string &ujid, int ts);
+	virtual void onGroupRemoveUser(const std::string &gjid, const std::string &ujid, int ts);
 	virtual void onGroupNewSubject(const std::string &from, const std::string &author, const std::string &newSubject, int ts);
 	virtual void onGroupMessage(const FMessage &paramFMessage);
 	virtual void onServerProperties(std::map<std::string, std::string>* nameValueMap) {}

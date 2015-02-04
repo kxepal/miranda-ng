@@ -405,12 +405,50 @@ void WhatsAppProto::onGroupNewSubject(const std::string &gjid, const std::string
 	setTString(pInfo->hContact, "Nick", tszText);
 }
 
-void WhatsAppProto::onGroupAddUser(const std::string &paramString1, const std::string &paramString2)
+void WhatsAppProto::onGroupAddUser(const std::string &gjid, const std::string &ujid, int ts)
 {
+	WAChatInfo *pInfo;
+	{
+		mir_cslock lck(m_csChats);
+		pInfo = m_chats[gjid];
+		if (pInfo == NULL)
+			return;
+	}
+
+	ptrT tszUID(str2t(ujid));
+	ptrT tszNick(GetChatUserNick(ujid));
+
+	GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_JOIN };
+
+	GCEVENT gce = { sizeof(gce), &gcd };
+	gce.dwFlags = GCEF_ADDTOLOG;
+	gce.ptszUID = tszUID;
+	gce.ptszNick = tszNick;
+	gce.time = ts;
+	CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
 }
 
-void WhatsAppProto::onGroupRemoveUser(const std::string &paramString1, const std::string &paramString2)
+void WhatsAppProto::onGroupRemoveUser(const std::string &gjid, const std::string &ujid, int ts)
 {
+	WAChatInfo *pInfo;
+	{
+		mir_cslock lck(m_csChats);
+		pInfo = m_chats[gjid];
+		if (pInfo == NULL)
+			return;
+	}
+
+	ptrT tszUID(str2t(ujid));
+	ptrT tszNick(GetChatUserNick(ujid));
+
+	GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_PART };
+
+	GCEVENT gce = { sizeof(gce), &gcd };
+	gce.dwFlags = GCEF_ADDTOLOG;
+	gce.ptszUID = tszUID;
+	gce.ptszNick = tszNick;
+	gce.time = ts;
+	CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
 }
 
 void WhatsAppProto::onLeaveGroup(const std::string &paramString)

@@ -528,12 +528,21 @@ void WAConnection::parseNotification(ProtocolTreeNode *node) throw(WAException)
 			}
 		}
 	}
+	// group chats 
 	else if (type == "participant") {
-		// group chats 
-		const string &offline = node->getAttributeValue("offline");
-		if (offline.empty()) {
-			// to do: add a user on the fly
+		ProtocolTreeNode *subNode = node->getChild("add");
+		if (subNode != NULL) {
+			const string &jid = subNode->getAttributeValue("jid");
+			if (m_pGroupEventHandler)
+				m_pGroupEventHandler->onGroupAddUser(from, jid, ts);
 		}
+		else if ((subNode = node->getChild("remove")) != NULL) {
+			const string &jid = subNode->getAttributeValue("jid");
+			if (m_pGroupEventHandler)
+				m_pGroupEventHandler->onGroupRemoveUser(from, jid, ts);
+		}
+		else return;
+
 	}
 	else if (type == "subject") {
 		ProtocolTreeNode *bodyNode = node->getChild("body");
@@ -559,17 +568,18 @@ void WAConnection::parsePresense(ProtocolTreeNode *node) throw(WAException)
 	if (from.empty())
 		return;
 
+	int ts = atoi(node->getAttributeValue("t").c_str());
 	if (xmlns == "w" && !from.empty()) {
 		const string &add = node->getAttributeValue("add");
 		const string &remove = node->getAttributeValue("remove");
 		const string &status = node->getAttributeValue("status");
 		if (!add.empty()) {
 			if (m_pGroupEventHandler != NULL)
-				m_pGroupEventHandler->onGroupAddUser(from, add);
+				m_pGroupEventHandler->onGroupAddUser(from, add, ts);
 		}
 		else if (!remove.empty()) {
 			if (m_pGroupEventHandler != NULL)
-				m_pGroupEventHandler->onGroupRemoveUser(from, remove);
+				m_pGroupEventHandler->onGroupRemoveUser(from, remove, ts);
 		}
 		else if (status == "dirty") {
 			std::map<string, string> categories = parseCategories(node);
