@@ -48,13 +48,13 @@ INT_PTR WhatsAppProto::OnLeaveChat(WPARAM hContact, LPARAM)
 /////////////////////////////////////////////////////////////////////////////////////////
 // handler to pass events from SRMM to WAConnection
 
-int WhatsAppProto::OnChatOutgoing(WPARAM wParam, LPARAM lParam)
+int WhatsAppProto::onGroupChatEvent(WPARAM wParam, LPARAM lParam)
 {
-	GCHOOK *hook = (GCHOOK*)lParam;
-	if (mir_strcmp(hook->pDest->pszModule, m_szModuleName))
+	GCHOOK *gch = (GCHOOK*)lParam;
+	if (mir_strcmp(gch->pDest->pszModule, m_szModuleName))
 		return 0;
 
-	std::string chat_id(ptrA(mir_utf8encodeT(hook->pDest->ptszID)));
+	std::string chat_id(ptrA(mir_utf8encodeT(gch->pDest->ptszID)));
 	WAChatInfo *pInfo;
 	{
 		mir_cslock lck(m_csChats);
@@ -63,14 +63,19 @@ int WhatsAppProto::OnChatOutgoing(WPARAM wParam, LPARAM lParam)
 			return 0;
 	}
 
-	switch (hook->pDest->iType) {
+	switch (gch->pDest->iType) {
 	case GC_USER_LEAVE:
 	case GC_SESSION_TERMINATE:
 		break;
 
+	case GC_USER_LOGMENU:
+	case GC_USER_NICKLISTMENU:
+		ChatMenutHook(pInfo, gch);
+		break;
+
 	case GC_USER_MESSAGE:
 		if (isOnline()) {
-			std::string msg(ptrA(mir_utf8encodeT(hook->ptszText)));
+			std::string msg(ptrA(mir_utf8encodeT(gch->ptszText)));
 			
 			try {
 				int msgId = GetSerial();
@@ -82,7 +87,7 @@ int WhatsAppProto::OnChatOutgoing(WPARAM wParam, LPARAM lParam)
 				fmsg.data = msg;
 				m_pConnection->sendMessage(&fmsg);
 
-				pInfo->m_unsentMsgs[id] = hook->ptszText;
+				pInfo->m_unsentMsgs[id] = gch->ptszText;
 			}
 			CODE_BLOCK_CATCH_ALL
 		}
@@ -148,6 +153,31 @@ int WhatsAppProto::OnChatMenu(WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// chat menu event handler
+
+void __cdecl WhatsAppProto::ChatMenutHook(struct WAChatInfo *pInfo, struct GCHOOK *gch)
+{
+	switch (gch->dwData) {
+	case IDM_TOPIC:
+		CMString title(FORMAT, TranslateT("Set new subject for %s"), pInfo->tszNick);
+		
+		ENTER_STRING es = { 0 };
+		es.cbSize = sizeof(es);
+		es.type = ESF_RICHEDIT;
+		es.szModuleName = m_szModuleName;
+		es.caption = title;
+		es.szDataPrefix = "es_";
+		if (EnterString(&es)) {
+			ptrA gjid(mir_utf8encodeT(pInfo->tszJid));
+			ptrA gsubject(mir_utf8encodeT(es.ptszResult));
+			m_pConnection->sendSetNewSubject(std::string(gjid), std::string(gsubject));
+			mir_free(es.ptszResult);
+		}
+		break;
+	}
 }
 
 void __cdecl WhatsAppProto::SendSetGroupNameWorker(void* data)
@@ -247,7 +277,7 @@ void WhatsAppProto::onGroupMessage(const FMessage &msg)
 		mir_cslock lck(m_csChats);
 		pInfo = m_chats[msg.key.remote_jid];
 		if (pInfo == NULL) {
-			pInfo = new WAChatInfo(msg.key.remote_jid.c_str(), msg.notifyname.c_str());
+			pInfo = new WAChatInfo(msg.key.remote_jid.c_str(), NULL);
 			m_chats[msg.key.remote_jid] = pInfo;
 
 			InitChat(pInfo->tszJid, pInfo->tszNick);
@@ -257,13 +287,14 @@ void WhatsAppProto::onGroupMessage(const FMessage &msg)
 
 	ptrT tszText(mir_utf8decodeT(msg.data.c_str()));
 	ptrT tszUID(mir_utf8decodeT(msg.remote_resource.c_str()));
+	ptrT tszNick(GetChatUserNick(msg.remote_resource));
 
 	GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_MESSAGE };
 
 	GCEVENT gce = { sizeof(gce), &gcd };
 	gce.dwFlags = GCEF_ADDTOLOG;
 	gce.ptszUID = tszUID;
-	gce.ptszNick = pInfo->tszNick;
+	gce.ptszNick = tszNick;
 	gce.time = msg.timestamp;
 	gce.ptszText = tszText;
 	gce.bIsMe = m_szJid == msg.remote_resource;

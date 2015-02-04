@@ -69,7 +69,7 @@ int WhatsAppProto::OnEvent(PROTOEVENTTYPE evType, WPARAM wParam, LPARAM lParam)
 		gcr.pszModule = m_szModuleName;
 		CallServiceSync(MS_GC_REGISTER, 0, (LPARAM)&gcr);
 
-		HookProtoEvent(ME_GC_EVENT, &WhatsAppProto::OnChatOutgoing);
+		HookProtoEvent(ME_GC_EVENT, &WhatsAppProto::onGroupChatEvent);
 		HookProtoEvent(ME_GC_BUILDMENU, &WhatsAppProto::OnChatMenu);
 	}
 	return 0;

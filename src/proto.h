@@ -119,12 +119,13 @@ public:
 	map<std::string, WAChatInfo*> m_chats;
 	mir_cs   m_csChats;
 
+	void     ChatMenutHook(WAChatInfo *pInfo, GCHOOK *gch);
 	void     InitChat(const TCHAR *jid, const TCHAR *nick);
 	TCHAR*   GetChatUserNick(const std::string &jid);
 
 	void     onGroupMessageReceived(const FMessage &fmsg);
 
-	int      __cdecl OnChatOutgoing(WPARAM, LPARAM);
+	int      __cdecl onGroupChatEvent(WPARAM, LPARAM);
 	int      __cdecl OnChatMenu(WPARAM, LPARAM);
 
 	INT_PTR  __cdecl OnJoinChat(WPARAM, LPARAM);
