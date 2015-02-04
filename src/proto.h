@@ -130,6 +130,7 @@ public:
 	void     onGroupMessageReceived(const FMessage &fmsg);
 
 	WAChatInfo* InitChat(const std::string &jidjid, const std::string &nick);
+	WAChatInfo* SafeGetChat(const std::string &jid);
 
 	int      __cdecl onGroupChatEvent(WPARAM, LPARAM);
 	int      __cdecl OnChatMenu(WPARAM, LPARAM);

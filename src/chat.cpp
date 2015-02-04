@@ -66,13 +66,9 @@ int WhatsAppProto::onGroupChatEvent(WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	std::string chat_id(ptrA(mir_utf8encodeT(gch->pDest->ptszID)));
-	WAChatInfo *pInfo;
-	{
-		mir_cslock lck(m_csChats);
-		pInfo = m_chats[chat_id];
-		if (pInfo == NULL)
-			return 0;
-	}
+	WAChatInfo *pInfo = SafeGetChat(chat_id);
+	if (pInfo == NULL)
+		return 0;
 
 	switch (gch->pDest->iType) {
 	case GC_USER_LEAVE:
@@ -310,19 +306,21 @@ TCHAR* WhatsAppProto::GetChatUserNick(const std::string &jid)
 	return (hContact == 0) ? utils::removeA(str2t(jid)) : mir_tstrdup(pcli->pfnGetContactDisplayName(hContact, 0));
 }
 
+WAChatInfo* WhatsAppProto::SafeGetChat(const std::string &jid)
+{
+	mir_cslock lck(m_csChats);
+	return m_chats[jid];
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // WAGroupListener members
 
 void WhatsAppProto::onGroupInfo(const std::string &jid, const std::string &owner, const std::string &subject, const std::string &subject_owner, int time_subject, int time_created)
 {
-	WAChatInfo *pInfo;
-	{
-		mir_cslock lck(m_csChats);
-		pInfo = m_chats[jid];
-		if (pInfo == NULL) {
-			pInfo = InitChat(jid, subject);
-			pInfo->bActive = true;
-		}
+	WAChatInfo *pInfo = SafeGetChat(jid);
+	if (pInfo == NULL) {
+		pInfo = InitChat(jid, subject);
+		pInfo->bActive = true;
 	}
 
 	GCDEST gcd = { m_szModuleName, pInfo->tszJid, 0 };
@@ -349,14 +347,10 @@ void WhatsAppProto::onGroupInfo(const std::string &jid, const std::string &owner
 
 void WhatsAppProto::onGroupMessage(const FMessage &msg)
 {
-	WAChatInfo *pInfo;
-	{
-		mir_cslock lck(m_csChats);
-		pInfo = m_chats[msg.key.remote_jid];
-		if (pInfo == NULL) {
-			pInfo = InitChat(msg.key.remote_jid, "");
-			pInfo->bActive = true;
-		}
+	WAChatInfo *pInfo = SafeGetChat(msg.key.remote_jid);
+	if (pInfo == NULL) {
+		pInfo = InitChat(msg.key.remote_jid, "");
+		pInfo->bActive = true;
 	}
 
 	ptrT tszText(str2t(msg.data));
@@ -380,13 +374,9 @@ void WhatsAppProto::onGroupMessage(const FMessage &msg)
 
 void WhatsAppProto::onGroupNewSubject(const std::string &gjid, const std::string &author, const std::string &newSubject, int ts)
 {
-	WAChatInfo *pInfo;
-	{
-		mir_cslock lck(m_csChats);
-		pInfo = m_chats[gjid];
-		if (pInfo == NULL)
-			return;
-	}
+	WAChatInfo *pInfo = SafeGetChat(gjid);
+	if (pInfo == NULL)
+		return;
 
 	ptrT tszUID(str2t(author));
 	ptrT tszNick(GetChatUserNick(author));
@@ -407,13 +397,9 @@ void WhatsAppProto::onGroupNewSubject(const std::string &gjid, const std::string
 
 void WhatsAppProto::onGroupAddUser(const std::string &gjid, const std::string &ujid, int ts)
 {
-	WAChatInfo *pInfo;
-	{
-		mir_cslock lck(m_csChats);
-		pInfo = m_chats[gjid];
-		if (pInfo == NULL)
-			return;
-	}
+	WAChatInfo *pInfo = SafeGetChat(gjid);
+	if (pInfo == NULL)
+		return;
 
 	ptrT tszUID(str2t(ujid));
 	ptrT tszNick(GetChatUserNick(ujid));
@@ -430,13 +416,9 @@ void WhatsAppProto::onGroupAddUser(const std::string &gjid, const std::string &u
 
 void WhatsAppProto::onGroupRemoveUser(const std::string &gjid, const std::string &ujid, int ts)
 {
-	WAChatInfo *pInfo;
-	{
-		mir_cslock lck(m_csChats);
-		pInfo = m_chats[gjid];
-		if (pInfo == NULL)
-			return;
-	}
+	WAChatInfo *pInfo = SafeGetChat(gjid);
+	if (pInfo == NULL)
+		return;
 
 	ptrT tszUID(str2t(ujid));
 	ptrT tszNick(GetChatUserNick(ujid));
@@ -485,13 +467,9 @@ void WhatsAppProto::onGroupCreated(const std::string &paramString1, const std::s
 
 void WhatsAppProto::onGroupMessageReceived(const FMessage &msg)
 {
-	WAChatInfo *pInfo;
-	{
-		mir_cslock lck(m_csChats);
-		pInfo = m_chats[msg.key.remote_jid];
-		if (pInfo == NULL)
-			return;
-	}
+	WAChatInfo *pInfo = SafeGetChat(msg.key.remote_jid);
+	if (pInfo == NULL)
+		return;
 	
 	auto p = pInfo->m_unsentMsgs.find(msg.key.id);
 	if (p == pInfo->m_unsentMsgs.end())
