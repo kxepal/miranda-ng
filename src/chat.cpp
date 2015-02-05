@@ -149,7 +149,13 @@ void WhatsAppProto::ChatLogMenuHook(WAChatInfo *pInfo, struct GCHOOK *gch)
 
 void WhatsAppProto::InviteChatUser(WAChatInfo *pInfo)
 {
+	if (TRUE != DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_GROUPCHAT_INVITE), NULL, InviteDialogProc, (LPARAM)this))
+		return;
 
+	if (isOnline()) {
+		m_pConnection->sendAddParticipants((char*)_T2A(pInfo->tszJid), m_szInviteJids);
+		m_szInviteJids.clear();
+	}
 }
 
 void WhatsAppProto::SetChatSubject(WAChatInfo *pInfo)

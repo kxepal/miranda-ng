@@ -96,6 +96,19 @@ BEGIN
     CTEXT           "-",IDC_STATIC,82,62,8,8
 END
 
+IDD_GROUPCHAT_INVITE DIALOGEX 0, 0, 215, 170
+STYLE DS_SETFONT | DS_MODALFRAME | DS_SETFOREGROUND | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Invite Users"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Choose an user",IDC_STATIC,4,2,208,130
+    CONTROL         "",IDC_CLIST,"CListControl",WS_TABSTOP | 0x1,12,12,192,112,WS_EX_CLIENTEDGE
+    LTEXT           "Other user:",IDC_STATIC,4,138,55,8
+    EDITTEXT        IDC_NEWJID,60,136,152,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "&Invite",IDOK,108,152,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,162,152,50,14
+END
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Icon

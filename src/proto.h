@@ -115,6 +115,7 @@ public:
 
 	// Group chats ///////////////////////////////////////////////////////////////////////
 
+	std::vector<string> m_szInviteJids;
 	map<std::string, WAChatInfo*> m_chats;
 	mir_cs   m_csChats;
 
