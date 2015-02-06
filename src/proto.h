@@ -127,7 +127,6 @@ public:
 	void     InviteChatUser(WAChatInfo *pInfo);
 	void     KickChatUser(WAChatInfo *pInfo, const TCHAR *ptszJid);
 	TCHAR*   GetChatUserNick(const std::string &jid);
-	void     SetChatSubject(WAChatInfo *pInfo, const std::string &subject);
 
 	void     onGroupMessageReceived(const FMessage &fmsg);
 

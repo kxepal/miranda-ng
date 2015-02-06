@@ -179,10 +179,6 @@ void WhatsAppProto::EditChatSubject(WAChatInfo *pInfo)
 	}
 }
 
-void WhatsAppProto::SetChatSubject(WAChatInfo *pInfo, const std::string &subject)
-{
-}
-
 /////////////////////////////////////////////////////////////////////////////////////////
 // nicklist menu event handler
 
@@ -334,8 +330,11 @@ void WhatsAppProto::onGroupInfo(const std::string &jid, const std::string &owner
 		pInfo->bActive = true;
 	}
 
-	if (!subject.empty())
+	if (!subject.empty()) {
+		pInfo->tszOwner = str2t(owner);
+
 		onGroupNewSubject(jid, subject_owner, subject, time_subject);
+	}
 
 	GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_CONTROL };
 	GCEVENT gce = { sizeof(gce), &gcd };
@@ -460,7 +459,8 @@ void WhatsAppProto::onGetParticipants(const std::string &gjid, const std::vector
 
 void WhatsAppProto::onGroupCreated(const std::string &gjid, const std::string &subject)
 {
-	InitChat(gjid, subject);
+	WAChatInfo *pInfo = InitChat(gjid, subject);
+	pInfo->tszOwner = str2t(m_szJid);
 
 	// also set new subject if it's present
 	if (!subject.empty())
