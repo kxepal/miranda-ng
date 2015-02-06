@@ -21,8 +21,6 @@ WhatsAppProto::WhatsAppProto(const char* proto_name, const TCHAR* username) :
 	db_set_resident(m_szModuleName, "StatusMsg");
 
 	CreateProtoService(PS_CREATEACCMGRUI, &WhatsAppProto::SvcCreateAccMgrUI);
-	CreateProtoService(PS_JOINCHAT, &WhatsAppProto::OnJoinChat);
-	CreateProtoService(PS_LEAVECHAT, &WhatsAppProto::OnLeaveChat);
 
 	CreateProtoService(PS_GETAVATARINFOT, &WhatsAppProto::GetAvatarInfo);
 	CreateProtoService(PS_GETAVATARCAPS, &WhatsAppProto::GetAvatarCaps);

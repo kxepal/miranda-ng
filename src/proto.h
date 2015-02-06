@@ -135,9 +135,6 @@ public:
 
 	int      __cdecl onGroupChatEvent(WPARAM, LPARAM);
 	int      __cdecl OnChatMenu(WPARAM, LPARAM);
-
-	INT_PTR  __cdecl OnJoinChat(WPARAM, LPARAM);
-	INT_PTR  __cdecl OnLeaveChat(WPARAM, LPARAM);
 	INT_PTR  __cdecl OnCreateGroup(WPARAM, LPARAM);
 
 	// Registration //////////////////////////////////////////////////////////////////////

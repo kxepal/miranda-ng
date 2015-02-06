@@ -35,19 +35,6 @@ INT_PTR __cdecl WhatsAppProto::OnCreateGroup(WPARAM wParam, LPARAM lParam)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
-// join/leave services for the standard contact list popup menu
-
-INT_PTR WhatsAppProto::OnJoinChat(WPARAM hContact, LPARAM)
-{
-	return 0;
-}
-
-INT_PTR WhatsAppProto::OnLeaveChat(WPARAM hContact, LPARAM)
-{
-	return 0;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////
 // handler to pass events from SRMM to WAConnection
 
 int WhatsAppProto::onGroupChatEvent(WPARAM wParam, LPARAM lParam)
