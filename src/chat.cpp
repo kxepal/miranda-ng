@@ -20,7 +20,8 @@ INT_PTR __cdecl WhatsAppProto::OnCreateGroup(WPARAM wParam, LPARAM lParam)
 {
 	ENTER_STRING es = { 0 };
 	es.cbSize = sizeof(es);
-	es.caption = _T("Enter group subject");
+	es.type = ESF_MULTILINE;
+	es.caption = _T("Enter a subject for new group");
 	es.szModuleName = m_szModuleName;
 	if (EnterString(&es)) {
 		if (isOnline()) {
@@ -129,7 +130,7 @@ void WhatsAppProto::ChatLogMenuHook(WAChatInfo *pInfo, struct GCHOOK *gch)
 		break;
 
 	case IDM_TOPIC:
-		SetChatSubject(pInfo);
+		EditChatSubject(pInfo);
 		break;
 
 	case IDM_CPY_RJID:
@@ -158,7 +159,7 @@ void WhatsAppProto::InviteChatUser(WAChatInfo *pInfo)
 	}
 }
 
-void WhatsAppProto::SetChatSubject(WAChatInfo *pInfo)
+void WhatsAppProto::EditChatSubject(WAChatInfo *pInfo)
 {
 	CMString title(FORMAT, TranslateT("Set new subject for %s"), pInfo->tszNick);
 	ptrT tszOldValue(getTStringA(pInfo->hContact, "Nick"));
@@ -176,6 +177,10 @@ void WhatsAppProto::SetChatSubject(WAChatInfo *pInfo)
 		m_pConnection->sendSetNewSubject(std::string(gjid), std::string(gsubject));
 		mir_free(es.ptszResult);
 	}
+}
+
+void WhatsAppProto::SetChatSubject(WAChatInfo *pInfo, const std::string &subject)
+{
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -329,24 +334,10 @@ void WhatsAppProto::onGroupInfo(const std::string &jid, const std::string &owner
 		pInfo->bActive = true;
 	}
 
-	GCDEST gcd = { m_szModuleName, pInfo->tszJid, 0 };
-	if (!subject.empty()) {
-		gcd.iType = GC_EVENT_TOPIC;
-		pInfo->tszOwner = str2t(owner);
+	if (!subject.empty())
+		onGroupNewSubject(jid, subject_owner, subject, time_subject);
 
-		ptrT tszSubject(str2t(subject));
-		ptrT tszSubjectOwner(str2t(subject_owner));
-
-		GCEVENT gce = { sizeof(gce), &gcd };
-		gce.ptszUID = pInfo->tszOwner;
-		gce.ptszNick = utils::removeA(tszSubjectOwner);
-		gce.time = time_subject;
-		gce.dwFlags = GCEF_ADDTOLOG;
-		gce.ptszText = tszSubject;
-		CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
-	}
-
-	gcd.iType = GC_EVENT_CONTROL;
+	GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_CONTROL };
 	GCEVENT gce = { sizeof(gce), &gcd };
 	CallServiceSync(MS_GC_EVENT, SESSION_INITDONE, (LPARAM)&gce);
 }
@@ -467,8 +458,13 @@ void WhatsAppProto::onGetParticipants(const std::string &gjid, const std::vector
 	}
 }
 
-void WhatsAppProto::onGroupCreated(const std::string &paramString1, const std::string &paramString2)
+void WhatsAppProto::onGroupCreated(const std::string &gjid, const std::string &subject)
 {
+	InitChat(gjid, subject);
+
+	// also set new subject if it's present
+	if (!subject.empty())
+		onGroupNewSubject(gjid, "Server", subject, time(0));
 }
 
 void WhatsAppProto::onGroupMessageReceived(const FMessage &msg)

@@ -58,7 +58,7 @@ public:
 	virtual void onGroupNewSubject(const std::string &from, const std::string &author, const std::string &newSubject, int paramInt) = 0;
 	virtual void onGroupMessage(const FMessage &paramFMessage) = 0;
 	virtual void onServerProperties(std::map<std::string, std::string>* nameValueMap) = 0;
-	virtual void onGroupCreated(const std::string &paramString1, const std::string &paramString2) = 0;
+	virtual void onGroupCreated(const std::string &gjid, const std::string &nick) = 0;
 	virtual void onGroupInfo(const std::string &jid, const std::string &owner, const std::string &subject, const std::string &subject_owner, int time_subject, int time_created) = 0;
 	virtual void onSetSubject(const std::string &paramString) = 0;
 	virtual void onAddGroupParticipants(const std::string &paramString, const std::vector<string> &paramVector, int paramHashtable) = 0;
@@ -204,14 +204,17 @@ class WAConnection
 	};
 
 	class IqResultCreateGroupChatHandler: public IqResultHandler {
+		std::string subject;
 	public:
-		IqResultCreateGroupChatHandler(WAConnection* con):IqResultHandler(con) {}
+		IqResultCreateGroupChatHandler(WAConnection* con, const std::string &_subject) :
+			IqResultHandler(con),
+			subject(_subject) {}
 		virtual void parse(ProtocolTreeNode* node, const std::string &from) throw (WAException) {
 			ProtocolTreeNode* groupNode = node->getChild(0);
 			ProtocolTreeNode::require(groupNode, "group");
 			const string &groupId = groupNode->getAttributeValue("id");
 			if (!groupId.empty() && con->m_pGroupEventHandler != NULL)
-				this->con->m_pGroupEventHandler->onGroupCreated(from, groupId);
+				this->con->m_pGroupEventHandler->onGroupCreated(groupId + "@" + from, subject);
 		}
 	};
 

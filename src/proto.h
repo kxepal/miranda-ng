@@ -123,10 +123,11 @@ public:
 	void     NickListMenuHook(WAChatInfo *pInfo, GCHOOK *gch);
 
 	void     AddChatUser(WAChatInfo *pInfo, const TCHAR *ptszJid);
+	void     EditChatSubject(WAChatInfo *pInfo);
 	void     InviteChatUser(WAChatInfo *pInfo);
 	void     KickChatUser(WAChatInfo *pInfo, const TCHAR *ptszJid);
 	TCHAR*   GetChatUserNick(const std::string &jid);
-	void     SetChatSubject(WAChatInfo *pInfo);
+	void     SetChatSubject(WAChatInfo *pInfo, const std::string &subject);
 
 	void     onGroupMessageReceived(const FMessage &fmsg);
 
@@ -210,7 +211,7 @@ protected:
 	virtual void onGroupNewSubject(const std::string &from, const std::string &author, const std::string &newSubject, int ts);
 	virtual void onGroupMessage(const FMessage &paramFMessage);
 	virtual void onServerProperties(std::map<std::string, std::string>* nameValueMap) {}
-	virtual void onGroupCreated(const std::string &paramString1, const std::string &paramString2);
+	virtual void onGroupCreated(const std::string &gjid, const std::string &nick);
 	virtual void onGroupInfo(const std::string &jid, const std::string &owner, const std::string &subject, const std::string &subject_owner, int time_subject, int time_created);
 	virtual void onSetSubject(const std::string &paramString) {  }
 	virtual void onAddGroupParticipants(const std::string &paramString, const std::vector<string> &paramVector, int paramHashtable) {  }

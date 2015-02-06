@@ -901,11 +901,11 @@ void WAConnection::sendCreateGroupChat(const std::string &subject) throw (WAExce
 {
 	logData("sending create group: %s", subject.c_str());
 	std::string id = makeId("create_group_");
-	this->pending_server_requests[id] = new IqResultCreateGroupChatHandler(this);
+	this->pending_server_requests[id] = new IqResultCreateGroupChatHandler(this, subject);
 
 	ProtocolTreeNode *groupNode = new ProtocolTreeNode("group") << XATTR("action", "create") << XATTR("subject", subject);
 
-	out.write(ProtocolTreeNode("iq", groupNode) << XATTR("xmlns", "w:g2")
+	out.write(ProtocolTreeNode("iq", groupNode) << XATTR("xmlns", "w:g")
 		<< XATTR("id", id) << XATTR("type", "set") << XATTR("to", "g.us"));
 }
 
@@ -914,7 +914,7 @@ void WAConnection::sendEndGroupChat(const std::string &gjid) throw (WAException)
 	std::string id = makeId("iq_");
 
 	ProtocolTreeNode *groupNode = new ProtocolTreeNode("group") << XATTR("action", "delete");
-	out.write(ProtocolTreeNode("iq", groupNode) << XATTR("xmlns", "w:g2")
+	out.write(ProtocolTreeNode("iq", groupNode) << XATTR("xmlns", "w:g")
 		<< XATTR("id", id) << XATTR("type", "set") << XATTR("to", gjid));
 }
 
