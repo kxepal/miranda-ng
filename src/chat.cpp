@@ -6,7 +6,7 @@ enum
 {
 	IDM_CANCEL,
 
-	IDM_DESTROY, IDM_INVITE, IDM_LEAVE, IDM_TOPIC,
+	IDM_INVITE, IDM_LEAVE, IDM_TOPIC,
 
 	IDM_MESSAGE, IDM_KICK,
 	IDM_CPY_NICK, IDM_CPY_TOPIC,
@@ -39,21 +39,11 @@ INT_PTR __cdecl WhatsAppProto::OnCreateGroup(WPARAM wParam, LPARAM lParam)
 
 INT_PTR WhatsAppProto::OnJoinChat(WPARAM hContact, LPARAM)
 {
-	ptrA jid(getStringA(hContact, WHATSAPP_KEY_ID));
-	if (jid && isOnline()) {
-		setByte(hContact, "IsGroupMember", 0);
-		m_pConnection->sendJoinLeaveGroup(jid, true);
-	}
 	return 0;
 }
 
 INT_PTR WhatsAppProto::OnLeaveChat(WPARAM hContact, LPARAM)
 {
-	ptrA jid(getStringA(hContact, WHATSAPP_KEY_ID));
-	if (jid && isOnline()) {
-		setByte(hContact, "IsGroupMember", 0);
-		m_pConnection->sendJoinLeaveGroup(jid, false);
-	}
 	return 0;
 }
 
@@ -113,13 +103,14 @@ int WhatsAppProto::onGroupChatEvent(WPARAM wParam, LPARAM lParam)
 
 static gc_item sttLogListItems[] =
 {
-	{ LPGENT("&Invite a user"), IDM_INVITE, MENU_ITEM },
-	{ LPGENT("View/change &topic"), IDM_TOPIC, MENU_POPUPITEM },
+	{ LPGENT("&Invite a user"),      IDM_INVITE,    MENU_ITEM },
 	{ NULL, 0, MENU_SEPARATOR },
-	{ LPGENT("Copy room &JID"), IDM_CPY_RJID, MENU_ITEM },
-	{ LPGENT("Copy room topic"), IDM_CPY_TOPIC, MENU_ITEM },
+	{ LPGENT("&Room options"),       0,             MENU_NEWPOPUP },
+	{ LPGENT("View/change &topic"),  IDM_TOPIC,     MENU_POPUPITEM },
+	{ LPGENT("&Leave chat session"), IDM_LEAVE,     MENU_POPUPITEM },
 	{ NULL, 0, MENU_SEPARATOR },
-	{ LPGENT("&Leave chat session"), IDM_LEAVE, MENU_ITEM }
+	{ LPGENT("Copy room &JID"),      IDM_CPY_RJID,  MENU_ITEM },
+	{ LPGENT("Copy room topic"),     IDM_CPY_TOPIC, MENU_ITEM },
 };
 
 void WhatsAppProto::ChatLogMenuHook(WAChatInfo *pInfo, struct GCHOOK *gch)
@@ -148,17 +139,6 @@ void WhatsAppProto::ChatLogMenuHook(WAChatInfo *pInfo, struct GCHOOK *gch)
 	}
 }
 
-void WhatsAppProto::InviteChatUser(WAChatInfo *pInfo)
-{
-	if (TRUE != DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_GROUPCHAT_INVITE), NULL, InviteDialogProc, (LPARAM)this))
-		return;
-
-	if (isOnline()) {
-		m_pConnection->sendAddParticipants((char*)_T2A(pInfo->tszJid), m_szInviteJids);
-		m_szInviteJids.clear();
-	}
-}
-
 void WhatsAppProto::EditChatSubject(WAChatInfo *pInfo)
 {
 	CMString title(FORMAT, TranslateT("Set new subject for %s"), pInfo->tszNick);
@@ -176,6 +156,17 @@ void WhatsAppProto::EditChatSubject(WAChatInfo *pInfo)
 		ptrA gsubject(mir_utf8encodeT(es.ptszResult));
 		m_pConnection->sendSetNewSubject(std::string(gjid), std::string(gsubject));
 		mir_free(es.ptszResult);
+	}
+}
+
+void WhatsAppProto::InviteChatUser(WAChatInfo *pInfo)
+{
+	if (TRUE != DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_GROUPCHAT_INVITE), NULL, InviteDialogProc, (LPARAM)this))
+		return;
+
+	if (isOnline()) {
+		m_pConnection->sendAddParticipants((char*)_T2A(pInfo->tszJid), m_szInviteJids);
+		m_szInviteJids.clear();
 	}
 }
 
@@ -429,8 +420,20 @@ void WhatsAppProto::onGroupRemoveUser(const std::string &gjid, const std::string
 	CallServiceSync(MS_GC_EVENT, NULL, (LPARAM)&gce);
 }
 
-void WhatsAppProto::onLeaveGroup(const std::string &paramString)
+void WhatsAppProto::onLeaveGroup(const std::string &gjid)
 {
+	WAChatInfo *pInfo = SafeGetChat(gjid);
+	if (pInfo == NULL)
+		return;
+
+	GCDEST gcd = { m_szModuleName, pInfo->tszJid, GC_EVENT_CONTROL };
+	
+	GCEVENT gce = { sizeof(gce), &gcd };
+	gce.ptszUID = pInfo->tszJid;
+	CallServiceSync(MS_GC_EVENT, SESSION_TERMINATE, (LPARAM)&gce);
+
+	CallService(MS_DB_CONTACT_DELETE, pInfo->hContact, 0);
+	m_chats.erase((char*)_T2A(pInfo->tszJid));
 }
 
 void WhatsAppProto::onGetParticipants(const std::string &gjid, const std::vector<string> &participants)

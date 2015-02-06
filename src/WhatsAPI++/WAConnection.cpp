@@ -324,6 +324,18 @@ void WAConnection::parseIq(ProtocolTreeNode *node) throw(WAException)
 			if (m_pEventHandler != NULL)
 				m_pEventHandler->onAccountChange(this->account_kind, this->expire_date);
 		}
+		else {
+			ProtocolTreeNode *childNode = node->getChild(0);
+			if (ProtocolTreeNode::tagEquals(childNode, "leave")) {
+				std::vector<ProtocolTreeNode*> nodes(childNode->getAllChildren("group"));
+				for (size_t i = 0; i < nodes.size(); i++) {
+					ProtocolTreeNode *groupNode = nodes[i];
+					const string &gjid = groupNode->getAttributeValue("id");
+					if (m_pGroupEventHandler != NULL)
+						m_pGroupEventHandler->onLeaveGroup(gjid);
+				}
+			}
+		}
 	}
 	else if (type == "error") {
 		std::map<string, IqResultHandler*>::iterator it = this->pending_server_requests.find(id);
@@ -907,15 +919,6 @@ void WAConnection::sendCreateGroupChat(const std::string &subject) throw (WAExce
 
 	out.write(ProtocolTreeNode("iq", groupNode) << XATTR("xmlns", "w:g")
 		<< XATTR("id", id) << XATTR("type", "set") << XATTR("to", "g.us"));
-}
-
-void WAConnection::sendEndGroupChat(const std::string &gjid) throw (WAException)
-{
-	std::string id = makeId("iq_");
-
-	ProtocolTreeNode *groupNode = new ProtocolTreeNode("group") << XATTR("action", "delete");
-	out.write(ProtocolTreeNode("iq", groupNode) << XATTR("xmlns", "w:g")
-		<< XATTR("id", id) << XATTR("type", "set") << XATTR("to", gjid));
 }
 
 void WAConnection::sendClearDirty(const std::string &category) throw (WAException)
