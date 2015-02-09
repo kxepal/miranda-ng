@@ -119,6 +119,16 @@ INT_PTR CALLBACK WhatsAppAccountProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPA
 /////////////////////////////////////////////////////////////////////////////////////////
 // Invite dialog
 
+static void FilterList(HWND hwndClist, WhatsAppProto *ppro)
+{
+	for (MCONTACT hContact = db_find_first(); hContact; hContact = db_find_next(hContact)) {
+		char *proto = GetContactProto(hContact);
+		if (mir_strcmp(proto, ppro->m_szModuleName) || ppro->isChatRoom(hContact))
+			if (MCONTACT hItem = SendMessage(hwndClist, CLM_FINDCONTACT, hContact, 0))
+				SendMessage(hwndClist, CLM_DELETEITEM, hItem, 0);
+	}
+}
+
 static void InitList(HWND hwndClist, WhatsAppProto *ppro)
 {
 	SetWindowLongPtr(hwndClist, GWL_STYLE,
@@ -135,13 +145,8 @@ static void InitList(HWND hwndClist, WhatsAppProto *ppro)
 
 	for (int i = 0; i <= FONTID_MAX; i++)
 		SendMessage(hwndClist, CLM_SETTEXTCOLOR, i, GetSysColor(COLOR_WINDOWTEXT));
-
-	for (MCONTACT hContact = db_find_first(); hContact; hContact = db_find_next(hContact)) {
-		char *proto = GetContactProto(hContact);
-		if (mir_strcmp(proto, ppro->m_szModuleName) || ppro->isChatRoom(hContact))
-			if (MCONTACT hItem = SendMessage(hwndClist, CLM_FINDCONTACT, hContact, 0))
-				SendMessage(hwndClist, CLM_DELETEITEM, hItem, 0);
-	}
+	
+	FilterList(hwndClist, ppro);
 }
 
 INT_PTR CALLBACK InviteDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -157,7 +162,17 @@ INT_PTR CALLBACK InviteDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM
 
 		InitList(GetDlgItem(hwndDlg, IDC_CLIST), proto);
 		return 1;
-	
+
+	case WM_NOTIFY:
+		if (((LPNMHDR)lParam)->idFrom == IDC_CLIST) {
+			switch (((LPNMHDR)lParam)->code) {
+			case CLN_LISTREBUILT:
+			case CLN_NEWCONTACT:
+				FilterList(((LPNMHDR)lParam)->hwndFrom, proto);
+			}
+		}
+		break;
+
 	case WM_COMMAND:
 		switch (LOWORD(wParam)) {
 		case IDCANCEL:
