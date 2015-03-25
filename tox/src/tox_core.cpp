@@ -10,8 +10,8 @@ bool CToxProto::InitToxCore()
 	debugLogA("CToxProto::InitToxCore: initializing tox core");
 
 	Tox_Options options = { 0 };
-	options.udp_disabled = getBool("DisableUDP", 0);
-	options.ipv6enabled = !getBool("DisableIPv6", 0);
+	options.udp_enabled = getBool("EnableUDP", 1);
+	options.ipv6_enabled = getBool("EnableIPv6", 0);
 
 	if (hNetlib != NULL)
 	{
@@ -23,16 +23,16 @@ bool CToxProto::InitToxCore()
 			if (nlus.proxyType == PROXYTYPE_HTTP || nlus.proxyType == PROXYTYPE_HTTPS)
 			{
 				debugLogA("CToxProto::InitToxCore: setting http user proxy config");
-				options.proxy_type = TOX_PROXY_HTTP;
-				strcpy(&options.proxy_address[0], nlus.szProxyServer);
+				options.proxy_type = TOX_PROXY_TYPE_HTTP;
+				mir_strcpy((char*)&options.proxy_host[0], nlus.szProxyServer);
 				options.proxy_port = nlus.wProxyPort;
 			}
 
 			if (nlus.proxyType == PROXYTYPE_SOCKS4 || nlus.proxyType == PROXYTYPE_SOCKS5)
 			{
 				debugLogA("CToxProto::InitToxCore: setting socks user proxy config");
-				options.proxy_type = TOX_PROXY_SOCKS5;
-				strcpy(&options.proxy_address[0], nlus.szProxyServer);
+				options.proxy_type = TOX_PROXY_TYPE_SOCKS5;
+				mir_strcpy((char*)&options.proxy_host[0], nlus.szProxyServer);
 				options.proxy_port = nlus.wProxyPort;
 			}
 		}
@@ -49,13 +49,12 @@ bool CToxProto::InitToxCore()
 
 		tox_callback_friend_request(tox, OnFriendRequest, this);
 		tox_callback_friend_message(tox, OnFriendMessage, this);
-		tox_callback_friend_action(tox, OnFriendAction, this);
-		tox_callback_typing_change(tox, OnTypingChanged, this);
-		tox_callback_name_change(tox, OnFriendNameChange, this);
-		tox_callback_status_message(tox, OnStatusMessageChanged, this);
-		tox_callback_user_status(tox, OnUserStatusChanged, this);
-		tox_callback_read_receipt(tox, OnReadReceipt, this);
-		tox_callback_connection_status(tox, OnConnectionStatusChanged, this);
+		tox_callback_friend_read_receipt(tox, OnReadReceipt, this);
+		tox_callback_friend_typing(tox, OnTypingChanged, this);
+		tox_callback_friend_name(tox, OnFriendNameChange, this);
+		tox_callback_friend_status_message(tox, OnStatusMessageChanged, this);
+		tox_callback_friend_status(tox, OnUserStatusChanged, this);
+		tox_callback_friend_connection_status(tox, OnConnectionStatusChanged, this);
 		// file transfers
 		tox_callback_file_control(tox, OnFileRequest, this);
 		tox_callback_file_send_request(tox, OnFriendFile, this);
@@ -66,9 +65,9 @@ bool CToxProto::InitToxCore()
 		// group chats
 		tox_callback_group_invite(tox, OnGroupChatInvite, this);
 
-		uint8_t data[TOX_FRIEND_ADDRESS_SIZE];
+		uint8_t data[TOX_ADDRESS_SIZE];
 		tox_get_address(tox, data);
-		ToxHexAddress address(data, TOX_FRIEND_ADDRESS_SIZE);
+		ToxHexAddress address(data, TOX_ADDRESS_SIZE);
 		setString(TOX_SETTINGS_ID, address);
 
 		int size = tox_get_self_name_size(tox);

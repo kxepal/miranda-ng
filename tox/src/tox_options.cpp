@@ -58,7 +58,7 @@ INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 
 		case IDC_CLIPBOARD:
 		{
-			char toxId[TOX_FRIEND_ADDRESS_SIZE * 2 + 1];
+			char toxId[TOX_ADDRESS_SIZE * 2 + 1];
 			GetDlgItemTextA(hwnd, IDC_TOXID, toxId, SIZEOF(toxId));
 			if (OpenClipboard(GetDlgItem(hwnd, IDC_TOXID)))
 			{

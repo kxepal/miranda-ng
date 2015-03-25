@@ -163,11 +163,11 @@ private:
 	INT_PTR __cdecl OnRequestAuth(WPARAM hContact, LPARAM lParam);
 	INT_PTR __cdecl OnGrantAuth(WPARAM hContact, LPARAM);
 
-	static void OnFriendRequest(Tox *tox, const uint8_t *pubKey, const uint8_t *message, const uint16_t messageSize, void *arg);
-	static void OnFriendNameChange(Tox *tox, const int friendNumber, const uint8_t *name, const uint16_t nameSize, void *arg);
-	static void OnStatusMessageChanged(Tox *tox, const int friendNumber, const uint8_t* message, const uint16_t messageSize, void *arg);
-	static void OnUserStatusChanged(Tox *tox, int32_t friendNumber, uint8_t usertatus, void *arg);
-	static void OnConnectionStatusChanged(Tox *tox, const int friendNumber, const uint8_t status, void *arg);
+	static void OnFriendRequest(Tox *tox, const uint8_t *pubKey, const uint8_t *message, size_t length, void *arg);
+	static void OnFriendNameChange(Tox *tox, uint32_t friendNumber, const uint8_t *name, size_t length, void *arg);
+	static void OnStatusMessageChanged(Tox *tox, uint32_t friendNumber, const uint8_t *message, size_t length, void *arg);
+	static void OnUserStatusChanged(Tox *tox, uint32_t friendNumber, TOX_USER_STATUS status, void *arg);
+	static void OnConnectionStatusChanged(Tox *tox, uint32_t friendNumber, TOX_CONNECTION status, void *arg);
 
 	// contacts search
 	void __cdecl SearchByNameAsync(void* arg);
@@ -208,10 +208,9 @@ private:
 	int OnReceiveMessage(MCONTACT hContact, PROTORECVEVENT *pre);
 	int OnSendMessage(MCONTACT hContact, int flags, const char *message);
 
-	static void OnFriendMessage(Tox *tox, const int friendNumber, const uint8_t *message, const uint16_t messageSize, void *arg);
-	static void OnFriendAction(Tox *tox, const int friendNumber, const uint8_t *action, const uint16_t actionSize, void *arg);
-	static void OnTypingChanged(Tox *tox, const int friendNumber, uint8_t isTyping, void *arg);
-	static void OnReadReceipt(Tox *tox, int32_t friendNumber, uint32_t receipt, void *arg);
+	static void OnFriendMessage(Tox *tox, uint32_t friendNumber, TOX_MESSAGE_TYPE type, const uint8_t *message, size_t length, void *arg);
+	static void OnReadReceipt(Tox *tox, uint32_t friendNumber, uint32_t messageId, void *arg);
+	static void OnTypingChanged(Tox *tox, uint32_t friendNumber, bool isTyping, void *arg);
 
 	int __cdecl OnPreCreateMessage(WPARAM wParam, LPARAM lParam);
 
@@ -238,8 +237,8 @@ private:
 	// folders
 
 	// utils
-	TOX_USERSTATUS MirandaToToxStatus(int status);
-	int ToxToMirandaStatus(TOX_USERSTATUS userstatus);
+	TOX_USER_STATUS MirandaToToxStatus(int status);
+	int ToxToMirandaStatus(TOX_USER_STATUS userstatus);
 
 	static void ShowNotification(const TCHAR *message, int flags = 0, MCONTACT hContact = NULL);
 	static void ShowNotification(const TCHAR *caption, const TCHAR *message, int flags = 0, MCONTACT hContact = NULL);

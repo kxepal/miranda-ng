@@ -7,9 +7,10 @@ bool CToxProto::IsOnline()
 
 void CToxProto::BootstrapNode(const char *address, int port, const uint8_t *pubKey)
 {
-	if (!tox_bootstrap_from_address(tox, address, port, pubKey))
+	TOX_ERR_BOOTSTRAP error;
+	if (!tox_bootstrap(tox, address, port, pubKey, &error))
 	{
-		debugLogA("CToxProto::BootstrapNode: failed to bootstrap node %s:%d (%s)", address, port, (const char*)ToxHexAddress(pubKey));
+		debugLogA("CToxProto::BootstrapNode: failed to bootstrap node %s:%d \"%s\" (%d)", address, port, (const char*)ToxHexAddress(pubKey), error);
 	}
 }
 
@@ -82,7 +83,7 @@ void CToxProto::BootstrapNodes()
 
 void CToxProto::TryConnect()
 {
-	if (tox_isconnected(tox))
+	if (tox_self_get_connection_status(tox) != TOX_CONNECTION_NONE)
 	{
 		isConnected = true;
 		debugLogA("CToxProto::PollingThread: successfuly connected to DHT");
@@ -91,7 +92,7 @@ void CToxProto::TryConnect()
 
 		m_iStatus = m_iDesiredStatus;
 		ProtoBroadcastAck(NULL, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)ID_STATUS_CONNECTING, m_iStatus);
-		tox_set_user_status(tox, MirandaToToxStatus(m_iStatus));
+		tox_self_set_status(tox, MirandaToToxStatus(m_iStatus));
 		debugLogA("CToxProto::PollingThread: changing status from %i to %i", ID_STATUS_CONNECTING, m_iDesiredStatus);
 	}
 	else if (m_iStatus++ > TOX_MAX_CONNECT_RETRIES)
@@ -108,7 +109,7 @@ void CToxProto::CheckConnection(int &retriesCount)
 	{
 		TryConnect();
 	}
-	else if (tox_isconnected(tox))
+	else if (tox_self_get_connection_status(tox) != TOX_CONNECTION_NONE)
 	{
 		if (retriesCount < TOX_MAX_DISCONNECT_RETRIES)
 		{
@@ -141,9 +142,9 @@ void CToxProto::DoTox()
 {
 	{
 		mir_cslock lock(toxLock);
-		tox_do(tox);
+		tox_iterate(tox);
 	}
-	uint32_t interval = tox_do_interval(tox);
+	uint32_t interval = tox_iteration_interval(tox);
 	Sleep(interval);
 }
 
