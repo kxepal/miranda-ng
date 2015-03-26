@@ -74,7 +74,7 @@ private:
 	std::tstring GetToxProfilePath();
 	static std::tstring CToxProto::GetToxProfilePath(const TCHAR *accountName);
 
-	bool LoadToxProfile();
+	bool LoadToxProfile(uint8_t *data, size_t &size);
 	void SaveToxProfile();
 
 	INT_PTR __cdecl OnCopyToxID(WPARAM, LPARAM);
@@ -83,8 +83,6 @@ private:
 	static INT_PTR CALLBACK ToxProfilePasswordProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	// tox core
-	bool IsToxCoreInited();
-
 	bool InitToxCore();
 	void UninitToxCore();
 
@@ -215,12 +213,16 @@ private:
 	int __cdecl OnPreCreateMessage(WPARAM wParam, LPARAM lParam);
 
 	// transfer
+	HANDLE OnFileAllow(MCONTACT hContact, HANDLE hTransfer, const PROTOCHAR *tszPath);
+	int OnFileResume(HANDLE hTransfer, int *action, const PROTOCHAR **szFilename);
+	int OnFileCancel(MCONTACT hContact, HANDLE hTransfer);
+	HANDLE OnSendFile(MCONTACT hContact, const PROTOCHAR*, PROTOCHAR **ppszFiles);
 	void __cdecl SendFileAsync(void* arg);
 
 	//static void OnFileControlCallback(Tox *tox, int32_t number, uint8_t hFile, uint64_t fileSize, uint8_t *name, uint16_t nameSize, void *arg);
-	static void OnFileRequest(Tox *tox, int32_t friendNumber, uint8_t receive_send, uint8_t fileNumber, uint8_t type, const uint8_t *data, uint16_t length, void *arg);
-	static void OnFriendFile(Tox *tox, int32_t friendNumber, uint8_t fileNumber, uint64_t fileSize, const uint8_t *fileName, uint16_t length, void *arg);
-	static void OnFileData(Tox *tox, int32_t friendNumber, uint8_t fileNumber, const uint8_t *data, uint16_t length, void *arg);
+	static void OnFileRequest(Tox *tox, uint32_t friendNumber, uint32_t fileNumber, TOX_FILE_CONTROL control, void *arg);
+	static void OnFriendFile(Tox *tox, uint32_t friendNumber, uint32_t fileNumber, uint32_t kind, uint64_t fileSize, const uint8_t *fileName, size_t filenameLength, void *arg);
+	static void OnFileData(Tox *tox, uint32_t friendNumber, uint32_t fileNumber, uint64_t position, const uint8_t *data, size_t length, void *arg);
 
 	// avatars
 	std::tstring GetAvatarFilePath(MCONTACT hContact = NULL);

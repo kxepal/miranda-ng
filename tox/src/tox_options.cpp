@@ -12,17 +12,30 @@ INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 			proto = (CToxProto*)lParam;
 			SetWindowLongPtr(hwnd, GWLP_USERDATA, lParam);
 
+			std::tstring profilePath = proto->GetToxProfilePath();
+			if (IsFileExists(profilePath))
+			{
+				ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_NEW), FALSE);
+				ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_IMPORT), FALSE);
+
+				ShowWindow(GetDlgItem(hwnd, IDC_CLIPBOARD), TRUE);
+				ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_EXPORT), TRUE);
+			}
+
+			if (proto->IsOnline())
+			{
+				EnableWindow(GetDlgItem(hwnd, IDC_NAME), TRUE);
+				EnableWindow(GetDlgItem(hwnd, IDC_PASSWORD), TRUE);
+			}
+
+			ptrA address(proto->getStringA(TOX_SETTINGS_ID));
+			SetDlgItemTextA(hwnd, IDC_TOXID, address);
+
 			ptrT nick(proto->getTStringA("Nick"));
 			SetDlgItemText(hwnd, IDC_NAME, nick);
 
 			ptrT pass(proto->getTStringA("Password"));
 			SetDlgItemText(hwnd, IDC_PASSWORD, pass);
-
-			ptrA address(proto->getStringA(TOX_SETTINGS_ID));
-			if (address != NULL)
-			{
-				SetDlgItemTextA(hwnd, IDC_TOXID, address);
-			}
 
 			ptrT group(proto->getTStringA(TOX_SETTINGS_GROUP));
 			SetDlgItemText(hwnd, IDC_GROUP, group ? group : _T("Tox"));
@@ -30,10 +43,6 @@ INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 
 			CheckDlgButton(hwnd, IDC_DISABLE_UDP, proto->getBool("DisableUDP", 0));
 			CheckDlgButton(hwnd, IDC_DISABLE_IPV6, proto->getBool("DisableIPv6", 0));
-			if (!proto->IsToxCoreInited())
-			{
-				EnableWindow(GetDlgItem(hwnd, IDC_IMPORT_PROFILE), TRUE);
-			}
 		}
 		return TRUE;
 
@@ -72,11 +81,11 @@ INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 		}
 		break;
 
-		case IDC_IMPORT_PROFILE:
+		case IDC_PROFILE_IMPORT:
 		{
 			TCHAR filter[MAX_PATH];
 			mir_sntprintf(filter, SIZEOF(filter), _T("%s(*.tox)%c*.tox%c%s(*.*)%c*.*%c%c"),
-			TranslateT("Tox profile"), 0, 0, TranslateT("All files"), 0, 0, 0);
+				TranslateT("Tox profile"), 0, 0, TranslateT("All files"), 0, 0, 0);
 
 			TCHAR profilePath[MAX_PATH] = { 0 };
 
@@ -90,87 +99,66 @@ INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 			ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_EXPLORER;
 			ofn.lpstrInitialDir = _T("%APPDATA%\\Tox");
 
-			if (GetOpenFileName(&ofn))
+			if (!GetOpenFileName(&ofn))
 			{
-				if (!proto->IsToxCoreInited())
-				{
-					std::tstring defaultProfilePath = GetToxProfilePath(proto->accountName);
-					if (CToxProto::IsFileExists(defaultProfilePath.c_str()))
-					{
-						if (MessageBox(
-							hwnd,
-							TranslateT("You have existing profile. Do you want remove it with all tox contacts and history and continue import?"),
-							TranslateT("Tox profile import"),
-							MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) == IDYES)
-						{
-							while (MCONTACT hContact = db_find_first(proto->m_szModuleName))
-							{
-								CallService(MS_DB_CONTACT_DELETE, hContact, 0);
-							}
-						}
-						else break;
-					}
-					if (profilePath && _tcslen(profilePath))
-					{
-						if (_tcsicmp(profilePath, defaultProfilePath.c_str()) != 0)
-						{
-							CopyFile(profilePath, defaultProfilePath.c_str(), FALSE);
-						}
-					}
+				break;
+			}
 
-					if (proto->InitToxCore())
-					{
-						TCHAR group[64];
-						GetDlgItemText(hwnd, IDC_GROUP, group, SIZEOF(group));
-						if (_tcslen(group) > 0)
-						{
-							proto->setTString(TOX_SETTINGS_GROUP, group);
-							Clist_CreateGroup(0, group);
-						}
-						else
-						{
-							proto->delSetting(TOX_SETTINGS_GROUP);
-						}
-						proto->LoadFriendList(NULL);
-						proto->UninitToxCore();
-
-						ptrT nick(proto->getTStringA("Nick"));
-						SetDlgItemText(hwnd, IDC_NAME, nick);
-
-						ptrT pass(proto->getTStringA("Password"));
-						SetDlgItemText(hwnd, IDC_PASSWORD, pass);
-
-						ptrA address(proto->getStringA(TOX_SETTINGS_ID));
-						if (address != NULL)
-						{
-							SetDlgItemTextA(hwnd, IDC_TOXID, address);
-						}
-					}
-				}
+			std::tstring defaultProfilePath = proto->GetToxProfilePath();
+			/*if (CToxProto::IsFileExists(defaultProfilePath.c_str()))
+			{
+			if (MessageBox(
+			hwnd,
+			TranslateT("You have existing profile. Do you want remove it with all tox contacts and history and continue import?"),
+			TranslateT("Tox profile import"),
+			MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) == IDYES)
+			{
+			while (MCONTACT hContact = db_find_first(proto->m_szModuleName))
+			{
+			CallService(MS_DB_CONTACT_DELETE, hContact, 0);
+			}
+			}
+			else break;
+			}*/
+			if (_tcsicmp(profilePath, defaultProfilePath.c_str()) != 0)
+			{
+				CopyFile(profilePath, defaultProfilePath.c_str(), FALSE);
 			}
 		}
-		break;
+		case IDC_PROFILE_NEW:
+			if (proto->InitToxCore())
+			{
+				TCHAR group[64];
+				GetDlgItemText(hwnd, IDC_GROUP, group, SIZEOF(group));
+				if (_tcslen(group) > 0)
+				{
+					proto->setTString(TOX_SETTINGS_GROUP, group);
+					Clist_CreateGroup(0, group);
+				}
+				else
+				{
+					proto->delSetting(TOX_SETTINGS_GROUP);
+				}
+				proto->LoadFriendList(NULL);
+				proto->UninitToxCore();
+
+				ptrT nick(proto->getTStringA("Nick"));
+				SetDlgItemText(hwnd, IDC_NAME, nick);
+
+				ptrT pass(proto->getTStringA("Password"));
+				SetDlgItemText(hwnd, IDC_PASSWORD, pass);
+
+				ptrA address(proto->getStringA(TOX_SETTINGS_ID));
+				SetDlgItemTextA(hwnd, IDC_TOXID, address);
+			}
+			break;
 		}
 	}
 	break;
 
 	case WM_NOTIFY:
-		if (reinterpret_cast<NMHDR*>(lParam)->code == PSN_APPLY)
+		if (((NMHDR*)lParam)->code == PSN_APPLY)
 		{
-			TCHAR nick[TOX_MAX_NAME_LENGTH];
-			GetDlgItemText(hwnd, IDC_NAME, nick, TOX_MAX_NAME_LENGTH);
-			CallProtoService(proto->m_szModuleName, PS_SETMYNICKNAME, SMNN_TCHAR, (LPARAM)nick);
-
-			TCHAR password[MAX_PATH];
-			GetDlgItemText(hwnd, IDC_PASSWORD, password, SIZEOF(password));
-			proto->setTString("Password", password);
-			if (proto->password != NULL)
-			{
-				mir_free(proto->password);
-				proto->password = NULL;
-			}
-			proto->password = mir_utf8encodeW(password);
-
 			TCHAR group[64];
 			GetDlgItemText(hwnd, IDC_GROUP, group, SIZEOF(group));
 			if (_tcslen(group) > 0)
@@ -188,7 +176,21 @@ INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 
 			if (proto->IsOnline())
 			{
-				//proto->SaveToxProfile();
+				TCHAR nick[TOX_MAX_NAME_LENGTH];
+				GetDlgItemText(hwnd, IDC_NAME, nick, TOX_MAX_NAME_LENGTH);
+				CallProtoService(proto->m_szModuleName, PS_SETMYNICKNAME, SMNN_TCHAR, (LPARAM)nick);
+
+				TCHAR password[MAX_PATH];
+				GetDlgItemText(hwnd, IDC_PASSWORD, password, SIZEOF(password));
+				proto->setTString("Password", password);
+				if (proto->password != NULL)
+				{
+					mir_free(proto->password);
+					proto->password = NULL;
+				}
+				proto->password = mir_utf8encodeW(password);
+
+				proto->SaveToxProfile();
 			}
 
 			return TRUE;

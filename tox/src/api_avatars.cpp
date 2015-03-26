@@ -27,11 +27,6 @@ int tox_get_self_avatar(const Tox *tox, uint8_t *format, uint8_t *buf, uint32_t 
 	return CreateFunction<int(*)(const Tox*, uint8_t*, uint8_t*, uint32_t*, uint32_t, uint8_t*)>(__FUNCTION__)(tox, format, buf, length, maxlen, hash);
 }
 
-bool tox_hash(uint8_t *hash, const uint8_t *data, size_t datalen)
-{
-	return CreateFunction<bool(*)(uint8_t*, const uint8_t*, size_t)>(__FUNCTION__)(hash, data, datalen);
-}
-
 int tox_request_avatar_info(const Tox *tox, const int32_t friendnumber)
 {
 	return CreateFunction<int(*)(const Tox*, const int32_t)>(__FUNCTION__)(tox, friendnumber);

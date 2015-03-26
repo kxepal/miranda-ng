@@ -2,29 +2,34 @@
 
 /* FILE SENDING FUNCTIONS */
 
-void tox_callback_file_send_request(Tox *tox, void(*function)(Tox *m, int32_t, uint8_t, uint64_t, const uint8_t *, uint16_t, void *), void *userdata)
+bool tox_hash(uint8_t *hash, const uint8_t *data, size_t datalen)
 {
-	CreateFunction<int(*)(Tox*, void(*)(Tox*, int32_t, uint8_t, uint64_t, const uint8_t*, uint16_t, void*), void*)>(__FUNCTION__)(tox, function, userdata);
+	return CreateFunction<bool(*)(uint8_t*, const uint8_t*, size_t)>(__FUNCTION__)(hash, data, datalen);
 }
 
-void tox_callback_file_control(Tox *tox, void(*function)(Tox *m, int32_t, uint8_t, uint8_t, uint8_t, const uint8_t *, uint16_t, void *), void *userdata)
+void tox_callback_file_recv(Tox *tox, tox_file_recv_cb *function, void *user_data)
 {
-	CreateFunction<int(*)(Tox*, void(*)(Tox*, int32_t, uint8_t, uint8_t, uint8_t, const uint8_t*, uint16_t, void*), void*)>(__FUNCTION__)(tox, function, userdata);
+	CreateFunction<void(*)(Tox*, tox_file_recv_cb, void*)>(__FUNCTION__)(tox, function, user_data);
 }
 
-void tox_callback_file_data(Tox *tox, void(*function)(Tox *m, int32_t, uint8_t, const uint8_t *, uint16_t length, void *), void *userdata)
+void tox_callback_file_recv_control(Tox *tox, tox_file_recv_control_cb *function, void *user_data)
 {
-	CreateFunction<int(*)(Tox*tox, void(*)(Tox*, int32_t, uint8_t, const uint8_t *, uint16_t length, void*), void*)>(__FUNCTION__)(tox, function, userdata);
+	CreateFunction<void(*)(Tox*, tox_file_recv_control_cb, void*)>(__FUNCTION__)(tox, function, user_data);
 }
 
-int tox_new_file_sender(Tox *tox, int32_t friendnumber, uint64_t filesize, const uint8_t *filename, uint16_t filename_length)
+void tox_callback_file_recv_chunk(Tox *tox, tox_file_recv_chunk_cb *function, void *user_data)
 {
-	return CreateFunction<int(*)(Tox*, int32_t, uint64_t, const uint8_t*, uint16_t)>(__FUNCTION__)(tox, friendnumber, filesize, filename, filename_length);
+	CreateFunction<void(*)(Tox*tox, tox_file_recv_chunk_cb, void*)>(__FUNCTION__)(tox, function, user_data);
 }
 
-int tox_file_send_control(Tox *tox, int32_t friendnumber, uint8_t send_receive, uint8_t filenumber, uint8_t message_id, const uint8_t *data, uint16_t length)
+uint32_t tox_file_send(Tox *tox, uint32_t friend_number, uint32_t kind, uint64_t file_size, const uint8_t *file_id, const uint8_t *filename, size_t filename_length, TOX_ERR_FILE_SEND *error)
 {
-	return CreateFunction<int(*)(Tox*, int32_t, uint8_t, uint8_t, uint8_t, const uint8_t*, uint16_t)>(__FUNCTION__)(tox, friendnumber, send_receive, filenumber, message_id, data, length);
+	return CreateFunction<uint32_t(*)(Tox*, uint32_t, uint32_t, uint64_t, const uint8_t*, const uint8_t*, size_t, TOX_ERR_FILE_SEND*)>(__FUNCTION__)(tox, friend_number, kind, file_size, file_id, filename, filename_length, error);
+}
+
+bool tox_file_control(Tox *tox, uint32_t friend_number, uint32_t file_number, TOX_FILE_CONTROL control, TOX_ERR_FILE_CONTROL *error)
+{
+	return CreateFunction<bool(*)(Tox*, uint32_t, uint32_t, TOX_FILE_CONTROL, TOX_ERR_FILE_CONTROL*)>(__FUNCTION__)(tox, friend_number, file_number, control, error);
 }
 
 int tox_file_send_data(Tox *tox, int32_t friendnumber, uint8_t filenumber, const uint8_t *data, uint16_t length)

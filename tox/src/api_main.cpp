@@ -2,9 +2,19 @@
 
 /* MAIN FUNCTIONS */
 
+struct Tox_Options *tox_options_new(TOX_ERR_OPTIONS_NEW *error)
+{
+	return CreateFunction<struct Tox_Options*(*)(TOX_ERR_OPTIONS_NEW*)>(__FUNCTION__)(error);
+}
+
+void tox_options_free(struct Tox_Options *options)
+{
+	return CreateFunction<void(*)(struct Tox_Options*)>(__FUNCTION__)(options);
+}
+
 Tox *tox_new(const struct Tox_Options *options, const uint8_t *data, size_t length, TOX_ERR_NEW *error)
 {
-	return CreateFunction<Tox*(*)(const struct Tox_Options*, const uint8_t*, size_t, TOX_ERR_NEW *)>(__FUNCTION__)(options, data, length, error);
+	return CreateFunction<Tox*(*)(const struct Tox_Options*, const uint8_t*, size_t, TOX_ERR_NEW*)>(__FUNCTION__)(options, data, length, error);
 }
 
 void tox_kill(Tox *tox)
@@ -38,9 +48,9 @@ bool tox_friend_get_public_key(const Tox *tox, uint32_t friend_number, uint8_t *
 	return CreateFunction<bool(*)(const Tox*, int32_t, uint8_t*, TOX_ERR_FRIEND_GET_PUBLIC_KEY*)>(__FUNCTION__)(tox, friend_number, public_key, error);
 }
 
-int tox_del_friend(Tox *tox, int32_t friendnumber)
+bool tox_friend_delete(Tox *tox, uint32_t friend_number, TOX_ERR_FRIEND_DELETE *error)
 {
-	return CreateFunction<int(*)(Tox*, int32_t)>(__FUNCTION__)(tox, friendnumber);
+	return CreateFunction<bool(*)(Tox*, uint32_t, TOX_ERR_FRIEND_DELETE*)>(__FUNCTION__)(tox, friend_number, error);
 }
 
 int tox_get_friend_connection_status(const Tox *tox, int32_t friendnumber)
@@ -60,6 +70,8 @@ uint32_t tox_friend_send_message(Tox *tox, uint32_t friend_number, TOX_MESSAGE_T
 
 int tox_set_name(Tox *tox, const uint8_t *name, uint16_t length)
 {
+	if (tox == NULL)
+		return -1;
 	return CreateFunction<int(*)(Tox*, const uint8_t*, uint16_t)>(__FUNCTION__ )(tox, name, length);
 }
 
@@ -195,12 +207,12 @@ void tox_callback_friend_connection_status(Tox *tox, tox_friend_connection_statu
 
 /* SAVING AND LOADING FUNCTIONS */
 
-uint32_t tox_size(const Tox *tox)
+size_t tox_get_savedata_size(const Tox *tox)
 {
-	return CreateFunction<int(*)(const Tox*)>(__FUNCTION__)(tox);
+	return CreateFunction<size_t(*)(const Tox*)>(__FUNCTION__)(tox);
 }
 
-void tox_save(const Tox *tox, uint8_t *data)
+void tox_get_savedata(const Tox *tox, uint8_t *data)
 {
 	CreateFunction<int(*)(const Tox*, uint8_t*)>(__FUNCTION__)(tox, data);
 }

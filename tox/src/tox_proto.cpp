@@ -98,6 +98,26 @@ int CToxProto::AuthRequest(MCONTACT hContact, const PROTOCHAR *szMessage)
 	return OnRequestAuth(hContact, (LPARAM)reason);
 }
 
+HANDLE CToxProto::FileAllow(MCONTACT hContact, HANDLE hTransfer, const PROTOCHAR *tszPath)
+{
+	return OnFileAllow(hContact, hTransfer, tszPath);
+}
+
+int CToxProto::FileCancel(MCONTACT hContact, HANDLE hTransfer)
+{
+	return OnFileCancel(hContact, hTransfer);
+}
+
+int CToxProto::FileDeny(MCONTACT hContact, HANDLE hTransfer, const PROTOCHAR*)
+{
+	return FileCancel(hContact, hTransfer);
+}
+
+int CToxProto::FileResume(HANDLE hTransfer, int *action, const PROTOCHAR **szFilename)
+{
+	return OnFileResume(hTransfer, action, szFilename);
+}
+
 HWND CToxProto::SearchAdvanced(HWND owner)
 {
 	return OnSearchAdvanced(owner);
@@ -116,6 +136,11 @@ int CToxProto::RecvMsg(MCONTACT hContact, PROTORECVEVENT *pre)
 int CToxProto::SendMsg(MCONTACT hContact, int flags, const char *msg)
 {
 	return OnSendMessage(hContact, flags, msg);
+}
+
+HANDLE CToxProto::SendFile(MCONTACT hContact, const PROTOCHAR *msg, PROTOCHAR **ppszFiles)
+{
+	return OnSendFile(hContact, msg, ppszFiles);
 }
 
 int CToxProto::SetStatus(int iNewStatus)
