@@ -4,7 +4,7 @@
 
 bool tox_bootstrap(Tox *tox, const char *host, uint16_t port, const uint8_t *public_key, TOX_ERR_BOOTSTRAP *error)
 {
-	return CreateFunction<int(*)(Tox*, const char*, uint16_t, const uint8_t*, TOX_ERR_BOOTSTRAP*)>(__FUNCTION__)(tox, host, port, public_key, error);
+	return CreateFunction<bool(*)(Tox*, const char*, uint16_t, const uint8_t*, TOX_ERR_BOOTSTRAP*)>(__FUNCTION__)(tox, host, port, public_key, error);
 }
 
 bool tox_add_tcp_relay(Tox *tox, const char *host, uint16_t port, const uint8_t *public_key, TOX_ERR_BOOTSTRAP *error)

@@ -150,7 +150,7 @@ uint32_t tox_get_num_online_friends(const Tox *tox)
 
 void tox_self_get_friend_list(const Tox *tox, uint32_t *list)
 {
-	return CreateFunction<void(*)(const Tox*, int32_t*)>(__FUNCTION__)(tox, list);
+	return CreateFunction<void(*)(const Tox*, uint32_t*)>(__FUNCTION__)(tox, list);
 }
 
 void tox_callback_friend_request(Tox *tox, tox_friend_request_cb *function, void *user_data)
@@ -190,7 +190,7 @@ void tox_callback_friend_typing(Tox *tox, tox_friend_typing_cb *function, void *
 
 void tox_callback_friend_connection_status(Tox *tox, tox_friend_connection_status_cb *function, void *user_data)
 {
-	CreateFunction<void(*)(Tox*, tox_friend_connection_status_cb, void*)>(__FUNCTION__)(tox, function, userdata);
+	CreateFunction<void(*)(Tox*, tox_friend_connection_status_cb, void*)>(__FUNCTION__)(tox, function, user_data);
 }
 
 /* SAVING AND LOADING FUNCTIONS */
