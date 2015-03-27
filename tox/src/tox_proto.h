@@ -217,12 +217,12 @@ private:
 	int OnFileResume(HANDLE hTransfer, int *action, const PROTOCHAR **szFilename);
 	int OnFileCancel(MCONTACT hContact, HANDLE hTransfer);
 	HANDLE OnSendFile(MCONTACT hContact, const PROTOCHAR*, PROTOCHAR **ppszFiles);
-	void __cdecl SendFileAsync(void* arg);
 
-	//static void OnFileControlCallback(Tox *tox, int32_t number, uint8_t hFile, uint64_t fileSize, uint8_t *name, uint16_t nameSize, void *arg);
 	static void OnFileRequest(Tox *tox, uint32_t friendNumber, uint32_t fileNumber, TOX_FILE_CONTROL control, void *arg);
 	static void OnFriendFile(Tox *tox, uint32_t friendNumber, uint32_t fileNumber, uint32_t kind, uint64_t fileSize, const uint8_t *fileName, size_t filenameLength, void *arg);
-	static void OnFileData(Tox *tox, uint32_t friendNumber, uint32_t fileNumber, uint64_t position, const uint8_t *data, size_t length, void *arg);
+	static void OnFileReceiveData(Tox *tox, uint32_t friendNumber, uint32_t fileNumber, uint64_t position, const uint8_t *data, size_t length, void *arg);
+
+	static void OnFileSendData(Tox *tox, uint32_t friendNumber, uint32_t fileNumber, uint64_t position, size_t length, void *arg);
 
 	// avatars
 	std::tstring GetAvatarFilePath(MCONTACT hContact = NULL);
@@ -233,8 +233,7 @@ private:
 	INT_PTR __cdecl GetMyAvatar(WPARAM wParam, LPARAM lParam);
 	INT_PTR __cdecl SetMyAvatar(WPARAM wParam, LPARAM lParam);
 
-	static void OnGotFriendAvatarInfo(Tox *tox, int32_t number, uint8_t format, uint8_t *hash, void *arg);
-	static void OnGotFriendAvatarData(Tox *tox, int32_t number, uint8_t format, uint8_t *hash, uint8_t *data, uint32_t length, void *arg);
+	void OnGotFriendAvatarInfo(FileTransferParam *transfer, const uint8_t *hash);
 
 	// folders
 

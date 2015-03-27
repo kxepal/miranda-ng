@@ -41,7 +41,8 @@ bool CToxProto::InitToxCore()
 
 	debugLogA("CToxProto::InitToxCore: loading tox profile");
 
-	uint8_t *data; size_t size;
+	size_t size;
+	uint8_t *data = NULL;
 	bool isProfileLoaded = LoadToxProfile(data, size);
 	if (isProfileLoaded)
 	{
@@ -88,7 +89,8 @@ bool CToxProto::InitToxCore()
 		// file transfers
 		tox_callback_file_recv_control(tox, OnFileRequest, this);
 		tox_callback_file_recv(tox, OnFriendFile, this);
-		tox_callback_file_recv_chunk(tox, OnFileData, this);
+		tox_callback_file_recv_chunk(tox, OnFileReceiveData, this);
+		tox_callback_file_chunk_request(tox, OnFileSendData, this);
 		// avatars
 		//tox_callback_avatar_info(tox, OnGotFriendAvatarInfo, this);
 		//tox_callback_avatar_data(tox, OnGotFriendAvatarData, this);
