@@ -48,7 +48,7 @@ extern "C" {
  * request we stored earlier to get the Tox id returned by the DNS server.
  */
 
-/* Create a new tox_dns3 object for server with server_public_key of size TOX_PUBLIC_KEY_SIZE.
+/* Create a new tox_dns3 object for server with server_public_key of size TOX_CLIENT_ID_SIZE.
  *
  * return Null on failure.
  * return pointer object on success.
@@ -75,7 +75,7 @@ int tox_generate_dns3_string(void *dns3_object, uint8_t *string, uint16_t string
                              uint8_t *name, uint8_t name_len);
 
 /* Decode and decrypt the id_record returned of length id_record_len into
- * tox_id (needs to be at least TOX_ADDRESS_SIZE).
+ * tox_id (needs to be at least TOX_FRIEND_ADDRESS_SIZE).
  *
  * request_id is the request id given by tox_generate_dns3_string() when creating the request.
  *

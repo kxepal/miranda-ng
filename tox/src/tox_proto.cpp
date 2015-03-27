@@ -68,7 +68,7 @@ MCONTACT CToxProto::AddToList(int flags, PROTOSEARCHRESULT *psr)
 		ShowNotification(TranslateT("You cannot add yourself to your contact list"), 0);
 		return NULL;
 	}
-	MCONTACT hContact = GetContact(address);
+	MCONTACT hContact = GetContact((char*)address);
 	if (hContact)
 	{
 		ShowNotification(TranslateT("Contact already in your contact list"), 0, hContact);

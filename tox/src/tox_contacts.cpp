@@ -187,11 +187,11 @@ INT_PTR CToxProto::OnRequestAuth(WPARAM hContact, LPARAM lParam)
 	delSetting(hContact, "Grant");
 
 	uint8_t nick[TOX_MAX_NAME_LENGTH];
-	TOX_ERR_FRIEND_QUERY error;
-	if (tox_friend_get_name(tox, friendNumber, nick, &error))
+	TOX_ERR_FRIEND_QUERY errorfriend;
+	if (tox_friend_get_name(tox, friendNumber, nick, &errorfriend))
 		setWString(hContact, "Nick", ptrT(mir_utf8decodeW((char*)nick)));
 	else
-		debugLogA(__FUNCTION__": failed to get friend name (%d)", error);
+		debugLogA(__FUNCTION__": failed to get friend name (%d)", errorfriend);
 
 	return 0;
 }
