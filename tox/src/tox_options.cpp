@@ -15,11 +15,13 @@ INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 			std::tstring profilePath = proto->GetToxProfilePath();
 			if (IsFileExists(profilePath))
 			{
+				EnableWindow(GetDlgItem(hwnd, IDC_TOXID), TRUE);
+
 				ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_NEW), FALSE);
 				ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_IMPORT), FALSE);
 
 				ShowWindow(GetDlgItem(hwnd, IDC_CLIPBOARD), TRUE);
-				ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_EXPORT), TRUE);
+				//ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_EXPORT), TRUE);
 			}
 
 			if (proto->IsOnline())
@@ -34,15 +36,15 @@ INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 			ptrT nick(proto->getTStringA("Nick"));
 			SetDlgItemText(hwnd, IDC_NAME, nick);
 
-			ptrT pass(proto->getTStringA("Password"));
-			SetDlgItemText(hwnd, IDC_PASSWORD, pass);
+			ptrT password(proto->getTStringA("Password"));
+			SetDlgItemText(hwnd, IDC_PASSWORD, password);
 
 			ptrT group(proto->getTStringA(TOX_SETTINGS_GROUP));
 			SetDlgItemText(hwnd, IDC_GROUP, group ? group : _T("Tox"));
 			SendDlgItemMessage(hwnd, IDC_GROUP, EM_LIMITTEXT, 64, 0);
 
-			CheckDlgButton(hwnd, IDC_DISABLE_UDP, proto->getBool("DisableUDP", 0));
-			CheckDlgButton(hwnd, IDC_DISABLE_IPV6, proto->getBool("DisableIPv6", 0));
+			CheckDlgButton(hwnd, IDC_ENABLE_UDP, proto->getBool("EnableUDP", 1));
+			CheckDlgButton(hwnd, IDC_ENABLE_IPV6, proto->getBool("EnableIPv6", 0));
 		}
 		return TRUE;
 
@@ -60,8 +62,8 @@ INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 			}
 			break;
 
-		case IDC_DISABLE_UDP:
-		case IDC_DISABLE_IPV6:
+		case IDC_ENABLE_UDP:
+		case IDC_ENABLE_IPV6:
 			SendMessage(GetParent(hwnd), PSM_CHANGED, 0, 0);
 			break;
 
@@ -105,21 +107,6 @@ INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 			}
 
 			std::tstring defaultProfilePath = proto->GetToxProfilePath();
-			/*if (CToxProto::IsFileExists(defaultProfilePath.c_str()))
-			{
-			if (MessageBox(
-			hwnd,
-			TranslateT("You have existing profile. Do you want remove it with all tox contacts and history and continue import?"),
-			TranslateT("Tox profile import"),
-			MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) == IDYES)
-			{
-			while (MCONTACT hContact = db_find_first(proto->m_szModuleName))
-			{
-			CallService(MS_DB_CONTACT_DELETE, hContact, 0);
-			}
-			}
-			else break;
-			}*/
 			if (_tcsicmp(profilePath, defaultProfilePath.c_str()) != 0)
 			{
 				CopyFile(profilePath, defaultProfilePath.c_str(), FALSE);
@@ -135,21 +122,26 @@ INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 					proto->setTString(TOX_SETTINGS_GROUP, group);
 					Clist_CreateGroup(0, group);
 				}
-				else
-				{
-					proto->delSetting(TOX_SETTINGS_GROUP);
-				}
+
 				proto->LoadFriendList(NULL);
 				proto->UninitToxCore();
 
 				ptrT nick(proto->getTStringA("Nick"));
 				SetDlgItemText(hwnd, IDC_NAME, nick);
 
-				ptrT pass(proto->getTStringA("Password"));
-				SetDlgItemText(hwnd, IDC_PASSWORD, pass);
+				ptrT password(proto->getTStringA("Password"));
+				SetDlgItemText(hwnd, IDC_PASSWORD, password);
 
 				ptrA address(proto->getStringA(TOX_SETTINGS_ID));
 				SetDlgItemTextA(hwnd, IDC_TOXID, address);
+
+				EnableWindow(GetDlgItem(hwnd, IDC_TOXID), TRUE);
+
+				ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_NEW), FALSE);
+				ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_IMPORT), FALSE);
+
+				ShowWindow(GetDlgItem(hwnd, IDC_CLIPBOARD), TRUE);
+				//ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_EXPORT), TRUE);
 			}
 			break;
 		}
@@ -166,13 +158,9 @@ INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 				proto->setTString(TOX_SETTINGS_GROUP, group);
 				Clist_CreateGroup(0, group);
 			}
-			else
-			{
-				proto->delSetting(NULL, TOX_SETTINGS_GROUP);
-			}
 
-			proto->setByte("DisableUDP", (BYTE)IsDlgButtonChecked(hwnd, IDC_DISABLE_UDP));
-			proto->setByte("DisableIPv6", (BYTE)IsDlgButtonChecked(hwnd, IDC_DISABLE_IPV6));
+			proto->setByte("EnableUDP", (BYTE)IsDlgButtonChecked(hwnd, IDC_ENABLE_UDP));
+			proto->setByte("EnableIPv6", (BYTE)IsDlgButtonChecked(hwnd, IDC_ENABLE_IPV6));
 
 			if (proto->IsOnline())
 			{

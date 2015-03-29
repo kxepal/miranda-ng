@@ -28,7 +28,7 @@ struct FileTransferParam
 		hFile = NULL;
 		this->friendNumber = friendNumber;
 		this->fileNumber = fileNumber;
-		transferNumber = (((uint32_t)friendNumber) << 32) | ((uint32_t)fileNumber);
+		transferNumber = (((uint32_t)friendNumber) << 16) | ((uint32_t)fileNumber);
 
 		pfts.cbSize = sizeof(PROTOFILETRANSFERSTATUS);
 		pfts.flags = PFTS_TCHAR;

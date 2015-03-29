@@ -68,11 +68,9 @@ uint32_t tox_friend_send_message(Tox *tox, uint32_t friend_number, TOX_MESSAGE_T
 	return CreateFunction<uint32_t(*)(Tox*, uint32_t, TOX_MESSAGE_TYPE, const uint8_t*, size_t, TOX_ERR_FRIEND_SEND_MESSAGE*)>(__FUNCTION__)(tox, friend_number, type, message, length, error);
 }
 
-int tox_self_set_name(Tox *tox, const uint8_t *name, uint16_t length)
+bool tox_self_set_name(Tox *tox, const uint8_t *name, size_t length, TOX_ERR_SET_INFO *error)
 {
-	if (tox == NULL)
-		return -1;
-	return CreateFunction<int(*)(Tox*, const uint8_t*, uint16_t)>(__FUNCTION__ )(tox, name, length);
+	return CreateFunction<bool(*)(Tox*, const uint8_t*, size_t, TOX_ERR_SET_INFO*)>(__FUNCTION__)(tox, name, length, error);
 }
 
 void tox_self_get_name(const Tox *tox, uint8_t *name)
@@ -102,7 +100,7 @@ bool tox_self_set_status_message(Tox *tox, const uint8_t *status, size_t length,
 
 void tox_self_set_status(Tox *tox, TOX_USER_STATUS user_status)
 {
-	return CreateFunction<void(*)(Tox*, TOX_USER_STATUS)>(__FUNCTION__)(tox, user_status);
+	CreateFunction<void(*)(Tox*, TOX_USER_STATUS)>(__FUNCTION__)(tox, user_status);
 }
 
 int tox_get_status_message_size(const Tox *tox, int32_t friendnumber)
@@ -110,9 +108,9 @@ int tox_get_status_message_size(const Tox *tox, int32_t friendnumber)
 	return CreateFunction<int(*)(const Tox*, int32_t)>(__FUNCTION__)(tox, friendnumber);
 }
 
-int tox_self_get_status_message(const Tox *tox)
+void tox_self_get_status_message(const Tox *tox, uint8_t *status)
 {
-	return CreateFunction<int(*)(const Tox*)>(__FUNCTION__)(tox);
+	CreateFunction<void(*)(const Tox*, uint8_t*)>(__FUNCTION__)(tox, status);
 }
 
 int tox_get_status_message(const Tox *tox, int32_t friendnumber, uint8_t *buf, uint32_t maxlen)

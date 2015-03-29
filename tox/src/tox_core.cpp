@@ -41,43 +41,9 @@ bool CToxProto::InitToxCore()
 
 	debugLogA("CToxProto::InitToxCore: loading tox profile");
 
-	size_t size;
-	uint8_t *data = NULL;
-	bool isProfileLoaded = LoadToxProfile(data, size);
-	if (isProfileLoaded)
+	
+	if (LoadToxProfile(options))
 	{
-		TOX_ERR_NEW coreError;
-		if (tox_is_data_encrypted(data))
-		{
-			password = mir_utf8encodeW(ptrT(getTStringA("Password")));
-			if (password == NULL || mir_strlen(password) == 0)
-			{
-				if (!DialogBoxParam(
-					g_hInstance,
-					MAKEINTRESOURCE(IDD_PASSWORD),
-					NULL,
-					ToxProfilePasswordProc,
-					(LPARAM)this))
-				{
-					tox_options_free(options);
-					mir_free(data);
-					return false;
-				}
-			}
-			tox = tox_encrypted_new(options, data, size, (uint8_t*)password, mir_strlen(password), &coreError);
-		}
-		else
-			tox = tox_new(options, data, size, &coreError);
-		if (coreError != TOX_ERR_NEW_OK)
-		{
-			debugLogA(__FUNCTION__": failed to load tox profile (%d)", coreError);
-			tox_options_free(options);
-			mir_free(data);
-			tox = NULL;
-			return false;
-		}
-		debugLogA(__FUNCTION__": tox profile load successfully");
-
 		tox_callback_friend_request(tox, OnFriendRequest, this);
 		tox_callback_friend_message(tox, OnFriendMessage, this);
 		tox_callback_friend_read_receipt(tox, OnReadReceipt, this);
@@ -91,9 +57,6 @@ bool CToxProto::InitToxCore()
 		tox_callback_file_recv(tox, OnFriendFile, this);
 		tox_callback_file_recv_chunk(tox, OnFileReceiveData, this);
 		tox_callback_file_chunk_request(tox, OnFileSendData, this);
-		// avatars
-		//tox_callback_avatar_info(tox, OnGotFriendAvatarInfo, this);
-		//tox_callback_avatar_data(tox, OnGotFriendAvatarData, this);
 		// group chats
 		//tox_callback_group_invite(tox, OnGroupChatInvite, this);
 
@@ -111,37 +74,29 @@ bool CToxProto::InitToxCore()
 		tox_self_get_status_message(tox, statusMessage);
 		setWString("StatusMsg", ptrW(Utf8DecodeW((char*)statusMessage)));
 
-		/*std::tstring avatarPath = GetAvatarFilePath();
+		std::tstring avatarPath = GetAvatarFilePath();
 		if (IsFileExists(avatarPath))
 		{
 			SetToxAvatar(avatarPath);
-		}*/
-	}
-	else
-	{
-		debugLogA(__FUNCTION__": failed to load tox profile");
-		if (password != NULL)
-		{
-			mir_free(password);
-			password = NULL;
 		}
-		tox = NULL;
+		return true;
 	}
+
 	tox_options_free(options);
-	mir_free(data);
-	return isProfileLoaded;
+
+	return false;
 }
 
 void CToxProto::UninitToxCore()
 {
-	/*for (size_t i = 0; i < transfers.Count(); i++)
+	for (size_t i = 0; i < transfers.Count(); i++)
 	{
 		FileTransferParam *transfer = transfers.GetAt(i);
 		transfer->status = CANCELED;
-		tox_file_send_control(tox, transfer->friendNumber, transfer->GetDirection(), transfer->fileNumber, TOX_FILECONTROL_KILL, NULL, 0);
+		tox_file_control(tox, transfer->friendNumber, transfer->fileNumber, TOX_FILE_CONTROL_CANCEL, NULL);
 		ProtoBroadcastAck(transfer->pfts.hContact, ACKTYPE_FILE, ACKRESULT_DENIED, (HANDLE)transfer, 0);
 		transfers.Remove(transfer);
-	}*/
+	}
 
 	//if (IsToxCoreInited())
 	//{

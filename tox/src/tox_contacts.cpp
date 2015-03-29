@@ -205,7 +205,7 @@ INT_PTR CToxProto::OnGrantAuth(WPARAM hContact, LPARAM)
 
 	ToxBinAddress pubKey(ptrA(getStringA(hContact, TOX_SETTINGS_ID)), TOX_PUBLIC_KEY_SIZE * 2);
 	TOX_ERR_FRIEND_ADD error;
-	uint32_t friendNumber = tox_friend_add_norequest(tox, pubKey, &error);
+	tox_friend_add_norequest(tox, pubKey, &error);
 	if (error != TOX_ERR_FRIEND_ADD_OK)
 	{
 		debugLogA(__FUNCTION__": failed to grant auth (%d)", error);

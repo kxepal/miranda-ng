@@ -16,40 +16,73 @@ std::tstring CToxProto::GetToxProfilePath(const TCHAR *accountName)
 	return profilePath;
 }
 
-bool CToxProto::LoadToxProfile(uint8_t *data, size_t &size)
+bool CToxProto::LoadToxProfile(Tox_Options *options)
 {
+	debugLogA(__FUNCTION__": loading tox profile");
+
+	size_t size = 0;
+	uint8_t *data = NULL;
 	std::tstring profilePath = GetToxProfilePath();
-	if (!IsFileExists(profilePath))
+	if (IsFileExists(profilePath))
 	{
-		return false;
-	}
+		FILE *profile = _tfopen(profilePath.c_str(), _T("rb"));
+		if (profile == NULL)
+		{
+			debugLogA(__FUNCTION__": failed to open tox profile");
+			return false;
+		}
 
-	FILE *profile = _tfopen(profilePath.c_str(), _T("rb"));
-	if (profile == NULL)
-	{
-		debugLogA(__FUNCTION__": could not open tox profile");
-		return false;
-	}
+		fseek(profile, 0, SEEK_END);
+		size = ftell(profile);
+		rewind(profile);
+		if (size == 0)
+		{
+			fclose(profile);
+			debugLogA(__FUNCTION__": tox profile is empty");
+			return true;
+		}
 
-	fseek(profile, 0, SEEK_END);
-	size = ftell(profile);
-	rewind(profile);
-	if (size == 0)
-	{
+		data = (uint8_t*)mir_calloc(size);
+		if (fread((char*)data, sizeof(char), size, profile) != size)
+		{
+			fclose(profile);
+			debugLogA(__FUNCTION__": failed to read tox profile");
+			mir_free(data);
+			return false;
+		}
 		fclose(profile);
-		debugLogA(__FUNCTION__": tox profile is empty");
-		return true;
 	}
-
-	data = (uint8_t*)mir_calloc(size);
-	if (fread((char*)data, sizeof(char), size, profile) != size)
+	
+	TOX_ERR_NEW coreError;
+	if (data != NULL && tox_is_data_encrypted(data))
 	{
-		fclose(profile);
-		debugLogA(__FUNCTION__": could not read tox profile");
+		password = mir_utf8encodeW(ptrT(getTStringA("Password")));
+		if (password == NULL || mir_strlen(password) == 0)
+		{
+			if (!DialogBoxParam(
+				g_hInstance,
+				MAKEINTRESOURCE(IDD_PASSWORD),
+				NULL,
+				ToxProfilePasswordProc,
+				(LPARAM)this))
+			{
+				mir_free(data);
+				return false;
+			}
+		}
+		tox = tox_encrypted_new(options, data, size, (uint8_t*)password, mir_strlen(password), &coreError);
+	}
+	else
+		tox = tox_new(options, data, size, &coreError);
+
+	if (coreError != TOX_ERR_NEW_OK)
+	{
+		debugLogA(__FUNCTION__": failed to load tox profile (%d)", coreError);
 		mir_free(data);
 		return false;
 	}
-	fclose(profile);
+
+	debugLogA(__FUNCTION__": tox profile load successfully");
 	return true;
 }
 
@@ -67,7 +100,7 @@ void CToxProto::SaveToxProfile()
 			data = (uint8_t*)mir_calloc(size);
 			if (tox_encrypted_save(tox, data, (uint8_t*)password, strlen(password)) == TOX_ERROR)
 			{
-				debugLogA("CToxProto::LoadToxData: could not encrypt tox profile");
+				debugLogA(__FUNCTION__": failed to encrypt tox profile");
 				mir_free(data);
 				return;
 			}
@@ -84,7 +117,7 @@ void CToxProto::SaveToxProfile()
 	FILE *profile = _tfopen(profilePath.c_str(), _T("wb"));
 	if (profile == NULL)
 	{
-		debugLogA("CToxProto::LoadToxData: could not open tox profile");
+		debugLogA(__FUNCTION__": failed to open tox profile");
 		return;
 	}
 
@@ -92,7 +125,7 @@ void CToxProto::SaveToxProfile()
 	if (size != written)
 	{
 		fclose(profile);
-		debugLogA("CToxProto::LoadToxData: could not write tox profile");
+		debugLogA(__FUNCTION__": failed to write tox profile");
 	}
 
 	fclose(profile);
@@ -137,13 +170,9 @@ INT_PTR CToxProto::ToxProfilePasswordProc(HWND hwnd, UINT uMsg, WPARAM wParam, L
 				TCHAR password[MAX_PATH];
 				GetDlgItemText(hwnd, IDC_PASSWORD, password, SIZEOF(password));
 				if (IsDlgButtonChecked(hwnd, IDC_SAVEPERMANENTLY))
-				{
 					proto->setTString("Password", password);
-				}
 				if (proto->password != NULL)
-				{
 					mir_free(proto->password);
-				}
 				proto->password = mir_utf8encodeW(password);
 
 				EndDialog(hwnd, 1);

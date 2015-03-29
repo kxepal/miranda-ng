@@ -74,7 +74,7 @@ private:
 	std::tstring GetToxProfilePath();
 	static std::tstring CToxProto::GetToxProfilePath(const TCHAR *accountName);
 
-	bool LoadToxProfile(uint8_t *data, size_t &size);
+	bool LoadToxProfile(Tox_Options *options);
 	void SaveToxProfile();
 
 	INT_PTR __cdecl OnCopyToxID(WPARAM, LPARAM);
