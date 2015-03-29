@@ -41,7 +41,6 @@ bool CToxProto::InitToxCore()
 
 	debugLogA("CToxProto::InitToxCore: loading tox profile");
 
-	
 	if (LoadToxProfile(options))
 	{
 		tox_callback_friend_request(tox, OnFriendRequest, this);
@@ -65,12 +64,11 @@ bool CToxProto::InitToxCore()
 		ToxHexAddress address(data, TOX_ADDRESS_SIZE);
 		setString(TOX_SETTINGS_ID, address);
 
-		uint8_t nick[TOX_MAX_NAME_LENGTH];
+		uint8_t nick[TOX_MAX_NAME_LENGTH] = { 0 };
 		tox_self_get_name(tox, nick);
 		setWString("Nick", ptrW(Utf8DecodeW((char*)nick)));
 
-		//temporary
-		uint8_t statusMessage[TOX_MAX_STATUS_MESSAGE_LENGTH];
+		uint8_t statusMessage[TOX_MAX_STATUS_MESSAGE_LENGTH] = { 0 };
 		tox_self_get_status_message(tox, statusMessage);
 		setWString("StatusMsg", ptrW(Utf8DecodeW((char*)statusMessage)));
 

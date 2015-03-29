@@ -73,7 +73,7 @@ HANDLE CToxProto::OnFileAllow(MCONTACT hContact, HANDLE hTransfer, const PROTOCH
 		debugLogA("CToxProto::FileAllow: start receiving file (%d)", transfer->fileNumber);
 		transfer->status = STARTED;
 		TOX_ERR_FILE_CONTROL error;
-		if (!tox_file_control(tox, transfer->friendNumber, transfer->fileNumber, TOX_FILE_CONTROL_RESUME, NULL))
+		if (!tox_file_control(tox, transfer->friendNumber, transfer->fileNumber, TOX_FILE_CONTROL_RESUME, &error))
 		{
 			debugLogA("CToxProto::FileAllow: failed to start the transfer (%d)", error);
 			tox_file_control(tox, transfer->friendNumber, transfer->fileNumber, TOX_FILE_CONTROL_CANCEL, NULL);
