@@ -3,6 +3,8 @@
 
 struct CToxProto : public PROTO<CToxProto>
 {
+	friend CToxPasswordEditor;
+
 public:
 
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -78,9 +80,6 @@ private:
 	void SaveToxProfile();
 
 	INT_PTR __cdecl OnCopyToxID(WPARAM, LPARAM);
-
-	static INT_PTR CALLBACK ToxProfileImportProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	static INT_PTR CALLBACK ToxProfilePasswordProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	// tox core
 	bool InitToxCore();

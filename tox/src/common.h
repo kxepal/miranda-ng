@@ -33,6 +33,7 @@
 #include <m_genmenu.h>
 #include <m_clc.h>
 #include <m_clistint.h>
+#include <m_gui.h>
 
 #include <m_folders.h>
 
@@ -51,6 +52,7 @@ struct CToxProto;
 #include "tox_options.h"
 #include "tox_transfer.h"
 #include "tox_chatrooms.h"
+#include "tox_dialogs.h"
 #include "tox_proto.h"
 
 extern HINSTANCE g_hInstance;

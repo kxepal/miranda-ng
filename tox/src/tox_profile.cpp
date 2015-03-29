@@ -59,12 +59,8 @@ bool CToxProto::LoadToxProfile(Tox_Options *options)
 		password = mir_utf8encodeW(ptrT(getTStringA("Password")));
 		if (password == NULL || mir_strlen(password) == 0)
 		{
-			if (!DialogBoxParam(
-				g_hInstance,
-				MAKEINTRESOURCE(IDD_PASSWORD),
-				NULL,
-				ToxProfilePasswordProc,
-				(LPARAM)this))
+			CToxPasswordEditor passwordEditor(this);
+			if (!passwordEditor.DoModal())
 			{
 				mir_free(data);
 				return false;
@@ -148,43 +144,25 @@ INT_PTR CToxProto::OnCopyToxID(WPARAM, LPARAM)
 	return 0;
 }
 
-INT_PTR CToxProto::ToxProfilePasswordProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+CToxPasswordEditor::CToxPasswordEditor(CToxProto *proto) :
+	CSuper(proto, IDD_PASSWORD, NULL, false), ok(this, IDOK),
+	password(this, IDC_PASSWORD), savePermanently(this, IDC_SAVEPERMANENTLY)
 {
-	CToxProto *proto = (CToxProto*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+	ok.OnClick = Callback(this, &CToxPasswordEditor::OnOk);
+}
 
-	switch (uMsg)
-	{
-	case WM_INITDIALOG:
-		TranslateDialogDefault(hwnd);
-		{
-			proto = (CToxProto*)lParam;
-			SetWindowLongPtr(hwnd, GWLP_USERDATA, lParam);
-		}
-		return TRUE;
+void CToxPasswordEditor::OnInitDialog()
+{
+	TranslateDialogDefault(m_hwnd);
+}
 
-	case WM_COMMAND:
-		switch (LOWORD(wParam))
-		{
-		case IDOK:
-			{
-				TCHAR password[MAX_PATH];
-				GetDlgItemText(hwnd, IDC_PASSWORD, password, SIZEOF(password));
-				if (IsDlgButtonChecked(hwnd, IDC_SAVEPERMANENTLY))
-					proto->setTString("Password", password);
-				if (proto->password != NULL)
-					mir_free(proto->password);
-				proto->password = mir_utf8encodeW(password);
+void CToxPasswordEditor::OnOk(CCtrlButton*)
+{
+	if (savePermanently.Enabled())
+		m_proto->setTString("Password", password.GetText());
+	if (m_proto->password != NULL)
+		mir_free(m_proto->password);
+	m_proto->password = mir_utf8encodeW(password.GetText());
 
-				EndDialog(hwnd, 1);
-			}
-			break;
-
-		case IDCANCEL:
-			EndDialog(hwnd, 0);
-			break;
-		}
-		break;
-	}
-
-	return FALSE;
+	EndDialog(m_hwnd, 1);
 }
