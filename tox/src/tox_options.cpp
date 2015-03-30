@@ -1,192 +1,168 @@
 #include "common.h"
 
-INT_PTR CToxProto::MainOptionsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+CToxOptionsMain::CToxOptionsMain(CToxProto *proto)
+	: CSuper(proto, IDD_OPTIONS_MAIN, NULL, false),
+	m_toxAddress(this, IDC_TOXID), m_toxAddressCopy(this, IDC_CLIPBOARD),
+	m_profileCreate(this, IDC_PROFILE_NEW), m_profileImport(this, IDC_PROFILE_IMPORT),
+	m_profileExport(this, IDC_PROFILE_EXPORT), m_nickname(this, IDC_NAME),
+	m_password(this, IDC_PASSWORD), m_group(this, IDC_GROUP),
+	m_enableUdp(this, IDC_ENABLE_UDP), m_enableIPv6(this, IDC_ENABLE_IPV6)
 {
-	CToxProto *proto = (CToxProto*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+	CreateLink(m_toxAddress, TOX_SETTINGS_ID, _T(""));
+	CreateLink(m_nickname, "Nick", _T(""));
+	CreateLink(m_password, "Password", _T(""));
+	CreateLink(m_group, TOX_SETTINGS_GROUP, _T(""));
+	CreateLink(m_enableUdp, "EnableUDP", DBVT_BYTE, TRUE);
+	CreateLink(m_enableIPv6, "EnableIPv6", DBVT_BYTE, FALSE);
 
-	switch (uMsg)
+	m_toxAddressCopy.OnClick = Callback(this, &CToxOptionsMain::ToxAddressCopy_OnClick);
+	m_profileCreate.OnClick = Callback(this, &CToxOptionsMain::ProfileCreate_OnClick);
+	m_profileImport.OnClick = Callback(this, &CToxOptionsMain::ProfileImport_OnClick);
+	m_profileExport.OnClick = Callback(this, &CToxOptionsMain::ProfileExport_OnClick);
+}
+
+CToxOptionsMain::CToxOptionsMain(CToxProto *proto, HWND hwndParent)
+	: CSuper(proto, IDD_ACCOUNT_MANAGER, hwndParent, false),
+	m_toxAddress(this, IDC_TOXID), m_toxAddressCopy(this, IDC_CLIPBOARD),
+	m_profileCreate(this, IDC_PROFILE_NEW), m_profileImport(this, IDC_PROFILE_IMPORT),
+	m_profileExport(this, IDC_PROFILE_EXPORT), m_nickname(this, IDC_NAME),
+	m_password(this, IDC_PASSWORD), m_group(this, IDC_GROUP),
+	m_enableUdp(this, IDC_ENABLE_UDP), m_enableIPv6(this, IDC_ENABLE_IPV6)
+{
+	CreateLink(m_toxAddress, TOX_SETTINGS_ID, _T(""));
+	CreateLink(m_nickname, "Nick", _T(""));
+	CreateLink(m_password, "Password", _T(""));
+	CreateLink(m_group, TOX_SETTINGS_GROUP, _T(""));
+	CreateLink(m_enableUdp, "EnableUDP", DBVT_BYTE, TRUE);
+	CreateLink(m_enableIPv6, "EnableIPv6", DBVT_BYTE, FALSE);
+
+	m_toxAddressCopy.OnClick = Callback(this, &CToxOptionsMain::ToxAddressCopy_OnClick);
+	m_profileCreate.OnClick = Callback(this, &CToxOptionsMain::ProfileCreate_OnClick);
+	m_profileImport.OnClick = Callback(this, &CToxOptionsMain::ProfileImport_OnClick);
+	m_profileExport.OnClick = Callback(this, &CToxOptionsMain::ProfileExport_OnClick);
+}
+
+void CToxOptionsMain::OnInitDialog()
+{
+	CSuper::OnInitDialog();
+
+	std::tstring profilePath = m_proto->GetToxProfilePath();
+	if (CToxProto::IsFileExists(profilePath))
 	{
-	case WM_INITDIALOG:
-		TranslateDialogDefault(hwnd);
-		{
-			proto = (CToxProto*)lParam;
-			SetWindowLongPtr(hwnd, GWLP_USERDATA, lParam);
+		m_toxAddress.Enable();
 
-			std::tstring profilePath = proto->GetToxProfilePath();
-			if (IsFileExists(profilePath))
-			{
-				EnableWindow(GetDlgItem(hwnd, IDC_TOXID), TRUE);
+		ShowWindow(m_profileCreate.GetHwnd(), FALSE);
+		ShowWindow(m_profileImport.GetHwnd(), FALSE);
 
-				ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_NEW), FALSE);
-				ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_IMPORT), FALSE);
-
-				ShowWindow(GetDlgItem(hwnd, IDC_CLIPBOARD), TRUE);
-				//ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_EXPORT), TRUE);
-			}
-
-			if (proto->IsOnline())
-			{
-				EnableWindow(GetDlgItem(hwnd, IDC_NAME), TRUE);
-				EnableWindow(GetDlgItem(hwnd, IDC_PASSWORD), TRUE);
-			}
-
-			ptrA address(proto->getStringA(TOX_SETTINGS_ID));
-			SetDlgItemTextA(hwnd, IDC_TOXID, address);
-
-			ptrT nick(proto->getTStringA("Nick"));
-			SetDlgItemText(hwnd, IDC_NAME, nick);
-
-			ptrT password(proto->getTStringA("Password"));
-			SetDlgItemText(hwnd, IDC_PASSWORD, password);
-
-			ptrT group(proto->getTStringA(TOX_SETTINGS_GROUP));
-			SetDlgItemText(hwnd, IDC_GROUP, group ? group : _T("Tox"));
-			SendDlgItemMessage(hwnd, IDC_GROUP, EM_LIMITTEXT, 64, 0);
-
-			CheckDlgButton(hwnd, IDC_ENABLE_UDP, proto->getBool("EnableUDP", 1));
-			CheckDlgButton(hwnd, IDC_ENABLE_IPV6, proto->getBool("EnableIPv6", 0));
-		}
-		return TRUE;
-
-	case WM_COMMAND:
-	{
-		switch (LOWORD(wParam))
-		{
-		case IDC_NAME:
-		case IDC_GROUP:
-		case IDC_PASSWORD:
-			if ((HWND)lParam == GetFocus())
-			{
-				if (HIWORD(wParam) != EN_CHANGE) return 0;
-				SendMessage(GetParent(hwnd), PSM_CHANGED, 0, 0);
-			}
-			break;
-
-		case IDC_ENABLE_UDP:
-		case IDC_ENABLE_IPV6:
-			SendMessage(GetParent(hwnd), PSM_CHANGED, 0, 0);
-			break;
-
-		case IDC_CLIPBOARD:
-		{
-			char toxId[TOX_ADDRESS_SIZE * 2 + 1];
-			GetDlgItemTextA(hwnd, IDC_TOXID, toxId, SIZEOF(toxId));
-			if (OpenClipboard(GetDlgItem(hwnd, IDC_TOXID)))
-			{
-				EmptyClipboard();
-				HGLOBAL hMem = GlobalAlloc(GMEM_FIXED, sizeof(toxId));
-				memcpy(GlobalLock(hMem), toxId, sizeof(toxId));
-				GlobalUnlock(hMem);
-				SetClipboardData(CF_TEXT, hMem);
-				CloseClipboard();
-			}
-		}
-		break;
-
-		case IDC_PROFILE_IMPORT:
-		{
-			TCHAR filter[MAX_PATH];
-			mir_sntprintf(filter, SIZEOF(filter), _T("%s(*.tox)%c*.tox%c%s(*.*)%c*.*%c%c"),
-				TranslateT("Tox profile"), 0, 0, TranslateT("All files"), 0, 0, 0);
-
-			TCHAR profilePath[MAX_PATH] = { 0 };
-
-			OPENFILENAME ofn = { sizeof(ofn) };
-			ofn.hwndOwner = hwnd;
-			ofn.lpstrFilter = filter;
-			ofn.nFilterIndex = 1;
-			ofn.lpstrFile = profilePath;
-			ofn.lpstrTitle = TranslateT("Select tox profile");
-			ofn.nMaxFile = MAX_PATH;
-			ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_EXPLORER;
-			ofn.lpstrInitialDir = _T("%APPDATA%\\Tox");
-
-			if (!GetOpenFileName(&ofn))
-			{
-				break;
-			}
-
-			std::tstring defaultProfilePath = proto->GetToxProfilePath();
-			if (_tcsicmp(profilePath, defaultProfilePath.c_str()) != 0)
-			{
-				CopyFile(profilePath, defaultProfilePath.c_str(), FALSE);
-			}
-		}
-		case IDC_PROFILE_NEW:
-			if (proto->InitToxCore())
-			{
-				TCHAR group[64];
-				GetDlgItemText(hwnd, IDC_GROUP, group, SIZEOF(group));
-				if (_tcslen(group) > 0)
-				{
-					proto->setTString(TOX_SETTINGS_GROUP, group);
-					Clist_CreateGroup(0, group);
-				}
-
-				proto->LoadFriendList(NULL);
-				proto->UninitToxCore();
-
-				ptrT nick(proto->getTStringA("Nick"));
-				SetDlgItemText(hwnd, IDC_NAME, nick);
-
-				ptrT password(proto->getTStringA("Password"));
-				SetDlgItemText(hwnd, IDC_PASSWORD, password);
-
-				ptrA address(proto->getStringA(TOX_SETTINGS_ID));
-				SetDlgItemTextA(hwnd, IDC_TOXID, address);
-
-				EnableWindow(GetDlgItem(hwnd, IDC_TOXID), TRUE);
-
-				ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_NEW), FALSE);
-				ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_IMPORT), FALSE);
-
-				ShowWindow(GetDlgItem(hwnd, IDC_CLIPBOARD), TRUE);
-				//ShowWindow(GetDlgItem(hwnd, IDC_PROFILE_EXPORT), TRUE);
-			}
-			break;
-		}
-	}
-	break;
-
-	case WM_NOTIFY:
-		if (((NMHDR*)lParam)->code == PSN_APPLY)
-		{
-			TCHAR group[64];
-			GetDlgItemText(hwnd, IDC_GROUP, group, SIZEOF(group));
-			if (_tcslen(group) > 0)
-			{
-				proto->setTString(TOX_SETTINGS_GROUP, group);
-				Clist_CreateGroup(0, group);
-			}
-
-			proto->setByte("EnableUDP", (BYTE)IsDlgButtonChecked(hwnd, IDC_ENABLE_UDP));
-			proto->setByte("EnableIPv6", (BYTE)IsDlgButtonChecked(hwnd, IDC_ENABLE_IPV6));
-
-			if (proto->IsOnline())
-			{
-				TCHAR nick[TOX_MAX_NAME_LENGTH];
-				GetDlgItemText(hwnd, IDC_NAME, nick, TOX_MAX_NAME_LENGTH);
-				CallProtoService(proto->m_szModuleName, PS_SETMYNICKNAME, SMNN_TCHAR, (LPARAM)nick);
-
-				TCHAR password[MAX_PATH];
-				GetDlgItemText(hwnd, IDC_PASSWORD, password, SIZEOF(password));
-				proto->setTString("Password", password);
-				if (proto->password != NULL)
-				{
-					mir_free(proto->password);
-					proto->password = NULL;
-				}
-				proto->password = mir_utf8encodeW(password);
-
-				proto->SaveToxProfile();
-			}
-
-			return TRUE;
-		}
-		break;
+		ShowWindow(m_toxAddressCopy.GetHwnd(), TRUE);
+		//ShowWindow(m_profileExport.GetHwnd(), TRUE);
 	}
 
-	return FALSE;
+	if (m_proto->IsOnline())
+	{
+		EnableWindow(m_nickname.GetHwnd(), TRUE);
+		EnableWindow(m_password.GetHwnd(), TRUE);
+	}
+
+	SendMessage(m_toxAddress.GetHwnd(), EM_LIMITTEXT, TOX_ADDRESS_SIZE * 2, 0);
+	SendMessage(m_nickname.GetHwnd(), EM_LIMITTEXT, TOX_MAX_NAME_LENGTH, 0);
+	SendMessage(m_password.GetHwnd(), EM_LIMITTEXT, 32, 0);
+	SendMessage(m_group.GetHwnd(), EM_LIMITTEXT, 64, 0);
+}
+
+void CToxOptionsMain::ToxAddressCopy_OnClick(CCtrlButton*)
+{
+	char *toxAddress = m_toxAddress.GetTextA();
+	int toxAddressLength = mir_strlen(toxAddress);
+	if (OpenClipboard(m_toxAddress.GetHwnd()))
+	{
+		EmptyClipboard();
+		HGLOBAL hMemory = GlobalAlloc(GMEM_FIXED, toxAddressLength);
+		memcpy(GlobalLock(hMemory), toxAddress, toxAddressLength);
+		GlobalUnlock(hMemory);
+		SetClipboardData(CF_TEXT, hMemory);
+		CloseClipboard();
+	}
+}
+
+void CToxOptionsMain::ProfileCreate_OnClick(CCtrlButton*)
+{
+	if (m_proto->InitToxCore())
+	{
+		TCHAR *group = m_group.GetText();
+		if (mir_tstrlen(group) > 0 && Clist_GroupExists(group))
+			Clist_CreateGroup(0, group);
+
+		m_proto->LoadFriendList(NULL);
+		m_proto->UninitToxCore();
+
+		m_toxAddress.Enable();
+		m_toxAddress.SetTextA(ptrA(m_proto->getStringA(TOX_SETTINGS_ID)));
+
+		m_nickname.SetText(ptrT(m_proto->getTStringA("Nick")));
+		m_password.SetText(ptrT(m_proto->getTStringA("Password")));
+		m_group.SetText(ptrT(m_proto->getTStringA(TOX_SETTINGS_GROUP)));
+
+		ShowWindow(m_profileCreate.GetHwnd(), FALSE);
+		ShowWindow(m_profileImport.GetHwnd(), FALSE);
+
+		ShowWindow(m_toxAddressCopy.GetHwnd(), TRUE);
+		//ShowWindow(m_profileExport.GetHwnd(), TRUE);
+	}
+}
+
+void CToxOptionsMain::ProfileImport_OnClick(CCtrlButton*)
+{
+	TCHAR filter[MAX_PATH];
+	mir_sntprintf(filter, SIZEOF(filter), _T("%s(*.tox)%c*.tox%c%s(*.*)%c*.*%c%c"),
+		TranslateT("Tox profile"), 0, 0, TranslateT("All files"), 0, 0, 0);
+
+	TCHAR profilePath[MAX_PATH] = { 0 };
+
+	OPENFILENAME ofn = { sizeof(ofn) };
+	ofn.hwndOwner = m_hwnd;
+	ofn.lpstrFilter = filter;
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFile = profilePath;
+	ofn.lpstrTitle = TranslateT("Select tox profile");
+	ofn.nMaxFile = MAX_PATH;
+	ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_EXPLORER;
+	ofn.lpstrInitialDir = _T("%APPDATA%\\Tox");
+
+	if (!GetOpenFileName(&ofn))
+	{
+		return;
+	}
+
+	std::tstring defaultProfilePath = m_proto->GetToxProfilePath();
+	if (_tcsicmp(profilePath, defaultProfilePath.c_str()) != 0)
+	{
+		CopyFile(profilePath, defaultProfilePath.c_str(), FALSE);
+	}
+
+	m_profileCreate.OnClick(&m_profileCreate);
+}
+
+void CToxOptionsMain::ProfileExport_OnClick(CCtrlButton*)
+{
+}
+
+void CToxOptionsMain::OnApply()
+{
+	TCHAR *group = m_group.GetText();
+	if (mir_tstrlen(group) > 0 && Clist_GroupExists(group))
+		Clist_CreateGroup(0, group);
+
+	if (m_proto->IsOnline())
+	{
+		CallProtoService(m_proto->m_szModuleName, PS_SETMYNICKNAME, SMNN_TCHAR, (LPARAM)m_nickname.GetText());
+
+		if (m_proto->password != NULL)
+			mir_free(m_proto->password);
+		m_proto->password = mir_utf8encodeW(m_password.GetText());
+
+		m_proto->SaveToxProfile();
+	}
 }
 
 int AddItemToListView(HWND hwndList, UINT mask, int iGroupId, int iItem, int iSubItem, char *pszText, int iImage = -1)
@@ -663,7 +639,10 @@ int CToxProto::OnOptionsInit(WPARAM wParam, LPARAM)
 
 	odp.pszTab = LPGEN("Account");
 	odp.pszTemplate = MAKEINTRESOURCEA(IDD_OPTIONS_MAIN);
-	odp.pfnDlgProc = MainOptionsProc;
+	odp.pfnDlgProc = CDlgBase::DynamicDlgProc;
+	odp.dwInitParam = (LPARAM)&ToxMainOptions;
+	ToxMainOptions.create = CToxOptionsMain::Create;
+	ToxMainOptions.param = this;
 	Options_AddPage(wParam, &odp);
 
 	/*odp.pszTab = LPGEN("Audio/Video");

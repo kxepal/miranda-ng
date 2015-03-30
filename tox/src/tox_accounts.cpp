@@ -58,10 +58,7 @@ int CToxProto::OnAccountRenamed(WPARAM, LPARAM)
 
 INT_PTR CToxProto::OnAccountManagerInit(WPARAM, LPARAM lParam)
 {
-	return (INT_PTR)CreateDialogParam(
-		g_hInstance,
-		MAKEINTRESOURCE(IDD_ACCOUNT_MANAGER),
-		(HWND)lParam,
-		CToxProto::MainOptionsProc,
-		(LPARAM)this);
+	CToxOptionsMain *dlg = new CToxOptionsMain(this, (HWND)lParam);
+	dlg->Show();
+	return (INT_PTR)dlg->GetHwnd();
 }
