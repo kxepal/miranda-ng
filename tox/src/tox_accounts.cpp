@@ -58,7 +58,7 @@ int CToxProto::OnAccountRenamed(WPARAM, LPARAM)
 
 INT_PTR CToxProto::OnAccountManagerInit(WPARAM, LPARAM lParam)
 {
-	CToxOptionsMain *dlg = new CToxOptionsMain(this, (HWND)lParam);
+	CToxOptionsMain *dlg = new CToxOptionsMain(this, IDD_ACCOUNT_MANAGER, (HWND)lParam);
 	dlg->Show();
 	return (INT_PTR)dlg->GetHwnd();
 }

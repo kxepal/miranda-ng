@@ -1,27 +1,6 @@
 #include "common.h"
 
-CToxOptionsMain::CToxOptionsMain(CToxProto *proto)
-	: CSuper(proto, IDD_OPTIONS_MAIN, NULL, false),
-	m_toxAddress(this, IDC_TOXID), m_toxAddressCopy(this, IDC_CLIPBOARD),
-	m_profileCreate(this, IDC_PROFILE_NEW), m_profileImport(this, IDC_PROFILE_IMPORT),
-	m_profileExport(this, IDC_PROFILE_EXPORT), m_nickname(this, IDC_NAME),
-	m_password(this, IDC_PASSWORD), m_group(this, IDC_GROUP),
-	m_enableUdp(this, IDC_ENABLE_UDP), m_enableIPv6(this, IDC_ENABLE_IPV6)
-{
-	CreateLink(m_toxAddress, TOX_SETTINGS_ID, _T(""));
-	CreateLink(m_nickname, "Nick", _T(""));
-	CreateLink(m_password, "Password", _T(""));
-	CreateLink(m_group, TOX_SETTINGS_GROUP, _T(""));
-	CreateLink(m_enableUdp, "EnableUDP", DBVT_BYTE, TRUE);
-	CreateLink(m_enableIPv6, "EnableIPv6", DBVT_BYTE, FALSE);
-
-	m_toxAddressCopy.OnClick = Callback(this, &CToxOptionsMain::ToxAddressCopy_OnClick);
-	m_profileCreate.OnClick = Callback(this, &CToxOptionsMain::ProfileCreate_OnClick);
-	m_profileImport.OnClick = Callback(this, &CToxOptionsMain::ProfileImport_OnClick);
-	m_profileExport.OnClick = Callback(this, &CToxOptionsMain::ProfileExport_OnClick);
-}
-
-CToxOptionsMain::CToxOptionsMain(CToxProto *proto, HWND hwndParent)
+CToxOptionsMain::CToxOptionsMain(CToxProto *proto, int idDialog, HWND hwndParent)
 	: CSuper(proto, IDD_ACCOUNT_MANAGER, hwndParent, false),
 	m_toxAddress(this, IDC_TOXID), m_toxAddressCopy(this, IDC_CLIPBOARD),
 	m_profileCreate(this, IDC_PROFILE_NEW), m_profileImport(this, IDC_PROFILE_IMPORT),

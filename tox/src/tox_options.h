@@ -36,10 +36,9 @@ protected:
 	void OnApply();
 
 public:
-	CToxOptionsMain(CToxProto *proto);
-	CToxOptionsMain(CToxProto *proto, HWND hwndParent);
+	CToxOptionsMain(CToxProto *proto, int idDialog, HWND hwndParent = NULL);
 
-	static CDlgBase *Create(void *param) { return new CToxOptionsMain((CToxProto *)param); }
+	static CDlgBase *Create(void *param) { return new CToxOptionsMain((CToxProto *)param, IDD_OPTIONS_MAIN); }
 };
 
 #endif //_TOX_OPTIONS_H_
