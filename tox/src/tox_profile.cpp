@@ -54,6 +54,7 @@ bool CToxProto::LoadToxProfile(Tox_Options *options)
 	}
 	
 	TOX_ERR_NEW coreError;
+	TOX_ERR_ENCRYPTED_NEW coreEncryptError;
 	if (data != NULL && tox_is_data_encrypted(data))
 	{
 		password = mir_utf8encodeW(ptrT(getTStringA("Password")));
@@ -66,16 +67,23 @@ bool CToxProto::LoadToxProfile(Tox_Options *options)
 				return false;
 			}
 		}
-		tox = tox_encrypted_new(options, data, size, (uint8_t*)password, mir_strlen(password), &coreError);
+		tox = tox_encrypted_new(options, data, size, (uint8_t*)password, mir_strlen(password), &coreEncryptError);
+		if (coreEncryptError != TOX_ERR_ENCRYPTED_NEW_OK)
+		{
+			debugLogA(__FUNCTION__": failed to load tox profile (%d)", coreError);
+			mir_free(data);
+			return false;
+		}
 	}
 	else
-		tox = tox_new(options, data, size, &coreError);
-
-	if (coreError != TOX_ERR_NEW_OK)
 	{
-		debugLogA(__FUNCTION__": failed to load tox profile (%d)", coreError);
-		mir_free(data);
-		return false;
+		tox = tox_new(options, data, size, &coreError);
+		if (coreError != TOX_ERR_NEW_OK)
+		{
+			debugLogA(__FUNCTION__": failed to load tox profile (%d)", coreError);
+			mir_free(data);
+			return false;
+		}
 	}
 
 	debugLogA(__FUNCTION__": tox profile load successfully");
