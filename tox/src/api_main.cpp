@@ -133,9 +133,9 @@ uint8_t tox_get_self_user_status(const Tox *tox)
 	return CreateFunction<int(*)(const Tox*)>(__FUNCTION__)(tox);
 }
 
-uint64_t tox_get_last_online(const Tox *tox, int32_t friendnumber)
+uint64_t tox_friend_get_last_online(const Tox *tox, uint32_t friend_number, TOX_ERR_FRIEND_GET_LAST_ONLINE *error)
 {
-	return CreateFunction<int(*)(const Tox*, int32_t)>(__FUNCTION__)(tox, friendnumber);
+	return CreateFunction<uint64_t(*)(const Tox*, uint32_t, TOX_ERR_FRIEND_GET_LAST_ONLINE*)>(__FUNCTION__)(tox, friend_number, error);
 }
 
 int tox_friend_get_typing(Tox *tox, int32_t friendnumber, uint8_t is_typing)

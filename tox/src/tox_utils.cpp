@@ -62,13 +62,5 @@ void CToxProto::ShowNotification(const TCHAR *message, int flags, MCONTACT hCont
 
 bool CToxProto::IsFileExists(std::tstring path)
 {
-	//return ::GetFileAttributes(fileName) != DWORD(-1)
-	WIN32_FIND_DATA wfd;
-	HANDLE hFind = FindFirstFile(path.c_str(), &wfd);
-	if (INVALID_HANDLE_VALUE != hFind)
-	{
-		FindClose(hFind);
-		return true;
-	}
-	return false;
+	return _taccess(path.c_str(), 0) == 0;
 }

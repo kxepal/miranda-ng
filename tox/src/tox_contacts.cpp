@@ -146,11 +146,11 @@ void CToxProto::LoadFriendList(void*)
 				else
 					debugLogA(__FUNCTION__": failed to get friend name (%d)", error);
 
-				/*uint64_t timestamp = tox_get_last_online(tox, friendNumber);
-				if (timestamp > getDword(hContact, "LastEventDateTS", 0))
-				{
-				setDword(hContact, "LastEventDateTS", timestamp);
-				}*/
+				TOX_ERR_FRIEND_GET_LAST_ONLINE getLastOnlineError;
+				uint64_t timestamp = tox_friend_get_last_online(tox, friendNumber, &getLastOnlineError);
+				if (getLastOnlineError == TOX_ERR_FRIEND_GET_LAST_ONLINE_OK &&
+					timestamp > getDword(hContact, "LastEventDateTS", 0))
+					setDword(hContact, "LastEventDateTS", timestamp);
 			}
 		}
 

@@ -53,8 +53,6 @@ bool CToxProto::LoadToxProfile(Tox_Options *options)
 		fclose(profile);
 	}
 
-	TOX_ERR_NEW coreError;
-	TOX_ERR_ENCRYPTED_NEW coreEncryptError;
 	if (data != NULL && tox_is_data_encrypted(data))
 	{
 		password = mir_utf8encodeW(ptrT(getTStringA("Password")));
@@ -67,23 +65,23 @@ bool CToxProto::LoadToxProfile(Tox_Options *options)
 				return false;
 			}
 		}
-		tox = tox_encrypted_new(options, data, size, (uint8_t*)password, mir_strlen(password), &coreEncryptError);
-		if (coreEncryptError != TOX_ERR_ENCRYPTED_NEW_OK)
+		TOX_ERR_DECRYPTION coreDecryptError;
+		if (!tox_pass_decrypt(data, size, (uint8_t*)password, mir_strlen(password), data, &coreDecryptError))
 		{
-			debugLogA(__FUNCTION__": failed to load tox profile (%d)", coreError);
+			debugLogA(__FUNCTION__": failed to load tox profile (%d)", coreDecryptError);
 			mir_free(data);
 			return false;
 		}
+		size -= TOX_PASS_ENCRYPTION_EXTRA_LENGTH;
 	}
-	else
+
+	TOX_ERR_NEW initError;
+	tox = tox_new(options, data, size, &initError);
+	if (initError != TOX_ERR_NEW_OK)
 	{
-		tox = tox_new(options, data, size, &coreError);
-		if (coreError != TOX_ERR_NEW_OK)
-		{
-			debugLogA(__FUNCTION__": failed to load tox profile (%d)", coreError);
-			mir_free(data);
-			return false;
-		}
+		debugLogA(__FUNCTION__": failed to load tox profile (%d)", initError);
+		mir_free(data);
+		return false;
 	}
 
 	debugLogA(__FUNCTION__": tox profile load successfully");
@@ -92,29 +90,20 @@ bool CToxProto::LoadToxProfile(Tox_Options *options)
 
 void CToxProto::SaveToxProfile()
 {
-	size_t size = 0;
-	uint8_t *data = NULL;
+	size_t size = tox_get_savedata_size(tox);
+	uint8_t *data = (uint8_t*)mir_calloc(size + TOX_PASS_ENCRYPTION_EXTRA_LENGTH);
+	tox_get_savedata(tox, data);
 
+	if (password && strlen(password))
 	{
-		mir_cslock lock(toxLock);
-
-		if (password && strlen(password))
+		TOX_ERR_ENCRYPTION coreEncryptError;
+		if (!tox_pass_encrypt(data, size, (uint8_t*)password, strlen(password), data, &coreEncryptError))
 		{
-			size = tox_encrypted_size(tox);
-			data = (uint8_t*)mir_calloc(size);
-			if (tox_encrypted_save(tox, data, (uint8_t*)password, strlen(password)) == TOX_ERROR)
-			{
-				debugLogA(__FUNCTION__": failed to encrypt tox profile");
-				mir_free(data);
-				return;
-			}
+			debugLogA(__FUNCTION__": failed to encrypt tox profile");
+			mir_free(data);
+			return;
 		}
-		else
-		{
-			size = tox_get_savedata_size(tox);
-			data = (uint8_t*)mir_calloc(size);
-			tox_get_savedata(tox, data);
-		}
+		size += TOX_PASS_ENCRYPTION_EXTRA_LENGTH;
 	}
 
 	std::tstring profilePath = GetToxProfilePath();
@@ -153,8 +142,8 @@ INT_PTR CToxProto::OnCopyToxID(WPARAM, LPARAM)
 }
 
 CToxPasswordEditor::CToxPasswordEditor(CToxProto *proto) :
-	CSuper(proto, IDD_PASSWORD, NULL, false), ok(this, IDOK),
-	password(this, IDC_PASSWORD), savePermanently(this, IDC_SAVEPERMANENTLY)
+CSuper(proto, IDD_PASSWORD, NULL, false), ok(this, IDOK),
+password(this, IDC_PASSWORD), savePermanently(this, IDC_SAVEPERMANENTLY)
 {
 	ok.OnClick = Callback(this, &CToxPasswordEditor::OnOk);
 }
