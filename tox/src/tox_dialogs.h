@@ -22,7 +22,6 @@ private:
 	CCtrlButton ok;
 
 protected:
-	void OnInitDialog();
 	void OnOk(CCtrlButton*);
 
 public:

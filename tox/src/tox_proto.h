@@ -5,6 +5,7 @@ struct CToxProto : public PROTO<CToxProto>
 {
 	friend CToxPasswordEditor;
 	friend CToxOptionsMain;
+	friend CToxOptionsNodeList;
 
 public:
 
@@ -131,8 +132,7 @@ private:
 
 	// options
 	CToxDlgBase::CreateParam ToxMainOptions;
-
-	static INT_PTR CALLBACK NodesOptionsProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
+	CToxDlgBase::CreateParam ToxNodeListOptions;
 
 	int __cdecl OnOptionsInit(WPARAM wParam, LPARAM lParam);
 

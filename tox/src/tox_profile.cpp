@@ -52,7 +52,7 @@ bool CToxProto::LoadToxProfile(Tox_Options *options)
 		}
 		fclose(profile);
 	}
-	
+
 	TOX_ERR_NEW coreError;
 	TOX_ERR_ENCRYPTED_NEW coreEncryptError;
 	if (data != NULL && tox_is_data_encrypted(data))
@@ -157,11 +157,6 @@ CToxPasswordEditor::CToxPasswordEditor(CToxProto *proto) :
 	password(this, IDC_PASSWORD), savePermanently(this, IDC_SAVEPERMANENTLY)
 {
 	ok.OnClick = Callback(this, &CToxPasswordEditor::OnOk);
-}
-
-void CToxPasswordEditor::OnInitDialog()
-{
-	TranslateDialogDefault(m_hwnd);
 }
 
 void CToxPasswordEditor::OnOk(CCtrlButton*)

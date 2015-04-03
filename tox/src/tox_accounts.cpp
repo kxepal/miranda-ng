@@ -24,12 +24,8 @@ int CToxProto::UninitAccount(CToxProto *proto)
 CToxProto* CToxProto::GetContactAccount(MCONTACT hContact)
 {
 	for (int i = 0; i < Accounts.getCount(); i++)
-	{
 		if (mir_strcmpi(GetContactProto(hContact), Accounts[i]->m_szModuleName) == 0)
-		{
 			return Accounts[i];
-		}
-	}
 	return NULL;
 }
 
@@ -58,7 +54,5 @@ int CToxProto::OnAccountRenamed(WPARAM, LPARAM)
 
 INT_PTR CToxProto::OnAccountManagerInit(WPARAM, LPARAM lParam)
 {
-	CToxOptionsMain *dlg = new CToxOptionsMain(this, IDD_ACCOUNT_MANAGER, (HWND)lParam);
-	dlg->Show();
-	return (INT_PTR)dlg->GetHwnd();
+	return (INT_PTR)(CToxOptionsMain::CreateAccountManagerPage(this, (HWND)lParam))->GetHwnd();
 }
