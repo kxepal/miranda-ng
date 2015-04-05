@@ -126,10 +126,10 @@ void CToxProto::LoadFriendList(void*)
 		for (size_t i = 0; i < count; i++)
 		{
 			uint32_t friendNumber = friends[i];
-			TOX_ERR_FRIEND_GET_PUBLIC_KEY error;
-			if (!tox_friend_get_public_key(tox, friendNumber, data, &error))
+			TOX_ERR_FRIEND_GET_PUBLIC_KEY getPublicKeyResult;
+			if (!tox_friend_get_public_key(tox, friendNumber, data, &getPublicKeyResult))
 			{
-				debugLogA(__FUNCTION__": failed to get friend public key (%d)", error);
+				debugLogA(__FUNCTION__": failed to get friend public key (%d)", getPublicKeyResult);
 				continue;
 			}
 			ToxHexAddress pubKey(data, TOX_PUBLIC_KEY_SIZE);
@@ -139,26 +139,22 @@ void CToxProto::LoadFriendList(void*)
 				delSetting(hContact, "Auth");
 				delSetting(hContact, "Grant");
 
-				TOX_ERR_FRIEND_QUERY error;
+				TOX_ERR_FRIEND_QUERY getNameResult;
 				uint8_t nick[TOX_MAX_NAME_LENGTH] = { 0 };
-				if (tox_friend_get_name(tox, friendNumber, nick, &error))
+				if (tox_friend_get_name(tox, friendNumber, nick, &getNameResult))
 					setWString(hContact, "Nick", ptrT(mir_utf8decodeW((char*)nick)));
 				else
-					debugLogA(__FUNCTION__": failed to get friend name (%d)", error);
+					debugLogA(__FUNCTION__": failed to get friend name (%d)", getNameResult);
 
-				TOX_ERR_FRIEND_GET_LAST_ONLINE getLastOnlineError;
-				uint64_t timestamp = tox_friend_get_last_online(tox, friendNumber, &getLastOnlineError);
-				if (getLastOnlineError == TOX_ERR_FRIEND_GET_LAST_ONLINE_OK &&
-					timestamp > getDword(hContact, "LastEventDateTS", 0))
+				TOX_ERR_FRIEND_GET_LAST_ONLINE getLastOnlineResult;
+				uint64_t timestamp = tox_friend_get_last_online(tox, friendNumber, &getLastOnlineResult);
+				if (getLastOnlineResult == TOX_ERR_FRIEND_GET_LAST_ONLINE_OK)
 					setDword(hContact, "LastEventDateTS", timestamp);
+				else
+					debugLogA(__FUNCTION__": failed to get friend last online (%d)", getLastOnlineResult);
 			}
 		}
-
 		mir_free(friends);
-	}
-	else
-	{
-		debugLogA(__FUNCTION__": your friend list is empty");
 	}
 }
 
@@ -173,12 +169,12 @@ INT_PTR CToxProto::OnRequestAuth(WPARAM hContact, LPARAM lParam)
 	size_t length = mir_strlen(reason);
 	ToxBinAddress address(ptrA(getStringA(hContact, TOX_SETTINGS_ID)));
 
-	TOX_ERR_FRIEND_ADD errorFriendAdd;
-	int32_t friendNumber = tox_friend_add(tox, address, (uint8_t*)reason, length, &errorFriendAdd);
-	if (errorFriendAdd != TOX_ERR_FRIEND_ADD_OK)
+	TOX_ERR_FRIEND_ADD addFriendResult;
+	int32_t friendNumber = tox_friend_add(tox, address, (uint8_t*)reason, length, &addFriendResult);
+	if (addFriendResult != TOX_ERR_FRIEND_ADD_OK)
 	{
-		debugLogA(__FUNCTION__": failed to request auth");
-		return errorFriendAdd;
+		debugLogA(__FUNCTION__": failed to request auth (%d)", addFriendResult);
+		return addFriendResult;
 	}
 
 	// trim address to public key

@@ -11,7 +11,7 @@ CToxOptionsMain::CToxOptionsMain(CToxProto *proto, int idDialog, HWND hwndParent
 	CreateLink(m_toxAddress, TOX_SETTINGS_ID, _T(""));
 	CreateLink(m_nickname, "Nick", _T(""));
 	CreateLink(m_password, "Password", _T(""));
-	CreateLink(m_group, TOX_SETTINGS_GROUP, _T(""));
+	CreateLink(m_group, TOX_SETTINGS_GROUP, _T("Tox"));
 	CreateLink(m_enableUdp, "EnableUDP", DBVT_BYTE, TRUE);
 	CreateLink(m_enableIPv6, "EnableIPv6", DBVT_BYTE, FALSE);
 
