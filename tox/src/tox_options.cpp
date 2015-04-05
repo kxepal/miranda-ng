@@ -52,7 +52,7 @@ void CToxOptionsMain::OnInitDialog()
 void CToxOptionsMain::ToxAddressCopy_OnClick(CCtrlButton*)
 {
 	char *toxAddress = m_toxAddress.GetTextA();
-	int toxAddressLength = mir_strlen(toxAddress);
+	int toxAddressLength = mir_strlen(toxAddress) + 1;
 	if (OpenClipboard(m_toxAddress.GetHwnd()))
 	{
 		EmptyClipboard();

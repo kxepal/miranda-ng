@@ -225,6 +225,7 @@ void CToxProto::OnFriendRequest(Tox *tox, const uint8_t *pubKey, const uint8_t *
 	if (!hContact)
 	{
 		proto->debugLogA(__FUNCTION__": failed to create contact");
+		return;
 	}
 
 	proto->delSetting(hContact, "Auth");
@@ -255,10 +256,10 @@ void CToxProto::OnFriendNameChange(Tox *tox, uint32_t friendNumber, const uint8_
 {
 	CToxProto *proto = (CToxProto*)arg;
 
-	MCONTACT hContact = proto->GetContact(friendNumber);
-	if (hContact)
+	if (MCONTACT hContact = proto->GetContact(friendNumber))
 	{
-		proto->setString(hContact, "Nick", (char*)name);
+		ptrT nickname(mir_utf8decodeW((char*)name));
+		proto->setTString(hContact, "Nick", nickname);
 	}
 }
 
@@ -266,11 +267,10 @@ void CToxProto::OnStatusMessageChanged(Tox *tox, uint32_t friendNumber, const ui
 {
 	CToxProto *proto = (CToxProto*)arg;
 
-	MCONTACT hContact = proto->GetContact(friendNumber);
-	if (hContact)
+	if (MCONTACT hContact = proto->GetContact(friendNumber))
 	{
-		ptrW statusMessage(mir_utf8decodeW((char*)message));
-		db_set_ws(hContact, "CList", "StatusMsg", statusMessage);
+		ptrT statusMessage(mir_utf8decodeW((char*)message));
+		db_set_ts(hContact, "CList", "StatusMsg", statusMessage);
 	}
 }
 

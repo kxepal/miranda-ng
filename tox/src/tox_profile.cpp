@@ -132,10 +132,10 @@ INT_PTR CToxProto::OnCopyToxID(WPARAM, LPARAM)
 	if (OpenClipboard(NULL))
 	{
 		EmptyClipboard();
-		HGLOBAL hMem = GlobalAlloc(GMEM_FIXED, length);
-		memcpy(GlobalLock(hMem), address, length);
-		GlobalUnlock(hMem);
-		SetClipboardData(CF_TEXT, hMem);
+		HGLOBAL hMemory = GlobalAlloc(GMEM_FIXED, length);
+		memcpy(GlobalLock(hMemory), address, length);
+		GlobalUnlock(hMemory);
+		SetClipboardData(CF_TEXT, hMemory);
 		CloseClipboard();
 	}
 	return 0;

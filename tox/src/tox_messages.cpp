@@ -10,8 +10,9 @@ void CToxProto::OnFriendMessage(Tox *tox, uint32_t friendNumber, TOX_MESSAGE_TYP
 	MCONTACT hContact = proto->GetContact(friendNumber);
 	if (hContact)
 	{
+		std::string test((char*)message);
 		ptrA szMessage((char*)mir_alloc(length + 1));
-		mir_strncpy(szMessage, (const char*)message, length + 1);
+		mir_strncpy(szMessage, (const char*)message, length);
 
 		PROTORECVEVENT recv = { 0 };
 		recv.flags = PREF_UTF;
