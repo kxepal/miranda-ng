@@ -30,8 +30,6 @@ std::tstring CToxProto::GetAvatarFilePath(MCONTACT hContact)
 
 void CToxProto::SetToxAvatar(std::tstring path, bool checkHash)
 {
-	size_t length;
-	uint8_t *data;
 	FILE *hFile = _tfopen(path.c_str(), L"rb");
 	if (!hFile)
 	{
@@ -40,7 +38,7 @@ void CToxProto::SetToxAvatar(std::tstring path, bool checkHash)
 	}
 
 	fseek(hFile, 0, SEEK_END);
-	length = ftell(hFile);
+	size_t length = ftell(hFile);
 	rewind(hFile);
 	if (length > 1024 * 1024)
 	{
@@ -49,7 +47,7 @@ void CToxProto::SetToxAvatar(std::tstring path, bool checkHash)
 		return;
 	}
 
-	data = (uint8_t*)mir_alloc(length);
+	uint8_t *data = (uint8_t*)mir_alloc(length);
 	if (fread(data, sizeof(uint8_t), length, hFile) != length)
 	{
 		fclose(hFile);
@@ -75,6 +73,9 @@ void CToxProto::SetToxAvatar(std::tstring path, bool checkHash)
 
 	for (MCONTACT hContact = db_find_first(m_szModuleName); hContact; hContact = db_find_next(hContact, m_szModuleName))
 	{
+		if (GetContactStatus(hContact) == ID_STATUS_OFFLINE)
+			continue;
+
 		int32_t friendNumber = GetToxFriendNumber(hContact);
 		if (friendNumber == UINT32_MAX)
 		{
@@ -186,24 +187,31 @@ INT_PTR CToxProto::SetMyAvatar(WPARAM, LPARAM lParam)
 			return -1;
 		}
 
-		SetToxAvatar(avatarPath, true);
+		if (IsOnline())
+			SetToxAvatar(avatarPath, true);
 	}
 	else
 	{
-		for (MCONTACT hContact = db_find_first(m_szModuleName); hContact; hContact = db_find_next(hContact, m_szModuleName))
+		if (IsOnline())
 		{
-			int32_t friendNumber = GetToxFriendNumber(hContact);
-			if (friendNumber == UINT32_MAX)
+			for (MCONTACT hContact = db_find_first(m_szModuleName); hContact; hContact = db_find_next(hContact, m_szModuleName))
 			{
-				debugLogA(__FUNCTION__": failed to unset avatar");
-				return -1;
-			}
+				if (GetContactStatus(hContact) == ID_STATUS_OFFLINE)
+					continue;
 
-			TOX_ERR_FILE_SEND error;
-			if (!tox_file_send(tox, NULL, TOX_FILE_KIND_AVATAR, 0, NULL, NULL, 0, &error))
-			{
-				debugLogA(__FUNCTION__": failed to unset avatar");
-				return -1;
+				int32_t friendNumber = GetToxFriendNumber(hContact);
+				if (friendNumber == UINT32_MAX)
+				{
+					debugLogA(__FUNCTION__": failed to unset avatar");
+					return -1;
+				}
+
+				TOX_ERR_FILE_SEND error;
+				if (!tox_file_send(tox, NULL, TOX_FILE_KIND_AVATAR, 0, NULL, NULL, 0, &error))
+				{
+					debugLogA(__FUNCTION__": failed to unset avatar");
+					return -1;
+				}
 			}
 		}
 

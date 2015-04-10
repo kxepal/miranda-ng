@@ -72,11 +72,6 @@ bool CToxProto::InitToxCore()
 		tox_self_get_status_message(tox, statusMessage);
 		setWString("StatusMsg", ptrW(Utf8DecodeW((char*)statusMessage)));
 
-		std::tstring avatarPath = GetAvatarFilePath();
-		if (IsFileExists(avatarPath))
-		{
-			SetToxAvatar(avatarPath);
-		}
 		return true;
 	}
 

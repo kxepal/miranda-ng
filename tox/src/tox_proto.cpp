@@ -230,7 +230,7 @@ int CToxProto::SetAwayMsg(int, const PROTOCHAR *msg)
 
 int CToxProto::UserIsTyping(MCONTACT hContact, int type)
 {
-	return 0;
+	return OnUserIsTyping(hContact, type);
 }
 
 int CToxProto::OnEvent(PROTOEVENTTYPE iEventType, WPARAM wParam, LPARAM lParam)

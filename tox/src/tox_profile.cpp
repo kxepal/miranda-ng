@@ -142,8 +142,8 @@ INT_PTR CToxProto::OnCopyToxID(WPARAM, LPARAM)
 }
 
 CToxPasswordEditor::CToxPasswordEditor(CToxProto *proto) :
-CSuper(proto, IDD_PASSWORD, NULL, false), ok(this, IDOK),
-password(this, IDC_PASSWORD), savePermanently(this, IDC_SAVEPERMANENTLY)
+	CToxDlgBase(proto, IDD_PASSWORD, NULL, false), ok(this, IDOK),
+	password(this, IDC_PASSWORD), savePermanently(this, IDC_SAVEPERMANENTLY)
 {
 	ok.OnClick = Callback(this, &CToxPasswordEditor::OnOk);
 }

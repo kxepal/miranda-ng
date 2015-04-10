@@ -1,7 +1,7 @@
 #include "common.h"
 
 CToxOptionsMain::CToxOptionsMain(CToxProto *proto, int idDialog, HWND hwndParent)
-	: CSuper(proto, IDD_ACCOUNT_MANAGER, hwndParent, false),
+	: CToxDlgBase(proto, idDialog, hwndParent, false),
 	m_toxAddress(this, IDC_TOXID), m_toxAddressCopy(this, IDC_CLIPBOARD),
 	m_profileCreate(this, IDC_PROFILE_NEW), m_profileImport(this, IDC_PROFILE_IMPORT),
 	m_profileExport(this, IDC_PROFILE_EXPORT), m_nickname(this, IDC_NAME),
@@ -23,7 +23,7 @@ CToxOptionsMain::CToxOptionsMain(CToxProto *proto, int idDialog, HWND hwndParent
 
 void CToxOptionsMain::OnInitDialog()
 {
-	CSuper::OnInitDialog();
+	CToxDlgBase::OnInitDialog();
 
 	std::tstring profilePath = m_proto->GetToxProfilePath();
 	if (CToxProto::IsFileExists(profilePath))
@@ -192,7 +192,6 @@ void CToxNodeEditor::OnInitDialog()
 
 void CToxNodeEditor::OnOk(CCtrlBase*)
 {
-	char value[MAX_PATH];
 	if (!m_ipv4.GetInt())
 	{
 		MessageBox(m_hwnd, TranslateT("Enter IPv4"), TranslateT("Error"), MB_OK);

@@ -143,9 +143,9 @@ int tox_friend_get_typing(Tox *tox, int32_t friendnumber, uint8_t is_typing)
 	return CreateFunction<int(*)(Tox*, int32_t, uint8_t)>(__FUNCTION__)(tox, friendnumber, is_typing);
 }
 
-uint8_t tox_get_is_typing(const Tox *tox, int32_t friendnumber)
+bool tox_self_set_typing(Tox *tox, uint32_t friend_number, bool is_typing, TOX_ERR_SET_TYPING *error)
 {
-	return CreateFunction<int(*)(const Tox*, int32_t)>(__FUNCTION__)(tox, friendnumber);
+	return CreateFunction<bool(*)(Tox*, uint32_t, bool, TOX_ERR_SET_TYPING*)>(__FUNCTION__)(tox, friend_number, is_typing, error);
 }
 
 size_t tox_self_get_friend_list_size(const Tox *tox)

@@ -155,7 +155,7 @@ private:
 
 	MCONTACT GetContactFromAuthEvent(MEVENT hEvent);
 
-	int32_t GetToxFriendNumber(MCONTACT hContact);
+	uint32_t GetToxFriendNumber(MCONTACT hContact);
 
 	void __cdecl LoadFriendList(void*);
 
@@ -209,6 +209,8 @@ private:
 
 	static void OnFriendMessage(Tox *tox, uint32_t friendNumber, TOX_MESSAGE_TYPE type, const uint8_t *message, size_t length, void *arg);
 	static void OnReadReceipt(Tox *tox, uint32_t friendNumber, uint32_t messageId, void *arg);
+
+	int OnUserIsTyping(MCONTACT hContact, int type);
 	static void OnTypingChanged(Tox *tox, uint32_t friendNumber, bool isTyping, void *arg);
 
 	int __cdecl OnPreCreateMessage(WPARAM wParam, LPARAM lParam);

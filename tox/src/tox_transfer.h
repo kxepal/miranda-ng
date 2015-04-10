@@ -28,7 +28,7 @@ struct FileTransferParam
 		hFile = NULL;
 		this->friendNumber = friendNumber;
 		this->fileNumber = fileNumber;
-		transferNumber = (((uint32_t)friendNumber) << 16) | ((uint32_t)fileNumber);
+		transferNumber = (((int64_t)friendNumber) << 32) | ((int64_t)fileNumber);
 
 		pfts.cbSize = sizeof(PROTOFILETRANSFERSTATUS);
 		pfts.flags = PFTS_TCHAR;
@@ -94,7 +94,7 @@ public:
 		}
 	}
 
-	FileTransferParam* Get(int32_t friendNumber, uint8_t fileNumber)
+	FileTransferParam* Get(uint32_t friendNumber, uint32_t fileNumber)
 	{
 		int64_t transferNumber = (((int64_t)friendNumber) << 32) | ((int64_t)fileNumber);
 		if (transfers.find(transferNumber) != transfers.end())
@@ -115,7 +115,7 @@ public:
 		return NULL;
 	}
 
-	void Remove(int32_t friendNumber, uint8_t fileNumber)
+	void Remove(uint32_t friendNumber, uint32_t fileNumber)
 	{
 		int64_t transferNumber = (((int64_t)friendNumber) << 32) | ((int64_t)fileNumber);
 		if (transfers.find(transferNumber) != transfers.end())

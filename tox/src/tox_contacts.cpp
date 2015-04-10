@@ -102,11 +102,11 @@ MCONTACT CToxProto::AddContact(const char *address, const std::tstring &dnsId, b
 	return hContact;
 }
 
-int32_t CToxProto::GetToxFriendNumber(MCONTACT hContact)
+uint32_t CToxProto::GetToxFriendNumber(MCONTACT hContact)
 {
 	ToxBinAddress pubKey = ptrA(getStringA(hContact, TOX_SETTINGS_ID));
 	TOX_ERR_FRIEND_BY_PUBLIC_KEY error;
-	int32_t friendNumber = tox_friend_by_public_key(tox, pubKey, &error);
+	uint32_t friendNumber = tox_friend_by_public_key(tox, pubKey, &error);
 	if (error != TOX_ERR_FRIEND_BY_PUBLIC_KEY_OK)
 	{
 		debugLogA(__FUNCTION__": failed to get friend number (%d)", error);
@@ -216,7 +216,7 @@ INT_PTR CToxProto::OnGrantAuth(WPARAM hContact, LPARAM)
 	return 0;
 }
 
-void CToxProto::OnFriendRequest(Tox *tox, const uint8_t *pubKey, const uint8_t *message, size_t length, void *arg)
+void CToxProto::OnFriendRequest(Tox*, const uint8_t *pubKey, const uint8_t *message, size_t length, void *arg)
 {
 	CToxProto *proto = (CToxProto*)arg;
 
@@ -252,29 +252,37 @@ void CToxProto::OnFriendRequest(Tox *tox, const uint8_t *pubKey, const uint8_t *
 	ProtoChainRecv(hContact, PSR_AUTH, 0, (LPARAM)&pre);
 }
 
-void CToxProto::OnFriendNameChange(Tox *tox, uint32_t friendNumber, const uint8_t *name, size_t length, void *arg)
+void CToxProto::OnFriendNameChange(Tox*, uint32_t friendNumber, const uint8_t *name, size_t length, void *arg)
 {
 	CToxProto *proto = (CToxProto*)arg;
 
 	if (MCONTACT hContact = proto->GetContact(friendNumber))
 	{
-		ptrT nickname(mir_utf8decodeW((char*)name));
+		ptrA rawName((char*)mir_alloc(length + 1));
+		memcpy(rawName, name, length);
+		rawName[length] = 0;
+
+		ptrT nickname(mir_utf8decodeW(rawName));
 		proto->setTString(hContact, "Nick", nickname);
 	}
 }
 
-void CToxProto::OnStatusMessageChanged(Tox *tox, uint32_t friendNumber, const uint8_t *message, size_t length, void *arg)
+void CToxProto::OnStatusMessageChanged(Tox*, uint32_t friendNumber, const uint8_t *message, size_t length, void *arg)
 {
 	CToxProto *proto = (CToxProto*)arg;
 
 	if (MCONTACT hContact = proto->GetContact(friendNumber))
 	{
-		ptrT statusMessage(mir_utf8decodeW((char*)message));
+		ptrA rawMessage((char*)mir_alloc(length + 1));
+		memcpy(rawMessage, message, length);
+		rawMessage[length] = 0;
+
+		ptrT statusMessage(mir_utf8decodeT(rawMessage));
 		db_set_ts(hContact, "CList", "StatusMsg", statusMessage);
 	}
 }
 
-void CToxProto::OnUserStatusChanged(Tox *tox, uint32_t friendNumber, TOX_USER_STATUS userstatus, void *arg)
+void CToxProto::OnUserStatusChanged(Tox*, uint32_t friendNumber, TOX_USER_STATUS userstatus, void *arg)
 {
 	CToxProto *proto = (CToxProto*)arg;
 
@@ -286,20 +294,21 @@ void CToxProto::OnUserStatusChanged(Tox *tox, uint32_t friendNumber, TOX_USER_ST
 	}
 }
 
-void CToxProto::OnConnectionStatusChanged(Tox *tox, uint32_t friendNumber, TOX_CONNECTION status, void *arg)
+void CToxProto::OnConnectionStatusChanged(Tox*, uint32_t friendNumber, TOX_CONNECTION status, void *arg)
 {
 	CToxProto *proto = (CToxProto*)arg;
 
 	MCONTACT hContact = proto->GetContact(friendNumber);
 	if (hContact)
 	{
-		if (status == TOX_CONNECTION_NONE)
+		if (status != TOX_CONNECTION_NONE)
 		{
+			proto->SetContactStatus(hContact, ID_STATUS_OFFLINE);
+
 			proto->delSetting(hContact, "Auth");
 			proto->delSetting(hContact, "Grant");
 
-			//tox_send_avatar_info(proto->tox, friendNumber);
-
+			// resume transfers
 			for (size_t i = 0; i < proto->transfers.Count(); i++)
 			{
 				// only for receiving
@@ -309,14 +318,54 @@ void CToxProto::OnConnectionStatusChanged(Tox *tox, uint32_t friendNumber, TOX_C
 					proto->debugLogA(__FUNCTION__": sending ask to resume the transfer of file (%d)", transfer->fileNumber);
 					transfer->status = STARTED;
 					TOX_ERR_FILE_CONTROL error;
-					if (!tox_file_control(tox, transfer->friendNumber, transfer->fileNumber, TOX_FILE_CONTROL_RESUME, &error))
+					if (!tox_file_control(proto->tox, transfer->friendNumber, transfer->fileNumber, TOX_FILE_CONTROL_RESUME, &error))
 					{
 						proto->debugLogA(__FUNCTION__": failed to resume the transfer (%d)", error);
-						tox_file_control(tox, transfer->friendNumber, transfer->fileNumber, TOX_FILE_CONTROL_RESUME, NULL);
+						tox_file_control(proto->tox, transfer->friendNumber, transfer->fileNumber, TOX_FILE_CONTROL_RESUME, NULL);
 					}
 				}
 			}
-			proto->SetContactStatus(hContact, ID_STATUS_OFFLINE);
+
+			// update avatar
+			std::tstring avatarPath = proto->GetAvatarFilePath();
+			if (IsFileExists(avatarPath))
+			{
+				FILE *hFile = _tfopen(avatarPath.c_str(), L"rb");
+				if (!hFile)
+				{
+					proto->debugLogA(__FUNCTION__": failed to open avatar file");
+					return;
+				}
+
+				fseek(hFile, 0, SEEK_END);
+				size_t length = ftell(hFile);
+				rewind(hFile);
+
+				uint8_t hash[TOX_HASH_LENGTH];
+				DBVARIANT dbv;
+				if (!db_get(NULL, proto->m_szModuleName, TOX_SETTINGS_AVATAR_HASH, &dbv))
+				{
+					memcpy(hash, dbv.pbVal, TOX_HASH_LENGTH);
+					db_free(&dbv);
+				}
+
+				TOX_ERR_FILE_SEND error;
+				uint32_t fileNumber = tox_file_send(proto->tox, friendNumber, TOX_FILE_KIND_AVATAR, length, NULL, hash, TOX_HASH_LENGTH, &error);
+				if (error != TOX_ERR_FILE_SEND_OK)
+				{
+					proto->debugLogA(__FUNCTION__": failed to set new avatar");
+					return;
+				}
+
+				FileTransferParam *transfer = new FileTransferParam(friendNumber, fileNumber, _T("avatar"), length);
+				transfer->pfts.hContact = hContact;
+				transfer->pfts.flags |= PFTS_SENDING;
+				//transfer->pfts.tszWorkingDir = fileDir;
+				transfer->hFile = hFile;
+				proto->transfers.Add(transfer);
+			}
+			else
+				tox_file_send(proto->tox, NULL, TOX_FILE_KIND_AVATAR, 0, NULL, NULL, 0, NULL);
 		}
 		else
 		{
@@ -326,9 +375,7 @@ void CToxProto::OnConnectionStatusChanged(Tox *tox, uint32_t friendNumber, TOX_C
 			{
 				FileTransferParam *transfer = proto->transfers.GetAt(i);
 				if (transfer->friendNumber == friendNumber)
-				{
 					transfer->status = BROKEN;
-				}
 			}
 		}
 	}

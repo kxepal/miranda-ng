@@ -3,7 +3,7 @@
 /* MESSAGE RECEIVING */
 
 // incoming message flow
-void CToxProto::OnFriendMessage(Tox *tox, uint32_t friendNumber, TOX_MESSAGE_TYPE type, const uint8_t *message, size_t length, void *arg)
+void CToxProto::OnFriendMessage(Tox*, uint32_t friendNumber, TOX_MESSAGE_TYPE type, const uint8_t *message, size_t length, void *arg)
 {
 	CToxProto *proto = (CToxProto*)arg;
 
@@ -78,7 +78,7 @@ int CToxProto::OnSendMessage(MCONTACT hContact, int flags, const char *szMessage
 }
 
 // message is received by the other side
-void CToxProto::OnReadReceipt(Tox *tox, uint32_t friendNumber, uint32_t messageId, void *arg)
+void CToxProto::OnReadReceipt(Tox*, uint32_t friendNumber, uint32_t messageId, void *arg)
 {
 	CToxProto *proto = (CToxProto*)arg;
 
@@ -111,13 +111,26 @@ int CToxProto::OnPreCreateMessage(WPARAM, LPARAM lParam)
 
 /* TYPING */
 
-void CToxProto::OnTypingChanged(Tox *tox, uint32_t friendNumber, bool isTyping, void *arg)
+int CToxProto::OnUserIsTyping(MCONTACT hContact, int type)
+{
+	int32_t friendNumber = GetToxFriendNumber(hContact);
+	if (friendNumber == UINT32_MAX)
+		return 0;
+	
+	TOX_ERR_SET_TYPING error;
+	if (!tox_self_set_typing(tox, friendNumber, type == PROTOTYPE_SELFTYPING_ON, &error))
+		debugLogA(__FUNCTION__": failed to send typing (%d)", error);
+
+	return 0;
+}
+
+void CToxProto::OnTypingChanged(Tox*, uint32_t friendNumber, bool isTyping, void *arg)
 {
 	CToxProto *proto = (CToxProto*)arg;
 
-	MCONTACT hContact = proto->GetContact(friendNumber);
-	if (hContact)
+	if (MCONTACT hContact = proto->GetContact(friendNumber))
 	{
-		CallService(MS_PROTO_CONTACTISTYPING, hContact, (LPARAM)isTyping);
+		int typingStatus = (isTyping ? PROTOTYPE_CONTACTTYPING_INFINITE : PROTOTYPE_CONTACTTYPING_OFF);
+		CallService(MS_PROTO_CONTACTISTYPING, hContact, (LPARAM)typingStatus);
 	}
 }
