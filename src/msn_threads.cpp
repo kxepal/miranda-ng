@@ -42,7 +42,7 @@ void __cdecl CMsnProto::msn_keepAliveThread(void*)
 				msnPingTimeout = 45;
 			else {
 				msnPingTimeout = 20;
-				keepFlag = keepFlag && msnNsThread->send("PNG\r\n", 5);
+				keepFlag = keepFlag && msnNsThread->sendPacket("PNG", "CON 0");
 			}
 			p2p_clearDormantSessions();
 			if (hHttpsConnection && (clock() - mHttpsTS) > 60 * CLOCKS_PER_SEC) {
@@ -120,6 +120,7 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 		tConn.wPort = MSN_DEFAULT_GATEWAY_PORT;
 	}
 	else {
+		tConn.flags = NLOCF_SSL;
 		tConn.szHost = info->mServer;
 		tConn.wPort = MSN_DEFAULT_PORT;
 	}
@@ -149,9 +150,8 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 
 	debugLogA("Connected with handle=%08X", info->s);
 
-	if (info->mType == SERVER_NOTIFICATION) {
-		info->sendPacket("VER", "MSNP18 MSNP17 CVR0");
-	}
+	if (info->mType == SERVER_NOTIFICATION) 
+		info->sendPacketPayload("CNT", "CON", "<connect><ver>2</ver><agent><os>winnt</os><osVer>5.2</osVer><proc>x86</proc><lcid>en-us</lcid></agent></connect>\r\n");
 	else if (info->mType == SERVER_SWITCHBOARD) {
 		info->sendPacket(info->mCaller ? "USR" : "ANS", "%s;%s %s", MyOptions.szEmail, MyOptions.szMachineGuid, info->mCookie);
 	}
@@ -165,6 +165,7 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 
 	debugLogA("Entering main recv loop");
 	info->mBytesInData = 0;
+	int msglen = 0;
 	for (;;) {
 		int recvResult = info->recv(info->mData + info->mBytesInData, sizeof(info->mData) - info->mBytesInData);
 		if (recvResult == SOCKET_ERROR) {
@@ -189,8 +190,19 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 				if (peol == NULL)
 					break;
 
-				if (info->mBytesInData < peol - info->mData + 2)
+				/* Check for extra payload to read
+				if (!msglen && isdigit(peol[-1])) {
+					char *pMsgLen = peol-1;
+					
+					while (pMsgLen>info->mData && isdigit(*pMsgLen)) pMsgLen--;
+					pMsgLen++;
+					sscanf(pMsgLen, "%d", &msglen);
+				}*/
+
+				if (info->mBytesInData < peol - info->mData + 2 + msglen)
 					break;  //wait for full line end
+
+				msglen = 0;
 
 				char msg[sizeof(info->mData)];
 				memcpy(msg, info->mData, peol - info->mData); msg[peol - info->mData] = 0;
@@ -224,6 +236,7 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 				else
 					if (MSN_HandleMSNFTP(info, msg))
 						goto LBL_Exit;
+				info->mBytesInData = 0;
 			}
 		}
 

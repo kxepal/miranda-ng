@@ -27,8 +27,8 @@ MCONTACT CMsnProto::MSN_HContactFromEmail(const char* wlid, const char* msnNick,
 {
 	MCONTACT hContact = NULL;
 
-	char *szEmail;
-	parseWLID(NEWSTR_ALLOCA(wlid), NULL, &szEmail, NULL);
+	char *szEmail, *szNet;
+	parseWLID(NEWSTR_ALLOCA(wlid), &szNet, &szEmail, NULL);
 
 	MsnContact *msc = Lists_Get(szEmail);
 	if (msc && msc->hContact)
@@ -39,10 +39,11 @@ MCONTACT CMsnProto::MSN_HContactFromEmail(const char* wlid, const char* msnNick,
 		CallService(MS_PROTO_ADDTOCONTACT, hContact, (LPARAM)m_szModuleName);
 		setString(hContact, "e-mail", szEmail);
 		setStringUtf(hContact, "Nick", msnNick ? msnNick : wlid);
+		setWord(hContact, "netId", atoi(szNet));
 		if (temporary)
 			db_set_b(hContact, "CList", "NotOnList", 1);
 
-		Lists_Add(0, NETID_MSN, wlid, hContact);
+		Lists_Add(0, atoi(szNet), szEmail, hContact);
 	}
 
 	return hContact;
@@ -226,21 +227,29 @@ bool CMsnProto::MSN_RefreshContactList(void)
 	Lists_Wipe();
 	Lists_Populate();
 
-	if (!MSN_SharingFindMembership()) return false;
+	if (GetMyNetID() != NETID_SKYPE)
+	{
+		if (!MSN_SharingFindMembership()) return false;
 
-	if (m_iDesiredStatus == ID_STATUS_OFFLINE) return false;
+		if (m_iDesiredStatus == ID_STATUS_OFFLINE) return false;
 
-	if (!MSN_ABFind("ABFindContactsPaged", NULL)) return false;
+		if (!MSN_ABFind("ABFindContactsPaged", NULL)) return false;
 
-	if (m_iDesiredStatus == ID_STATUS_OFFLINE) return false;
+		if (m_iDesiredStatus == ID_STATUS_OFFLINE) return false;
 
-	MSN_CleanupLists();
+		MSN_CleanupLists();
 
-	if (m_iDesiredStatus == ID_STATUS_OFFLINE) return false;
+		if (m_iDesiredStatus == ID_STATUS_OFFLINE) return false;
 
-	msnLoggedIn = true;
+		msnLoggedIn = true;
 
-	MSN_CreateContList();
-	MSN_StoreGetProfile();
+		MSN_CreateContList();
+		MSN_StoreGetProfile();
+	}
+	else
+	{
+		/* TODO: Add pulling Skype contacts from event server or skypeweb or other unknown method.. */
+		MSN_CreateContList();
+	}
 	return true;
 }

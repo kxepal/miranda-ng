@@ -37,7 +37,7 @@ ezxml_t CMsnProto::abSoapHdr(const char* service, const char* scenario, ezxml_t&
 	ezxml_t node = ezxml_add_child(apphdr, "ApplicationId", 0);
 	ezxml_set_txt(node, msnAppID);
 	node = ezxml_add_child(apphdr, "IsMigration", 0);
-	ezxml_set_txt(node, abchMigrated ? "false" : "true");
+	ezxml_set_txt(node, "false"); // abchMigrated ? "false" : "true");
 	node = ezxml_add_child(apphdr, "PartnerScenario", 0);
 	ezxml_set_txt(node, scenario);
 

@@ -71,10 +71,10 @@ static const char authPacket[] =
 				"<wst:RequestType>http://schemas.xmlsoap.org/ws/2005/02/trust/Issue</wst:RequestType>"
 				"<wsp:AppliesTo>"
 					"<wsa:EndpointReference>"
-						"<wsa:Address>messengerclear.live.com</wsa:Address>"
+						"<wsa:Address>chatservice.live.com</wsa:Address>"
 					"</wsa:EndpointReference>"
 				"</wsp:AppliesTo>"
-				"<wsp:PolicyReference URI=\"MBI_KEY_OLD\" />"
+				"<wsp:PolicyReference URI=\"MBI_SSL\" />"
 			"</wst:RequestSecurityToken>"
 			"<wst:RequestSecurityToken Id=\"RST2\">"
 				"<wst:RequestType>http://schemas.xmlsoap.org/ws/2005/02/trust/Issue</wst:RequestType>"
@@ -194,7 +194,7 @@ int CMsnProto::MSN_GetPassportAuth(void)
 						node = ezxml_get(tokr, "wst:RequestedProofToken", 0, "wst:BinarySecret", -1);
 						replaceStr(hotSecretToken, ezxml_txt(node));
 					}
-					else if (strcmp(addr, "messengerclear.live.com") == 0) {
+					else if (strcmp(addr, "chatservice.live.com") == 0) {
 						ezxml_t node = ezxml_get(tokr, "wst:RequestedProofToken", 0,
 							"wst:BinarySecret", -1);
 						if (toks) {
@@ -436,6 +436,68 @@ CMStringA CMsnProto::HotmailLogin(const char* url)
 	ptrA szHash(mir_base64_encode(hash, sizeof(hash)));
 	result.AppendFormat("&hash=%s", ptrA(mir_urlEncode(szHash)));
 	return result;
+}
+
+/* 1	-	Login successful
+   0	-	Login failed
+   -1	-	Loading Skylogin library failed
+   -2	-	Functions cannot be loaded from Skylogin library
+   -3	-	Initializing Skylogin library failed
+ */
+int CMsnProto::MSN_SkypeAuth(const char *pszNonce, char *pszUIC)
+{
+	int iRet = -1;
+	typedef void* SkyLogin;
+	typedef SkyLogin (*pfnSkyLogin_Init)();
+	typedef void (*pfnSkyLogin_Exit)(SkyLogin pInst);
+	typedef int (*pfnSkyLogin_LoadCredentials)(SkyLogin pInst, char *pszUser);
+	typedef int (*pfnSkyLogin_PerformLogin)(SkyLogin pInst, char *pszUser, char *pszPass);
+	typedef int (*pfnSkyLogin_CreateUICString)(SkyLogin pInst, const char *pszNonce, char *pszOutUIC);
+	pfnSkyLogin_Init SkyLogin_Init;
+	pfnSkyLogin_Exit SkyLogin_Exit;
+	pfnSkyLogin_LoadCredentials SkyLogin_LoadCredentials;
+	pfnSkyLogin_PerformLogin SkyLogin_PerformLogin;
+	pfnSkyLogin_CreateUICString SkyLogin_CreateUICString;
+
+	HMODULE hLibSkylogin;
+
+	if ((hLibSkylogin = LoadLibraryA("Plugins\\skylogin.dll")))
+	{
+		SkyLogin hLogin;
+		char szPassword[100];
+
+		// load function pointers
+		#define LOAD_FN(name) (##name = (pfn##name)GetProcAddress(hLibSkylogin, #name))
+		if (!LOAD_FN(SkyLogin_Init) ||
+			!LOAD_FN(SkyLogin_Exit) ||
+			!LOAD_FN(SkyLogin_LoadCredentials) ||
+			!LOAD_FN(SkyLogin_PerformLogin) ||
+			!LOAD_FN(SkyLogin_CreateUICString))
+		{
+			FreeLibrary(hLibSkylogin);
+			return -2;
+		}
+
+		// Perform login
+		if (hLogin = SkyLogin_Init())
+		{
+			db_get_static(NULL, m_szModuleName, "Password", szPassword, sizeof(szPassword));
+			if (SkyLogin_LoadCredentials(hLogin, MyOptions.szEmail) ||
+				SkyLogin_PerformLogin(hLogin, MyOptions.szEmail, szPassword))
+			{
+				if (SkyLogin_CreateUICString(hLogin, pszNonce, pszUIC))
+					iRet = 1;
+			} else iRet = 0;
+			SkyLogin_Exit(hLogin);
+		} else iRet = -3;
+		FreeLibrary(hLibSkylogin);
+	}
+	return iRet;
+}
+
+int	 CMsnProto::GetMyNetID(void)
+{
+	return strchr(MyOptions.szEmail, '@')?NETID_MSN:NETID_SKYPE;
 }
 
 void CMsnProto::FreeAuthTokens(void)

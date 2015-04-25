@@ -168,6 +168,7 @@ CMsnProto::~CMsnProto()
 	mir_free(msnLastStatusMsg);
 	mir_free(msnPreviousUUX);
 	mir_free(msnExternalIP);
+	mir_free(msnRegistration);
 
 	mir_free(abCacheKey);
 	mir_free(sharingCacheKey);
@@ -824,7 +825,10 @@ int __cdecl CMsnProto::SendMsg(MCONTACT hContact, int flags, const char* pszSrc)
 		else {
 			const char msgType = MyOptions.SlowSend ? 'A' : 'N';
 			bool isOffline;
-			ThreadData* thread = MSN_StartSB(tEmail, isOffline);
+			ThreadData* thread; // = MSN_StartSB(tEmail, isOffline);
+			/* MSNP24 doesn't have a switchboard anymore */
+			thread = NULL; isOffline = true;
+
 			if (thread == NULL) {
 				if (isOffline) {
 					if (netId != NETID_LCS) {

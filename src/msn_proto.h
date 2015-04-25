@@ -110,6 +110,7 @@ struct CMsnProto : public PROTO<CMsnProto>
 	char *authContactToken;
 	char *authStorageToken;
 	char *hotSecretToken, *hotAuthToken;
+	bool bSentBND;
 
 	char *abCacheKey, *sharingCacheKey, *storageCacheKey;
 
@@ -149,6 +150,7 @@ struct CMsnProto : public PROTO<CMsnProto>
 	bool        usingGateway;
 
 	char*       msnExternalIP;
+	char*		msnRegistration;
 	char*       msnPreviousUUX;
 	char*       msnLastStatusMsg;
 
@@ -199,7 +201,7 @@ struct CMsnProto : public PROTO<CMsnProto>
 	int			MSN_HandleCommands(ThreadData* info, char* cmdString);
 	int			MSN_HandleErrors(ThreadData* info, char* cmdString);
 	void        MSN_ProcessNotificationMessage(char* buf, unsigned len);
-	void        MSN_ProcessStatusMessage(char* buf, unsigned len, const char* wlid);
+	void		MSN_ProcessStatusMessage(ezxml_t xmli, const char* wlid);
 	void        MSN_ProcessPage(char* buf, unsigned len);
 	void        MSN_ProcessRemove(char* buf, size_t len);
 	void        MSN_ProcessAdd(char* buf, size_t len);
@@ -460,9 +462,11 @@ struct CMsnProto : public PROTO<CMsnProto>
 	//	MSN Authentication
 
 	int       MSN_GetPassportAuth(void);
+	int		  MSN_SkypeAuth(const char *pszNonce, char *pszUIC);
 	char*	    GenerateLoginBlob(char* challenge);
 	CMStringA HotmailLogin(const char* url);
 	void	    FreeAuthTokens(void);
+	int	 GetMyNetID(void);
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	MSN avatars support

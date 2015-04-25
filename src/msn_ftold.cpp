@@ -333,8 +333,7 @@ void CMsnProto::msnftp_startFileSend(ThreadData* info, const char* Invcommand, c
 	else
 		hostname[0] = 0;
 
-	char command[1024];
-	int  nBytes = mir_snprintf(command, SIZEOF(command),
+	info->sendPacketPayload("MSG", "N",
 		"MIME-Version: 1.0\r\n"
 		"Content-Type: text/x-msmsgsinvite; charset=UTF-8\r\n\r\n"
 		"Invitation-Command: %s\r\n"
@@ -351,8 +350,6 @@ void CMsnProto::msnftp_startFileSend(ThreadData* info, const char* Invcommand, c
 		Invcookie, MyConnection.GetMyExtIPStr(), hostname,
 		nlb.wExPort, nlb.wExPort ^ 0x3141, nlb.wPort ^ 0x3141,
 		MSN_GenRandom());
-
-	info->sendPacket("MSG", "N %d\r\n%s", nBytes, command);
 
 	if (sb) {
 		ThreadData* newThread = new ThreadData;

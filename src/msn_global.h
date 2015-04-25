@@ -124,10 +124,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MSN_GUID_LEN              40
 
 #define MSN_PACKETS_COMBINE         7
-#define MSN_DEFAULT_PORT         1863
-#define MSN_DEFAULT_GATEWAY_PORT   80
-const char MSN_DEFAULT_LOGIN_SERVER[] = "messenger.hotmail.com";
-const char MSN_DEFAULT_GATEWAY[] =      "gateway.messenger.hotmail.com";
+#define MSN_DEFAULT_PORT          443
+#define MSN_DEFAULT_GATEWAY_PORT  443
+const char MSN_DEFAULT_LOGIN_SERVER[] = "s.gateway.messenger.live.com";
+const char MSN_DEFAULT_GATEWAY[] =      "geo.gateway.messenger.live.com";
 const char MSN_USER_AGENT[] =           NETLIB_USER_AGENT;
 
 #define MSN_BLOCK        "/BlockCommand"
@@ -158,6 +158,7 @@ char*       HtmlEncode(const char* str);
 bool		txtParseParam (const char* szData, const char* presearch, const char* start, const char* finish, char* param, const int size);
 void		stripBBCode(char* src);
 void		stripColorCode(char* src);
+void		stripHTML(char* str);
 void		parseWLID(char* wlid, char** net, char** email, char** inst);
 
 char*		GetGlobalIp(void);
@@ -539,6 +540,7 @@ struct ThreadData
    int           sendMessage(int msgType, const char* email, int netId, const char* msg, int parFlags);
    int           sendRawMessage(int msgType, const char* data, int datLen);
    int           sendPacket(const char* cmd, const char* fmt, ...);
+   int			 sendPacketPayload(const char* cmd, const char *param, const char* fmt, ...);
 
    int           contactJoined(const char* email);
    int           contactLeft(const char* email);
@@ -715,6 +717,7 @@ struct MsnContact
 #define NETID_LCS		0x0002
 #define NETID_MOB		0x0004
 #define NETID_MOBNET	0x0008
+#define NETID_SKYPE		NETID_MOBNET
 #define NETID_CIRCLE	0x0009
 #define NETID_TMPCIRCLE	0x000A
 #define NETID_CID		0x000B
@@ -769,12 +772,13 @@ struct TWinErrorCode
 
 #define MSN_NUM_MODES 9
 
-const char msnProtChallenge[] = "C1BX{V4W}Q3*10SM";
-const char msnProductID[] = "PROD0120PW!CCV9@";
-const char msnAppID[] = "484AAC02-7F59-41B7-9601-772045DCC569";
-const char msnStoreAppId[] = "Windows Live Messenger 2012";
-const char msnProductVer[] = "16.4.3528";
-const char msnProtID[] = "MSNP18";
+const char msnProtChallenge[] = "YMM8C_H7KCQ2S_KL";
+const char msnProductID[] = "PROD0090YUAUV{2B";
+const char msnAppID[] = "F6D2794D-501F-443A-ADBE-8F1490FF30FD";
+const int  msnP24Ver = 1;
+const char msnStoreAppId[] = "Skype";
+const char msnProductVer[] = "2/4.3.0.37/174";
+const char msnProtID[] = "MSNP24";
 
 extern HINSTANCE hInst;
 

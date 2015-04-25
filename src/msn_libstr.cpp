@@ -88,6 +88,7 @@ void parseWLID(char* wlid, char** net, char** email, char** inst)
 		if (net) *net = wlid;
 		if (email) *email = col + 1;
 		++col;
+		wlid=col;
 	}
 	else {
 		if (net) *net = NULL;
@@ -265,6 +266,32 @@ void stripColorCode(char* src)
 	}
 	*pd = 0;
 }
+
+void  stripHTML(char* str)
+{
+	char *p, *q;
+
+	for ( p=q=str; *p!='\0'; p++,q++ ) 
+	{
+		if ( *p == '<' )
+		{
+			if      ( !strnicmp( p, "<p>",  3 )) { strcpy(q, "\r\n\r\n"); q += 3; p += 2; }
+			else if ( !strnicmp( p, "</p>", 4 )) { strcpy(q, "\r\n\r\n"); q += 3; p += 3; }
+			else if ( !strnicmp( p, "<br>", 4 )) { strcpy(q, "\r\n"); ++q; p += 3; }
+			else if ( !strnicmp( p, "<br />", 6 )) { strcpy(q, "\r\n"); ++q; p += 5; }
+			else if ( !strnicmp( p, "<hr>", 4 )) { strcpy(q, "\r\n"); ++q; p += 3; }
+			else if ( !strnicmp( p, "<hr />", 6 )) { strcpy(q, "\r\n"); ++q; p += 5; }
+			else { 
+				char *l = strchr(p, '>');
+				if (l) { p = l; --q; } else *q = *p; 
+			}
+		}
+		else 
+			*q = *p;
+	}
+	*q = '\0';
+}
+
 
 // Process a string, and double all % characters, according to chat.dll's restrictions
 // Returns a pointer to the new string (old one is not freed)

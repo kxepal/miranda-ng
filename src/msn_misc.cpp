@@ -417,6 +417,7 @@ void CMsnProto::MSN_GoOffline(void)
 
 int ThreadData::sendMessage(int msgType, const char* email, int netId, const char* parMsg, int parFlags)
 {
+	/*
 	char buf[2048];
 	int off;
 
@@ -463,14 +464,50 @@ int ThreadData::sendMessage(int msgType, const char* email, int netId, const cha
 		off += mir_snprintf((buf + off), (SIZEOF(buf) - off), "X-MMS-IM-Format: FN=%s; EF=%s; CO=%x; CS=0; PF=31%s\r\n\r\n",
 			tFontName, tFontStyle, tFontColor, (parFlags & MSG_RTL) ? ";RL=1" : "");
 	}
+	*/
 
+	char *pszNick=proto->MyOptions.szEmail;
+	DBVARIANT dbv;
 	int seq;
+	time_t cur_time;
+
+	/* FIXME: Use a real message ID and save it, not just this random UUID */
+	unsigned __int64 msgid;
+	time(&cur_time);
+	msgid = ((unsigned __int64)cur_time<<32)|GetTickCount();
+
+	// TODO: Handle msgType!
+
+	if (!proto->getString("Nick", &dbv))
+		pszNick = dbv.pszVal;
+
+	seq = sendPacketPayload("SDG", "MSGR", 
+		"Routing: 1.0\r\n"
+		"To: %d:%s\r\n"
+		"From: %d:%s;epid=%s\r\n\r\n"
+		"Reliability: 1.0\r\n\r\n"
+		"Messaging: 2.0\r\n"
+		"Client-Message-ID: %llu\r\n"
+		"Message-Type: Text\r\n"
+		"IM-Display-Name: %s\r\n"
+		"Content-Type: Text/plain; charset=UTF-8\r\n"
+		"Content-Length: %d\r\n\r\n%s",
+		netId, email,
+		proto->GetMyNetID(), proto->MyOptions.szEmail, proto->MyOptions.szMachineGuid,
+		msgid,
+		pszNick,
+		strlen(parMsg), parMsg);
+
+	if (pszNick!=proto->MyOptions.szEmail) db_free(&dbv);
+
+	/*
 	if (netId == NETID_YAHOO || netId == NETID_MOB || (parFlags & MSG_OFFLINE))
 		seq = sendPacket("UUM", "%s %d %c %d\r\n%s%s", email, netId, msgType,
 		strlen(parMsg) + off, buf, parMsg);
 	else
 		seq = sendPacket("MSG", "%c %d\r\n%s%s", msgType,
 		strlen(parMsg) + off, buf, parMsg);
+	*/
 
 	return seq;
 }
@@ -491,7 +528,7 @@ void ThreadData::sendCaps(void)
 void ThreadData::sendTerminate(void)
 {
 	if (!termPending) {
-		sendPacket("OUT", NULL);
+		sendPacket("OUT", "CON 0");
 		termPending = true;
 	}
 }
@@ -580,6 +617,9 @@ void CMsnProto::MSN_SendStatusMessage(const char* msg)
 {
 	if (!msnLoggedIn)
 		return;
+
+	/* FIXME: Currently not implemented, shuold be set on status change anyway */
+	return;
 
 	char* msgEnc = HtmlEncode(msg ? msg : "");
 
@@ -690,6 +730,37 @@ int ThreadData::sendPacket(const char* cmd, const char* fmt, ...)
 	return (result > 0) ? thisTrid : -1;
 }
 
+int ThreadData::sendPacketPayload(const char* cmd, const char *param, const char* fmt, ...)
+{
+	int thisTrid = 0;
+
+	if (this == NULL) return 0;
+
+	size_t strsize = 512;
+	char* str = (char*)mir_alloc(strsize);
+
+	va_list vararg;
+	va_start(vararg, fmt);
+
+	thisTrid = InterlockedIncrement(&mTrid);
+	int regSz = proto->msnRegistration?strlen(proto->msnRegistration)+16:0;
+	int paramStart = mir_snprintf(str, strsize, "%s %d %s ", cmd, thisTrid, param), strszstart = 0, strSz;
+	while ((strSz = mir_vsnprintf(str + paramStart, strsize - paramStart - regSz - 10, fmt, vararg)) == -1)
+		str = (char*)mir_realloc(str, strsize += 512);
+	if (strSz) strSz+=2;
+	paramStart+=mir_snprintf(str+paramStart, strsize - paramStart , "%d\r\n", strSz+regSz);
+	if (proto->msnRegistration) paramStart+=mir_snprintf(str+paramStart, strsize - paramStart, "Registration: %s\r\n", proto->msnRegistration);
+	if (strSz) paramStart+=mir_snprintf(str+paramStart, strsize - paramStart, "\r\n");
+	mir_vsnprintf(str + paramStart, strsize - paramStart, fmt, vararg);
+	str[strsize - 3] = 0;
+	va_end(vararg);
+
+	int result = send(str, strlen(str));
+	mir_free(str);
+	return (result > 0) ? thisTrid : -1;
+}
+
+
 /////////////////////////////////////////////////////////////////////////////////////////
 // MSN_SetServerStatus - changes plugins status at the server
 
@@ -717,7 +788,8 @@ void CMsnProto::MSN_SetServerStatus(int newStatus)
 
 		unsigned myFlagsEx = capex_SupportsPeerToPeerV2;
 
-		char szMsg[256];
+		char szMsg[2048];
+		/*
 		if (m_iStatus < ID_STATUS_ONLINE) {
 			int sz = mir_snprintf(szMsg, SIZEOF(szMsg),
 				"<EndpointData><Capabilities>%u:%u</Capabilities></EndpointData>", myFlags, myFlagsEx);
@@ -732,6 +804,7 @@ void CMsnProto::MSN_SetServerStatus(int newStatus)
 				db_free(&dbv);
 			}
 		}
+		*/
 
 		char *szPlace;
 		DBVARIANT dbv;
@@ -744,6 +817,47 @@ void CMsnProto::MSN_SetServerStatus(int newStatus)
 			szPlace = mir_utf8encodeT(buf);
 		}
 
+		// I guess this is only if you have a Skype account?
+		// if (GetMyNetID() == NETID_SKYPE) {
+		char** msgptr = GetStatusMsgLoc(newStatus);
+		/* FIXME: This is what Skype client sends
+		myFlags = 0;
+		myFlagsEx = cap_SupportsSDrive | cap_SupportsActivities;
+		*/
+		int sz = mir_snprintf(szMsg, SIZEOF(szMsg),
+			"<user>"
+			"<sep n=\"PE\" epid=\"%s\"><VER>%s</VER><TYP>11</TYP><Capabilities>0:0</Capabilities></sep>"
+			"<s n=\"IM\"><Status>%s</Status></s>"
+			"<sep n=\"IM\" epid=\"%s\"><Capabilities>%u:%u</Capabilities></sep>"
+			"<sep n=\"PD\" epid=\"%s\"><EpName>%s</EpName><ClientType>11</ClientType></sep>"
+			"<s n=\"SKP\"><Mood>%s</Mood><Skypename>%s</Skypename></s>"
+			"<sep n=\"SKP\" epid=\"%s\"><NodeInfo></NodeInfo><Version>24</Version><Seamless>true</Seamless></sep>"
+			"</user>",
+			MyOptions.szMachineGuid, msnProductVer,
+			szStatusName,
+			MyOptions.szMachineGuid, myFlags, myFlagsEx,
+			MyOptions.szMachineGuid, szPlace,
+			msgptr?ptrA(HtmlEncode(*msgptr)):"", MyOptions.szEmail,
+			MyOptions.szMachineGuid);
+		msnNsThread->sendPacketPayload("PUT", "MSGR\\PRESENCE", 
+			"Routing: 1.0\r\n"
+			"To: %d:%s\r\n"
+			"From: %d:%s;epid=%s\r\n\r\n"
+			"Reliability: 1.0\r\n\r\n"
+			"Publication: 1.0\r\n"
+			"Uri: /user\r\n"
+			"Content-Type: application/user+xml\r\n"
+			"Status-Priority: low\r\n"
+			"Content-Length: %d\r\n\r\n%s",
+			GetMyNetID(), MyOptions.szEmail,
+			GetMyNetID(), MyOptions.szEmail,
+			MyOptions.szMachineGuid,
+			sz, szMsg);
+		//}
+
+
+		// TODO: Send, MSN_SendStatusMessage anpassen.
+		/*
 		int sz = mir_snprintf(szMsg, SIZEOF(szMsg),
 			"<PrivateEndpointData>"
 			"<EpName>%s</EpName>"
@@ -753,8 +867,10 @@ void CMsnProto::MSN_SetServerStatus(int newStatus)
 			"</PrivateEndpointData>",
 			szPlace, newStatus == ID_STATUS_IDLE ? "true" : "false", szStatusName);
 		msnNsThread->sendPacket("UUX", "%d\r\n%s", sz, szMsg);
+		*/
 		mir_free(szPlace);
 
+		/*
 		if (newStatus != ID_STATUS_IDLE) {
 			char** msgptr = GetStatusMsgLoc(newStatus);
 			if (msgptr != NULL)
@@ -762,9 +878,10 @@ void CMsnProto::MSN_SetServerStatus(int newStatus)
 		}
 
 		msnNsThread->sendPacket("CHG", "%s %u:%u %s", szStatusName, myFlags, myFlagsEx, msnObject.pszVal ? msnObject.pszVal : "0");
+		*/
 		db_free(&msnObject);
 	}
-	else msnNsThread->sendPacket("CHG", szStatusName);
+	//else msnNsThread->sendPacket("CHG", szStatusName);
 }
 
 

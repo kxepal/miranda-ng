@@ -205,10 +205,11 @@ void CMsnProto::Lists_Populate(void)
 			db_get_static(hContact, m_szModuleName, "e-mail", szEmail, sizeof(szEmail));
 		if (szEmail[0]) {
 			bool localList = getByte(hContact, "LocalList", 0) != 0;
+			int netId = getWord(hContact, "netId", localList?NETID_MSN:NETID_UNKNOWN);
 			if (localList)
-				Lists_Add(LIST_LL, NETID_MSN, szEmail, hContact);
+				Lists_Add(LIST_LL, netId, szEmail, hContact);
 			else
-				Lists_Add(0, NETID_UNKNOWN, szEmail, hContact);
+				Lists_Add(0, netId, szEmail, hContact);
 		}
 		else CallService(MS_DB_CONTACT_DELETE, hContact, 0);
 		hContact = hNext;
@@ -272,6 +273,7 @@ void CMsnProto::MSN_CleanupLists(void)
 void CMsnProto::MSN_CreateContList(void)
 {
 	bool *used = (bool*)mir_calloc(m_arContacts.getCount()*sizeof(bool));
+	bool bIsSkype = GetMyNetID() == NETID_SKYPE;
 
 	char cxml[8192];
 
@@ -298,11 +300,15 @@ void CMsnProto::MSN_CreateContList(void)
 				if (dom == NULL && lastds == NULL) {
 					if (sz == 0) sz = mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<ml l=\"1\">");
 					if (newdom) {
-						sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<t>");
+						sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), bIsSkype?"<skp>":"<t>");
 						newdom = false;
 					}
-
-					sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<c n=\"%s\" l=\"%d\"/>", C.email, C.list & ~(LIST_RL | LIST_LL));
+					int list = C.list & ~(LIST_RL | LIST_LL);
+					if (bIsSkype) {
+						list = LIST_FL | LIST_AL; /* Seems to be always 3 in Skype... */
+						sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<c n=\"%s\" t=\"%d\"><s l=\"%d\" n=\"PE\"/><s l=\"%d\" n=\"IM\"/><s l=\"%d\" n=\"SKP\"/><s l=\"%d\" n=\"PUB\"/></c>", C.email, C.netId, list, list, list, list);
+					}
+					else sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<c n=\"%s\" l=\"%d\"/>", C.email, list);
 					used[j] = true;
 				}
 				else if (dom != NULL && lastds != NULL && _stricmp(lastds, dom) == 0) {
@@ -319,21 +325,24 @@ void CMsnProto::MSN_CreateContList(void)
 				}
 
 				if (used[j] && sz > 7400) {
-					sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "</%c></ml>", lastds ? 'd' : 't');
-					msnNsThread->sendPacket("ADL", "%d\r\n%s", sz, cxml);
+					sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "</%s></ml>", lastds ? "d" : (bIsSkype?"skp":"t"));
+					msnNsThread->sendPacketPayload("PUT", "MSGR\\CONTACTS", "%s", cxml);
 					sz = 0;
 					newdom = true;
 				}
 			}
 			if (!newdom)
-				sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), lastds ? "</d>" : "</t>");
+				sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), lastds ? "</d>" : (bIsSkype?"</skp>":"</t>"));
 		}
 	}
 
 	if (sz) {
 		sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "</ml>");
-		msnNsThread->sendPacket("ADL", "%d\r\n%s", sz, cxml);
+		msnNsThread->sendPacketPayload("PUT", "MSGR\\CONTACTS", "%s", cxml);
 	}
+
+	if (msnP24Ver > 1)
+		msnNsThread->sendPacketPayload("PUT", "MSGR\\SUBSCRIPTIONS", "<subscribe><presence><buddies><all /></buddies></presence><messaging><im /><conversations /></messaging></subscribe>");
 
 	mir_free(used);
 }
