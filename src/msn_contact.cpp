@@ -234,6 +234,7 @@ bool CMsnProto::MSN_RefreshContactList(void)
 		if (m_iDesiredStatus == ID_STATUS_OFFLINE) return false;
 
 		if (!MSN_ABFind("ABFindContactsPaged", NULL)) return false;
+		MSN_ABRefreshClist();
 
 		if (m_iDesiredStatus == ID_STATUS_OFFLINE) return false;
 

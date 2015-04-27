@@ -110,6 +110,7 @@ struct CMsnProto : public PROTO<CMsnProto>
 	char *authContactToken;
 	char *authStorageToken;
 	char *hotSecretToken, *hotAuthToken;
+	char *authAccessToken, *authUIC, *authCookies;
 	bool bSentBND;
 
 	char *abCacheKey, *sharingCacheKey, *storageCacheKey;
@@ -463,10 +464,13 @@ struct CMsnProto : public PROTO<CMsnProto>
 
 	int       MSN_GetPassportAuth(void);
 	int		  MSN_SkypeAuth(const char *pszNonce, char *pszUIC);
+	int		  MSN_DoOAuth(void);
 	char*	    GenerateLoginBlob(char* challenge);
+	int	      LoginSkypeOAuth(const char *pszAccessToken, char *pszUIC);
 	CMStringA HotmailLogin(const char* url);
 	void	    FreeAuthTokens(void);
 	int	 GetMyNetID(void);
+	const char *GetMyUsername(int netId);
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	MSN avatars support
@@ -512,6 +516,7 @@ struct CMsnProto : public PROTO<CMsnProto>
 	bool MSN_ABAddRemoveContact(const char* szCntId, int netId, bool add, bool allowRecurse = true);
 	unsigned MSN_ABContactAdd(const char* szEmail, const char* szNick, int netId, const char* szInvite, bool search, bool retry = false, bool allowRecurse = true);
 	void MSN_ABUpdateDynamicItem(bool allowRecurse = true);
+	bool MSN_ABRefreshClist(void);
 
 	ezxml_t abSoapHdr(const char* service, const char* scenario, ezxml_t& tbdy, char*& httphdr);
 	char* GetABHost(const char* service, bool isSharing);

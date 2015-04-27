@@ -1218,28 +1218,24 @@ LBL_InvalidCommand:
 		break;
 	case ' TNC':	//********* CNT: Connect, MSNP21+ Authentication
 		{
-			if (GetMyNetID()!=NETID_SKYPE)
-			{
+			if (GetMyNetID()!=NETID_SKYPE) {
 				/* MSN account login */
 
-				if (MSN_GetPassportAuth()) {
+				if (MSN_DoOAuth() || MSN_GetPassportAuth()) {
 					m_iDesiredStatus = ID_STATUS_OFFLINE;
 					return 1;
 				}
 
-				/* FIXME: Get <uic> via oauth2 somehow, otherwise we will fail later at BND */
 				info->sendPacketPayload("ATH", "CON\\USER",
 					"<user><ssl-compact-ticket>%s</ssl-compact-ticket>"
+					"<uic>%s</uic>"
 					"<ssl-site-name>chatservice.live.com</ssl-site-name></user>\r\n", 
-					authStrToken ? ptrA(HtmlEncode(authStrToken)) : "");
-			}
-			else
-			{
+					authStrToken ? ptrA(HtmlEncode(authStrToken)) : "", authUIC);
+			} else {
 				/* Skype username/pass login */
 				ezxml_t xmlcnt = ezxml_parse_str(info->mData, strlen(info->mData));
 				ezxml_t xmlnonce = ezxml_get(xmlcnt, "nonce", -1);
-				if (xmlnonce)
-				{
+				if (xmlnonce) {
 					char szUIC[1024]={0};
 
 					MSN_SkypeAuth(xmlnonce->txt, szUIC);

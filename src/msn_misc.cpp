@@ -493,7 +493,7 @@ int ThreadData::sendMessage(int msgType, const char* email, int netId, const cha
 		"Content-Type: Text/plain; charset=UTF-8\r\n"
 		"Content-Length: %d\r\n\r\n%s",
 		netId, email,
-		proto->GetMyNetID(), proto->MyOptions.szEmail, proto->MyOptions.szMachineGuid,
+		netId == NETID_SKYPE?netId:proto->GetMyNetID(), proto->GetMyUsername(netId), proto->MyOptions.szMachineGuid,
 		msgid,
 		pszNick,
 		strlen(parMsg), parMsg);
@@ -832,12 +832,14 @@ void CMsnProto::MSN_SetServerStatus(int newStatus)
 			"<sep n=\"PD\" epid=\"%s\"><EpName>%s</EpName><ClientType>11</ClientType></sep>"
 			"<s n=\"SKP\"><Mood>%s</Mood><Skypename>%s</Skypename></s>"
 			"<sep n=\"SKP\" epid=\"%s\"><NodeInfo></NodeInfo><Version>24</Version><Seamless>true</Seamless></sep>"
+			"<sep n=\"PUB\" epid=\"%s\"><Capabilities>1</Capabilities></sep>"
 			"</user>",
 			MyOptions.szMachineGuid, msnProductVer,
 			szStatusName,
 			MyOptions.szMachineGuid, myFlags, myFlagsEx,
 			MyOptions.szMachineGuid, szPlace,
-			msgptr?ptrA(HtmlEncode(*msgptr)):"", MyOptions.szEmail,
+			msgptr?ptrA(HtmlEncode(*msgptr)):"", GetMyUsername(NETID_SKYPE),
+			MyOptions.szMachineGuid,
 			MyOptions.szMachineGuid);
 		msnNsThread->sendPacketPayload("PUT", "MSGR\\PRESENCE", 
 			"Routing: 1.0\r\n"

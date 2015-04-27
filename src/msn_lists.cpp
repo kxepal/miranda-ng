@@ -273,7 +273,6 @@ void CMsnProto::MSN_CleanupLists(void)
 void CMsnProto::MSN_CreateContList(void)
 {
 	bool *used = (bool*)mir_calloc(m_arContacts.getCount()*sizeof(bool));
-	bool bIsSkype = GetMyNetID() == NETID_SKYPE;
 
 	char cxml[8192];
 
@@ -300,15 +299,12 @@ void CMsnProto::MSN_CreateContList(void)
 				if (dom == NULL && lastds == NULL) {
 					if (sz == 0) sz = mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<ml l=\"1\">");
 					if (newdom) {
-						sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), bIsSkype?"<skp>":"<t>");
+						sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<skp>");
 						newdom = false;
 					}
 					int list = C.list & ~(LIST_RL | LIST_LL);
-					if (bIsSkype) {
-						list = LIST_FL | LIST_AL; /* Seems to be always 3 in Skype... */
-						sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<c n=\"%s\" t=\"%d\"><s l=\"%d\" n=\"PE\"/><s l=\"%d\" n=\"IM\"/><s l=\"%d\" n=\"SKP\"/><s l=\"%d\" n=\"PUB\"/></c>", C.email, C.netId, list, list, list, list);
-					}
-					else sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<c n=\"%s\" l=\"%d\"/>", C.email, list);
+					list = LIST_FL | LIST_AL; /* Seems to be always 3 in Skype... */
+					sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<c n=\"%s\" t=\"%d\"><s l=\"%d\" n=\"PE\"/><s l=\"%d\" n=\"IM\"/><s l=\"%d\" n=\"SKP\"/><s l=\"%d\" n=\"PUB\"/></c>", C.email, C.netId, list, list, list, list);
 					used[j] = true;
 				}
 				else if (dom != NULL && lastds != NULL && _stricmp(lastds, dom) == 0) {
@@ -325,14 +321,14 @@ void CMsnProto::MSN_CreateContList(void)
 				}
 
 				if (used[j] && sz > 7400) {
-					sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "</%s></ml>", lastds ? "d" : (bIsSkype?"skp":"t"));
+					sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "</%s></ml>", lastds ? "d" : "skp");
 					msnNsThread->sendPacketPayload("PUT", "MSGR\\CONTACTS", "%s", cxml);
 					sz = 0;
 					newdom = true;
 				}
 			}
 			if (!newdom)
-				sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), lastds ? "</d>" : (bIsSkype?"</skp>":"</t>"));
+				sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), lastds ? "</d>" : "</skp>");
 		}
 	}
 
