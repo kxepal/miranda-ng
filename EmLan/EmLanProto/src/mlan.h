@@ -79,7 +79,7 @@ protected:
 	virtual void OnRecvPacket(u_char* mes, int len, in_addr from);
 	virtual void OnInTCPConnection(u_long addr, SOCKET in_socket);
 	virtual void OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParameter);
-private:
+//private:
 	struct TContact
 	{
 		in_addr m_addr;

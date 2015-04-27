@@ -5,78 +5,10 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-PLUGININFOEX pluginInfo={
-	sizeof(PLUGININFOEX),
-	__PLUGIN_NAME,
-	PLUGIN_MAKE_VERSION(__MAJOR_VERSION, __MINOR_VERSION, __RELEASE_NUM, __BUILD_NUM),
-	__DESCRIPTION,
-	__AUTHOR,
-	__AUTHOREMAIL,
-	__COPYRIGHT,
-	__AUTHORWEB,
-	UNICODE_AWARE,
-	// {E08CE7C4-9EEB-4272-B544-0D32E18D90DE}
-	{0xe08ce7c4, 0x9eeb, 0x4272, {0xb5, 0x44, 0xd, 0x32, 0xe1, 0x8d, 0x90, 0xde}}
-};
-
-HINSTANCE g_hInstance = NULL;
-CMLan* g_lan = NULL;
+/*CMLan* g_lan = NULL;
 HANDLE g_heOptions = NULL;
-
-int hLangpack;
 bool g_InitOptions = false;
 
-#ifdef VERBOSE
-std::fstream emlanLog("EmLanLog.txt", std::ios::out|std::ios::app);
-#endif
-
-extern "C" __declspec(dllexport)  PLUGININFOEX* __cdecl MirandaPluginInfoEx(DWORD mirandaVersion)
-{
-	return &pluginInfo;
-}
-
-//////////////////////////////////////////////////////////////////////////
-// Interface information
-
-extern "C" __declspec(dllexport) const MUUID MirandaInterfaces[] = {MIID_PROTOCOL, MIID_LAST};
-
-//////////////////////////////////////////////////////////////////////////
-
-BOOL APIENTRY DllMain(HINSTANCE hInstDLL, DWORD reason, LPVOID)
-{
-	g_hInstance = hInstDLL;
-	if (reason == DLL_PROCESS_ATTACH) {
-		EMLOG("EmLan Started");
-		DisableThreadLibraryCalls( hInstDLL);
-	}
-	else if (reason == DLL_PROCESS_DETACH) {
-		EMLOG("EmLan Stopped");
-	}
-
-	return TRUE;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-static INT_PTR __cdecl EMPGetCaps(WPARAM wParam,LPARAM )
-{
-	switch(wParam) {
-	case PFLAGNUM_1:
-		return PF1_IM|PF1_BASICSEARCH|PF1_ADDSEARCHRES|PF1_PEER2PEER|PF1_INDIVSTATUS|
-		      PF1_URL|PF1_MODEMSG|PF1_FILE|PF1_CANRENAMEFILE|PF1_FILERESUME;
-	case PFLAGNUM_2:		
-		return PF2_ONLINE | PF2_SHORTAWAY | PF2_LONGAWAY | PF2_LIGHTDND | PF2_HEAVYDND | PF2_FREECHAT;
-	case PFLAGNUM_3:
-		return PF2_SHORTAWAY | PF2_LONGAWAY | PF2_LIGHTDND | PF2_HEAVYDND | PF2_FREECHAT;
-	case PFLAG_UNIQUEIDTEXT:
-		return (INT_PTR)Translate("User name or '*'");
-	case PFLAG_UNIQUEIDSETTING:
-		return (INT_PTR)"Nick";
-	case PFLAG_MAXLENOFMESSAGE: //FIXME
-	default:
-		return 0;
-	}
-}
 
 static INT_PTR __cdecl EMPGetName(WPARAM wParam,LPARAM lParam)
 {
@@ -344,9 +276,9 @@ INT_PTR CALLBACK EMPDlgProcMessage(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARA
 		break;
 	}
 	return FALSE;
-}
+}*/
 
-extern "C" int __declspec(dllexport) __cdecl Load()
+/*extern "C" int __declspec(dllexport) __cdecl Load()
 {
 	mir_getLP(&pluginInfo);
 	g_lan = new CMLan();
@@ -381,12 +313,4 @@ extern "C" int __declspec(dllexport) __cdecl Load()
 	g_heOptions = HookEvent(ME_OPT_INITIALISE,EMPCreateOptionsDlg);
 
 	return 0;
-}
-
-extern "C" int __declspec(dllexport) __cdecl Unload()
-{
-	UnhookEvent(g_heOptions);
-
-	delete g_lan;
-	return 0;
-}
+}*/

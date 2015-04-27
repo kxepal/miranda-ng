@@ -15,14 +15,18 @@
 #include <newpluginapi.h>
 #include <m_options.h>
 #include <m_database.h>
+#include <m_protoint.h>
 #include <m_protomod.h>
 #include <m_langpack.h>
+
+struct CEmLanProto;
 
 #include "resource.h"
 #include "Version.h"
 #include "get_time.h"
 #include "lan.h"
 #include "mlan.h"
+#include "emlan_proto.h"
 
 #define PROTONAME "EM_LAN_PROTO"
 
