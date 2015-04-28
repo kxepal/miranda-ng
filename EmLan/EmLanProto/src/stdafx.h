@@ -11,6 +11,8 @@
 #include <windows.h>
 #include <winsock2.h>
 #include <prsht.h>
+#include <commctrl.h>
+#include <malloc.h>
 
 #include <newpluginapi.h>
 #include <m_options.h>
@@ -18,8 +20,12 @@
 #include <m_protoint.h>
 #include <m_protomod.h>
 #include <m_langpack.h>
+#include <m_gui.h>
+#include <m_clist.h>
 
 struct CEmLanProto;
+
+typedef CProtoDlgBase<CEmLanProto> CEmLanDlgBase;
 
 #include "resource.h"
 #include "Version.h"
@@ -27,6 +33,10 @@ struct CEmLanProto;
 #include "lan.h"
 #include "mlan.h"
 #include "emlan_proto.h"
+#include "emlan_options.h"
+
+
+#define MODULE "EmLan"
 
 #define PROTONAME "EM_LAN_PROTO"
 

@@ -437,12 +437,12 @@ void CMLan::RecvMessageUrl(CCSDATA* ccs)
 	dbei.szModule = PROTONAME;
 	dbei.timestamp = pre->timestamp;
 	dbei.flags = pre->flags&PREF_CREATEREAD?DBEF_READ:0;
-	dbei.cbBlob = mir_tstrlen(pre->szMessage)+1;
+	/*dbei.cbBlob = mir_tstrlen(pre->szMessage)+1;
 	if (!mir_strcmp(ccs->szProtoService, PSR_URL))
 	{
 		dbei.cbBlob += 2+mir_tstrlen(pre->szMessage+dbei.cbBlob+1);
 	}
-	dbei.pBlob = (PBYTE)pre->szMessage;
+	dbei.pBlob = (PBYTE)pre->szMessage;*/
 
 	db_unset(ccs->hContact,"CList","Hidden");
 
@@ -459,7 +459,7 @@ INT_PTR CMLan::AddToContactList(u_int flags, EMPSEARCHRESULT* psr)
 
 	bool TempAdd = flags&PALF_TEMPORARY;
 
-	MCONTACT contact = FindContact(addr, psr->hdr.nick, true, !TempAdd, !TempAdd, psr->stat);
+	MCONTACT contact = NULL;// FindContact(addr, psr->hdr.nick, true, !TempAdd, !TempAdd, psr->stat);
 	if (contact != NULL) {
 		db_set_w(contact,PROTONAME,"Status", psr->stat );
 		db_set_w(contact,PROTONAME,"RemoteVersion", psr->ver );
@@ -468,22 +468,22 @@ INT_PTR CMLan::AddToContactList(u_int flags, EMPSEARCHRESULT* psr)
 	return (INT_PTR)contact;
 }
 
-int CMLan::SendMessageUrl(CCSDATA* ccs, bool isUrl)
+int CMLan::SendMessageUrl(MCONTACT hContact, int flags, const char *msg, bool isUrl)
 {
 	DWORD th_id;
 	int cid = GetRandomProcId();
-	int len;
+	/*int len;
 	if (isUrl)
 	{
 		len = mir_tstrlen((char*)ccs->lParam);
 		((char*)ccs->lParam)[len] = 1;
-	}
-	TDataHolder* hold = new TDataHolder(ccs, cid, isUrl?LEXT_SENDURL:LEXT_SENDMESSAGE, this);
-	if (isUrl)
+	}*/
+	TDataHolder* hold = new TDataHolder(hContact, msg, cid, isUrl ? LEXT_SENDURL : LEXT_SENDMESSAGE, this);
+	/*if (isUrl)
 	{
 		((char*)ccs->lParam)[len] = 0;
 		hold->msg[len] = 0;
-	}
+	}*/
 	CloseHandle(CreateThread(NULL,0,LaunchExt,(LPVOID)hold ,0,&th_id));
 	return cid;
 }
@@ -544,7 +544,7 @@ void CMLan::SearchExt(TDataHolder* hold)
 	{
 		if (strcmp(hold->msg, cont->m_nick)==0 || strcmp(hold->msg, "*")==0)
 		{
-			char buf[MAX_HOSTNAME_LEN];
+			/*char buf[MAX_HOSTNAME_LEN];
 			mir_tstrcpy(buf, cont->m_nick);
 			int len = mir_tstrlen(buf);
 			buf[len] = '@';
@@ -555,7 +555,7 @@ void CMLan::SearchExt(TDataHolder* hold)
 			psr.hdr.email=buf;
 			psr.ipaddr = cont->m_addr.S_un.S_addr;
 			psr.stat = cont->m_status;
-			psr.ver = cont->m_ver;
+			psr.ver = cont->m_ver;*/
 
 			ProtoBroadcastAck(PROTONAME, NULL, ACKTYPE_SEARCH, ACKRESULT_DATA, (HANDLE)hold->id, (LPARAM)&psr);
 		}
@@ -662,7 +662,7 @@ u_char* CMLan::CreatePacket(TPacket& pak, int* pBufLen)
 	int nameLen;
 	if (pak.strName)
 	{
-		nameLen = mir_tstrlen(pak.strName);
+		//nameLen = mir_tstrlen(pak.strName);
 		len += 1+1+nameLen+1;
 	}
 
@@ -672,9 +672,9 @@ u_char* CMLan::CreatePacket(TPacket& pak, int* pBufLen)
 	int mesLen = 0;
 	if (pak.strMessage)
 	{
-		mesLen = mir_tstrlen(pak.strMessage);
-		if (pak.flIsUrl)
-			mesLen += 1+mir_tstrlen(pak.strMessage+mesLen+1);
+		//mesLen = mir_tstrlen(pak.strMessage);
+		//if (pak.flIsUrl)
+			//mesLen += 1+mir_tstrlen(pak.strMessage+mesLen+1);
 		len += 3+1+4+mesLen+1;
 	}
 
@@ -687,7 +687,7 @@ u_char* CMLan::CreatePacket(TPacket& pak, int* pBufLen)
 	int awayLen = 0;
 	if (pak.strAwayMessage)
 	{
-		awayLen = mir_tstrlen(pak.strAwayMessage);
+		//awayLen = mir_tstrlen(pak.strAwayMessage);
 		len += 3+1+4+awayLen+1;
 	}
 
@@ -850,7 +850,7 @@ void CMLan::LoadSettings()
 	m_UseHostName = db_get_b(NULL, PROTONAME, "UseHostName", 1) != 0;
 	if (m_UseHostName) {
 		gethostname(m_name, MAX_HOSTNAME_LEN);
-		CharLower(m_name);
+		//CharLower(m_name);
 	}
 	else {
 		DBVARIANT dbv;
@@ -863,9 +863,9 @@ void CMLan::LoadSettings()
 		}
 		if (!dbv.pszVal[0])
 			dbv.pszVal = "EmLan_User";
-		mir_tstrcpy(m_name, dbv.pszVal);
+		//mir_tstrcpy(m_name, dbv.pszVal);
 	}
-	m_nameLen = mir_tstrlen(m_name);
+	//m_nameLen = mir_tstrlen(m_name);
 
 	if (GetStatus()!=LM_LISTEN)
 	{
@@ -1193,7 +1193,7 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 	}
 
 	// Getting current directory
-	char path[MAX_PATH];
+	/*char path[MAX_PATH];
 	char* pathpart;
 	GetFullPathName(conn->m_szDir, MAX_PATH, path, &pathpart);
 	if (!SetCurrentDirectory(path))
@@ -1208,7 +1208,7 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 			delete conn;
 			return;
 		}
-	}
+	}*/
 
 	//Starting from next file
 	ProtoBroadcastAck(PROTONAME, conn->m_hContact, ACKTYPE_FILE, ACKRESULT_NEXTFILE, (HANDLE)conn->m_cid, 0);
@@ -1295,7 +1295,7 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 		conn->Unlock();
 
 		EMLOG("Creating file");
-		HANDLE hFile = CreateFile(filename, GENERIC_WRITE, FILE_SHARE_READ, NULL, mode_open, FILE_ATTRIBUTE_NORMAL, NULL);
+		HANDLE hFile = NULL;// CreateFile(filename, GENERIC_WRITE, FILE_SHARE_READ, NULL, mode_open, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (hFile==INVALID_HANDLE_VALUE)
 		{
 			EMLOG("Can't create file");
@@ -1413,7 +1413,7 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 	{
 		// TODO: FIX IT !
 		EMLOG("Opening file");
-		HANDLE hFile = CreateFile(*pf, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+		HANDLE hFile = NULL;// CreateFile(*pf, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 		if (hFile==INVALID_HANDLE_VALUE)
 		{
 			EMLOG("Can't open file for reading");
@@ -1426,7 +1426,7 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 		CloseHandle(hFile);
 
 		char* filepart;
-		GetFullPathName(*pf, MAX_PATH, (char*)name, &filepart);
+		//GetFullPathName(*pf, MAX_PATH, (char*)name, &filepart);
 		delete[] *pf;
 		*pf = _strdup(name);
 		strcpy((char*)buf+len, filepart);
@@ -1440,7 +1440,7 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 	*((int*)(buf+1)) = size;
 	*((int*)(buf+1+4)) = filecount;
 
-	GetCurrentDirectory(MAX_PATH, name);
+	//GetCurrentDirectory(MAX_PATH, name);
 	conn->m_szDir = _strdup(name);
 
 	PROTOFILETRANSFERSTATUS fts;
@@ -1476,7 +1476,7 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 	for (int fileNo=0; fileNo<filecount; fileNo++)
 	{
 		EMLOG("Opening file for reading (once more)");
-		HANDLE hFile = CreateFile(conn->m_szFiles[fileNo] , GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		HANDLE hFile = NULL;//CreateFile(conn->m_szFiles[fileNo] , GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (hFile==INVALID_HANDLE_VALUE)
 		{
 			EMLOG("Failed");
@@ -1718,7 +1718,7 @@ int CMLan::FileResume(int cid, PROTOFILERESUME* pfr)
 	case FILERESUME_RENAME:
 		conn->m_state = TFileConnection::FCS_RENAME;
 		delete[] conn->m_szRenamedFile;
-		conn->m_szRenamedFile = _strdup(pfr->szFilename);
+		//conn->m_szRenamedFile = _strdup(pfr->szFilename);
 		break;
 	case FILERESUME_SKIP:
 		conn->m_state = TFileConnection::FCS_SKIP;

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+int hLangpack;
 HINSTANCE g_hInstance = NULL;
 
 PLUGININFOEX pluginInfo =

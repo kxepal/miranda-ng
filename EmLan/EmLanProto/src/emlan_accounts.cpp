@@ -49,8 +49,8 @@ int CEmLanProto::UninitAccount(CEmLanProto *proto)
 //
 //	return 0;
 //}
-//
-//INT_PTR CToxProto::OnAccountManagerInit(WPARAM, LPARAM lParam)
-//{
-//	return (INT_PTR)(CToxOptionsMain::CreateAccountManagerPage(this, (HWND)lParam))->GetHwnd();
-//}
+
+INT_PTR CEmLanProto::OnAccountManagerInit(WPARAM, LPARAM lParam)
+{
+	return (INT_PTR)(CEmLanOptionsMain::CreateAccountManagerPage(this, (HWND)lParam))->GetHwnd();
+}

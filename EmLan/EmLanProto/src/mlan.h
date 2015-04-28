@@ -34,6 +34,10 @@ public:
 	char* const msg;
 	CMLan* lan;
 
+	explicit TDataHolder(MCONTACT hContact, const char* str, unsigned long _id, long _op, CMLan* _lan) :
+		msg(_strdup(str)), hContact(hContact), id(_id), op(_op), lan(_lan)
+	{}
+
 	explicit TDataHolder(const CCSDATA* cc,unsigned long _id, long _op, CMLan* _lan):
 	msg(_strdup((char*)cc->lParam)),hContact(cc->hContact),id(_id),op(_op),lan(_lan)
 	{}
@@ -53,7 +57,7 @@ public:
 	void SetMirandaStatus(u_int status);
 	void SetAllOffline();
 	void RecvMessageUrl(CCSDATA* ccs);
-	int SendMessageUrl(CCSDATA* ccs, bool isUrl);
+	int SendMessageUrl(MCONTACT hContact, int flags, const char *msg, bool isUrl);
 	int GetAwayMsg(CCSDATA* ccs);
 	int RecvAwayMsg(CCSDATA* ccs);
 	int SetAwayMsg(u_int status, char* msg);

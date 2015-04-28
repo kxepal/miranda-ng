@@ -3,6 +3,7 @@
 CEmLanProto::CEmLanProto(const char* protoName, const TCHAR* userName) :
 	PROTO<CEmLanProto>(protoName, userName)
 {
+	CreateProtoService(PS_CREATEACCMGRUI, &CEmLanProto::OnAccountManagerInit);
 }
 
 CEmLanProto::~CEmLanProto()
@@ -42,7 +43,10 @@ int CEmLanProto::FileResume(HANDLE hTransfer, int* action, const PROTOCHAR** tsz
 
 int CEmLanProto::RecvMsg(MCONTACT hContact, PROTORECVEVENT *pre) { return 0; }
 
-int CEmLanProto::SendMsg(MCONTACT hContact, int flags, const char *msg) { return 0; }
+int CEmLanProto::SendMsg(MCONTACT hContact, int flags, const char *msg)
+{
+	return SendMessageUrl(hContact, flags, msg, false);
+}
 
 int CEmLanProto::SetStatus(int iNewStatus)
 {

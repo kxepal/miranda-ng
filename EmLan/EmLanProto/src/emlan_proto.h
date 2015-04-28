@@ -22,20 +22,20 @@ public:
 
 	virtual	DWORD_PTR __cdecl GetCaps(int type, MCONTACT hContact = NULL);
 
-	virtual	HWND      __cdecl SearchAdvanced(HWND owner);
-	virtual	HWND      __cdecl CreateExtendedSearchUI(HWND owner);
+	//virtual	HWND      __cdecl SearchAdvanced(HWND owner);
+	//virtual	HWND      __cdecl CreateExtendedSearchUI(HWND owner);
 
 	virtual	int       __cdecl RecvMsg(MCONTACT hContact, PROTORECVEVENT*);
 	virtual	int       __cdecl SendMsg(MCONTACT hContact, int flags, const char* msg);
 
-	virtual	HANDLE    __cdecl SendFile(MCONTACT hContact, const PROTOCHAR*, PROTOCHAR **ppszFiles);
+	//virtual	HANDLE    __cdecl SendFile(MCONTACT hContact, const PROTOCHAR*, PROTOCHAR **ppszFiles);
 
 	virtual	int       __cdecl SetStatus(int iNewStatus);
 
-	virtual	HANDLE    __cdecl GetAwayMsg(MCONTACT hContact);
-	virtual	int       __cdecl SetAwayMsg(int iStatus, const PROTOCHAR* msg);
+	//virtual	HANDLE    __cdecl GetAwayMsg(MCONTACT hContact);
+	//virtual	int       __cdecl SetAwayMsg(int iStatus, const PROTOCHAR* msg);
 
-	virtual	int       __cdecl UserIsTyping(MCONTACT hContact, int type);
+	//virtual	int       __cdecl UserIsTyping(MCONTACT hContact, int type);
 
 	virtual	int       __cdecl OnEvent(PROTOEVENTTYPE iEventType, WPARAM wParam, LPARAM lParam);
 
@@ -47,6 +47,8 @@ private:
 	// accounts
 	static LIST<CEmLanProto> Accounts;
 	static int CompareAccounts(const CEmLanProto *p1, const CEmLanProto *p2);
+
+	INT_PTR __cdecl OnAccountManagerInit(WPARAM, LPARAM lParam);
 };
 
 #endif //_EMLAN_PROTO_H_

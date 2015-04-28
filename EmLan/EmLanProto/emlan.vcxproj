@@ -18,6 +18,10 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\icon_off.ico" />
+    <Image Include="res\icon_onl.ico" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>EmLanProto</ProjectName>
     <ProjectGuid>{2115FEBC-1EC4-4F95-A058-A523ED5295A4}</ProjectGuid>
@@ -27,7 +31,7 @@
   </ImportGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>Ws2_32;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
 </Project>
