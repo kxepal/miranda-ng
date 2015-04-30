@@ -874,6 +874,7 @@ bool CMsnProto::MSN_ABRefreshClist(void)
 	NETLIBHTTPREQUEST nlhr = { 0 };
 	NETLIBHTTPREQUEST *nlhrReply;
 	NETLIBHTTPHEADER headers[2];
+	bool bRet = false;
 
 	if (!authCookies) return false;
 
@@ -900,6 +901,7 @@ bool CMsnProto::MSN_ABRefreshClist(void)
 			ezxml_t xmlm = ezxml_parse_str(nlhrReply->pData, strlen(nlhrReply->pData));
 			
 			if (xmlm) {
+				bRet = true;
 				ezxml_t abinf = ezxml_child(xmlm, "ab");
 
 				for (ezxml_t pers = ezxml_get(abinf, "persons", 0, "Person", -1); pers != NULL; pers = ezxml_next(pers)) {
@@ -955,6 +957,7 @@ bool CMsnProto::MSN_ABRefreshClist(void)
 		}
 		CallService(MS_NETLIB_FREEHTTPREQUESTSTRUCT, 0, (LPARAM)nlhrReply);
 	} else hHttpsConnection = NULL;
+	return bRet;
 }
 
 

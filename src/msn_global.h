@@ -489,6 +489,7 @@ struct ThreadData
    TInfoType     mType;            // thread type
    MsnThreadFunc mFunc;            // thread entry point
    char          mServer[80];      // server name
+   char			 mState[128];	   // state on XFR
 
    HANDLE        s;               // NetLib connection for the thread
    HANDLE        mIncomingBoundPort; // Netlib listen for the thread

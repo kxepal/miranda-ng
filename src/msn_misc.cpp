@@ -832,7 +832,6 @@ void CMsnProto::MSN_SetServerStatus(int newStatus)
 			"<sep n=\"PD\" epid=\"%s\"><EpName>%s</EpName><ClientType>11</ClientType></sep>"
 			"<s n=\"SKP\"><Mood>%s</Mood><Skypename>%s</Skypename></s>"
 			"<sep n=\"SKP\" epid=\"%s\"><NodeInfo></NodeInfo><Version>24</Version><Seamless>true</Seamless></sep>"
-			"<sep n=\"PUB\" epid=\"%s\"><Capabilities>1</Capabilities></sep>"
 			"</user>",
 			MyOptions.szMachineGuid, msnProductVer,
 			szStatusName,

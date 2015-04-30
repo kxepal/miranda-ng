@@ -151,7 +151,8 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 	debugLogA("Connected with handle=%08X", info->s);
 
 	if (info->mType == SERVER_NOTIFICATION) 
-		info->sendPacketPayload("CNT", "CON", "<connect><ver>2</ver><agent><os>winnt</os><osVer>5.2</osVer><proc>x86</proc><lcid>en-us</lcid></agent></connect>\r\n");
+		info->sendPacketPayload("CNT", "CON", "<connect>%s%s%s<ver>2</ver><agent><os>winnt</os><osVer>5.2</osVer><proc>x86</proc><lcid>en-us</lcid></agent></connect>\r\n",
+		*info->mState?"<xfr><state>":"", *info->mState?info->mState:"", *info->mState?"</state></xfr>":"");
 	else if (info->mType == SERVER_SWITCHBOARD) {
 		info->sendPacket(info->mCaller ? "USR" : "ANS", "%s;%s %s", MyOptions.szEmail, MyOptions.szMachineGuid, info->mCookie);
 	}

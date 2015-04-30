@@ -110,7 +110,9 @@ struct CMsnProto : public PROTO<CMsnProto>
 	char *authContactToken;
 	char *authStorageToken;
 	char *hotSecretToken, *hotAuthToken;
-	char *authAccessToken, *authUIC, *authCookies;
+	char *authUser, *authUIC, *authCookies, *authSSLToken;
+	int  authMethod;
+	time_t authTokenExpiretime;
 	bool bSentBND;
 
 	char *abCacheKey, *sharingCacheKey, *storageCacheKey;
@@ -465,8 +467,12 @@ struct CMsnProto : public PROTO<CMsnProto>
 	int       MSN_GetPassportAuth(void);
 	int		  MSN_SkypeAuth(const char *pszNonce, char *pszUIC);
 	int		  MSN_DoOAuth(void);
-	char*	    GenerateLoginBlob(char* challenge);
-	int	      LoginSkypeOAuth(const char *pszAccessToken, char *pszUIC);
+	char*	  GenerateLoginBlob(char* challenge);
+	void      LoadAuthTokensDB(void);
+	void      SaveAuthTokensDB(void);
+	int		  LoginSkypeOAuth(const char *pRefreshToken);
+	bool      RefreshOAuth(const char *pszRefreshToken, const char *pszService, char *pszAccessToken, char *pszOutRefreshToken=NULL, time_t *ptExpires=NULL);
+	int		  MSN_AuthOAuth(void);
 	CMStringA HotmailLogin(const char* url);
 	void	    FreeAuthTokens(void);
 	int	 GetMyNetID(void);

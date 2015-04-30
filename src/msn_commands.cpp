@@ -1220,17 +1220,31 @@ LBL_InvalidCommand:
 		{
 			if (GetMyNetID()!=NETID_SKYPE) {
 				/* MSN account login */
+				char *pszSite = "";
 
-				if (MSN_DoOAuth() || MSN_GetPassportAuth()) {
+				/* Obsolete, though still working
+				if (MSN_GetPassportAuth()) {
+					m_iDesiredStatus = ID_STATUS_OFFLINE;
+					return 1;
+				}
+				*/
+
+				switch (MSN_AuthOAuth())
+				{
+				case 1: break;
+				case 2: pszSite = "<ssl-site-name>chatservice.live.com</ssl-site-name>"; break;
+				default:
 					m_iDesiredStatus = ID_STATUS_OFFLINE;
 					return 1;
 				}
 
 				info->sendPacketPayload("ATH", "CON\\USER",
-					"<user><ssl-compact-ticket>%s</ssl-compact-ticket>"
-					"<uic>%s</uic>"
-					"<ssl-site-name>chatservice.live.com</ssl-site-name></user>\r\n", 
-					authStrToken ? ptrA(HtmlEncode(authStrToken)) : "", authUIC);
+					"<user><ssl-compact-ticket>t=%s</ssl-compact-ticket>"
+					"<uic>%s</uic>%s"
+					"<id>%s</id><alias>%s</alias></user>\r\n", 
+					authSSLToken ? ptrA(HtmlEncode(authSSLToken)) : "", 
+					authUIC, pszSite, 
+					GetMyUsername(NETID_MSN), GetMyUsername(NETID_SKYPE));
 			} else {
 				/* Skype username/pass login */
 				ezxml_t xmlcnt = ezxml_parse_str(info->mData, strlen(info->mData));
@@ -1292,7 +1306,7 @@ LBL_InvalidCommand:
 			bool isMe = false;
 			char* szEmail, *szNet;
 			parseWLID(NEWSTR_ALLOCA(data.wlid), &szNet, &szEmail, NULL);
-			if (!stricmp(szEmail, MyOptions.szEmail) && atoi(szNet) == GetMyNetID()) {
+			if (!stricmp(szEmail, GetMyUsername(atoi(szNet)))) {
 				isMe = true;
 				int newStatus = MSNStatusToMiranda(params);
 				if (newStatus != m_iStatus && newStatus != ID_STATUS_IDLE) {
@@ -1552,7 +1566,7 @@ remove:
 			const char *pszFrom =  tHeader["From"];
 			for (i=0; i<2; i++) msgBody = tHeader.readFromBuffer(msgBody);
 
-			if (pszTo && pszFrom && atoi(pszToNet) == GetMyNetID() && !strcmp(pszTo, MyOptions.szEmail))
+			if (pszTo && pszFrom && !strcmp(pszTo, GetMyUsername(atoi(pszToNet))))
 			{
 				// It's for me, yay!
 				ezxml_t xmli;
@@ -1856,6 +1870,7 @@ remove:
 			{
 				ThreadData* newThread = new ThreadData;
 				strcpy(newThread->mServer, xmltgt->txt);
+				strcpy(newThread->mState, ezxml_txt(ezxml_get(xmlxfr, "state", -1)));
 				newThread->mType = SERVER_NOTIFICATION;
 				newThread->mTrid = info->mTrid;
 				newThread->mIsMainThread = true;

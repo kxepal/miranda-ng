@@ -245,7 +245,7 @@ bool CMsnProto::MSN_RefreshContactList(void)
 		msnLoggedIn = true;
 
 		MSN_CreateContList();
-		MSN_StoreGetProfile();
+		//MSN_StoreGetProfile();
 	}
 	else
 	{
