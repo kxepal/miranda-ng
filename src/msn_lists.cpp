@@ -375,7 +375,8 @@ static void SetContactIcons(MCONTACT hItem, HWND hwndList, CMsnProto* proto)
 	}
 
 	char szEmail[MSN_MAX_EMAIL_LEN];
-	if (db_get_static(hItem, proto->m_szModuleName, "e-mail", szEmail, sizeof(szEmail))) {
+	if (db_get_static(hItem, proto->m_szModuleName, "wlid", szEmail, sizeof(szEmail)) && 
+		db_get_static(hItem, proto->m_szModuleName, "e-mail", szEmail, sizeof(szEmail))) {
 		SendMessage(hwndList, CLM_DELETEITEM, (WPARAM)hItem, 0);
 		return;
 	}
@@ -441,7 +442,8 @@ static void SaveSettings(MCONTACT hItem, HWND hwndList, CMsnProto* proto)
 			char szEmail[MSN_MAX_EMAIL_LEN];
 
 			if (IsHContactContact(hItem)) {
-				if (db_get_static(hItem, proto->m_szModuleName, "e-mail", szEmail, sizeof(szEmail)))
+				if (db_get_static(hItem, proto->m_szModuleName, "wlid", szEmail, sizeof(szEmail)) &&
+					db_get_static(hItem, proto->m_szModuleName, "e-mail", szEmail, sizeof(szEmail)))
 					continue;
 			}
 			else if (IsHContactInfo(hItem)) {

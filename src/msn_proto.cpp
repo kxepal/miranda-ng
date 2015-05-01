@@ -281,12 +281,13 @@ int __cdecl CMsnProto::AuthRequest(MCONTACT hContact, const TCHAR* szMessage)
 {
 	if (msnLoggedIn) {
 		char email[MSN_MAX_EMAIL_LEN];
-		if (db_get_static(hContact, m_szModuleName, "e-mail", email, sizeof(email)))
+		if (db_get_static(hContact, m_szModuleName, "wlid", email, sizeof(email)) &&
+			db_get_static(hContact, m_szModuleName, "e-mail", email, sizeof(email)))
 			return 1;
 
 		char* szMsg = mir_utf8encodeT(szMessage);
 
-		int netId = strncmp(email, "tel:", 4) == 0 ? NETID_MOB : NETID_MSN;
+		int netId = strncmp(email, "tel:", 4) == 0 ? NETID_MOB : (strncmp(email, "live:", 5) == 0 ? NETID_SKYPE : NETID_MSN);
 		if (MSN_AddUser(hContact, email, netId, LIST_FL, szMsg)) {
 			MSN_AddUser(hContact, email, netId, LIST_PL + LIST_REMOVE);
 			MSN_AddUser(hContact, email, netId, LIST_BL + LIST_REMOVE);
@@ -654,7 +655,7 @@ DWORD_PTR __cdecl CMsnProto::GetCaps(int type, MCONTACT)
 		return (UINT_PTR)Translate("Live ID");
 
 	case PFLAG_UNIQUEIDSETTING:
-		return (UINT_PTR)"e-mail";
+		return (UINT_PTR)"wlid";
 
 	case PFLAG_MAXLENOFMESSAGE:
 		return 1202;
@@ -669,7 +670,8 @@ DWORD_PTR __cdecl CMsnProto::GetCaps(int type, MCONTACT)
 int __cdecl CMsnProto::RecvMsg(MCONTACT hContact, PROTORECVEVENT* pre)
 {
 	char tEmail[MSN_MAX_EMAIL_LEN];
-	db_get_static(hContact, m_szModuleName, "e-mail", tEmail, sizeof(tEmail));
+	if (db_get_static(hContact, m_szModuleName, "wlid", tEmail, sizeof(tEmail)))
+	    db_get_static(hContact, m_szModuleName, "e-mail", tEmail, sizeof(tEmail));
 
 	if (Lists_IsInList(LIST_FL, tEmail))
 		db_unset(hContact, "CList", "Hidden");

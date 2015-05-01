@@ -1313,7 +1313,8 @@ bool CMsnProto::MSN_IsMeByContact(MCONTACT hContact, char* szEmail)
 	char *emailPtr = szEmail ? szEmail : tEmail;
 
 	*emailPtr = 0;
-	if (db_get_static(hContact, m_szModuleName, "e-mail", emailPtr, sizeof(tEmail)))
+	if (db_get_static(hContact, m_szModuleName, "wlid", emailPtr, sizeof(tEmail)) &&
+		db_get_static(hContact, m_szModuleName, "e-mail", emailPtr, sizeof(tEmail)))
 		return false;
 
 	return _stricmp(emailPtr, MyOptions.szEmail) == 0;
