@@ -954,6 +954,7 @@ int __cdecl CMsnProto::UserIsTyping(MCONTACT hContact, int type)
 	bool typing = type == PROTOTYPE_SELFTYPING_ON;
 
 	int netId = Lists_GetNetId(tEmail);
+	/*
 	switch (netId) {
 	case NETID_UNKNOWN:
 	case NETID_MSN:
@@ -977,6 +978,8 @@ int __cdecl CMsnProto::UserIsTyping(MCONTACT hContact, int type)
 	default:
 		break;
 	}
+	*/
+	MSN_SendTyping(msnNsThread, tEmail, netId, typing);
 
 	return 0;
 }

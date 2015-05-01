@@ -197,7 +197,7 @@ struct CMsnProto : public PROTO<CMsnProto>
 	void        MSN_SendStatusMessage(const char* msg);
 	void        MSN_SetServerStatus(int newStatus);
 	void        MSN_StartStopTyping(ThreadData* info, bool start);
-	void        MSN_SendTyping(ThreadData* info, const char* email, int netId );
+	void        MSN_SendTyping(ThreadData* info, const char* email, int netId, bool bTyping );
 
 	void        MSN_InitSB(ThreadData* info, const char* szEmail);
 	void        MSN_ReceiveMessage(ThreadData* info, char* cmdString, char* params);

@@ -417,13 +417,10 @@ void CMsnProto::MSN_GoOffline(void)
 
 int ThreadData::sendMessage(int msgType, const char* email, int netId, const char* parMsg, int parFlags)
 {
-	/*
-	char buf[2048];
-	int off;
-
-	off = mir_snprintf(buf, SIZEOF(buf), "MIME-Version: 1.0\r\n");
+	CMStringA buf;
 
 	if ((parFlags & MSG_DISABLE_HDR) == 0) {
+		/*
 		char  tFontName[100], tFontStyle[3];
 		DWORD tFontColor;
 
@@ -460,45 +457,46 @@ int ThreadData::sendMessage(int msgType, const char* email, int netId, const cha
 		if (parFlags & MSG_OFFLINE)
 			off += mir_snprintf((buf + off), (SIZEOF(buf) - off), "Dest-Agent: client\r\n");
 
-		off += mir_snprintf((buf + off), (SIZEOF(buf) - off), "Content-Type: text/plain; charset=UTF-8\r\n");
-		off += mir_snprintf((buf + off), (SIZEOF(buf) - off), "X-MMS-IM-Format: FN=%s; EF=%s; CO=%x; CS=0; PF=31%s\r\n\r\n",
+		buf.AppendFormat("X-MMS-IM-Format: FN=%s; EF=%s; CO=%x; CS=0; PF=31%s\r\n\r\n",
 			tFontName, tFontStyle, tFontColor, (parFlags & MSG_RTL) ? ";RL=1" : "");
-	}
-	*/
+		*/
+		char *pszNick=proto->MyOptions.szEmail;
+		DBVARIANT dbv;
+		time_t cur_time;
 
-	char *pszNick=proto->MyOptions.szEmail;
-	DBVARIANT dbv;
-	int seq;
-	time_t cur_time;
+		/* FIXME: Use a real message ID and save it, not just this random UUID */
+		unsigned __int64 msgid;
+		time(&cur_time);
+		msgid = ((unsigned __int64)cur_time<<32)|GetTickCount();
 
-	/* FIXME: Use a real message ID and save it, not just this random UUID */
-	unsigned __int64 msgid;
-	time(&cur_time);
-	msgid = ((unsigned __int64)cur_time<<32)|GetTickCount();
+		if (!proto->getString("Nick", &dbv))
+			pszNick = dbv.pszVal;
 
-	// TODO: Handle msgType!
-
-	if (!proto->getString("Nick", &dbv))
-		pszNick = dbv.pszVal;
-
-	seq = sendPacketPayload("SDG", "MSGR", 
-		"Routing: 1.0\r\n"
-		"To: %d:%s\r\n"
-		"From: %d:%s;epid=%s\r\n\r\n"
-		"Reliability: 1.0\r\n\r\n"
+		buf.AppendFormat(
 		"Messaging: 2.0\r\n"
 		"Client-Message-ID: %llu\r\n"
 		"Message-Type: Text\r\n"
 		"IM-Display-Name: %s\r\n"
 		"Content-Type: Text/plain; charset=UTF-8\r\n"
 		"Content-Length: %d\r\n\r\n%s",
-		netId, email,
-		netId == NETID_SKYPE?netId:proto->GetMyNetID(), proto->GetMyUsername(netId), proto->MyOptions.szMachineGuid,
 		msgid,
 		pszNick,
 		strlen(parMsg), parMsg);
 
-	if (pszNick!=proto->MyOptions.szEmail) db_free(&dbv);
+		if (pszNick!=proto->MyOptions.szEmail) db_free(&dbv);
+		parMsg = buf;
+	}
+
+	// TODO: Handle msgType!
+
+	int seq = sendPacketPayload("SDG", "MSGR", 
+		"Routing: 1.0\r\n"
+		"To: %d:%s\r\n"
+		"From: %d:%s;epid=%s\r\n\r\n"
+		"Reliability: 1.0\r\n\r\n%s",
+		netId, email,
+		netId == NETID_SKYPE?netId:proto->GetMyNetID(), proto->GetMyUsername(netId), proto->MyOptions.szMachineGuid,
+		parMsg);
 
 	/*
 	if (netId == NETID_YAHOO || netId == NETID_MOB || (parFlags & MSG_OFFLINE))
@@ -558,17 +556,20 @@ int ThreadData::sendRawMessage(int msgType, const char* data, int datLen)
 
 // Typing notifications support
 
-void CMsnProto::MSN_SendTyping(ThreadData* info, const char* email, int netId)
+void CMsnProto::MSN_SendTyping(ThreadData* info, const char* email, int netId, bool bTyping)
 {
 	char tCommand[1024];
 	mir_snprintf(tCommand, SIZEOF(tCommand),
-		"Content-Type: text/x-msmsgscontrol\r\n"
-		"TypingUser: %s\r\n\r\n\r\n", MyOptions.szEmail);
+		"Messaging: 2.0\r\n"
+		"Message-Type: %s\r\n"
+		"Content-Type: Application/Message\r\n"
+		"Content-Length: 0\r\n",
+		bTyping?"Control/Typing":"Control/ClearTyping");
 
 	info->sendMessage(netId == NETID_MSN ? 'U' : '2', email, netId, tCommand, MSG_DISABLE_HDR);
 }
 
-
+/*
 static ThreadData* FindThreadTimer(UINT timerId)
 {
 	ThreadData* res = NULL;
@@ -586,10 +587,11 @@ static VOID CALLBACK TypingTimerProc(HWND, UINT, UINT_PTR idEvent, DWORD)
 	else
 		KillTimer(NULL, idEvent);
 }
-
+*/
 
 void CMsnProto::MSN_StartStopTyping(ThreadData* info, bool start)
 {
+	/* FIXME: typing notifications in groupchats 
 	if (start && info->mTimerId == 0) {
 		info->mTimerId = SetTimer(NULL, 0, 5000, TypingTimerProc);
 		MSN_SendTyping(info, NULL, 1);
@@ -598,6 +600,7 @@ void CMsnProto::MSN_StartStopTyping(ThreadData* info, bool start)
 		KillTimer(NULL, info->mTimerId);
 		info->mTimerId = 0;
 	}
+	*/
 }
 
 
