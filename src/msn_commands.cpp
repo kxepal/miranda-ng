@@ -422,70 +422,76 @@ void CMsnProto::MSN_ReceiveMessage(ThreadData* info, char* cmdString, char* para
 		(!_strnicmp(tContentType, "application/user+xml", 10) && tHeader["Message-Type"] && !strcmp(tHeader["Message-Type"], "RichText"))) {
 		MCONTACT hContact = MSN_HContactFromEmail(email, nick, true, true);
 
-		const char* p = tHeader["X-MMS-IM-Format"];
-		bool isRtl = p != NULL && strstr(p, "RL=1") != NULL;
+		int iTyping = -1;
+		if (!_stricmp(tHeader["Message-Type"], "Control/Typing")) iTyping=7; else
+		if (!_stricmp(tHeader["Message-Type"], "Control/ClearTyping")) iTyping=0;
+		if (iTyping == -1) {
 
-		if (info->mJoinedContactsWLID.getCount() > 1)
-			MSN_ChatStart(info);
-		else {
-			char *szEmail;
-			parseWLID(NEWSTR_ALLOCA(email), NULL, &szEmail, NULL);
-			sentMsg = _stricmp(szEmail, MyOptions.szEmail) == 0;
-			if (sentMsg)
-				hContact = ubmMsg ? MSN_HContactFromEmail(datau.toEmail, nick) : info->getContactHandle();
-		}
+			const char* p = tHeader["X-MMS-IM-Format"];
+			bool isRtl = p != NULL && strstr(p, "RL=1") != NULL;
 
-		const char* tP4Context = tHeader["P4-Context"];
-		if (tP4Context) {
-			size_t newlen = strlen(msgBody) + strlen(tP4Context) + 4;
-			char* newMsgBody = (char*)mir_alloc(newlen);
-			mir_snprintf(newMsgBody, newlen, "[%s] %s", tP4Context, msgBody);
-			mir_free(newbody);
-			msgBody = newbody = newMsgBody;
-		}
-
-		if (info->mChatID[0]) {
-			GCDEST gcd = { m_szModuleName, info->mChatID, GC_EVENT_MESSAGE };
-			GCEVENT gce = { sizeof(gce), &gcd };
-			gce.dwFlags = GCEF_ADDTOLOG;
-			gce.ptszUID = mir_a2t(email);
-			gce.ptszNick = GetContactNameT(hContact);
-			gce.time = time(NULL);
-			gce.bIsMe = FALSE;
-
-			TCHAR* p = mir_utf8decodeT(msgBody);
-			gce.ptszText = EscapeChatTags(p);
-			mir_free(p);
-
-			CallServiceSync(MS_GC_EVENT, 0, (LPARAM)&gce);
-			mir_free((void*)gce.ptszText);
-			mir_free((void*)gce.ptszUID);
-		}
-		else if (hContact) {
-			if (!sentMsg) {
-				CallService(MS_PROTO_CONTACTISTYPING, WPARAM(hContact), 0);
-
-				PROTORECVEVENT pre = { 0 };
-				pre.szMessage = (char*)msgBody;
-				pre.flags = PREF_UTF + (isRtl ? PREF_RTL : 0);
-				pre.timestamp = (DWORD)time(NULL);
-				pre.lParam = 0;
-				ProtoChainRecvMsg(hContact, &pre);
-			}
+			if (info->mJoinedContactsWLID.getCount() > 1)
+				MSN_ChatStart(info);
 			else {
-				bool haveWnd = MSN_MsgWndExist(hContact);
-
-				DBEVENTINFO dbei = { 0 };
-				dbei.cbSize = sizeof(dbei);
-				dbei.eventType = EVENTTYPE_MESSAGE;
-				dbei.flags = DBEF_SENT | DBEF_UTF | (haveWnd ? 0 : DBEF_READ) | (isRtl ? DBEF_RTL : 0);
-				dbei.szModule = m_szModuleName;
-				dbei.timestamp = time(NULL);
-				dbei.cbBlob = (unsigned)strlen(msgBody) + 1;
-				dbei.pBlob = (PBYTE)msgBody;
-				db_event_add(hContact, &dbei);
+				char *szEmail;
+				parseWLID(NEWSTR_ALLOCA(email), NULL, &szEmail, NULL);
+				sentMsg = _stricmp(szEmail, MyOptions.szEmail) == 0;
+				if (sentMsg)
+					hContact = ubmMsg ? MSN_HContactFromEmail(datau.toEmail, nick) : info->getContactHandle();
 			}
-		}
+
+			const char* tP4Context = tHeader["P4-Context"];
+			if (tP4Context) {
+				size_t newlen = strlen(msgBody) + strlen(tP4Context) + 4;
+				char* newMsgBody = (char*)mir_alloc(newlen);
+				mir_snprintf(newMsgBody, newlen, "[%s] %s", tP4Context, msgBody);
+				mir_free(newbody);
+				msgBody = newbody = newMsgBody;
+			}
+
+			if (info->mChatID[0]) {
+				GCDEST gcd = { m_szModuleName, info->mChatID, GC_EVENT_MESSAGE };
+				GCEVENT gce = { sizeof(gce), &gcd };
+				gce.dwFlags = GCEF_ADDTOLOG;
+				gce.ptszUID = mir_a2t(email);
+				gce.ptszNick = GetContactNameT(hContact);
+				gce.time = time(NULL);
+				gce.bIsMe = FALSE;
+
+				TCHAR* p = mir_utf8decodeT(msgBody);
+				gce.ptszText = EscapeChatTags(p);
+				mir_free(p);
+
+				CallServiceSync(MS_GC_EVENT, 0, (LPARAM)&gce);
+				mir_free((void*)gce.ptszText);
+				mir_free((void*)gce.ptszUID);
+			}
+			else if (hContact) {
+				if (!sentMsg) {
+					CallService(MS_PROTO_CONTACTISTYPING, WPARAM(hContact), 0);
+
+					PROTORECVEVENT pre = { 0 };
+					pre.szMessage = (char*)msgBody;
+					pre.flags = PREF_UTF + (isRtl ? PREF_RTL : 0);
+					pre.timestamp = (DWORD)time(NULL);
+					pre.lParam = 0;
+					ProtoChainRecvMsg(hContact, &pre);
+				}
+				else {
+					bool haveWnd = MSN_MsgWndExist(hContact);
+
+					DBEVENTINFO dbei = { 0 };
+					dbei.cbSize = sizeof(dbei);
+					dbei.eventType = EVENTTYPE_MESSAGE;
+					dbei.flags = DBEF_SENT | DBEF_UTF | (haveWnd ? 0 : DBEF_READ) | (isRtl ? DBEF_RTL : 0);
+					dbei.szModule = m_szModuleName;
+					dbei.timestamp = time(NULL);
+					dbei.cbBlob = (unsigned)strlen(msgBody) + 1;
+					dbei.pBlob = (PBYTE)msgBody;
+					db_event_add(hContact, &dbei);
+				}
+			}
+		} else CallService(MS_PROTO_CONTACTISTYPING, hContact, iTyping);
 	}
 	else if (!_strnicmp(tContentType, "text/x-msmsgsprofile", 20)) {
 		replaceStr(msnExternalIP, tHeader["ClientIP"]);
@@ -722,6 +728,103 @@ void CMsnProto::MSN_ProcessRemove(char* buf, size_t len)
 //	MSN_HandleCommands - process commands from the server
 /////////////////////////////////////////////////////////////////////////////////////////
 
+void CMsnProto::MSN_ProcessNLN(const char *userStatus, const char *wlid, char *userNick, const char *objid, char *cmdstring)
+{
+	if (userNick) {
+		UrlDecode(userNick);
+		stripBBCode(userNick);
+		stripColorCode(userNick);
+	}
+
+	bool isMe = false;
+	char* szEmail, *szNet;
+	parseWLID(NEWSTR_ALLOCA(wlid), &szNet, &szEmail, NULL);
+	if (!stricmp(szEmail, GetMyUsername(atoi(szNet)))) {
+		isMe = true;
+		int newStatus = MSNStatusToMiranda(userStatus);
+		if (newStatus != m_iStatus && newStatus != ID_STATUS_IDLE) {
+			int oldMode = m_iStatus;
+			m_iDesiredStatus = m_iStatus = newStatus;
+			ProtoBroadcastAck(NULL, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)oldMode, m_iStatus);
+		}
+	}
+
+	WORD lastStatus = ID_STATUS_OFFLINE;
+
+	MsnContact *cont = Lists_Get(szEmail);
+
+	MCONTACT hContact = NULL;
+	if (!cont && !isMe) {
+		hContact = MSN_HContactFromEmail(wlid, userNick, true, true);
+		cont = Lists_Get(szEmail);
+	}
+	if (cont) hContact = cont->hContact;
+
+	if (hContact != NULL) {
+		if (userNick) setStringUtf(hContact, "Nick", userNick);
+		lastStatus = getWord(hContact, "Status", ID_STATUS_OFFLINE);
+		if (lastStatus == ID_STATUS_OFFLINE || lastStatus == ID_STATUS_INVISIBLE)
+			db_unset(hContact, "CList", "StatusMsg");
+
+		int newStatus = MSNStatusToMiranda(userStatus);
+		setWord(hContact, "Status", newStatus != ID_STATUS_IDLE ? newStatus : ID_STATUS_AWAY);
+		setDword(hContact, "IdleTS", newStatus != ID_STATUS_IDLE ? 0 : time(NULL));
+	}
+
+	if (cont) {
+		if (objid) {
+			char* end = NULL;
+			cont->cap1 = strtoul(objid, &end, 10);
+			cont->cap2 = end && *end == ':' ? strtoul(end + 1, NULL, 10) : 0;
+		}
+
+		if (lastStatus == ID_STATUS_OFFLINE) {
+			DBVARIANT dbv;
+			bool always = getString(hContact, "MirVer", &dbv) != 0;
+			if (!always) db_free(&dbv);
+			MSN_SetMirVer(hContact, cont->cap1, always);
+		}
+
+		char *pszUrl, *pszAvatarHash;
+		if (cmdstring && *cmdstring && strcmp(cmdstring, "0") &&
+			(pszAvatarHash = MSN_GetAvatarHash(cmdstring, &pszUrl))) 
+		{
+			setString(hContact, "PictContext", cmdstring);
+			setString(hContact, "AvatarHash", pszAvatarHash);
+			if (pszUrl)
+				setString(hContact, "AvatarUrl", pszUrl);
+			else
+				delSetting(hContact, "AvatarUrl");
+
+			if (hContact != NULL) {
+				char szSavedHash[64] = "";
+				db_get_static(hContact, m_szModuleName, "AvatarSavedHash", szSavedHash, sizeof(szSavedHash));
+				if (stricmp(szSavedHash, pszAvatarHash))
+					pushAvatarRequest(hContact, pszUrl);
+				else {
+					char szSavedContext[64];
+					int result = db_get_static(hContact, m_szModuleName, "PictSavedContext", szSavedContext, sizeof(szSavedContext));
+					if (result || strcmp(szSavedContext, cmdstring))
+						pushAvatarRequest(hContact, pszUrl);
+				}
+			}
+			mir_free(pszAvatarHash);
+			mir_free(pszUrl);
+		}
+		else {
+			delSetting(hContact, "AvatarHash");
+			delSetting(hContact, "AvatarSavedHash");
+			delSetting(hContact, "AvatarUrl");
+			delSetting(hContact, "PictContext");
+			delSetting(hContact, "PictSavedContext");
+
+			ProtoBroadcastAck(hContact, ACKTYPE_AVATAR, ACKRESULT_STATUS, NULL, 0);
+		}
+	}
+	else if (lastStatus == ID_STATUS_OFFLINE)
+		delSetting(hContact, "MirVer");
+}
+
 void CMsnProto::MSN_ProcessStatusMessage(ezxml_t xmli, const char* wlid)
 {
 	MCONTACT hContact = MSN_HContactFromEmail(wlid);
@@ -730,22 +833,32 @@ void CMsnProto::MSN_ProcessStatusMessage(ezxml_t xmli, const char* wlid)
 	char* szEmail, *szNetId;
 	parseWLID(NEWSTR_ALLOCA(wlid), &szNetId, &szEmail, NULL);
 
-	if (atoi(szNetId) == NETID_SKYPE)
-	{
-		for (ezxml_t s = ezxml_child(xmli, "s"); s; s = s->next) {
-			const char *n = ezxml_attr(s, "n");
-			if (!strcmp(n, "SKP")) {
-				const char* szStatMsg = ezxml_txt(ezxml_child(s, "Mood"));
-				if (*szStatMsg) db_set_utf(hContact, "CList", "StatusMsg", szStatMsg);
-				else db_unset(hContact, "CList", "StatusMsg");
+	bool bHasPSM=false;
+	char* szStatMsg = NULL;
+
+	for (ezxml_t s = ezxml_child(xmli, "s"); s; s = s->next) {
+		const char *n = ezxml_attr(s, "n");
+		if (!strcmp(n, "SKP")) {
+			szStatMsg = ezxml_txt(ezxml_child(s, "Mood"));
+			if (*szStatMsg) db_set_utf(hContact, "CList", "StatusMsg", szStatMsg);
+			else if (!bHasPSM) db_unset(hContact, "CList", "StatusMsg");
+		} else if (!strcmp(n, "PE")) {
+			szStatMsg = ezxml_txt(ezxml_child(s, "PSM"));
+			if (*szStatMsg) {
+				stripBBCode((char*)szStatMsg);
+				stripColorCode((char*)szStatMsg);
+				db_set_utf(hContact, "CList", "StatusMsg", szStatMsg);
+				bHasPSM = true;
 			}
+			else db_unset(hContact, "CList", "StatusMsg");
 		}
 	}
-	else
-	{
-		// Add endpoints
-		for (ezxml_t endp = ezxml_child(xmli, "EndpointData"); endp; endp = ezxml_next(endp)) {
-			const char *id = ezxml_attr(endp, "id");
+
+	// Add endpoints
+	for (ezxml_t endp = ezxml_child(xmli, "sep"); endp; endp = ezxml_next(endp)) {
+		const char *n = ezxml_attr(endp, "n");
+		if (!strcmp(n, "IM")) {
+			const char *id = ezxml_attr(endp, "epid");
 			const char *caps = ezxml_txt(ezxml_child(endp, "Capabilities"));
 			char* end = NULL;
 			unsigned cap1 = caps ? strtoul(caps, &end, 10) : 0;
@@ -753,128 +866,116 @@ void CMsnProto::MSN_ProcessStatusMessage(ezxml_t xmli, const char* wlid)
 
 			Lists_AddPlace(szEmail, id, cap1, cap2);
 		}
+	}
 
-		// Process status message info
-		const char* szStatMsg = ezxml_txt(ezxml_child(xmli, "PSM"));
-		if (*szStatMsg) {
-			stripBBCode((char*)szStatMsg);
-			stripColorCode((char*)szStatMsg);
-			db_set_utf(hContact, "CList", "StatusMsg", szStatMsg);
+	{
+		ptrT tszStatus(mir_utf8decodeT(szStatMsg));
+		ProtoBroadcastAck(hContact, ACKTYPE_AWAYMSG, ACKRESULT_SUCCESS, NULL, tszStatus);
+	}
+
+	// Process current media info
+	const char* szCrntMda = ezxml_txt(ezxml_child(xmli, "CurrentMedia"));
+	if (!*szCrntMda) {
+		delSetting(hContact, "ListeningTo");
+		return;
+	}
+
+	// Get parts separeted by "\\0"
+	char *parts[16];
+	unsigned pCount;
+
+	char* p = (char*)szCrntMda;
+	for (pCount = 0; pCount < SIZEOF(parts); ++pCount) {
+		parts[pCount] = p;
+
+		char* p1 = strstr(p, "\\0");
+		if (p1 == NULL) break;
+
+		*p1 = '\0';
+		p = p1 + 2;
+	}
+
+	// Now let's mount the final string
+	if (pCount <= 4) {
+		delSetting(hContact, "ListeningTo");
+		return;
+	}
+
+	// Check if there is any info in the string
+	bool foundUsefullInfo = false;
+	for (unsigned i = 4; i < pCount; i++) {
+		if (parts[i][0] != '\0') {
+			foundUsefullInfo = true;
+			break;
 		}
-		else db_unset(hContact, "CList", "StatusMsg");
+	}
+	if (!foundUsefullInfo) {
+		delSetting(hContact, "ListeningTo");
+		return;
+	}
 
-		{
-			ptrT tszStatus(mir_utf8decodeT(szStatMsg));
-			ProtoBroadcastAck(hContact, ACKTYPE_AWAYMSG, ACKRESULT_SUCCESS, NULL, tszStatus);
-		}
+	if (!ServiceExists(MS_LISTENINGTO_GETPARSEDTEXT) ||
+		!ServiceExists(MS_LISTENINGTO_OVERRIDECONTACTOPTION) ||
+		!CallService(MS_LISTENINGTO_OVERRIDECONTACTOPTION, 0, hContact))
+	{
+		// User contact options
+		char *format = mir_strdup(parts[3]);
+		char *unknown = NULL;
+		if (ServiceExists(MS_LISTENINGTO_GETUNKNOWNTEXT))
+			unknown = mir_utf8encodeT((TCHAR *)CallService(MS_LISTENINGTO_GETUNKNOWNTEXT, 0, 0));
 
-		// Process current media info
-		const char* szCrntMda = ezxml_txt(ezxml_child(xmli, "CurrentMedia"));
-		if (!*szCrntMda) {
-			delSetting(hContact, "ListeningTo");
-			ezxml_free(xmli);
-			return;
-		}
-
-		// Get parts separeted by "\\0"
-		char *parts[16];
-		unsigned pCount;
-
-		char* p = (char*)szCrntMda;
-		for (pCount = 0; pCount < SIZEOF(parts); ++pCount) {
-			parts[pCount] = p;
-
-			char* p1 = strstr(p, "\\0");
-			if (p1 == NULL) break;
-
-			*p1 = '\0';
-			p = p1 + 2;
-		}
-
-		// Now let's mount the final string
-		if (pCount <= 4) {
-			delSetting(hContact, "ListeningTo");
-			ezxml_free(xmli);
-			return;
-		}
-
-		// Check if there is any info in the string
-		bool foundUsefullInfo = false;
 		for (unsigned i = 4; i < pCount; i++) {
-			if (parts[i][0] != '\0') {
-				foundUsefullInfo = true;
-				break;
-			}
-		}
-		if (!foundUsefullInfo) {
-			delSetting(hContact, "ListeningTo");
-			ezxml_free(xmli);
-			return;
-		}
-
-		if (!ServiceExists(MS_LISTENINGTO_GETPARSEDTEXT) ||
-			!ServiceExists(MS_LISTENINGTO_OVERRIDECONTACTOPTION) ||
-			!CallService(MS_LISTENINGTO_OVERRIDECONTACTOPTION, 0, hContact))
-		{
-			// User contact options
-			char *format = mir_strdup(parts[3]);
-			char *unknown = NULL;
-			if (ServiceExists(MS_LISTENINGTO_GETUNKNOWNTEXT))
-				unknown = mir_utf8encodeT((TCHAR *)CallService(MS_LISTENINGTO_GETUNKNOWNTEXT, 0, 0));
-
-			for (unsigned i = 4; i < pCount; i++) {
-				char part[16];
-				size_t lenPart = mir_snprintf(part, SIZEOF(part), "{%d}", i - 4);
-				if (parts[i][0] == '\0' && unknown != NULL)
-					parts[i] = unknown;
-				size_t lenPartsI = strlen(parts[i]);
-				for (p = strstr(format, part); p; p = strstr(p + lenPartsI, part)) {
-					if (lenPart < lenPartsI) {
-						int loc = p - format;
-						format = (char *)mir_realloc(format, strlen(format) + (lenPartsI - lenPart) + 1);
-						p = format + loc;
-					}
-					memmove(p + lenPartsI, p + lenPart, strlen(p + lenPart) + 1);
-					memmove(p, parts[i], lenPartsI);
+			char part[16];
+			size_t lenPart = mir_snprintf(part, SIZEOF(part), "{%d}", i - 4);
+			if (parts[i][0] == '\0' && unknown != NULL)
+				parts[i] = unknown;
+			size_t lenPartsI = strlen(parts[i]);
+			for (p = strstr(format, part); p; p = strstr(p + lenPartsI, part)) {
+				if (lenPart < lenPartsI) {
+					int loc = p - format;
+					format = (char *)mir_realloc(format, strlen(format) + (lenPartsI - lenPart) + 1);
+					p = format + loc;
 				}
+				memmove(p + lenPartsI, p + lenPart, strlen(p + lenPart) + 1);
+				memmove(p, parts[i], lenPartsI);
 			}
-
-			setStringUtf(hContact, "ListeningTo", format);
-			mir_free(unknown);
-			mir_free(format);
 		}
-		else {
-			// Use user options
-			LISTENINGTOINFO lti = { 0 };
-			lti.cbSize = sizeof(LISTENINGTOINFO);
 
-			lti.ptszTitle = mir_utf8decodeT(parts[4]);
-			if (pCount > 5)  lti.ptszArtist = mir_utf8decodeT(parts[5]);
-			if (pCount > 6)  lti.ptszAlbum = mir_utf8decodeT(parts[6]);
-			if (pCount > 7)  lti.ptszTrack = mir_utf8decodeT(parts[7]);
-			if (pCount > 8)  lti.ptszYear = mir_utf8decodeT(parts[8]);
-			if (pCount > 9)  lti.ptszGenre = mir_utf8decodeT(parts[9]);
-			if (pCount > 10) lti.ptszLength = mir_utf8decodeT(parts[10]);
-			if (pCount > 11) lti.ptszPlayer = mir_utf8decodeT(parts[11]);
-			else lti.ptszPlayer = mir_utf8decodeT(parts[0]);
-			if (pCount > 12) lti.ptszType = mir_utf8decodeT(parts[12]);
-			else lti.ptszType = mir_utf8decodeT(parts[1]);
+		setStringUtf(hContact, "ListeningTo", format);
+		mir_free(unknown);
+		mir_free(format);
+	}
+	else {
+		// Use user options
+		LISTENINGTOINFO lti = { 0 };
+		lti.cbSize = sizeof(LISTENINGTOINFO);
 
-			TCHAR *cm = (TCHAR *)CallService(MS_LISTENINGTO_GETPARSEDTEXT, (WPARAM)_T("%title% - %artist%"), (LPARAM)&lti);
-			setTString(hContact, "ListeningTo", cm);
+		lti.ptszTitle = mir_utf8decodeT(parts[4]);
+		if (pCount > 5)  lti.ptszArtist = mir_utf8decodeT(parts[5]);
+		if (pCount > 6)  lti.ptszAlbum = mir_utf8decodeT(parts[6]);
+		if (pCount > 7)  lti.ptszTrack = mir_utf8decodeT(parts[7]);
+		if (pCount > 8)  lti.ptszYear = mir_utf8decodeT(parts[8]);
+		if (pCount > 9)  lti.ptszGenre = mir_utf8decodeT(parts[9]);
+		if (pCount > 10) lti.ptszLength = mir_utf8decodeT(parts[10]);
+		if (pCount > 11) lti.ptszPlayer = mir_utf8decodeT(parts[11]);
+		else lti.ptszPlayer = mir_utf8decodeT(parts[0]);
+		if (pCount > 12) lti.ptszType = mir_utf8decodeT(parts[12]);
+		else lti.ptszType = mir_utf8decodeT(parts[1]);
 
-			mir_free(cm);
+		TCHAR *cm = (TCHAR *)CallService(MS_LISTENINGTO_GETPARSEDTEXT, (WPARAM)_T("%title% - %artist%"), (LPARAM)&lti);
+		setTString(hContact, "ListeningTo", cm);
 
-			mir_free(lti.ptszArtist);
-			mir_free(lti.ptszAlbum);
-			mir_free(lti.ptszTitle);
-			mir_free(lti.ptszTrack);
-			mir_free(lti.ptszYear);
-			mir_free(lti.ptszGenre);
-			mir_free(lti.ptszLength);
-			mir_free(lti.ptszPlayer);
-			mir_free(lti.ptszType);
-		}
+		mir_free(cm);
+
+		mir_free(lti.ptszArtist);
+		mir_free(lti.ptszAlbum);
+		mir_free(lti.ptszTitle);
+		mir_free(lti.ptszTrack);
+		mir_free(lti.ptszYear);
+		mir_free(lti.ptszGenre);
+		mir_free(lti.ptszLength);
+		mir_free(lti.ptszPlayer);
+		mir_free(lti.ptszType);
 	}
 }
 
@@ -1296,103 +1397,11 @@ LBL_InvalidCommand:
 			};
 
 			int tArgs = sttDivideWords(params, 5, tWords);
-			if (tArgs < 2)
+			if (tArgs < 3)
 				goto LBL_InvalidCommand;
 
-			UrlDecode(data.userNick);
-			stripBBCode(data.userNick);
-			stripColorCode(data.userNick);
-
-			bool isMe = false;
-			char* szEmail, *szNet;
-			parseWLID(NEWSTR_ALLOCA(data.wlid), &szNet, &szEmail, NULL);
-			if (!stricmp(szEmail, GetMyUsername(atoi(szNet)))) {
-				isMe = true;
-				int newStatus = MSNStatusToMiranda(params);
-				if (newStatus != m_iStatus && newStatus != ID_STATUS_IDLE) {
-					int oldMode = m_iStatus;
-					m_iDesiredStatus = m_iStatus = newStatus;
-					ProtoBroadcastAck(NULL, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)oldMode, m_iStatus);
-				}
-			}
-
-			WORD lastStatus = ID_STATUS_OFFLINE;
-
-			MsnContact *cont = Lists_Get(szEmail);
-
-			MCONTACT hContact = NULL;
-			if (!cont && !isMe) {
-				hContact = MSN_HContactFromEmail(data.wlid, tArgs>2?data.userNick:NULL, true, true);
-				cont = Lists_Get(szEmail);
-			}
-			if (cont) hContact = cont->hContact;
-
-			if (hContact != NULL) {
-				if (tArgs>2) setStringUtf(hContact, "Nick", data.userNick);
-				lastStatus = getWord(hContact, "Status", ID_STATUS_OFFLINE);
-				if (lastStatus == ID_STATUS_OFFLINE || lastStatus == ID_STATUS_INVISIBLE)
-					db_unset(hContact, "CList", "StatusMsg");
-
-				int newStatus = MSNStatusToMiranda(params);
-				setWord(hContact, "Status", newStatus != ID_STATUS_IDLE ? newStatus : ID_STATUS_AWAY);
-				setDword(hContact, "IdleTS", newStatus != ID_STATUS_IDLE ? 0 : time(NULL));
-			}
-
-			if (tArgs > 3 && tArgs <= 5 && cont) {
-				UrlDecode(data.cmdstring);
-
-				char* end = NULL;
-				cont->cap1 = strtoul(data.objid, &end, 10);
-				cont->cap2 = end && *end == ':' ? strtoul(end + 1, NULL, 10) : 0;
-
-				if (lastStatus == ID_STATUS_OFFLINE) {
-					DBVARIANT dbv;
-					bool always = getString(hContact, "MirVer", &dbv) != 0;
-					if (!always) db_free(&dbv);
-					MSN_SetMirVer(hContact, cont->cap1, always);
-				}
-
-				if (data.cmdstring[0] && strcmp(data.cmdstring, "0")) {
-					char *pszUrl, *pszAvatarHash = MSN_GetAvatarHash(data.cmdstring, &pszUrl);
-					if (pszAvatarHash == NULL)
-						goto remove;
-
-					setString(hContact, "PictContext", data.cmdstring);
-					setString(hContact, "AvatarHash", pszAvatarHash);
-					if (pszUrl)
-						setString(hContact, "AvatarUrl", pszUrl);
-					else
-						delSetting(hContact, "AvatarUrl");
-
-					if (hContact != NULL) {
-						char szSavedHash[64] = "";
-						db_get_static(hContact, m_szModuleName, "AvatarSavedHash", szSavedHash, sizeof(szSavedHash));
-						if (stricmp(szSavedHash, pszAvatarHash))
-							pushAvatarRequest(hContact, pszUrl);
-						else {
-							char szSavedContext[64];
-							int result = db_get_static(hContact, m_szModuleName, "PictSavedContext", szSavedContext, sizeof(szSavedContext));
-							if (result || strcmp(szSavedContext, data.cmdstring))
-								pushAvatarRequest(hContact, pszUrl);
-						}
-					}
-					mir_free(pszAvatarHash);
-					mir_free(pszUrl);
-				}
-				else {
-remove:
-					delSetting(hContact, "AvatarHash");
-					delSetting(hContact, "AvatarSavedHash");
-					delSetting(hContact, "AvatarUrl");
-					delSetting(hContact, "PictContext");
-					delSetting(hContact, "PictSavedContext");
-
-					ProtoBroadcastAck(hContact, ACKTYPE_AVATAR, ACKRESULT_STATUS, NULL, 0);
-				}
-			}
-			else if (lastStatus == ID_STATUS_OFFLINE)
-				delSetting(hContact, "MirVer");
-
+			if (data.cmdstring) UrlDecode(data.cmdstring);
+			MSN_ProcessNLN(data.userStatus, data.wlid, data.userNick, data.objid, data.cmdstring);
 		}
 		break;
 	case ' ORI':    //********* IRO: section 8.4 Getting Invited to a Switchboard Session
@@ -1566,9 +1575,8 @@ remove:
 			const char *pszFrom =  tHeader["From"];
 			for (i=0; i<2; i++) msgBody = tHeader.readFromBuffer(msgBody);
 
-			if (pszTo && pszFrom && !strcmp(pszTo, GetMyUsername(atoi(pszToNet))))
+			if (pszFrom)
 			{
-				// It's for me, yay!
 				ezxml_t xmli;
 				if (xmli = ezxml_parse_str(msgBody, strlen(msgBody)))
 				{
@@ -1577,10 +1585,10 @@ remove:
 						ezxml_t xmlstatus = ezxml_get(xmli, "s", 0, "Status", -1);
 						if (xmlstatus)
 						{
-							/* Convert to legacy status change command to be handled */
-							char newcmd[128];
-							mir_snprintf(newcmd, SIZEOF(newcmd), "NLN %d %s %s", trid, xmlstatus->txt, pszFrom);
-							MSN_HandleCommands(info, newcmd);
+							// These capabilities seem to be something different than in previous MSNP versions?
+							//ezxml_t xmlcaps = ezxml_get(xmli, "sep", 0, "Capabilities", -1);
+							ezxml_t usertile = ezxml_get(xmli, "s", 1, "UserTileLocation", -1);
+							MSN_ProcessNLN(xmlstatus->txt, pszFrom, NULL, NULL, usertile?usertile->txt:NULL);
 						}
 						MSN_ProcessStatusMessage(xmli, pszFrom);
 					}

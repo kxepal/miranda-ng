@@ -39,7 +39,7 @@ MCONTACT CMsnProto::MSN_HContactFromEmail(const char* wlid, const char* msnNick,
 		CallService(MS_PROTO_ADDTOCONTACT, hContact, (LPARAM)m_szModuleName);
 		setString(hContact, "e-mail", szEmail);
 		setStringUtf(hContact, "Nick", msnNick ? msnNick : wlid);
-		setWord(hContact, "netId", atoi(szNet));
+		setWord(hContact, "netId", msc && msc->netId?msc->netId:(szNet?atoi(szNet):NETID_MSN));
 		if (temporary)
 			db_set_b(hContact, "CList", "NotOnList", 1);
 

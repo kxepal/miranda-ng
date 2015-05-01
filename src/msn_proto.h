@@ -205,6 +205,7 @@ struct CMsnProto : public PROTO<CMsnProto>
 	int			MSN_HandleErrors(ThreadData* info, char* cmdString);
 	void        MSN_ProcessNotificationMessage(char* buf, unsigned len);
 	void		MSN_ProcessStatusMessage(ezxml_t xmli, const char* wlid);
+	void		MSN_ProcessNLN(const char *userStatus, const char *wlid, char *userNick, const char *objid, char *cmdstring);
 	void        MSN_ProcessPage(char* buf, unsigned len);
 	void        MSN_ProcessRemove(char* buf, size_t len);
 	void        MSN_ProcessAdd(char* buf, size_t len);

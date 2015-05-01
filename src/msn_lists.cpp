@@ -274,9 +274,9 @@ void CMsnProto::MSN_CreateContList(void)
 {
 	bool *used = (bool*)mir_calloc(m_arContacts.getCount()*sizeof(bool));
 
-	char cxml[8192];
+	CMStringA cxml;
 
-	size_t sz = mir_snprintf(cxml, SIZEOF(cxml), "<ml l=\"1\">");
+	cxml.Append("<ml l=\"1\">");
 	{
 		mir_cslock lck(m_csLists);
 
@@ -297,48 +297,36 @@ void CMsnProto::MSN_CreateContList(void)
 
 				const char *dom = strchr(C.email, '@');
 				if (dom == NULL && lastds == NULL) {
-					if (sz == 0) sz = mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<ml l=\"1\">");
 					if (newdom) {
-						sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<skp>");
+						cxml.Append("<skp>");
 						newdom = false;
 					}
 					int list = C.list & ~(LIST_RL | LIST_LL);
 					list = LIST_FL | LIST_AL; /* Seems to be always 3 in Skype... */
-					sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<c n=\"%s\" t=\"%d\"><s l=\"%d\" n=\"PE\"/><s l=\"%d\" n=\"IM\"/><s l=\"%d\" n=\"SKP\"/><s l=\"%d\" n=\"PUB\"/></c>", C.email, C.netId, list, list, list, list);
+					cxml.AppendFormat("<c n=\"%s\" t=\"%d\"><s l=\"%d\" n=\"PE\"/><s l=\"%d\" n=\"IM\"/><s l=\"%d\" n=\"SKP\"/><s l=\"%d\" n=\"PUB\"/></c>", C.email, C.netId, list, list, list, list);
 					used[j] = true;
 				}
 				else if (dom != NULL && lastds != NULL && _stricmp(lastds, dom) == 0) {
-					if (sz == 0) sz = mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<ml l=\"1\">");
 					if (newdom) {
-						sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<d n=\"%s\">", lastds + 1);
+						cxml.AppendFormat("<d n=\"%s\">", lastds + 1);
 						newdom = false;
 					}
 
 					*(char*)dom = 0;
-					sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "<c n=\"%s\" l=\"%d\" t=\"%d\"/>", C.email, C.list & ~(LIST_RL | LIST_LL), C.netId);
+					cxml.AppendFormat("<c n=\"%s\" t=\"%d\"><s n=\"IM\" l=\"%d\"/></c>", C.email, C.netId, C.list & ~(LIST_RL | LIST_LL));
 					*(char*)dom = '@';
 					used[j] = true;
 				}
-
-				if (used[j] && sz > 7400) {
-					sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "</%s></ml>", lastds ? "d" : "skp");
-					msnNsThread->sendPacketPayload("PUT", "MSGR\\CONTACTS", "%s", cxml);
-					sz = 0;
-					newdom = true;
-				}
 			}
-			if (!newdom)
-				sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), lastds ? "</d>" : "</skp>");
+			if (!newdom) cxml.Append(lastds ? "</d>" : "</skp>");
 		}
 	}
 
-	if (sz) {
-		sz += mir_snprintf((cxml + sz), (SIZEOF(cxml) - sz), "</ml>");
-		msnNsThread->sendPacketPayload("PUT", "MSGR\\CONTACTS", "%s", cxml);
-	}
+	cxml.Append("</ml>");
+	msnNsThread->sendPacketPayload("PUT", "MSGR\\CONTACTS", "%s", cxml);
 
 	if (msnP24Ver > 1)
-		msnNsThread->sendPacketPayload("PUT", "MSGR\\SUBSCRIPTIONS", "<subscribe><presence><buddies><all /></buddies></presence><messaging><im /><conversations /></messaging></subscribe>");
+		msnNsThread->sendPacketPayload("PUT", "MSGR\\SUBSCRIPTIONS", "<subscribe><presence><buddies><all /></buddies></presence><messaging><im /><conversations /></messaging><notifications><partners><partner>ABCH</partner></partners></notifications></subscribe>");
 
 	mir_free(used);
 }

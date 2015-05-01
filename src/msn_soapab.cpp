@@ -924,9 +924,13 @@ bool CMsnProto::MSN_ABRefreshClist(void)
 						if (netId == NETID_UNKNOWN || szEmail[0] == 0)
 							continue;
 
-						Lists_Add(LIST_FL, netId, szEmail);
+						ezxml_t xmlnick = ezxml_child(pers, "nickname");
+						const char *pszNickname = xmlnick?xmlnick->txt:NULL;
+						Lists_Add(LIST_FL, netId, szEmail, NULL, pszNickname);
+						char szWLId[128];
+						mir_snprintf(szWLId, sizeof(szWLId), "%d:%s", netId, szEmail);
 
-						MCONTACT hContact = MSN_HContactFromEmail(szEmail, szEmail, true, false);
+						MCONTACT hContact = MSN_HContactFromEmail(szWLId, pszNickname, true, false);
 						if (!hContact) continue;
 
 						const char* szNick = ezxml_txt(ezxml_child(pers, "orderedName"));
