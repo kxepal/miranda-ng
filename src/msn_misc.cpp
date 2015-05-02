@@ -820,8 +820,6 @@ void CMsnProto::MSN_SetServerStatus(int newStatus)
 			szPlace = mir_utf8encodeT(buf);
 		}
 
-		// I guess this is only if you have a Skype account?
-		// if (GetMyNetID() == NETID_SKYPE) {
 		char** msgptr = GetStatusMsgLoc(newStatus);
 		/* FIXME: This is what Skype client sends
 		myFlags = 0;
@@ -857,7 +855,6 @@ void CMsnProto::MSN_SetServerStatus(int newStatus)
 			GetMyNetID(), MyOptions.szEmail,
 			MyOptions.szMachineGuid,
 			sz, szMsg);
-		//}
 
 
 		// TODO: Send, MSN_SendStatusMessage anpassen.
@@ -886,6 +883,34 @@ void CMsnProto::MSN_SetServerStatus(int newStatus)
 		db_free(&msnObject);
 	}
 	//else msnNsThread->sendPacket("CHG", szStatusName);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// MSN_FetchRecentMessages - fetches missed offline messages
+
+void CMsnProto::MSN_FetchRecentMessages(time_t since)
+{
+	if (!since) {
+		/* Assuming that you want all messages that were sent after the last
+		 * user conversation according to DB 
+		 */
+		MCONTACT hContact;
+		MEVENT hDbEvent;
+		for (hContact = db_find_first(m_szModuleName); hContact; 
+			 hContact = db_find_next(hContact, m_szModuleName)) 
+		{
+			if (!(hDbEvent = db_event_last(hContact)))
+				continue;
+
+			DBEVENTINFO dbei = { sizeof(dbei) };
+			db_event_get(hDbEvent, &dbei);
+			if (dbei.timestamp>since) since=dbei.timestamp;
+		}
+	}
+
+	msnNsThread->sendPacketPayload("GET", "MSGR\\RECENTCONVERSATIONS", 
+		"<recentconversations><start>%llu</start><pagesize>100</pagesize></recentconversations>",
+		((unsigned __int64)since)*1000);
 }
 
 

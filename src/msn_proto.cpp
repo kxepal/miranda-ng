@@ -979,7 +979,8 @@ int __cdecl CMsnProto::UserIsTyping(MCONTACT hContact, int type)
 		break;
 	}
 	*/
-	MSN_SendTyping(msnNsThread, tEmail, netId, typing);
+	if (getWord(hContact, "Status", ID_STATUS_OFFLINE) != ID_STATUS_OFFLINE)
+		MSN_SendTyping(msnNsThread, tEmail, netId, typing);
 
 	return 0;
 }

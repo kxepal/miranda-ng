@@ -1174,6 +1174,7 @@ LBL_InvalidCommand:
 			msnLoggedIn = true;
 			MSN_SetServerStatus(m_iStatus);
 			MSN_RefreshContactList();
+			MSN_FetchRecentMessages();
 		}
 		break;
 
@@ -1388,6 +1389,89 @@ LBL_InvalidCommand:
 			}
 		}
 		break;
+
+	case ' TEG':    //********* GET: MSNP21+ GET reply
+		{
+			MimeHeaders tHeader;
+			ezxml_t xmli;
+
+			char* msgBody = tHeader.readFromBuffer(info->mData);
+			if (tHeader["Set-Registration"]) replaceStr(msnRegistration,tHeader["Set-Registration"]);
+			if (xmli = ezxml_parse_str(msgBody, strlen(msgBody)))
+			{
+				if (!strcmp(xmli->name, "recentconversations-response"))
+				{
+					for (ezxml_t conv = ezxml_get(xmli, "conversations", 0, "conversation", -1); conv != NULL; conv = ezxml_next(conv)) {
+						ezxml_t id;
+						MCONTACT hContact;
+						MEVENT hDbEvent;
+
+						if (ezxml_get(conv, "messages", 0, "message", -1) && (id=ezxml_get(conv, "id",-1)) &&
+							(hContact = MSN_HContactFromEmail(id->txt, NULL, false, false))) 
+						{
+							DWORD ts = 1;
+							// There are messages to be fetched
+							if (hDbEvent = db_event_last(hContact)) {
+								DBEVENTINFO dbei = { sizeof(dbei) };
+								db_event_get(hDbEvent, &dbei);
+								ts = dbei.timestamp;
+							}
+							msnNsThread->sendPacketPayload("GET", "MSGR\\MESSAGESBYCONVERSATION", 
+								"<messagesbyconversation><id>%s</id><start>%llu</start><pagesize>100</pagesize></messagesbyconversation>",
+								id->txt, ((unsigned __int64)ts)*1000);
+						}
+					}
+				}
+				else if (!strcmp(xmli->name, "messagesbyconversation-response")) {
+					ezxml_t id;
+					MCONTACT hContact;
+
+					if ((id=ezxml_get(xmli, "id",-1)) &&
+						(hContact = MSN_HContactFromEmail(id->txt, NULL, false, false))) 
+					{
+						for (ezxml_t msg = ezxml_get(xmli, "messages", 0, "message", -1); msg != NULL; msg = ezxml_next(msg)) {
+							ezxml_t arrtime = ezxml_get(msg, "originalarrivaltime", -1), from = ezxml_get(msg, "from", -1),
+									msgtype = ezxml_get(msg, "messagetype", -1), content = ezxml_get(msg, "content", -1);
+							time_t ts;
+							char *netId, *email, *message;
+
+							if (!arrtime || !from || !content) continue;
+							ts=IsoToUnixTime(arrtime->txt);
+							parseWLID(from->txt, &netId, &email, NULL);
+							message=content->txt;
+							if (msgtype && !strcmp(msgtype->txt, "RichText")) {
+								message = NEWSTR_ALLOCA(message);
+								stripHTML(message);
+								HtmlDecode(message);
+							}
+
+							if (stricmp(email, GetMyUsername(atoi(netId)))) {
+								PROTORECVEVENT pre = { 0 };
+								pre.szMessage = (char*)message;
+								pre.flags = PREF_UTF;
+								pre.timestamp = (DWORD)ts;
+								ProtoChainRecvMsg(hContact, &pre);
+							}
+							else {
+								DBEVENTINFO dbei = { 0 };
+								dbei.cbSize = sizeof(dbei);
+								dbei.eventType = EVENTTYPE_MESSAGE;
+								dbei.flags = DBEF_SENT | DBEF_UTF;
+								dbei.szModule = m_szModuleName;
+								dbei.timestamp = ts;
+								dbei.cbBlob = (unsigned)strlen(message) + 1;
+								dbei.pBlob = (PBYTE)message;
+								db_event_add(hContact, &dbei);
+							}
+						}
+					}
+				}
+				ezxml_free(xmli);
+			}				
+
+		}
+		break;
+
 	case ' NLI':
 	case ' NLN':    //********* ILN/NLN: section 7.9 Notification Messages
 		{
