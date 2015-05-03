@@ -26,13 +26,6 @@ void CEmLanOptionsMain::OnInitDialog()
 		m_ipAddress.AddString(_A2T(ip));
 	}
 	m_ipAddress.SetCurSel(cind);
-	
-	char *nickname = m_proto->GetName();
-	if (nickname == NULL)
-	{
-		gethostname(nickname, MAX_HOSTNAME_LEN);
-		m_nickname.SetTextA(nickname);
-	}
 
 	SendMessage(m_nickname.GetHwnd(), EM_LIMITTEXT, 32, 0);
 	SendMessage(m_group.GetHwnd(), EM_LIMITTEXT, 64, 0);

@@ -16,7 +16,7 @@
 
 class CMLan;
 
-typedef struct 
+typedef struct
 {
 	PROTOSEARCHRESULT hdr;
 	u_long ipaddr;
@@ -34,17 +34,13 @@ public:
 	char* const msg;
 	CMLan* lan;
 
-	explicit TDataHolder(MCONTACT hContact, const char* str, unsigned long _id, long _op, CMLan* _lan) :
-		msg(_strdup(str)), hContact(hContact), id(_id), op(_op), lan(_lan)
+	explicit TDataHolder(const CCSDATA* cc, unsigned long _id, long _op, CMLan* _lan) :
+		msg(_strdup((char*)cc->lParam)), hContact(cc->hContact), id(_id), op(_op), lan(_lan)
 	{}
-
-	explicit TDataHolder(const CCSDATA* cc,unsigned long _id, long _op, CMLan* _lan):
-	msg(_strdup((char*)cc->lParam)),hContact(cc->hContact),id(_id),op(_op),lan(_lan)
+	explicit TDataHolder(const char* str, unsigned long _id, long _op, CMLan* _lan) :
+		msg(_strdup(str)), hContact(0), id(_id), op(_op), lan(_lan)
 	{}
-	explicit TDataHolder(const char* str,unsigned long _id, long _op, CMLan* _lan):
-	msg(_strdup(str)),hContact(0), id(_id), op(_op), lan(_lan)
-	{}
-	~TDataHolder(){delete[] msg;}
+	~TDataHolder(){ delete[] msg; }
 };
 
 class CMLan : public CLan
@@ -57,7 +53,7 @@ public:
 	void SetMirandaStatus(u_int status);
 	void SetAllOffline();
 	void RecvMessageUrl(CCSDATA* ccs);
-	int SendMessageUrl(MCONTACT hContact, int flags, const char *msg, bool isUrl);
+	int SendMessageUrl(CCSDATA* ccs, bool isUrl);
 	int GetAwayMsg(CCSDATA* ccs);
 	int RecvAwayMsg(CCSDATA* ccs);
 	int SetAwayMsg(u_int status, char* msg);
@@ -67,7 +63,7 @@ public:
 	void LoadSettings();
 	void SaveSettings();
 
-	char* GetName() { return m_name; }
+	TCHAR* GetName() { return m_name; }
 	bool GetUseHostName() { return m_UseHostName; }
 	void SetUseHostName(bool val) { m_UseHostName = val; }
 	void SetRequiredIp(u_long ip) { m_RequiredIp = ip; }
@@ -83,7 +79,7 @@ protected:
 	virtual void OnRecvPacket(u_char* mes, int len, in_addr from);
 	virtual void OnInTCPConnection(u_long addr, SOCKET in_socket);
 	virtual void OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParameter);
-//private:
+	//private:
 	struct TContact
 	{
 		in_addr m_addr;
@@ -97,14 +93,14 @@ protected:
 	TContact* m_pRootContact;
 	HANDLE m_hCheckThread;
 
-	char m_name[MAX_HOSTNAME_LEN];
+	TCHAR m_name[MAX_HOSTNAME_LEN];
 	int m_nameLen;
 
 	CRITICAL_SECTION m_csAccessClass;
 	CRITICAL_SECTION m_csReceiveThreadLock;
 	CRITICAL_SECTION m_csAccessAwayMes;
 
-	void RequestStatus(bool answer=false, u_long m_addr=INADDR_BROADCAST);
+	void RequestStatus(bool answer = false, u_long m_addr = INADDR_BROADCAST);
 	MCONTACT FindContact(in_addr addr, const char* nick, bool add_to_list, bool make_permanent, bool make_visible, u_int status = ID_STATUS_ONLINE);
 	void DeleteCache();
 
@@ -125,18 +121,18 @@ protected:
 	{
 		u_int idVersion; // -1 means version is not sent
 		u_int idStatus; // -1 means status is not sent
-		char* strName; // NULL means no name
+		char *strName; // NULL means no name
 		bool flReqStatus; // false means no request
-		char* strMessage; // NULL means no message
+		char *strMessage; // NULL means no message
 		int idMessage;
 		bool flIsUrl; // true if message is an URL
 		int idAckMessage; // 0 means no ack
 		int idReqAwayMessage; // 0 means no request
-		char* strAwayMessage; // NULL means no away message
+		char *strAwayMessage; // NULL means no away message
 		int idAckAwayMessage;
 	};
-	u_char* CreatePacket(TPacket& pak, int* pBufLen=NULL);
-	void ParsePacket(TPacket& pak, u_char* buf, int len=65536);
+	u_char* CreatePacket(TPacket& pak, int* pBufLen = NULL);
+	void ParsePacket(TPacket& pak, u_char* buf, int len = 65536);
 	void SendPacketExt(TPacket& pak, u_long addr);
 
 	bool m_UseHostName;
@@ -169,7 +165,7 @@ protected:
 		void Lock() { EnterCriticalSection(&m_csAccess); }
 		void Unlock() { LeaveCriticalSection(&m_csAccess); }
 		void Terminate() { Lock(); m_state = FCS_TERMINATE; Unlock(); }
-		int Recv(bool halt=true);
+		int Recv(bool halt = true);
 		int Send(u_char* buf, int size);
 		int SendRaw(u_char* buf, int size);
 

@@ -95,38 +95,38 @@ void CMLan::DeleteCache()
 
 int CMLan::GetMirandaStatus()
 {
-	if (GetMode()!=LM_LISTEN)
+	if (GetMode() != LM_LISTEN)
 		return ID_STATUS_OFFLINE;
 	return m_mirStatus;
 }
 
 void CMLan::SetMirandaStatus(u_int status)
 {
-	if (status==ID_STATUS_INVISIBLE) 
+	if (status == ID_STATUS_INVISIBLE)
 	{
-		ProtoBroadcastAck(PROTONAME,NULL,ACKTYPE_STATUS,ACKRESULT_SUCCESS, (HANDLE)m_mirStatus, m_mirStatus);
+		ProtoBroadcastAck(PROTONAME, NULL, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)m_mirStatus, m_mirStatus);
 		return;
 	}
 	u_int old_status = m_mirStatus;
 	m_mirStatus = status;
-	if (old_status==ID_STATUS_OFFLINE && m_mirStatus!=ID_STATUS_OFFLINE)
+	if (old_status == ID_STATUS_OFFLINE && m_mirStatus != ID_STATUS_OFFLINE)
 	{
 		StartChecking();
 	}
-	else if (old_status!=ID_STATUS_OFFLINE && m_mirStatus==ID_STATUS_OFFLINE)
+	else if (old_status != ID_STATUS_OFFLINE && m_mirStatus == ID_STATUS_OFFLINE)
 	{
 		StopChecking();
 	}
-	else if (m_mirStatus!=ID_STATUS_OFFLINE && m_mirStatus!=old_status)
+	else if (m_mirStatus != ID_STATUS_OFFLINE && m_mirStatus != old_status)
 	{
 		RequestStatus(false);
 	}
-	
-	ProtoBroadcastAck(PROTONAME,NULL,ACKTYPE_STATUS,ACKRESULT_SUCCESS,(HANDLE)old_status,m_mirStatus);
+
+	ProtoBroadcastAck(PROTONAME, NULL, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)old_status, m_mirStatus);
 }
 
 void CMLan::SetAllOffline()
-{	
+{
 	for (MCONTACT hContact = db_find_first(PROTONAME); hContact; hContact = db_find_next(hContact, PROTONAME)) {
 		db_set_w(hContact, PROTONAME, "Status", ID_STATUS_OFFLINE);
 		db_unset(hContact, PROTONAME, "IP");
@@ -188,7 +188,7 @@ DWORD WINAPI CMLan::CheckProc(LPVOID lpParameter)
 
 void CMLan::Check()
 {
-	while(1)
+	while (1)
 	{
 		Sleep(MLAN_SLEEP);
 		EnterCriticalSection(&m_csAccessClass);
@@ -199,7 +199,7 @@ void CMLan::Check()
 			{
 				if (cont->m_time)
 					cont->m_time--;
-				if (cont->m_time==MLAN_TIMEOUT)
+				if (cont->m_time == MLAN_TIMEOUT)
 					RequestStatus(true, cont->m_addr.S_un.S_addr);
 				if (!cont->m_time)
 				{
@@ -207,7 +207,7 @@ void CMLan::Check()
 					MCONTACT hContact = FindContact(cont->m_addr, cont->m_nick, false, false, false);
 					if (hContact)
 					{
-						db_set_w(hContact,PROTONAME,"Status",ID_STATUS_OFFLINE);
+						db_set_w(hContact, PROTONAME, "Status", ID_STATUS_OFFLINE);
 					}
 				}
 			}
@@ -219,10 +219,9 @@ void CMLan::Check()
 
 void CMLan::RequestStatus(bool answer, u_long addr)
 {
-	TPacket pak;
-	memset(&pak, 0, sizeof(pak));
+	TPacket pak = { 0 };
 	pak.flReqStatus = answer;
-	pak.strName = m_name;
+	pak.strName = ptrA(mir_utf8encodeT(m_name));
 	SendPacketExt(pak, addr);
 }
 
@@ -236,31 +235,31 @@ void CMLan::SendPacketExt(TPacket& pak, u_long addr)
 	delete[] buf;
 }
 
-MCONTACT CMLan::FindContact(in_addr addr, const char* nick,  bool add_to_list, bool make_permanent, bool make_visible, u_int status)
+MCONTACT CMLan::FindContact(in_addr addr, const char* nick, bool add_to_list, bool make_permanent, bool make_visible, u_int status)
 {
 	for (MCONTACT res = db_find_first(PROTONAME); res; res = db_find_next(res, PROTONAME)) {
 		u_long caddr = db_get_dw(res, PROTONAME, "ipaddr", -1);
-		if (caddr==addr.S_un.S_addr) {					
+		if (caddr == addr.S_un.S_addr) {
 			if (make_permanent)
-				db_unset(res,"CList","NotOnList");
+				db_unset(res, "CList", "NotOnList");
 			if (make_visible)
-				db_unset(res,"CList","Hidden");
+				db_unset(res, "CList", "Hidden");
 			return res;
-		}			
+		}
 	}
 
 	if (add_to_list) {
-		MCONTACT res=(MCONTACT)CallService(MS_DB_CONTACT_ADD,0,0);
-		CallService(MS_PROTO_ADDTOCONTACT,(WPARAM)res,(LPARAM)PROTONAME);
-		db_set_dw(res,PROTONAME, "ipaddr", addr.S_un.S_addr);
-		db_set_s(res,PROTONAME, "Nick", nick);
+		MCONTACT res = (MCONTACT)CallService(MS_DB_CONTACT_ADD, 0, 0);
+		CallService(MS_PROTO_ADDTOCONTACT, (WPARAM)res, (LPARAM)PROTONAME);
+		db_set_dw(res, PROTONAME, "ipaddr", addr.S_un.S_addr);
+		db_set_s(res, PROTONAME, "Nick", nick);
 
 		if (!make_permanent)
-			db_set_b(res,"CList","NotOnList",1);
+			db_set_b(res, "CList", "NotOnList", 1);
 		if (!make_visible)
-			db_set_b(res,"CList","Hidden",1);
+			db_set_b(res, "CList", "Hidden", 1);
 
-		db_set_w(res,PROTONAME, "Status", status);
+		db_set_w(res, PROTONAME, "Status", status);
 		return res;
 	}
 
@@ -276,7 +275,7 @@ void CMLan::OnRecvPacket(u_char* mes, int len, in_addr from)
 		TPacket pak;
 		ParsePacket(pak, mes, len);
 
-		if (pak.idVersion!=0)
+		if (pak.idVersion != 0)
 		{
 			TContact* cont = m_pRootContact;
 			while (cont)
@@ -297,18 +296,18 @@ void CMLan::OnRecvPacket(u_char* mes, int len, in_addr from)
 					cont->m_prev = m_pRootContact;
 					cont->m_status = ID_STATUS_OFFLINE;
 					int nlen = (int)strlen(pak.strName);
-					cont->m_nick = new char[nlen+1];
-					memcpy(cont->m_nick, pak.strName, nlen+1);
+					cont->m_nick = new char[nlen + 1];
+					memcpy(cont->m_nick, pak.strName, nlen + 1);
 					m_pRootContact = cont;
 				}
 				else
 				{
-					if (pak.strName && strcmp(pak.strName, cont->m_nick)!=0)
+					if (pak.strName && strcmp(pak.strName, cont->m_nick) != 0)
 					{
 						delete[] cont->m_nick;
 						int nlen = (int)strlen(pak.strName);
-						cont->m_nick = new char[nlen+1];
-						memcpy(cont->m_nick, pak.strName, nlen+1);
+						cont->m_nick = new char[nlen + 1];
+						memcpy(cont->m_nick, pak.strName, nlen + 1);
 					}
 				}
 				cont->m_time = MLAN_CHECK + MLAN_TIMEOUT;
@@ -318,17 +317,17 @@ void CMLan::OnRecvPacket(u_char* mes, int len, in_addr from)
 				MCONTACT hContact = FindContact(cont->m_addr, cont->m_nick, false, false, false);
 				if (hContact)
 				{
-					db_set_w(hContact,PROTONAME, "Status", cont->m_status);
-					if (db_get_dw(hContact,PROTONAME, "RemoteVersion", 0)!=cont->m_ver)
-								db_set_dw(hContact,PROTONAME, "RemoteVersion", cont->m_ver);
+					db_set_w(hContact, PROTONAME, "Status", cont->m_status);
+					if (db_get_dw(hContact, PROTONAME, "RemoteVersion", 0) != cont->m_ver)
+						db_set_dw(hContact, PROTONAME, "RemoteVersion", cont->m_ver);
 					if (old_status == ID_STATUS_OFFLINE)
 					{
 						u_int rip = cont->m_addr.S_un.S_addr;
-						int tip = (rip<<24)|((rip&0xff00)<<8)|((rip&0xff0000)>>8)|(rip>>24);
+						int tip = (rip << 24) | ((rip & 0xff00) << 8) | ((rip & 0xff0000) >> 8) | (rip >> 24);
 						db_set_dw(hContact, PROTONAME, "IP", tip);
-//						HOSTENT* host = gethostbyaddr((const char*)&rip, sizeof(rip), AF_INET);
-//						if (host)
-//							db_set_s(hContact, PROTONAME, "UID", host->h_name);
+						//						HOSTENT* host = gethostbyaddr((const char*)&rip, sizeof(rip), AF_INET);
+						//						if (host)
+						//							db_set_s(hContact, PROTONAME, "UID", host->h_name);
 					}
 				}
 				LeaveCriticalSection(&m_csAccessClass);
@@ -345,8 +344,8 @@ void CMLan::OnRecvPacket(u_char* mes, int len, in_addr from)
 					PROTORECVEVENT pre = { 0 };
 					pre.timestamp = get_time();
 					pre.szMessage = pak.strMessage;
-					ProtoChainRecv( FindContact(cont->m_addr, cont->m_nick, true, false, false, cont->m_status),
-						pak.flIsUrl ? PSR_URL : PSR_MESSAGE, 0, (LPARAM)&pre );
+					ProtoChainRecv(FindContact(cont->m_addr, cont->m_nick, true, false, false, cont->m_status),
+						pak.flIsUrl ? PSR_URL : PSR_MESSAGE, 0, (LPARAM)&pre);
 
 					TPacket npak;
 					memset(&npak, 0, sizeof(npak));
@@ -360,7 +359,7 @@ void CMLan::OnRecvPacket(u_char* mes, int len, in_addr from)
 			{
 				MCONTACT hContact = FindContact(cont->m_addr, cont->m_nick, false, false, false);
 				if (hContact)
-					ProtoBroadcastAck(PROTONAME, hContact, pak.flIsUrl?ACKTYPE_URL:ACKTYPE_MESSAGE, ACKRESULT_SUCCESS, (HANDLE)pak.idAckMessage, 0);
+					ProtoBroadcastAck(PROTONAME, hContact, pak.flIsUrl ? ACKTYPE_URL : ACKTYPE_MESSAGE, ACKRESULT_SUCCESS, (HANDLE)pak.idAckMessage, 0);
 			}
 
 			if (pak.strAwayMessage && cont)
@@ -369,29 +368,29 @@ void CMLan::OnRecvPacket(u_char* mes, int len, in_addr from)
 				pre.timestamp = get_time();
 				pre.szMessage = pak.strAwayMessage;
 				pre.lParam = pak.idAckAwayMessage;
-				ProtoChainRecv( FindContact(cont->m_addr, cont->m_nick, true, false, false, cont->m_status), PSR_AWAYMSG, 0, (LPARAM)&pre);
+				ProtoChainRecv(FindContact(cont->m_addr, cont->m_nick, true, false, false, cont->m_status), PSR_AWAYMSG, 0, (LPARAM)&pre);
 			}
 
 			if (pak.idReqAwayMessage && cont)
 			{
 				MCONTACT hContact = FindContact(cont->m_addr, cont->m_nick, true, false, false);
 				// Removed - it causes that whoisreadingawaymessage plugin was not working
-//				if (hContact)
-//				{
-//					int IcqStatus = 0;
-//					switch (m_mirStatus)
-//					{
-//					case ID_STATUS_AWAY: IcqStatus = ICQ_MSGTYPE_GETAWAYMSG; break;
-//					case ID_STATUS_NA: IcqStatus = ICQ_MSGTYPE_GETNAMSG; break;
-//					case ID_STATUS_OCCUPIED: IcqStatus = ICQ_MSGTYPE_GETOCCUMSG; break;
-//					case ID_STATUS_DND: IcqStatus = ICQ_MSGTYPE_GETDNDMSG; break;
-//					case ID_STATUS_FREECHAT: IcqStatus = ICQ_MSGTYPE_GETFFCMSG; break;
-//					}
-//					// HACK: this is a real hack
-//					db_set_dw(hContact, "ICQ", "UIN", 1/*0xffffffff*/);
-//					NotifyEventHooks(m_hookIcqMsgReq, IcqStatus, 1/*0xffffffff*/);
-//					db_unset(hContact, "ICQ", "UIN");
-//				}
+				//				if (hContact)
+				//				{
+				//					int IcqStatus = 0;
+				//					switch (m_mirStatus)
+				//					{
+				//					case ID_STATUS_AWAY: IcqStatus = ICQ_MSGTYPE_GETAWAYMSG; break;
+				//					case ID_STATUS_NA: IcqStatus = ICQ_MSGTYPE_GETNAMSG; break;
+				//					case ID_STATUS_OCCUPIED: IcqStatus = ICQ_MSGTYPE_GETOCCUMSG; break;
+				//					case ID_STATUS_DND: IcqStatus = ICQ_MSGTYPE_GETDNDMSG; break;
+				//					case ID_STATUS_FREECHAT: IcqStatus = ICQ_MSGTYPE_GETFFCMSG; break;
+				//					}
+				//					// HACK: this is a real hack
+				//					db_set_dw(hContact, "ICQ", "UIN", 1/*0xffffffff*/);
+				//					NotifyEventHooks(m_hookIcqMsgReq, IcqStatus, 1/*0xffffffff*/);
+				//					db_unset(hContact, "ICQ", "UIN");
+				//				}
 
 				EnterCriticalSection(&m_csAccessAwayMes);
 
@@ -424,7 +423,7 @@ void CMLan::OnRecvPacket(u_char* mes, int len, in_addr from)
 void CMLan::RecvMessageUrl(CCSDATA* ccs)
 {
 	DBEVENTINFO dbei;
-	PROTORECVEVENT *pre=(PROTORECVEVENT*)ccs->lParam;
+	PROTORECVEVENT *pre = (PROTORECVEVENT*)ccs->lParam;
 
 	memset(&dbei, 0, sizeof(dbei));
 
@@ -436,22 +435,22 @@ void CMLan::RecvMessageUrl(CCSDATA* ccs)
 	dbei.cbSize = sizeof(dbei);
 	dbei.szModule = PROTONAME;
 	dbei.timestamp = pre->timestamp;
-	dbei.flags = pre->flags&PREF_CREATEREAD?DBEF_READ:0;
+	dbei.flags = pre->flags&PREF_CREATEREAD ? DBEF_READ : 0;
 	/*dbei.cbBlob = mir_tstrlen(pre->szMessage)+1;
 	if (!mir_strcmp(ccs->szProtoService, PSR_URL))
 	{
-		dbei.cbBlob += 2+mir_tstrlen(pre->szMessage+dbei.cbBlob+1);
+	dbei.cbBlob += 2+mir_tstrlen(pre->szMessage+dbei.cbBlob+1);
 	}
 	dbei.pBlob = (PBYTE)pre->szMessage;*/
 
-	db_unset(ccs->hContact,"CList","Hidden");
+	db_unset(ccs->hContact, "CList", "Hidden");
 
 	db_event_add(ccs->hContact, &dbei);
 }
 
 INT_PTR CMLan::AddToContactList(u_int flags, EMPSEARCHRESULT* psr)
 {
-	if (psr->hdr.cbSize!=sizeof(EMPSEARCHRESULT))
+	if (psr->hdr.cbSize != sizeof(EMPSEARCHRESULT))
 		return 0;
 
 	in_addr addr;
@@ -461,30 +460,30 @@ INT_PTR CMLan::AddToContactList(u_int flags, EMPSEARCHRESULT* psr)
 
 	MCONTACT contact = NULL;// FindContact(addr, psr->hdr.nick, true, !TempAdd, !TempAdd, psr->stat);
 	if (contact != NULL) {
-		db_set_w(contact,PROTONAME,"Status", psr->stat );
-		db_set_w(contact,PROTONAME,"RemoteVersion", psr->ver );
+		db_set_w(contact, PROTONAME, "Status", psr->stat);
+		db_set_w(contact, PROTONAME, "RemoteVersion", psr->ver);
 	}
 
 	return (INT_PTR)contact;
 }
 
-int CMLan::SendMessageUrl(MCONTACT hContact, int flags, const char *msg, bool isUrl)
+int CMLan::SendMessageUrl(CCSDATA* ccs, bool isUrl)
 {
 	DWORD th_id;
 	int cid = GetRandomProcId();
-	/*int len;
+	int len;
 	if (isUrl)
 	{
-		len = mir_tstrlen((char*)ccs->lParam);
+		len = mir_strlen((char*)ccs->lParam);
 		((char*)ccs->lParam)[len] = 1;
-	}*/
-	TDataHolder* hold = new TDataHolder(hContact, msg, cid, isUrl ? LEXT_SENDURL : LEXT_SENDMESSAGE, this);
-	/*if (isUrl)
+	}
+	TDataHolder* hold = new TDataHolder(ccs, cid, isUrl ? LEXT_SENDURL : LEXT_SENDMESSAGE, this);
+	if (isUrl)
 	{
 		((char*)ccs->lParam)[len] = 0;
 		hold->msg[len] = 0;
-	}*/
-	CloseHandle(CreateThread(NULL,0,LaunchExt,(LPVOID)hold ,0,&th_id));
+	}
+	CloseHandle(CreateThread(NULL, 0, LaunchExt, (LPVOID)hold, 0, &th_id));
 	return cid;
 }
 
@@ -492,7 +491,7 @@ int CMLan::Search(const char* name)
 {
 	DWORD th_id;
 	int cid = GetRandomProcId();
-	CloseHandle(CreateThread(NULL,0,LaunchExt,(LPVOID)new TDataHolder(name, cid, LEXT_SEARCH, this),0,&th_id));
+	CloseHandle(CreateThread(NULL, 0, LaunchExt, (LPVOID)new TDataHolder(name, cid, LEXT_SEARCH, this), 0, &th_id));
 	return cid;
 }
 
@@ -500,14 +499,14 @@ int CMLan::GetAwayMsg(CCSDATA* ccs)
 {
 	DWORD th_id;
 	int cid = GetRandomProcId();
-	CloseHandle(CreateThread(NULL,0,LaunchExt,(LPVOID)new TDataHolder(ccs, cid, LEXT_GETAWAYMSG, this),0,&th_id));
+	CloseHandle(CreateThread(NULL, 0, LaunchExt, (LPVOID)new TDataHolder(ccs, cid, LEXT_GETAWAYMSG, this), 0, &th_id));
 	return cid;
 }
 
 int CMLan::RecvAwayMsg(CCSDATA* ccs)
 {
-	PROTORECVEVENT *pre=(PROTORECVEVENT*)ccs->lParam;
-	ProtoBroadcastAck(PROTONAME, ccs->hContact, ACKTYPE_AWAYMSG, ACKRESULT_SUCCESS, (HANDLE)pre->lParam,(LPARAM)pre->szMessage);
+	PROTORECVEVENT *pre = (PROTORECVEVENT*)ccs->lParam;
+	ProtoBroadcastAck(PROTONAME, ccs->hContact, ACKTYPE_AWAYMSG, ACKRESULT_SUCCESS, (HANDLE)pre->lParam, (LPARAM)pre->szMessage);
 	return 0;
 }
 
@@ -536,13 +535,13 @@ void CMLan::SearchExt(TDataHolder* hold)
 
 	Sleep(0);
 	EMPSEARCHRESULT psr;
-	memset(&psr,0,sizeof(psr));
-	psr.hdr.cbSize=sizeof(psr);
+	memset(&psr, 0, sizeof(psr));
+	psr.hdr.cbSize = sizeof(psr);
 
 	TContact* cont = m_pRootContact;
 	while (cont)
 	{
-		if (strcmp(hold->msg, cont->m_nick)==0 || strcmp(hold->msg, "*")==0)
+		if (strcmp(hold->msg, cont->m_nick) == 0 || strcmp(hold->msg, "*") == 0)
 		{
 			/*char buf[MAX_HOSTNAME_LEN];
 			mir_tstrcpy(buf, cont->m_nick);
@@ -568,10 +567,10 @@ void CMLan::SearchExt(TDataHolder* hold)
 void CMLan::SendMessageExt(TDataHolder* hold)
 {
 	Sleep(0);
-	if (db_get_w((MCONTACT)hold->hContact, PROTONAME, "Status", ID_STATUS_OFFLINE)==ID_STATUS_OFFLINE)
+	if (db_get_w((MCONTACT)hold->hContact, PROTONAME, "Status", ID_STATUS_OFFLINE) == ID_STATUS_OFFLINE)
 	{
 		Sleep(20);
-		ProtoBroadcastAck(PROTONAME, hold->hContact, (hold->op==LEXT_SENDURL)?ACKTYPE_URL:ACKTYPE_MESSAGE, ACKRESULT_FAILED, (HANDLE)hold->id, 0);
+		ProtoBroadcastAck(PROTONAME, hold->hContact, (hold->op == LEXT_SENDURL) ? ACKTYPE_URL : ACKTYPE_MESSAGE, ACKRESULT_FAILED, (HANDLE)hold->id, 0);
 	}
 	else
 	{
@@ -580,7 +579,7 @@ void CMLan::SendMessageExt(TDataHolder* hold)
 		u_long addr = db_get_dw((MCONTACT)hold->hContact, PROTONAME, "ipaddr", 0);
 		pak.strMessage = hold->msg;
 		pak.idMessage = hold->id;
-		if (hold->op==LEXT_SENDURL)
+		if (hold->op == LEXT_SENDURL)
 			pak.flIsUrl = true;
 		SendPacketExt(pak, addr);
 	}
@@ -607,26 +606,26 @@ int CMLan::SetAwayMsg(u_int status, char* msg)
 	char** ppMsg;
 	switch (status)
 	{
-		case ID_STATUS_AWAY:
-			ppMsg = &m_amesAway;
-			break;
-		case ID_STATUS_NA:
-			ppMsg = &m_amesNa;
-			break;
-		case ID_STATUS_OCCUPIED:
-			ppMsg = &m_amesOccupied;
-			break;
-		case ID_STATUS_DND:
-			ppMsg = &m_amesDnd;
-			break;
-		case ID_STATUS_FREECHAT:
-			ppMsg = &m_amesFfc;
-			break;
+	case ID_STATUS_AWAY:
+		ppMsg = &m_amesAway;
+		break;
+	case ID_STATUS_NA:
+		ppMsg = &m_amesNa;
+		break;
+	case ID_STATUS_OCCUPIED:
+		ppMsg = &m_amesOccupied;
+		break;
+	case ID_STATUS_DND:
+		ppMsg = &m_amesDnd;
+		break;
+	case ID_STATUS_FREECHAT:
+		ppMsg = &m_amesFfc;
+		break;
 	default:
 		return 1;
 	}
 	EnterCriticalSection(&m_csAccessAwayMes);
-	delete[] *ppMsg;
+	delete[] * ppMsg;
 	if (msg)
 		*ppMsg = _strdup(msg);
 	else
@@ -654,41 +653,41 @@ u_char* CMLan::CreatePacket(TPacket& pak, int* pBufLen)
 	// Searching for packet len
 
 	if (pak.idVersion)
-		len += 1+1+4;
+		len += 1 + 1 + 4;
 
 	if (pak.idStatus)
-		len += 1+1+2;
+		len += 1 + 1 + 2;
 
 	int nameLen;
 	if (pak.strName)
 	{
-		//nameLen = mir_tstrlen(pak.strName);
-		len += 1+1+nameLen+1;
+		nameLen = mir_strlen(pak.strName);
+		len += 1 + 1 + nameLen + 1;
 	}
 
 	if (pak.flReqStatus)
-		len += 1+1;
+		len += 1 + 1;
 
 	int mesLen = 0;
 	if (pak.strMessage)
 	{
-		//mesLen = mir_tstrlen(pak.strMessage);
+		mesLen = mir_strlen(pak.strMessage);
 		//if (pak.flIsUrl)
-			//mesLen += 1+mir_tstrlen(pak.strMessage+mesLen+1);
-		len += 3+1+4+mesLen+1;
+		//mesLen += 1+mir_tstrlen(pak.strMessage+mesLen+1);
+		len += 3 + 1 + 4 + mesLen + 1;
 	}
 
 	if (pak.idAckMessage)
-		len += 1+1+4;
+		len += 1 + 1 + 4;
 
 	if (pak.idReqAwayMessage)
-		len += 1+1+4;
+		len += 1 + 1 + 4;
 
 	int awayLen = 0;
 	if (pak.strAwayMessage)
 	{
-		//awayLen = mir_tstrlen(pak.strAwayMessage);
-		len += 3+1+4+awayLen+1;
+		awayLen = mir_strlen(pak.strAwayMessage);
+		len += 3 + 1 + 4 + awayLen + 1;
 	}
 
 	// Creating packet
@@ -698,7 +697,7 @@ u_char* CMLan::CreatePacket(TPacket& pak, int* pBufLen)
 
 	if (pak.idVersion)
 	{
-		*pb++ = 1+4;
+		*pb++ = 1 + 4;
 		*pb++ = MCODE_SND_VERSION;
 		*((u_int*)pb) = pak.idVersion;
 		pb += sizeof(u_int);
@@ -714,7 +713,7 @@ u_char* CMLan::CreatePacket(TPacket& pak, int* pBufLen)
 
 	if (pak.strName)
 	{
-		*pb++ = 1+nameLen+1;
+		*pb++ = 1 + nameLen + 1;
 		*pb++ = MCODE_SND_NAME;
 		memcpy(pb, pak.strName, nameLen);
 		pb += nameLen;
@@ -730,7 +729,7 @@ u_char* CMLan::CreatePacket(TPacket& pak, int* pBufLen)
 	if (pak.strMessage)
 	{
 		*pb++ = 255;
-		*((u_short*)pb) = 1+4+mesLen+1;
+		*((u_short*)pb) = 1 + 4 + mesLen + 1;
 		pb += sizeof(u_short);
 		if (pak.flIsUrl)
 			*pb++ = MCODE_SND_URL;
@@ -746,7 +745,7 @@ u_char* CMLan::CreatePacket(TPacket& pak, int* pBufLen)
 
 	if (pak.idAckMessage)
 	{
-		*pb++ = 1+4;
+		*pb++ = 1 + 4;
 		if (pak.flIsUrl)
 			*pb++ = MCODE_ACK_URL;
 		else
@@ -757,7 +756,7 @@ u_char* CMLan::CreatePacket(TPacket& pak, int* pBufLen)
 
 	if (pak.idReqAwayMessage)
 	{
-		*pb++ = 1+4;
+		*pb++ = 1 + 4;
 		*pb++ = MCODE_REQ_AWAYMSG;
 		*((u_int*)pb) = pak.idReqAwayMessage;
 		pb += sizeof(u_int);
@@ -766,7 +765,7 @@ u_char* CMLan::CreatePacket(TPacket& pak, int* pBufLen)
 	if (pak.strAwayMessage)
 	{
 		*pb++ = 255;
-		*((u_short*)pb) = 1+4+awayLen+1;
+		*((u_short*)pb) = 1 + 4 + awayLen + 1;
 		pb += sizeof(u_short);
 		*pb++ = MCODE_SND_AWAYMSG;
 		*((u_int*)pb) = pak.idAckAwayMessage;
@@ -788,11 +787,11 @@ u_char* CMLan::CreatePacket(TPacket& pak, int* pBufLen)
 void CMLan::ParsePacket(TPacket& pak, u_char* buf, int len)
 {
 	memset(&pak, 0, sizeof(pak));
-	u_char* buf_end = buf+len;
-	while (*buf && buf<buf_end)
+	u_char* buf_end = buf + len;
+	while (*buf && buf < buf_end)
 	{
 		int tlen = *buf++;
-		if (tlen==255)
+		if (tlen == 255)
 		{
 			tlen = *((u_short*)buf);
 			buf += sizeof(u_short);
@@ -848,14 +847,17 @@ void CMLan::LoadSettings()
 {
 	m_RequiredIp = db_get_dw(NULL, PROTONAME, "ipaddr", 0);
 	m_UseHostName = db_get_b(NULL, PROTONAME, "UseHostName", 1) != 0;
-	if (m_UseHostName) {
-		gethostname(m_name, MAX_HOSTNAME_LEN);
-		//CharLower(m_name);
+	if (m_UseHostName)
+	{
+		char host[MAX_HOSTNAME_LEN];
+		gethostname(host, MAX_HOSTNAME_LEN);
+		CharLowerA(host);
+		mir_tstrncpy(m_name, _A2T(host), MAX_HOSTNAME_LEN);
 	}
 	else {
 		DBVARIANT dbv;
 		// Deleting old 'Name' value - using 'Nick' instead of it now
-		if ( db_get_s(NULL, PROTONAME, "Nick", &dbv)) {
+		if (db_get_s(NULL, PROTONAME, "Nick", &dbv)) {
 			if (db_get_s(NULL, PROTONAME, "Name", &dbv))
 				dbv.pszVal = "EmLan_User";
 			else
@@ -867,10 +869,10 @@ void CMLan::LoadSettings()
 	}
 	//m_nameLen = mir_tstrlen(m_name);
 
-	if (GetStatus()!=LM_LISTEN)
+	if (GetStatus() != LM_LISTEN)
 	{
 		int ipcount = GetHostAddrCount();
-		for (int i=0; i<ipcount; i++)
+		for (int i = 0; i < ipcount; i++)
 		{
 			in_addr addr = GetHostAddress(i);
 			if (addr.S_un.S_addr == m_RequiredIp)
@@ -886,7 +888,7 @@ void CMLan::SaveSettings()
 {
 	db_set_dw(NULL, PROTONAME, "ipaddr", m_RequiredIp);
 	db_set_b(NULL, PROTONAME, "UseHostName", m_UseHostName);
-	db_set_s(NULL, PROTONAME, "Nick", m_name);
+	db_set_ts(NULL, PROTONAME, "Nick", m_name);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -910,7 +912,7 @@ CMLan::TFileConnection::~TFileConnection()
 		char** cp = m_szFiles;
 		while (*cp)
 		{
-			delete[] *cp;
+			delete[] * cp;
 			cp++;
 		}
 		delete[] m_szFiles;
@@ -929,12 +931,12 @@ int CMLan::TFileConnection::Recv(bool halt)
 	while (1)
 	{
 		u_long len;
-		if (ioctlsocket(m_socket, FIONREAD, &len)!=0)
+		if (ioctlsocket(m_socket, FIONREAD, &len) != 0)
 		{
 			EMLOGERR();
 			return FCS_TERMINATE;
 		}
-		if (len>=3)
+		if (len >= 3)
 			break;
 		if (!halt)
 		{
@@ -945,7 +947,7 @@ int CMLan::TFileConnection::Recv(bool halt)
 			return FCS_OK;
 		}
 		Sleep(10);
-		if (m_state==FCS_TERMINATE)
+		if (m_state == FCS_TERMINATE)
 		{
 			EMLOG("Terminate requested, exiting recv");
 			return FCS_TERMINATE;
@@ -956,12 +958,12 @@ int CMLan::TFileConnection::Recv(bool halt)
 	int res;
 	EMLOG("Receiving packet size");
 	res = recv(m_socket, (char*)&size, 3, 0);
-	if (res==SOCKET_ERROR)
+	if (res == SOCKET_ERROR)
 	{
 		EMLOGERR();
 		return FCS_TERMINATE;
 	}
-	if (size==0)
+	if (size == 0)
 	{
 		EMLOG("Connection was gracefully closed - size is 0");
 		delete m_buf;
@@ -978,16 +980,16 @@ int CMLan::TFileConnection::Recv(bool halt)
 
 	EMLOG("Waiting for the whole packet (" << size << " bytes)");
 	int csize = 0;
-	while (csize!=size)
+	while (csize != size)
 	{
-		while(1)
+		while (1)
 		{
 			u_long len;
 			if (ioctlsocket(m_socket, FIONREAD, &len) != 0) {
 				EMLOGERR();
 				return FCS_TERMINATE;
 			}
-			if (len >= min(size,FILE_MIN_BLOCK))
+			if (len >= min(size, FILE_MIN_BLOCK))
 				break;
 			Sleep(10);
 			if (m_state == FCS_TERMINATE) {
@@ -997,11 +999,11 @@ int CMLan::TFileConnection::Recv(bool halt)
 		}
 		EMLOG("Getting data (approx " << size << " bytes)");
 		Lock();
-		res = recv(m_socket, (char*)m_buf+csize, size-csize, 0);
+		res = recv(m_socket, (char*)m_buf + csize, size - csize, 0);
 		Unlock();
 		EMLOGERR();
-		EMLOGIF("Connection was gracefully closed", res==0);
-		if (res==0 || res==SOCKET_ERROR)
+		EMLOGIF("Connection was gracefully closed", res == 0);
+		if (res == 0 || res == SOCKET_ERROR)
 			return FCS_TERMINATE;
 		EMLOG("Received " << res << " bytes");
 		csize += res;
@@ -1013,23 +1015,23 @@ int CMLan::TFileConnection::Recv(bool halt)
 
 int CMLan::TFileConnection::SendRaw(u_char* buf, int size)
 {
-	while (size>0)
+	while (size > 0)
 	{
-		if (m_state==FCS_TERMINATE)
+		if (m_state == FCS_TERMINATE)
 		{
 			EMLOG("Terminate requested, exiting sendraw");
 			return FCS_TERMINATE;
 		}
 		int err = send(m_socket, (char*)buf, size, 0);
-		if (err==SOCKET_ERROR)
+		if (err == SOCKET_ERROR)
 		{
 			EMLOGERR();
 			return FCS_TERMINATE;
 		}
 		size -= err;
 		buf += err;
-		EMLOGIF("Send " << err << " bytes", size==0);
-		if (size>0)
+		EMLOGIF("Send " << err << " bytes", size == 0);
+		if (size > 0)
 		{
 			EMLOG("Partial send (only " << err << " bytes");
 			Sleep(10);
@@ -1040,16 +1042,16 @@ int CMLan::TFileConnection::SendRaw(u_char* buf, int size)
 
 int CMLan::TFileConnection::Send(u_char* buf, int size)
 {
-	if (m_state==FCS_TERMINATE)
+	if (m_state == FCS_TERMINATE)
 	{
 		EMLOG("Terminate requested, exiting send");
 		return FCS_TERMINATE;
 	}
 
 	EMLOG("Sending 3 bytes of packet size (" << size << ")");
-	if ( SendRaw((u_char*)&size, 3) != FCS_OK )
+	if (SendRaw((u_char*)&size, 3) != FCS_OK)
 		return FCS_TERMINATE;
-	if ( SendRaw(buf, size) != FCS_OK )
+	if (SendRaw(buf, size) != FCS_OK)
 		return FCS_TERMINATE;
 
 	return FCS_OK;
@@ -1110,11 +1112,11 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 {
 	EMLOG("Received IN TCP connection");
 	TContact* cont = m_pRootContact;
-	while (cont && cont->m_addr.S_un.S_addr!=addr)
+	while (cont && cont->m_addr.S_un.S_addr != addr)
 		cont = cont->m_prev;
 
 	// There is no such user in cached list - can not identify him
-	if (cont==NULL)
+	if (cont == NULL)
 		return;
 	EMLOG("Passed contact search (cont is not NULL)");
 
@@ -1122,10 +1124,10 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 	conn->m_socket = in_sock;
 	conn->m_cid = GetRandomProcId();
 
-	if (conn->Recv() || conn->m_recSize==0 || conn->m_buf[0] != FCODE_SND_FILEREQ)
+	if (conn->Recv() || conn->m_recSize == 0 || conn->m_buf[0] != FCODE_SND_FILEREQ)
 	{
 		EMLOG("Not passed synchro data");
-		EMLOGIF("Rec size is 0", conn->m_recSize==0);
+		EMLOGIF("Rec size is 0", conn->m_recSize == 0);
 		EMLOGIF("Wrong data in packet", conn->m_buf[0] != FCODE_SND_FILEREQ);
 		delete conn;
 		return;
@@ -1136,17 +1138,17 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 
 	PROTORECVEVENT pre;
 
-	int rcTotalSize = *((int*)(conn->m_buf+1));
-	int rcTotalFiles = *((int*)(conn->m_buf+1+4));
-	pre.szMessage = new char[conn->m_recSize+rcTotalFiles];
+	int rcTotalSize = *((int*)(conn->m_buf + 1));
+	int rcTotalFiles = *((int*)(conn->m_buf + 1 + 4));
+	pre.szMessage = new char[conn->m_recSize + rcTotalFiles];
 	*((int*)pre.szMessage) = conn->m_cid;
-	char* pf_to = pre.szMessage+4;
-	char* pf_fr = (char*)conn->m_buf+1+4+4;
+	char* pf_to = pre.szMessage + 4;
+	char* pf_fr = (char*)conn->m_buf + 1 + 4 + 4;
 
-	conn->m_szFiles = new char* [rcTotalFiles+1];
+	conn->m_szFiles = new char*[rcTotalFiles + 1];
 	conn->m_szFiles[rcTotalFiles] = NULL;
 
-	for (int i=0; i<rcTotalFiles; i++)
+	for (int i = 0; i < rcTotalFiles; i++)
 	{
 		conn->m_szFiles[i] = _strdup(pf_fr);
 		if (i)
@@ -1173,7 +1175,7 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 	while (!conn->m_state)
 		Sleep(10);
 
-	if (conn->m_state!=TFileConnection::FCS_ALLOW)
+	if (conn->m_state != TFileConnection::FCS_ALLOW)
 	{
 		conn->Send(NULL, 0);
 		delete conn;
@@ -1198,16 +1200,16 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 	GetFullPathName(conn->m_szDir, MAX_PATH, path, &pathpart);
 	if (!SetCurrentDirectory(path))
 	{
-		if (rcTotalFiles==1)
-			conn->m_szRenamedFile = _strdup(pathpart);
-		*pathpart = 0;
-		if (!SetCurrentDirectory(path))
-		{
-			conn->Send(NULL, 0);
-			ProtoBroadcastAck(PROTONAME, conn->m_hContact, ACKTYPE_FILE, ACKRESULT_FAILED, (HANDLE)conn->m_cid, (LPARAM)"Can't open output directory");
-			delete conn;
-			return;
-		}
+	if (rcTotalFiles==1)
+	conn->m_szRenamedFile = _strdup(pathpart);
+	*pathpart = 0;
+	if (!SetCurrentDirectory(path))
+	{
+	conn->Send(NULL, 0);
+	ProtoBroadcastAck(PROTONAME, conn->m_hContact, ACKTYPE_FILE, ACKRESULT_FAILED, (HANDLE)conn->m_cid, (LPARAM)"Can't open output directory");
+	delete conn;
+	return;
+	}
 	}*/
 
 	//Starting from next file
@@ -1225,10 +1227,10 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 
 	bool err = false;
 
-	for (int fileNo=0; fileNo<rcTotalFiles; fileNo++)
+	for (int fileNo = 0; fileNo < rcTotalFiles; fileNo++)
 	{
 		EMLOG("Waiting for 'next file'");
-		if (conn->Recv() || conn->m_recSize==0 || conn->m_buf[0] != FCODE_SND_NEXTFILE)
+		if (conn->Recv() || conn->m_recSize == 0 || conn->m_buf[0] != FCODE_SND_NEXTFILE)
 		{
 			err = true;
 			break;
@@ -1238,7 +1240,7 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 		fts.szCurrentFile = fts.pszFiles[fileNo];
 		fts.currentFileNumber = fileNo;
 		fts.currentFileProgress = 0;
-		fts.currentFileSize = *((int*)(conn->m_buf+1));
+		fts.currentFileSize = *((int*)(conn->m_buf + 1));
 		fts.currentFileTime = get_time();
 
 		EMLOG("Waiting for ACCEPT");
@@ -1250,12 +1252,12 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 		}
 		else
 		{
-			while(!conn->m_state)
+			while (!conn->m_state)
 				Sleep(10);
 		}
 		EMLOG("Ok");
 		EMLOG("Checking if we're terminated");
-		if (conn->m_state==TFileConnection::FCS_TERMINATE)
+		if (conn->m_state == TFileConnection::FCS_TERMINATE)
 		{
 			err = true;
 			break;
@@ -1263,9 +1265,9 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 		EMLOG("Still working");
 
 		u_char snd_buf[5];
-		
+
 		EMLOG("Checking if we're skipping file");
-		if (conn->m_state==TFileConnection::FCS_SKIP)
+		if (conn->m_state == TFileConnection::FCS_SKIP)
 		{
 			EMLOG("Skipped");
 			conn->Lock();
@@ -1287,7 +1289,7 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 			filename = conn->m_szFiles[fileNo];
 
 		int mode_open = CREATE_ALWAYS;
-		if (conn->m_state==TFileConnection::FCS_RESUME)
+		if (conn->m_state == TFileConnection::FCS_RESUME)
 			mode_open = OPEN_ALWAYS;
 
 		conn->Lock();
@@ -1296,7 +1298,7 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 
 		EMLOG("Creating file");
 		HANDLE hFile = NULL;// CreateFile(filename, GENERIC_WRITE, FILE_SHARE_READ, NULL, mode_open, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (hFile==INVALID_HANDLE_VALUE)
+		if (hFile == INVALID_HANDLE_VALUE)
 		{
 			EMLOG("Can't create file");
 			conn->Send(NULL, 0);
@@ -1308,7 +1310,7 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 
 		snd_buf[0] = FCODE_SND_ACCEPT;
 		int fsize = GetFileSize(hFile, NULL);
-		*((int*)(snd_buf+1)) = fsize;
+		*((int*)(snd_buf + 1)) = fsize;
 		SetFilePointer(hFile, 0, NULL, FILE_END);
 
 		fts.currentFileProgress = fsize;
@@ -1328,15 +1330,15 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 		ProtoBroadcastAck(PROTONAME, conn->m_hContact, ACKTYPE_FILE, ACKRESULT_DATA, (HANDLE)conn->m_cid, (LPARAM)&fts);
 		EMLOG("Ok");
 		int refr = 0;
-		while (fts.currentFileProgress<fts.currentFileSize)
+		while (fts.currentFileProgress < fts.currentFileSize)
 		{
 			EMLOG("Waiting for data");
 			BOOL isErr = conn->Recv();
-			if (isErr || conn->m_recSize==0 || conn->m_buf[0]!=FCODE_SND_FILEDATA)
+			if (isErr || conn->m_recSize == 0 || conn->m_buf[0] != FCODE_SND_FILEDATA)
 			{
 				EMLOGIF("Error conn->Recv()", isErr);
-				EMLOGIF("Error conn->m_recSize!=0", conn->m_recSize==0);
-				EMLOGIF("Error conn->m_buf[0]==FCODE_SND_FILEDATA", conn->m_buf[0]!=FCODE_SND_FILEDATA);
+				EMLOGIF("Error conn->m_recSize!=0", conn->m_recSize == 0);
+				EMLOGIF("Error conn->m_buf[0]==FCODE_SND_FILEDATA", conn->m_buf[0] != FCODE_SND_FILEDATA);
 				EMLOG("Error");
 				err = true;
 				break;
@@ -1344,12 +1346,12 @@ void CMLan::OnInTCPConnection(u_long addr, SOCKET in_sock)
 			EMLOG("Received");
 			DWORD written;
 			EMLOG("Writing to file");
-			WriteFile(hFile, conn->m_buf+1, conn->m_recSize-1, &written, NULL);
+			WriteFile(hFile, conn->m_buf + 1, conn->m_recSize - 1, &written, NULL);
 			EMLOG("Ok");
-			fts.currentFileProgress += conn->m_recSize-1;
-			fts.totalProgress += conn->m_recSize-1;
-			refr += conn->m_recSize-1;
-			if (refr>=FILE_INFO_REFRESH)
+			fts.currentFileProgress += conn->m_recSize - 1;
+			fts.totalProgress += conn->m_recSize - 1;
+			refr += conn->m_recSize - 1;
+			if (refr >= FILE_INFO_REFRESH)
 			{
 				EMLOG("Refreshing progress bar");
 				ProtoBroadcastAck(PROTONAME, conn->m_hContact, ACKTYPE_FILE, ACKRESULT_DATA, (HANDLE)conn->m_cid, (LPARAM)&fts);
@@ -1401,11 +1403,11 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 	EMLOG("Added to list");
 	FileAddToList(conn);
 
-	u_char buf[FILE_SEND_BLOCK+1];
-	char name[MAX_PATH+8];
+	u_char buf[FILE_SEND_BLOCK + 1];
+	char name[MAX_PATH + 8];
 
 	buf[0] = FCODE_SND_FILEREQ;
-	int len = 1+4+4;
+	int len = 1 + 4 + 4;
 	int size = 0;
 	int filecount = 0;
 	char** pf = conn->m_szFiles;
@@ -1414,7 +1416,7 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 		// TODO: FIX IT !
 		EMLOG("Opening file");
 		HANDLE hFile = NULL;// CreateFile(*pf, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-		if (hFile==INVALID_HANDLE_VALUE)
+		if (hFile == INVALID_HANDLE_VALUE)
 		{
 			EMLOG("Can't open file for reading");
 			ProtoBroadcastAck(PROTONAME, conn->m_hContact, ACKTYPE_FILE, ACKRESULT_FAILED, (HANDLE)conn->m_cid, (LPARAM)"Can't open one of the files");
@@ -1427,18 +1429,18 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 
 		char* filepart;
 		//GetFullPathName(*pf, MAX_PATH, (char*)name, &filepart);
-		delete[] *pf;
+		delete[] * pf;
 		*pf = _strdup(name);
-		strcpy((char*)buf+len, filepart);
-		len += (int)strlen(filepart)+1;
+		strcpy((char*)buf + len, filepart);
+		len += (int)strlen(filepart) + 1;
 
 		pf++;
 	}
-	strcpy((char*)buf+len, conn->m_szDescription);
-	len += (int)strlen(conn->m_szDescription)+1;
+	strcpy((char*)buf + len, conn->m_szDescription);
+	len += (int)strlen(conn->m_szDescription) + 1;
 
-	*((int*)(buf+1)) = size;
-	*((int*)(buf+1+4)) = filecount;
+	*((int*)(buf + 1)) = size;
+	*((int*)(buf + 1 + 4)) = filecount;
 
 	//GetCurrentDirectory(MAX_PATH, name);
 	conn->m_szDir = _strdup(name);
@@ -1463,7 +1465,7 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 	}
 
 	EMLOG("Waiting for ACK");
-	if (conn->Recv() || conn->m_recSize==0 || conn->m_buf[0]!=FCODE_SND_ACCEPT)
+	if (conn->Recv() || conn->m_recSize == 0 || conn->m_buf[0] != FCODE_SND_ACCEPT)
 	{
 		EMLOG("Failed");
 		ProtoBroadcastAck(PROTONAME, conn->m_hContact, ACKTYPE_FILE, ACKRESULT_DENIED, (HANDLE)conn->m_cid, 0);
@@ -1473,11 +1475,11 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 
 	bool err = false;
 
-	for (int fileNo=0; fileNo<filecount; fileNo++)
+	for (int fileNo = 0; fileNo < filecount; fileNo++)
 	{
 		EMLOG("Opening file for reading (once more)");
 		HANDLE hFile = NULL;//CreateFile(conn->m_szFiles[fileNo] , GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (hFile==INVALID_HANDLE_VALUE)
+		if (hFile == INVALID_HANDLE_VALUE)
 		{
 			EMLOG("Failed");
 			conn->Send(NULL, 0);
@@ -1493,7 +1495,7 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 		u_char snd_buf[5];
 		snd_buf[0] = FCODE_SND_NEXTFILE;
 		int fsize = GetFileSize(hFile, NULL);
-		*((int*)(snd_buf+1)) = fsize;
+		*((int*)(snd_buf + 1)) = fsize;
 		EMLOG("Sending file size");
 		if (conn->Send(snd_buf, 5))
 		{
@@ -1504,7 +1506,7 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 		EMLOG("Ok");
 
 		EMLOG("Waiting for ACK");
-		if (conn->Recv() || conn->m_recSize==0 || (conn->m_buf[0]!=FCODE_SND_ACCEPT && conn->m_buf[0]!=FCODE_SND_FILESKIP))
+		if (conn->Recv() || conn->m_recSize == 0 || (conn->m_buf[0] != FCODE_SND_ACCEPT && conn->m_buf[0] != FCODE_SND_FILESKIP))
 		{
 			CloseHandle(hFile);
 			err = true;
@@ -1512,10 +1514,10 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 		}
 		EMLOG("Ok");
 
-		if (conn->m_buf[0]!=FCODE_SND_FILESKIP)
+		if (conn->m_buf[0] != FCODE_SND_FILESKIP)
 		{
 			EMLOG("File is not skipped");
-			int filepos = *((int*)(conn->m_buf+1));
+			int filepos = *((int*)(conn->m_buf + 1));
 			SetFilePointer(hFile, filepos, NULL, FILE_BEGIN);
 
 			fts.szCurrentFile = fts.pszFiles[fileNo];
@@ -1531,18 +1533,18 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 
 			fsize -= filepos;
 
-			while (fsize>0)
+			while (fsize > 0)
 			{
 				DWORD readbytes;
 				int tosend = FILE_SEND_BLOCK;
-				if (tosend>fsize)
+				if (tosend > fsize)
 					tosend = fsize;
 				EMLOG("Reading file data");
-				ReadFile(hFile, buf+1, tosend, &readbytes, NULL);
+				ReadFile(hFile, buf + 1, tosend, &readbytes, NULL);
 				EMLOG("Ok");
 				buf[0] = FCODE_SND_FILEDATA;
 
-				if (readbytes!=tosend)
+				if (readbytes != tosend)
 				{
 					EMLOG("Error during reading file. File was changed");
 					CloseHandle(hFile);
@@ -1552,7 +1554,7 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 					return;
 				}
 				EMLOG("Sending data buffer");
-				if (conn->Send(buf, tosend+1))
+				if (conn->Send(buf, tosend + 1))
 				{
 					//CloseHandle(hFile);
 					err = true;
@@ -1564,13 +1566,13 @@ void CMLan::OnOutTCPConnection(u_long addr, SOCKET out_socket, LPVOID lpParamete
 				fts.totalProgress += tosend;
 				fsize -= tosend;
 				refr += tosend;
-				if (refr>=FILE_INFO_REFRESH || fsize<=0)
+				if (refr >= FILE_INFO_REFRESH || fsize <= 0)
 				{
 					EMLOG("Refreshing file info");
 					ProtoBroadcastAck(PROTONAME, conn->m_hContact, ACKTYPE_FILE, ACKRESULT_DATA, (HANDLE)conn->m_cid, (LPARAM)&fts);
 					refr = 0;
 					EMLOG("Checking for 'abort'");
-					if (conn->Recv(false) || conn->m_recSize!=-1)
+					if (conn->Recv(false) || conn->m_recSize != -1)
 					{
 						EMLOG("Aborted");
 						//CloseHandle(hFile);
@@ -1622,8 +1624,8 @@ int CMLan::SendFile(CCSDATA* ccs)
 	char** ppszFiles = (char**)ccs->lParam;
 	while (ppszFiles[files])
 		files++;
-	conn->m_szFiles = new char* [files+1];
-	for (int i=0; i<files; i++)
+	conn->m_szFiles = new char*[files + 1];
+	for (int i = 0; i < files; i++)
 		conn->m_szFiles[i] = _strdup(ppszFiles[i]);
 	conn->m_szFiles[files] = NULL;
 

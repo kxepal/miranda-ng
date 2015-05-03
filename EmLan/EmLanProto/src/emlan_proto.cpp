@@ -1,7 +1,8 @@
 #include "stdafx.h"
 
 CEmLanProto::CEmLanProto(const char* protoName, const TCHAR* userName) :
-	PROTO<CEmLanProto>(protoName, userName)
+	PROTO<CEmLanProto>(protoName, userName),
+	hMessageProcess(1)
 {
 	CreateProtoService(PS_CREATEACCMGRUI, &CEmLanProto::OnAccountManagerInit);
 }
@@ -16,7 +17,7 @@ DWORD_PTR CEmLanProto::GetCaps(int type, MCONTACT)
 	{
 	case PFLAGNUM_1:
 		return PF1_IM | PF1_BASICSEARCH | PF1_ADDSEARCHRES | PF1_PEER2PEER | PF1_INDIVSTATUS |
-			PF1_URL | PF1_MODEMSG | PF1_FILE | PF1_CANRENAMEFILE | PF1_FILERESUME;
+			PF1_URLRECV | PF1_MODEMSG | PF1_FILE | PF1_CANRENAMEFILE | PF1_FILERESUME;
 	case PFLAGNUM_2:
 		return PF2_ONLINE | PF2_SHORTAWAY | PF2_LONGAWAY | PF2_LIGHTDND | PF2_HEAVYDND | PF2_FREECHAT;
 	case PFLAGNUM_3:
@@ -45,7 +46,7 @@ int CEmLanProto::RecvMsg(MCONTACT hContact, PROTORECVEVENT *pre) { return 0; }
 
 int CEmLanProto::SendMsg(MCONTACT hContact, int flags, const char *msg)
 {
-	return SendMessageUrl(hContact, flags, msg, false);
+	return OnSendMessage(hContact, flags, msg);
 }
 
 int CEmLanProto::SetStatus(int iNewStatus)
@@ -58,21 +59,18 @@ int CEmLanProto::SetStatus(int iNewStatus)
 
 	if (iNewStatus == ID_STATUS_OFFLINE)
 	{
-		StopChecking();
+		Stop();
 		m_iStatus = m_iDesiredStatus = ID_STATUS_OFFLINE;
 	}
 	else
 	{
 		if (old_status == ID_STATUS_CONNECTING)
-		{
 			return 0;
-		}
 
 		if (old_status == ID_STATUS_OFFLINE)
 		{
-			m_iStatus = ID_STATUS_CONNECTING;
-
-			StartChecking();
+			m_iStatus = m_iDesiredStatus = ID_STATUS_ONLINE;
+			Start();
 		}
 		/*else if (m_iStatus == ID_STATUS_INVISIBLE)
 		{

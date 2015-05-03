@@ -1,6 +1,28 @@
 #ifndef _EMLAN_PROTO_H_
 #define _EMLAN_PROTO_H_
 
+struct TDataParam
+{
+public:
+	long id;
+	long op;
+
+	CEmLanProto *proto;
+
+	MCONTACT hContact;
+	char *message;
+
+	TDataParam(MCONTACT hContact, const char *str, ULONG id, long op, CEmLanProto *proto) :
+		message(mir_strdup(str)), hContact(hContact), id(id), op(op), proto(proto)
+	{}
+
+	~TDataParam()
+	{
+		if (message)
+			mir_free(message);
+	}
+};
+
 struct CEmLanProto : public PROTO<CEmLanProto>, public CMLan
 {
 public:
@@ -26,7 +48,7 @@ public:
 	//virtual	HWND      __cdecl CreateExtendedSearchUI(HWND owner);
 
 	virtual	int       __cdecl RecvMsg(MCONTACT hContact, PROTORECVEVENT*);
-	virtual	int       __cdecl SendMsg(MCONTACT hContact, int flags, const char* msg);
+	virtual	int       __cdecl SendMsg(MCONTACT hContact, int flags, const char *msg);
 
 	//virtual	HANDLE    __cdecl SendFile(MCONTACT hContact, const PROTOCHAR*, PROTOCHAR **ppszFiles);
 
@@ -44,11 +66,40 @@ public:
 	static int         UninitAccount(CEmLanProto *proto);
 
 private:
+	ULONG hMessageProcess;
+
 	// accounts
 	static LIST<CEmLanProto> Accounts;
 	static int CompareAccounts(const CEmLanProto *p1, const CEmLanProto *p2);
 
 	INT_PTR __cdecl OnAccountManagerInit(WPARAM, LPARAM lParam);
+
+	// network
+	mir_cs receiveThreadLock;
+
+	void Start();
+	void Stop();
+
+	// contacts
+	bool isCheckingStarted;
+	mir_cs checkContactsLock;
+	HANDLE checkContactsThread;
+
+	WORD GetContactStatus(MCONTACT hContact);
+	void SetContactStatus(MCONTACT hContact, WORD status);
+	void SetAllContactsStatus(WORD status);
+
+	MCONTACT GetContact(const in_addr &addr);
+	MCONTACT AddContact(const in_addr &addr, const TCHAR *nick, bool isTemporary = false);
+
+	void __cdecl CheckContactsThread(void*);
+
+	// messages
+	static void SendMessageThread(void *arg);
+	int OnSendMessage(MCONTACT hContact, int flags, const char *msg);
+
+	// utils
+	bool IsOnline();
 };
 
 #endif //_EMLAN_PROTO_H_

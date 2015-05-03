@@ -24,18 +24,18 @@ CLan::~CLan()
 void CLan::Startup()
 {
 	WSADATA wsa;
-	if (WSAStartup(MAKEWORD(2,2), &wsa)==0)
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) == 0)
 	{
 		m_status = LS_OK;
 		m_mode = LM_ON;
 
 		char hostname[256];
-		if (gethostname(hostname, 256)==0)
+		if (gethostname(hostname, 256) == 0)
 		{
 			hostent* host = gethostbyname(hostname);
 			char** pAddr = host->h_addr_list;
 			m_hostAddrCount = 0;
-			while (*pAddr && m_hostAddrCount<MAX_INTERNAL_IP)
+			while (*pAddr && m_hostAddrCount < MAX_INTERNAL_IP)
 			{
 				in_addr addr;
 				addr.S_un.S_addr = *((u_long*)(*pAddr));
@@ -70,7 +70,7 @@ void CLan::Shutdown()
 
 void CLan::StopListen()
 {
-	if (m_mode==LM_OFF)
+	if (m_mode == LM_OFF)
 		return;
 
 	if (m_hListenThread)
@@ -100,7 +100,7 @@ void CLan::StopListen()
 
 void CLan::StartListen()
 {
-	if (m_mode!=LM_ON)
+	if (m_mode != LM_ON)
 		return;
 
 	m_income = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -113,7 +113,7 @@ void CLan::StartListen()
 	else
 	{
 		int enable = 1;
-		if (setsockopt(m_income, SOL_SOCKET, SO_BROADCAST, (const char*)&enable, sizeof(enable))!=0)
+		if (setsockopt(m_income, SOL_SOCKET, SO_BROADCAST, (const char*)&enable, sizeof(enable)) != 0)
 		{
 			m_mode = LM_ON;
 			m_status = LS_CANT_TURN_ON_BROADCAST;
@@ -125,7 +125,7 @@ void CLan::StartListen()
 		addr.sin_addr = m_curAddr;
 		addr.sin_family = AF_INET;
 		addr.sin_port = PORT_NUMBER;
-		if (bind(m_income, (sockaddr*)&addr, sizeof(addr))!=0)
+		if (bind(m_income, (sockaddr*)&addr, sizeof(addr)) != 0)
 		{
 			m_mode = LM_ON;
 			m_status = LS_CANT_BIND_SOCKET;
@@ -133,7 +133,7 @@ void CLan::StartListen()
 			return;
 		}
 
-		if (bind(m_filesoc, (sockaddr*)&addr, sizeof(addr))!=0)
+		if (bind(m_filesoc, (sockaddr*)&addr, sizeof(addr)) != 0)
 		{
 			m_mode = LM_ON;
 			m_status = LS_CANT_BIND_SOCKET;
@@ -141,7 +141,7 @@ void CLan::StartListen()
 			return;
 		}
 
-		if (listen(m_filesoc, SOMAXCONN)!=0)
+		if (listen(m_filesoc, SOMAXCONN) != 0)
 		{
 			m_mode = LM_ON;
 			m_status = LS_CANT_START_LISTEN;
@@ -150,9 +150,9 @@ void CLan::StartListen()
 		}
 
 		DWORD threadId;
-		m_hListenThread =  CreateThread(NULL, 0, ListenProc, (LPVOID)this, 0, &threadId);
+		m_hListenThread = CreateThread(NULL, 0, ListenProc, (LPVOID)this, 0, &threadId);
 		m_hAcceptTCPThread = CreateThread(NULL, 0, AcceptTCPProc, (LPVOID)this, 0, &threadId);
-		if (m_hListenThread==NULL || m_hAcceptTCPThread==NULL)
+		if (m_hListenThread == NULL || m_hAcceptTCPThread == NULL)
 		{
 			m_mode = LM_ON;
 			m_status = LS_CANT_CREATE_THREADS;
@@ -164,12 +164,12 @@ void CLan::StartListen()
 
 void CLan::SetCurHostAddress(in_addr addr)
 {
-	if (m_mode!=LM_OFF)
+	if (m_mode != LM_OFF)
 	{
 		int oldMode = m_mode;
 		StopListen();
 		m_curAddr = addr;
-		if (oldMode==LM_LISTEN)
+		if (oldMode == LM_LISTEN)
 			StartListen();
 	}
 }
@@ -183,16 +183,16 @@ DWORD WINAPI CLan::ListenProc(LPVOID lpParameter)
 
 void CLan::Listen()
 {
-	if (m_mode==LM_LISTEN)
+	if (m_mode == LM_LISTEN)
 	{
 		char buf[65536];
-		while(1)
+		while (1)
 		{
 			sockaddr_in addr;
 			int addrLen = sizeof(addr);
 			Sleep(20);
 			int recLen = recvfrom(m_income, buf, 65536, 0, (sockaddr*)&addr, &addrLen);
-			if (recLen!=SOCKET_ERROR)
+			if (recLen != SOCKET_ERROR)
 				OnRecvPacket((u_char*)buf, recLen, addr.sin_addr);
 		}
 	}
@@ -207,7 +207,7 @@ void CLan::SendPacketBroadcast(const u_char* mes, int len)
 
 void CLan::SendPacket(in_addr addr, const u_char* mes, int len)
 {
-	if (m_mode==LM_LISTEN)
+	if (m_mode == LM_LISTEN)
 	{
 		sockaddr_in addrTo;
 		addrTo.sin_addr = addr;
@@ -262,14 +262,14 @@ DWORD WINAPI CLan::OnInTCPConnectionProc(LPVOID lpParameter)
 SOCKET CLan::CreateTCPConnection(u_long addr, LPVOID lpParameter)
 {
 	SOCKET out_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (out_socket==INVALID_SOCKET)
+	if (out_socket == INVALID_SOCKET)
 		return INVALID_SOCKET;
 
 	sockaddr_in addrTo;
 	addrTo.sin_addr.S_un.S_addr = addr;
 	addrTo.sin_family = AF_INET;
 	addrTo.sin_port = PORT_NUMBER;
-	if (connect(out_socket, (sockaddr*)&addrTo, sizeof(addrTo))!=0)
+	if (connect(out_socket, (sockaddr*)&addrTo, sizeof(addrTo)) != 0)
 	{
 		closesocket(out_socket);
 		out_socket = INVALID_SOCKET;
