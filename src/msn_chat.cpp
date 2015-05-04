@@ -280,7 +280,7 @@ void CMsnProto::MSN_GCRefreshThreadsInfo(void)
 		}
 	}
 	if (nThreads)
-		msnNsThread->sendPacketPayload("GET", "MSGR\\THREADS", "<threads>%s</threads", buf);
+		msnNsThread->sendPacketPayload("GET", "MSGR\\THREADS", "<threads>%s</threads>", buf);
 }
 
 void CMsnProto::MSN_GCAddMessage(TCHAR *mChatID, MCONTACT hContact, char *email, time_t ts, bool sentMsg, char *msgBody)
