@@ -1447,6 +1447,7 @@ LBL_InvalidCommand:
 					if ((id=ezxml_child(xmli, "id"))) 
 					{
 						bool bIsChat = strncmp(id->txt, "19:", 3)==0;
+						hContact = MSN_HContactFromEmail(id->txt, NULL, false, false);
 
 						/* We have to traverse the list in reverse order as newest events are on top (which is the opposite direction of Groupchat) */
 						LIST<ezxml> msgs(10,PtrKeySortT);
@@ -1483,7 +1484,25 @@ LBL_InvalidCommand:
 								hContact = MSN_HContactFromEmail(from->txt, NULL, false, false);
 								MSN_GCAddMessage(_A2T(id->txt), hContact, email, ts, sentMsg, message);
 							}
-							else if ((hContact = MSN_HContactFromEmail(id->txt, NULL, false, false))) {
+							else if (hContact) {
+								/* Protect against double sync (Miranda MSGs only have granularity in seconds) */
+								MEVENT hDbEvent;
+								bool bDuplicate = false;
+								DBEVENTINFO dbei = { sizeof(dbei) };
+								BYTE *pszMsgBuf = (BYTE*)mir_alloc(dbei.cbBlob = strlen(message)+1);
+								if (pszMsgBuf) {
+									dbei.pBlob = pszMsgBuf;
+									for((hDbEvent = db_event_last(hContact)); 
+										!bDuplicate && hDbEvent; 
+										hDbEvent=db_event_prev(hContact, hDbEvent)) 
+									{
+										if (db_event_get(hDbEvent, &dbei) || dbei.timestamp != ts) break;
+										if (!strcmp((char*)dbei.pBlob, message)) bDuplicate = true;
+									}
+									mir_free(pszMsgBuf);
+									if (bDuplicate) continue;
+								}
+
 								if (!sentMsg) {
 									PROTORECVEVENT pre = { 0 };
 									pre.szMessage = (char*)message;
