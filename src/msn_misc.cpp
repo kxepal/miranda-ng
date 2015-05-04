@@ -399,14 +399,25 @@ void CMsnProto::MSN_GoOffline(void)
 		ProtoBroadcastAck(NULL, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)msnOldStatus, ID_STATUS_OFFLINE);
 		isIdle = false;
 
-		int count = -1;
-		for (;;) {
-			MsnContact *msc = Lists_GetNext(count);
-			if (msc == NULL) break;
+		MCONTACT hContact = NULL;
 
-			if (ID_STATUS_OFFLINE != getWord(msc->hContact, "Status", ID_STATUS_OFFLINE)) {
-				setWord(msc->hContact, "Status", ID_STATUS_OFFLINE);
-				setDword(msc->hContact, "IdleTS", 0);
+		for (hContact = db_find_first(m_szModuleName); hContact; 
+				hContact = db_find_next(hContact, m_szModuleName)) 
+		{
+			if (isChatRoom(hContact) != 0) {
+				DBVARIANT dbv;
+				if (getTString(hContact, "ChatRoomID", &dbv) == 0) {
+					GCDEST gcd = { m_szModuleName, dbv.ptszVal, GC_EVENT_CONTROL };
+					GCEVENT gce = { sizeof(gce), &gcd };
+					CallServiceSync(MS_GC_EVENT, SESSION_OFFLINE, (LPARAM)&gce);
+					db_free(&dbv);
+				}
+			}
+			else {
+				if (ID_STATUS_OFFLINE != getWord(hContact, "Status", ID_STATUS_OFFLINE)) {
+					setWord(hContact, "Status", ID_STATUS_OFFLINE);
+					setDword(hContact, "IdleTS", 0);
+				}
 			}
 		}
 	}
@@ -569,38 +580,9 @@ void CMsnProto::MSN_SendTyping(ThreadData* info, const char* email, int netId, b
 	info->sendMessage(netId == NETID_MSN ? 'U' : '2', email, netId, tCommand, MSG_DISABLE_HDR);
 }
 
-/*
-static ThreadData* FindThreadTimer(UINT timerId)
+void CMsnProto::MSN_StartStopTyping(GCThreadData* info, bool start)
 {
-	ThreadData* res = NULL;
-	for (int i = 0; i < g_Instances.getCount() && res == NULL; ++i)
-		res = g_Instances[i].MSN_GetThreadByTimer(timerId);
-
-	return res;
-}
-
-static VOID CALLBACK TypingTimerProc(HWND, UINT, UINT_PTR idEvent, DWORD)
-{
-	ThreadData* T = FindThreadTimer(idEvent);
-	if (T != NULL)
-		T->proto->MSN_SendTyping(T, NULL, 1);
-	else
-		KillTimer(NULL, idEvent);
-}
-*/
-
-void CMsnProto::MSN_StartStopTyping(ThreadData* info, bool start)
-{
-	/* FIXME: typing notifications in groupchats 
-	if (start && info->mTimerId == 0) {
-		info->mTimerId = SetTimer(NULL, 0, 5000, TypingTimerProc);
-		MSN_SendTyping(info, NULL, 1);
-	}
-	else if (!start && info->mTimerId != 0) {
-		KillTimer(NULL, info->mTimerId);
-		info->mTimerId = 0;
-	}
-	*/
+	MSN_SendTyping(msnNsThread, info->szEmail, info->netId, start);
 }
 
 
@@ -1105,8 +1087,7 @@ void CMsnProto::MSN_ShowPopup(const TCHAR* nickname, const TCHAR* msg, int flags
 
 void CMsnProto::MSN_ShowPopup(const MCONTACT hContact, const TCHAR* msg, int flags)
 {
-	const TCHAR* nickname = hContact ? GetContactNameT(hContact) : _T("Me");
-	MSN_ShowPopup(nickname, msg, flags, NULL);
+	MSN_ShowPopup(GetContactNameT(hContact), msg, flags, NULL);
 }
 
 

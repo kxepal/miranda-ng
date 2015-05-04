@@ -324,6 +324,7 @@ void CMsnProto::MSN_ReceiveMessage(ThreadData* info, char* cmdString, char* para
 
 	int msgBytes;
 	char *nick = NULL, *email;
+	TCHAR *mChatID = NULL;
 	bool ubmMsg = strncmp(cmdString, "UBM", 3) == 0;
 	bool sdgMsg = strncmp(cmdString, "SDG", 3) == 0;
 	bool sentMsg = false;
@@ -362,8 +363,18 @@ void CMsnProto::MSN_ReceiveMessage(ThreadData* info, char* cmdString, char* para
 	char* msgBody = tHeader.readFromBuffer(msg);
 
 	if (sdgMsg) {
+		if (tHeader["Ack-Id"]) {
+			CMStringA buf;
+
+			buf.AppendFormat("Ack-Id: %s\r\n", tHeader["Ack-Id"]);
+			if (msnRegistration) buf.AppendFormat("Registration: %s\r\n", msnRegistration);
+			buf.AppendFormat("\r\n");
+			msnNsThread->sendPacket("ACK", "MSGR %d\r\n%s", strlen(buf), buf);
+		}
 		msgBody = tHeader.readFromBuffer(msgBody);
 		if (!(email = NEWSTR_ALLOCA(tHeader["From"]))) return;
+		mChatID = mir_a2t(tHeader["To"]);
+		if (_tcsncmp(mChatID, _T("19:"), 3)) mChatID[0]=0; // NETID_THREAD
 		msgBody = tHeader.readFromBuffer(msgBody);
 		msgBody = tHeader.readFromBuffer(msgBody);
 		nick = NEWSTR_ALLOCA(tHeader["IM-Display-Name"]);
@@ -373,6 +384,7 @@ void CMsnProto::MSN_ReceiveMessage(ThreadData* info, char* cmdString, char* para
 			HtmlDecode(msgBody);
 		}
 	}
+	else mChatID = info->mChatID;
 
 	const char* tMsgId = tHeader["Message-ID"];
 
@@ -420,7 +432,7 @@ void CMsnProto::MSN_ReceiveMessage(ThreadData* info, char* cmdString, char* para
 
 	if (!_strnicmp(tContentType, "text/plain", 10) ||
 		(!_strnicmp(tContentType, "application/user+xml", 10) && tHeader["Message-Type"] && !strcmp(tHeader["Message-Type"], "RichText"))) {
-		MCONTACT hContact = MSN_HContactFromEmail(email, nick, true, true);
+		MCONTACT hContact = strncmp(email, "19:", 3)?MSN_HContactFromEmail(email, nick, true, true):NULL;
 
 		int iTyping = -1;
 		if (!_stricmp(tHeader["Message-Type"], "Control/Typing")) iTyping=7; else
@@ -430,12 +442,12 @@ void CMsnProto::MSN_ReceiveMessage(ThreadData* info, char* cmdString, char* para
 			const char* p = tHeader["X-MMS-IM-Format"];
 			bool isRtl = p != NULL && strstr(p, "RL=1") != NULL;
 
-			if (info->mJoinedContactsWLID.getCount() > 1)
+			/*if (info->mJoinedContactsWLID.getCount() > 1)
 				MSN_ChatStart(info);
-			else {
-				char *szEmail;
-				parseWLID(NEWSTR_ALLOCA(email), NULL, &szEmail, NULL);
-				sentMsg = _stricmp(szEmail, MyOptions.szEmail) == 0;
+			else */{
+				char *szNet, *szEmail;
+				parseWLID(NEWSTR_ALLOCA(email), &szNet, &szEmail, NULL);
+				sentMsg = _stricmp(szEmail, GetMyUsername(atoi(szNet))) == 0;
 				if (sentMsg)
 					hContact = ubmMsg ? MSN_HContactFromEmail(datau.toEmail, nick) : info->getContactHandle();
 			}
@@ -449,22 +461,15 @@ void CMsnProto::MSN_ReceiveMessage(ThreadData* info, char* cmdString, char* para
 				msgBody = newbody = newMsgBody;
 			}
 
-			if (info->mChatID[0]) {
-				GCDEST gcd = { m_szModuleName, info->mChatID, GC_EVENT_MESSAGE };
-				GCEVENT gce = { sizeof(gce), &gcd };
-				gce.dwFlags = GCEF_ADDTOLOG;
-				gce.ptszUID = mir_a2t(email);
-				gce.ptszNick = GetContactNameT(hContact);
-				gce.time = time(NULL);
-				gce.bIsMe = FALSE;
-
-				TCHAR* p = mir_utf8decodeT(msgBody);
-				gce.ptszText = EscapeChatTags(p);
-				mir_free(p);
-
-				CallServiceSync(MS_GC_EVENT, 0, (LPARAM)&gce);
-				mir_free((void*)gce.ptszText);
-				mir_free((void*)gce.ptszUID);
+			if (mChatID[0]) {
+				if (!_strnicmp(tHeader["Message-Type"], "ThreadActivity/", 15)) {
+					ezxml_t xmli = ezxml_parse_str(msgBody, strlen(msgBody));
+					if (xmli) {
+						MSN_GCProcessThreadActivity(xmli, mChatID);
+						ezxml_free(xmli);
+					}
+				}
+				else MSN_GCAddMessage(mChatID, hContact, email, time(NULL), sentMsg, msgBody);
 			}
 			else if (hContact) {
 				if (!sentMsg) {
@@ -585,6 +590,7 @@ void CMsnProto::MSN_ReceiveMessage(ThreadData* info, char* cmdString, char* para
 	else if (!_strnicmp(tContentType, "text/x-mms-animemoticon", 23))
 		MSN_CustomSmiley(msgBody, email, nick, MSN_APPID_CUSTOMANIMATEDSMILEY);
 
+	mir_free(mChatID);
 	mir_free(newbody);
 }
 
@@ -1047,6 +1053,7 @@ void CMsnProto::MSN_ProcessNotificationMessage(char* buf, unsigned len)
 
 void CMsnProto::MSN_InitSB(ThreadData* info, const char* szEmail)
 {
+/* MSNP21: No more switchboard, bye, bye ... 
 	MsnContact *cont = Lists_Get(szEmail);
 
 	if (cont->netId == NETID_MSN)
@@ -1065,7 +1072,7 @@ void CMsnProto::MSN_InitSB(ThreadData* info, const char* szEmail)
 				ProtoBroadcastAck(cont->hContact, ACKTYPE_MESSAGE, ACKRESULT_SUCCESS, (HANDLE)E.seq, 0);
 			}
 			else {
-				if (E.msgType == 'D' && !info->mBridgeInit /*&& strchr(data.flags, ':')*/) {
+				if (E.msgType == 'D' && !info->mBridgeInit) { //&& strchr(data.flags, ':'))  {
 					info->mBridgeInit = true;
 
 //					P2PV2_Header hdrdata(E.message);
@@ -1095,6 +1102,7 @@ void CMsnProto::MSN_InitSB(ThreadData* info, const char* szEmail)
 
 	PROTO_AVATAR_INFORMATIONT ai = { sizeof(ai), cont->hContact };
 	GetAvatarInfo(GAIF_FORCE, (LPARAM)&ai);
+	*/
 }
 
 int CMsnProto::MSN_HandleCommands(ThreadData* info, char* cmdString)
@@ -1173,6 +1181,7 @@ LBL_InvalidCommand:
 		{
 			msnLoggedIn = true;
 			MSN_SetServerStatus(m_iStatus);
+			MSN_EnableMenuItems(true);
 			MSN_RefreshContactList();
 			MSN_FetchRecentMessages();
 		}
@@ -1191,7 +1200,7 @@ LBL_InvalidCommand:
 
 			replaceStr(msnRegistration,tHeader["Set-Registration"]);
 			ezxml_t xmlbnd = ezxml_parse_str(msgBody, strlen(msgBody));
-			ezxml_t xmlbdy = ezxml_get(xmlbnd, "nonce", -1);
+			ezxml_t xmlbdy = ezxml_child(xmlbnd, "nonce");
 			if (xmlbdy)
 			{
 				char dgst[64];
@@ -1350,7 +1359,7 @@ LBL_InvalidCommand:
 			} else {
 				/* Skype username/pass login */
 				ezxml_t xmlcnt = ezxml_parse_str(info->mData, strlen(info->mData));
-				ezxml_t xmlnonce = ezxml_get(xmlcnt, "nonce", -1);
+				ezxml_t xmlnonce = ezxml_child(xmlcnt, "nonce");
 				if (xmlnonce) {
 					char szUIC[1024]={0};
 
@@ -1405,16 +1414,25 @@ LBL_InvalidCommand:
 						ezxml_t id;
 						MCONTACT hContact;
 						MEVENT hDbEvent;
+						DWORD ts = 1;
 
-						if (ezxml_get(conv, "messages", 0, "message", -1) && (id=ezxml_get(conv, "id",-1)) &&
-							(hContact = MSN_HContactFromEmail(id->txt, NULL, false, false))) 
+						if (ezxml_get(conv, "messages", 0, "message", -1) && (id=ezxml_child(conv, "id"))) 
 						{
-							DWORD ts = 1;
-							// There are messages to be fetched
-							if (hDbEvent = db_event_last(hContact)) {
-								DBEVENTINFO dbei = { sizeof(dbei) };
-								db_event_get(hDbEvent, &dbei);
-								ts = dbei.timestamp;
+							if (strncmp(id->txt, "19:", 3) == 0) {
+								/* This is a thread (Groupchat)
+								 * Find out about its current state on the server */
+								hContact = MSN_HContactFromChatID(id->txt);
+								msnNsThread->sendPacketPayload("GET", "MSGR\\THREADS", 
+									"<threads><thread><id>%s</id></thread></threads>", id->txt);
+							} else hContact = MSN_HContactFromEmail(id->txt, NULL, false, false);
+
+							if (hContact) {
+								// There are messages to be fetched
+								if (hDbEvent = db_event_last(hContact)) {
+									DBEVENTINFO dbei = { sizeof(dbei) };
+									db_event_get(hDbEvent, &dbei);
+									ts = dbei.timestamp;
+								}
 							}
 							msnNsThread->sendPacketPayload("GET", "MSGR\\MESSAGESBYCONVERSATION", 
 								"<messagesbyconversation><id>%s</id><start>%llu</start><pagesize>100</pagesize></messagesbyconversation>",
@@ -1426,45 +1444,71 @@ LBL_InvalidCommand:
 					ezxml_t id;
 					MCONTACT hContact;
 
-					if ((id=ezxml_get(xmli, "id",-1)) &&
-						(hContact = MSN_HContactFromEmail(id->txt, NULL, false, false))) 
+					if ((id=ezxml_child(xmli, "id"))) 
 					{
-						for (ezxml_t msg = ezxml_get(xmli, "messages", 0, "message", -1); msg != NULL; msg = ezxml_next(msg)) {
-							ezxml_t arrtime = ezxml_get(msg, "originalarrivaltime", -1), from = ezxml_get(msg, "from", -1),
-									msgtype = ezxml_get(msg, "messagetype", -1), content = ezxml_get(msg, "content", -1);
+						bool bIsChat = strncmp(id->txt, "19:", 3)==0;
+
+						/* We have to traverse the list in reverse order as newest events are on top (which is the opposite direction of Groupchat) */
+						LIST<ezxml> msgs(10,PtrKeySortT);
+						for (ezxml_t msg = ezxml_get(xmli, "messages", 0, "message", -1); msg != NULL; msg = ezxml_next(msg)) msgs.insert(msg, 0);
+						for (int i=0; i<msgs.getCount(); i++) {
+							ezxml_t msg = msgs[i];
+							ezxml_t arrtime = ezxml_child(msg, "originalarrivaltime"), from = ezxml_child(msg, "from"),
+									msgtype = ezxml_child(msg, "messagetype"), content = ezxml_child(msg, "content");
 							time_t ts;
 							char *netId, *email, *message;
+							bool sentMsg;
 
 							if (!arrtime || !from || !content) continue;
 							ts=IsoToUnixTime(arrtime->txt);
-							parseWLID(from->txt, &netId, &email, NULL);
+							parseWLID(NEWSTR_ALLOCA(from->txt), &netId, &email, NULL);
 							message=content->txt;
-							if (msgtype && !strcmp(msgtype->txt, "RichText")) {
-								message = NEWSTR_ALLOCA(message);
-								stripHTML(message);
-								HtmlDecode(message);
+							sentMsg = stricmp(email, GetMyUsername(atoi(netId)))==0;
+							if (msgtype) {
+								if (!strcmp(msgtype->txt, "RichText")) {
+									message = NEWSTR_ALLOCA(message);
+									stripHTML(message);
+									HtmlDecode(message);
+								} else if (!strncmp(msgtype->txt, "ThreadActivity/", 15)) {
+									if (ezxml_t xmlact = ezxml_parse_str(content->txt, strlen(content->txt))) {
+										MSN_GCProcessThreadActivity(xmlact, _A2T(id->txt));
+										ezxml_free(xmlact);
+									}
+									continue;
+								} else if (strcmp(msgtype->txt, "Text")) continue;
+								/* TODO: Implement i.e. RichText/Files for announcement of file transfers */
 							}
 
-							if (stricmp(email, GetMyUsername(atoi(netId)))) {
-								PROTORECVEVENT pre = { 0 };
-								pre.szMessage = (char*)message;
-								pre.flags = PREF_UTF;
-								pre.timestamp = (DWORD)ts;
-								ProtoChainRecvMsg(hContact, &pre);
+							if (bIsChat) {
+								hContact = MSN_HContactFromEmail(from->txt, NULL, false, false);
+								MSN_GCAddMessage(_A2T(id->txt), hContact, email, ts, sentMsg, message);
 							}
-							else {
-								DBEVENTINFO dbei = { 0 };
-								dbei.cbSize = sizeof(dbei);
-								dbei.eventType = EVENTTYPE_MESSAGE;
-								dbei.flags = DBEF_SENT | DBEF_UTF;
-								dbei.szModule = m_szModuleName;
-								dbei.timestamp = ts;
-								dbei.cbBlob = (unsigned)strlen(message) + 1;
-								dbei.pBlob = (PBYTE)message;
-								db_event_add(hContact, &dbei);
+							else if ((hContact = MSN_HContactFromEmail(id->txt, NULL, false, false))) {
+								if (!sentMsg) {
+									PROTORECVEVENT pre = { 0 };
+									pre.szMessage = (char*)message;
+									pre.flags = PREF_UTF;
+									pre.timestamp = (DWORD)ts;
+									ProtoChainRecvMsg(hContact, &pre);
+								}
+								else {
+									DBEVENTINFO dbei = { 0 };
+									dbei.cbSize = sizeof(dbei);
+									dbei.eventType = EVENTTYPE_MESSAGE;
+									dbei.flags = DBEF_SENT | DBEF_UTF;
+									dbei.szModule = m_szModuleName;
+									dbei.timestamp = ts;
+									dbei.cbBlob = (unsigned)strlen(message) + 1;
+									dbei.pBlob = (PBYTE)message;
+									db_event_add(hContact, &dbei);
+								}
 							}
 						}
 					}
+				}
+				else if (!strcmp(xmli->name, "threads-response")) {
+					for (ezxml_t thread = ezxml_get(xmli, "threads", 0, "thread", -1); thread != NULL; thread = ezxml_next(thread))
+						MSN_ChatStart(thread);
 				}
 				ezxml_free(xmli);
 			}				
@@ -1488,7 +1532,7 @@ LBL_InvalidCommand:
 			MSN_ProcessNLN(data.userStatus, data.wlid, data.userNick, data.objid, data.cmdstring);
 		}
 		break;
-	case ' ORI':    //********* IRO: section 8.4 Getting Invited to a Switchboard Session
+	case ' ORI':    /********* IRO: section 8.4 Getting Invited to a Switchboard Session
 		{
 			union {
 				char* tWords[5];
@@ -1523,9 +1567,9 @@ LBL_InvalidCommand:
 					MSN_ChatStart(info);
 			}
 		}
-		break;
+		break;*/
 
-	case ' IOJ':    //********* JOI: section 8.5 Session Participant Changes
+	case ' IOJ':    /********* JOI: section 8.5 Session Participant Changes
 		{
 			union {
 				char* tWords[3];
@@ -1630,7 +1674,7 @@ LBL_InvalidCommand:
 				else MSN_ChatStart(info);
 			}
 		}
-		break;
+		break;*/
 
 	case ' GSM':   //********* MSG: sections 8.7 Instant Messages, 8.8 Receiving an Instant Message
 		MSN_ReceiveMessage(info, cmdString, params);
@@ -1650,32 +1694,55 @@ LBL_InvalidCommand:
 
 	case ' YFN':   //********* NFY: MSNP21+ Notifications
 		{
-			MimeHeaders tHeader;
-			char* msgBody = info->mData;
-			int i;
-			for (i=0; i<2; i++) msgBody = tHeader.readFromBuffer(msgBody);
-			char *pszTo = NULL, *pszToNet;
-			if (tHeader["To"]) parseWLID(NEWSTR_ALLOCA(tHeader["To"]), &pszToNet, &pszTo, NULL);
-			const char *pszFrom =  tHeader["From"];
-			for (i=0; i<2; i++) msgBody = tHeader.readFromBuffer(msgBody);
+			union {
+				char* tWords[2];
+				struct { char *typeId, *strMsgBytes; } data;
+			};
 
-			if (pszFrom)
-			{
+			if (sttDivideWords(params, SIZEOF(tWords), tWords) < 2)
+				goto LBL_InvalidCommand;
+
+			if (!strcmp(data.typeId, "MSGR\\PUT") || !strcmp(data.typeId, "MSGR\\DEL")) {
+				MimeHeaders tHeader;
+				char* msgBody = info->mData;
+				int i;
+				for (i=0; i<2; i++) msgBody = tHeader.readFromBuffer(msgBody);
+				char *pszTo = NULL, *pszToNet;
+				if (tHeader["To"]) parseWLID(NEWSTR_ALLOCA(tHeader["To"]), &pszToNet, &pszTo, NULL);
+				const char *pszFrom =  tHeader["From"];
+				for (i=0; i<2; i++) msgBody = tHeader.readFromBuffer(msgBody);
+
+				if (pszFrom)
+				{
+					ezxml_t xmli;
+					if (xmli = ezxml_parse_str(msgBody, strlen(msgBody)))
+					{
+						if (!strcmp(xmli->name, "user"))
+						{
+							ezxml_t xmlstatus = ezxml_get(xmli, "s", 0, "Status", -1);
+							/* FIXME: MSGR\DEL: Instance of user with given EPID disconnected, not 
+							 * sure if this implies that contact is offline now... */
+							if (xmlstatus || !strcmp(data.typeId, "MSGR\\DEL"))
+							{
+								// These capabilities seem to be something different than in previous MSNP versions?
+								//ezxml_t xmlcaps = ezxml_get(xmli, "sep", 0, "Capabilities", -1);
+								ezxml_t usertile = ezxml_get(xmli, "s", 1, "UserTileLocation", -1);
+								MSN_ProcessNLN(ezxml_txt(xmlstatus), pszFrom, NULL, NULL, usertile?usertile->txt:NULL);
+							}
+							MSN_ProcessStatusMessage(xmli, pszFrom);
+						}
+						ezxml_free(xmli);
+					}				
+				}
+			}
+			else if (!strcmp(data.typeId, "MSGR\\THREAD")) {
+				MimeHeaders tHeader;
+				char *msgBody = tHeader.readFromBuffer(info->mData);
 				ezxml_t xmli;
+
 				if (xmli = ezxml_parse_str(msgBody, strlen(msgBody)))
 				{
-					if (!strcmp(xmli->name, "user"))
-					{
-						ezxml_t xmlstatus = ezxml_get(xmli, "s", 0, "Status", -1);
-						if (xmlstatus)
-						{
-							// These capabilities seem to be something different than in previous MSNP versions?
-							//ezxml_t xmlcaps = ezxml_get(xmli, "sep", 0, "Capabilities", -1);
-							ezxml_t usertile = ezxml_get(xmli, "s", 1, "UserTileLocation", -1);
-							MSN_ProcessNLN(xmlstatus->txt, pszFrom, NULL, NULL, usertile?usertile->txt:NULL);
-						}
-						MSN_ProcessStatusMessage(xmli, pszFrom);
-					}
+					MSN_ChatStart(xmli);
 					ezxml_free(xmli);
 				}				
 			}
@@ -1706,16 +1773,24 @@ LBL_InvalidCommand:
 		return 1;
 
 	case ' TUP':	//******** MSNP21+: PUT notifications
-		if (msnP24Ver > 1)
+	case ' GNP':	//******** MSNP21+: PNG reply
 		{
 			MimeHeaders tHeader;
 			char* msgBody = tHeader.readFromBuffer(info->mData);
 
 			if (tHeader["Set-Registration"]) replaceStr(msnRegistration,tHeader["Set-Registration"]);
+			if (cmdString[1]=='N') { // PNG
+				if (ezxml_t xmli = ezxml_parse_str(msgBody, strlen(msgBody)))
+				{
+					if (ezxml_t wait = ezxml_child(xmli, "wait")) {
+						msnPingTimeout = atoi(ezxml_txt(wait));
+						if (msnPingTimeout && hKeepAliveThreadEvt != NULL)
+							SetEvent(hKeepAliveThreadEvt);
+					}
+					ezxml_free(xmli);
+				}				
+			}
 		}
-		break;
-
-	case ' GNP':	//******** MSNP21+: PNG reply
 		break;
 
 	case ' YRQ':   //********* QRY:
@@ -1957,12 +2032,12 @@ LBL_InvalidCommand:
 	case ' RFX':    //******** XFR: sections 7.4 Referral, 8.1 Referral to Switchboard
 		{
 			ezxml_t xmlxfr = ezxml_parse_str(info->mData, strlen(info->mData));
-			ezxml_t xmltgt = ezxml_get(xmlxfr, "target", -1);
+			ezxml_t xmltgt = ezxml_child(xmlxfr, "target");
 			if (xmltgt)
 			{
 				ThreadData* newThread = new ThreadData;
 				strcpy(newThread->mServer, xmltgt->txt);
-				strcpy(newThread->mState, ezxml_txt(ezxml_get(xmlxfr, "state", -1)));
+				strcpy(newThread->mState, ezxml_txt(ezxml_child(xmlxfr, "state")));
 				newThread->mType = SERVER_NOTIFICATION;
 				newThread->mTrid = info->mTrid;
 				newThread->mIsMainThread = true;

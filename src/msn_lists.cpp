@@ -211,7 +211,7 @@ void CMsnProto::Lists_Populate(void)
 			else
 				Lists_Add(0, netId, szEmail, hContact);
 		}
-		else CallService(MS_DB_CONTACT_DELETE, hContact, 0);
+		else if (!isChatRoom(hContact)) CallService(MS_DB_CONTACT_DELETE, hContact, 0);
 		hContact = hNext;
 	}
 }

@@ -40,7 +40,7 @@ MCONTACT CMsnProto::MSN_HContactFromEmail(const char* wlid, const char* msnNick,
 		CallService(MS_PROTO_ADDTOCONTACT, hContact, (LPARAM)m_szModuleName);
 		if (netId != NETID_SKYPE) setString(hContact, "e-mail", szEmail);
 		setStringUtf(hContact, "Nick", msnNick ? msnNick : wlid);
-		setWord(hContact, "netId", msc && netId);
+		setWord(hContact, "netId", netId);
 		setString(hContact, "wlid", szEmail);
 		if (temporary)
 			db_set_b(hContact, "CList", "NotOnList", 1);
@@ -49,6 +49,27 @@ MCONTACT CMsnProto::MSN_HContactFromEmail(const char* wlid, const char* msnNick,
 	}
 
 	return hContact;
+}
+
+MCONTACT CMsnProto::MSN_HContactFromChatID(const char* wlid)
+{
+	MCONTACT hContact = NULL;
+
+	for (hContact = db_find_first(m_szModuleName); hContact; 
+			hContact = db_find_next(hContact, m_szModuleName)) 
+	{
+		if (isChatRoom(hContact) != 0) {
+			DBVARIANT dbv;
+			if (getString(hContact, "ChatRoomID", &dbv) == 0) {
+				if (strcmp(dbv.pszVal, wlid) == 0) {
+					db_free(&dbv);
+					return hContact;
+				}
+				db_free(&dbv);
+			}
+		}
+	}
+	return NULL;
 }
 
 
@@ -254,5 +275,9 @@ bool CMsnProto::MSN_RefreshContactList(void)
 		/* TODO: Add pulling Skype contacts from event server or skypeweb or other unknown method.. */
 		MSN_CreateContList();
 	}
+
+	// Refresh Threads which are also part of the contact list
+	if (msnP24Ver>1) MSN_GCRefreshThreadsInfo();
+
 	return true;
 }

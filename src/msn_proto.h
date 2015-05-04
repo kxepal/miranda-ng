@@ -124,6 +124,7 @@ struct CMsnProto : public PROTO<CMsnProto>
 
 	mir_cs m_csThreads;
 	OBJLIST<ThreadData> m_arThreads;
+	LIST<GCThreadData> m_arGCThreads;
 
 	mir_cs m_csSessions;
 	OBJLIST<filetransfer> m_arSessions;
@@ -197,7 +198,7 @@ struct CMsnProto : public PROTO<CMsnProto>
 	void        MSN_SendStatusMessage(const char* msg);
 	void        MSN_SetServerStatus(int newStatus);
 	void		MSN_FetchRecentMessages(time_t since = 0);
-	void        MSN_StartStopTyping(ThreadData* info, bool start);
+	void        MSN_StartStopTyping(GCThreadData* info, bool start);
 	void        MSN_SendTyping(ThreadData* info, const char* email, int netId, bool bTyping );
 
 	void        MSN_InitSB(ThreadData* info, const char* szEmail);
@@ -287,14 +288,13 @@ struct CMsnProto : public PROTO<CMsnProto>
 	int          MSN_GetActiveThreads(ThreadData**);
 	ThreadData*  MSN_GetThreadByConnection(HANDLE hConn);
 	ThreadData*  MSN_GetThreadByContact(const char* wlid, TInfoType type = SERVER_SWITCHBOARD);
-	ThreadData*  MSN_GetThreadByChatId(const TCHAR* chatId);
+	GCThreadData*MSN_GetThreadByChatId(const TCHAR* chatId);
 	ThreadData*  MSN_GetP2PThreadByContact(const char *wlid);
 	void         MSN_StartP2PTransferByContact(const char* wlid);
 	ThreadData*  MSN_GetThreadByPort(WORD wPort);
 	ThreadData*  MSN_GetUnconnectedThread(const char* wlid, TInfoType type = SERVER_SWITCHBOARD);
 	ThreadData*  MSN_GetOtherContactThread(ThreadData* thread);
-	ThreadData*  MSN_GetThreadByTimer(UINT timerId);
-
+	
 	ThreadData*  MSN_StartSB(const char* uid, bool& isOffline);
 	void __cdecl ThreadStub(void* arg);
 
@@ -402,9 +402,15 @@ struct CMsnProto : public PROTO<CMsnProto>
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	MSN Chat support
 
-	int  MSN_ChatInit(ThreadData* info);
-	void MSN_ChatStart(ThreadData* info);
+	int  MSN_ChatInit(GCThreadData *info, const char *pszID, const char *pszTopic);
+	void MSN_ChatStart(ezxml_t xmli);
 	void MSN_KillChatSession(const TCHAR* id);
+	void MSN_Kickuser(GCHOOK *gch);
+	void MSN_Promoteuser(GCHOOK *gch, const char *pszRole);
+	const TCHAR *MSN_GCGetRole(GCThreadData* thread, const char *pszWLID);
+	void MSN_GCProcessThreadActivity(ezxml_t xmli, const TCHAR *mChatID);
+	void MSN_GCAddMessage(TCHAR *mChatID, MCONTACT hContact, char *email, time_t ts, bool sentMsg, char *msgBody);
+	void MSN_GCRefreshThreadsInfo(void);
 
 	MCONTACT MSN_GetChatInernalHandle(MCONTACT hContact);
 
@@ -444,6 +450,7 @@ struct CMsnProto : public PROTO<CMsnProto>
 	void     MSN_AddAuthRequest(const char *email, const char *nick, const char *reason);
 	void     MSN_SetContactDb(MCONTACT hContact, const char *szEmail);
 	MCONTACT MSN_HContactFromEmail(const char* msnEmail, const char* msnNick = NULL, bool addIfNeeded = false, bool temporary = false);
+	MCONTACT MSN_HContactFromChatID(const char* wlid);
 	MCONTACT AddToListByEmail(const char *email, const char *nick, DWORD flags);
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -562,6 +569,7 @@ struct CMsnProto : public PROTO<CMsnProto>
 
 	//////////////////////////////////////////////////////////////////////////////////////
 
+	TCHAR *m_DisplayNameCache;
 	TCHAR* GetContactNameT(MCONTACT hContact);
 
 	int    getStringUtf(MCONTACT hContact, const char* name, DBVARIANT* result);

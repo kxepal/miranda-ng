@@ -187,6 +187,7 @@ int         sttDivideWords(char* parBuffer, int parMinItems, char** parDest);
 void		MSN_MakeDigest(const char* chl, char* dgst);
 char*		getNewUuid(void);
 time_t		IsoToUnixTime(const char *stamp);
+time_t		MsnTSToUnixtime(const char *pszTS);
 
 TCHAR* EscapeChatTags(const TCHAR* pszText);
 TCHAR* UnEscapeChatTags(TCHAR* str_in);
@@ -478,6 +479,31 @@ bool p2p_IsDlFileOk(filetransfer* ft);
 struct CMsnProto;
 typedef void (__cdecl CMsnProto::*MsnThreadFunc)(void*);
 
+/* Groupchat threadlist entry. As there is no more SB in MSNP21+, 
+ * this is no longer in ThreadData and there are no more new 
+ * Threads, but for code compatibility, we still have ThreadData
+ * as a "main connection"
+ */
+struct GCUserItem
+{
+	char	WLID[MSN_MAX_EMAIL_LEN];
+	TCHAR   role[8];
+	BYTE    btag;
+};
+
+struct GCThreadData
+{
+   GCThreadData();
+   ~GCThreadData();
+
+   LIST<GCUserItem> mJoinedContacts;
+   GCUserItem*   mCreator;
+   GCUserItem*   mMe;
+   TCHAR         mChatID[MSN_MAX_EMAIL_LEN];
+   int			 netId;			// from mChatID
+   char			 szEmail[MSN_MAX_EMAIL_LEN];	// frim mChatID
+};
+
 struct ThreadData
 {
    ThreadData();
@@ -714,19 +740,32 @@ struct MsnContact
 #define capex_SupportsP4Activity            0x40000000
 #define capex_SupportsChats                 0x80000000
 
-#define NETID_UNKNOWN	0x0000
-#define NETID_MSN		0x0001
-#define NETID_LCS		0x0002
-#define NETID_MOB		0x0004
-#define NETID_MOBNET	0x0008
-#define NETID_SKYPE		NETID_MOBNET
-#define NETID_CIRCLE	0x0009
-#define NETID_TMPCIRCLE	0x000A
-#define NETID_CID		0x000B
-#define NETID_CONNECT	0x000D
-#define NETID_REMOTE	0x000E
-#define NETID_SMTP		0x0010
-#define NETID_YAHOO		0x0020
+#define NETID_UNKNOWN	0
+#define NETID_MSN		1
+#define NETID_LCS		2
+#define NETID_ALIAS		3
+#define NETID_MOB		4
+#define NETID_DOMAIN	5
+#define NETID_SINK		6
+#define NETID_CONTACT	7
+#define NETID_SKYPE		8
+#define NETID_CIRCLE	9
+#define NETID_TMPCIRCLE	10
+#define NETID_CID		11
+#define NETID_APPID		12
+#define NETID_CONNECT	13
+#define NETID_REMOTE	14
+#define NETID_SMTP		16
+#define NETID_LVIDSINK	17
+#define NETID_MULTICAST	18
+#define NETID_THREAD	19
+#define NETID_1TO1TEXT	21
+#define NETID_GROUPTEXT	22
+#define NETID_BOT		28
+#define NETID_YAHOO		32
+#define NETID_PUBSUBTPC	33
+#define NETID_PUBSUBSUB	34
+#define NETID_WNSSID	35
 
 #define	LIST_FL         0x0001
 #define	LIST_AL		    0x0002
@@ -777,9 +816,9 @@ struct TWinErrorCode
 const char msnProtChallenge[] = "YMM8C_H7KCQ2S_KL";
 const char msnProductID[] = "PROD0090YUAUV{2B";
 const char msnAppID[] = "F6D2794D-501F-443A-ADBE-8F1490FF30FD";
-const int  msnP24Ver = 1;
+const int  msnP24Ver = 2;
 const char msnStoreAppId[] = "Skype";
-const char msnProductVer[] = "2/4.3.0.37/174";
+const char msnProductVer[] = "0/6.16.0.105/259/";
 const char msnProtID[] = "MSNP24";
 
 extern HINSTANCE hInst;

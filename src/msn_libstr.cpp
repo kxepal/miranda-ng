@@ -405,3 +405,12 @@ time_t IsoToUnixTime(const char *stamp)
 	t -= _timezone;
 	return (t >= 0) ? t : 0;
 }
+
+time_t MsnTSToUnixtime(const char *pszTS)
+{
+	char szTS[16];
+
+	if (!*pszTS) return time(NULL);
+	strncpy(szTS, pszTS, 10);
+	return (time_t)atoi(szTS);
+}

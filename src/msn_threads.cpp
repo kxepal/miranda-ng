@@ -354,27 +354,14 @@ ThreadData* CMsnProto::MSN_GetThreadByContact(const char* wlid, TInfoType type)
 	return NULL;
 }
 
-ThreadData* CMsnProto::MSN_GetThreadByChatId(const TCHAR* chatId)
+GCThreadData* CMsnProto::MSN_GetThreadByChatId(const TCHAR* chatId)
 {
 	mir_cslock lck(m_csThreads);
 
-	for (int i = 0; i < m_arThreads.getCount(); i++) {
-		ThreadData &T = m_arThreads[i];
-		if (_tcsicmp(T.mChatID, chatId) == 0)
-			return &T;
-	}
-
-	return NULL;
-}
-
-ThreadData* CMsnProto::MSN_GetThreadByTimer(UINT timerId)
-{
-	mir_cslock lck(m_csThreads);
-
-	for (int i = 0; i < m_arThreads.getCount(); i++) {
-		ThreadData &T = m_arThreads[i];
-		if (T.mType == SERVER_SWITCHBOARD && T.mTimerId == timerId)
-			return &T;
+	for (int i = 0; i < m_arGCThreads.getCount(); i++) {
+		GCThreadData *T = m_arGCThreads[i];
+		if (_tcsicmp(T->mChatID, chatId) == 0)
+			return T;
 	}
 
 	return NULL;
@@ -719,3 +706,17 @@ BYTE* HReadBuffer::surelyRead(size_t parBytes)
 	BYTE *result = buffer + startOffset; startOffset += parBytes;
 	return result;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// class GCThreadData members
+
+GCThreadData::GCThreadData() :
+mJoinedContacts(10, PtrKeySortT)
+{
+	memset(&mCreator, 0, sizeof(GCThreadData) - sizeof(mJoinedContacts));
+}
+
+GCThreadData::~GCThreadData()
+{
+}
+

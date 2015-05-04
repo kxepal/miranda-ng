@@ -38,6 +38,7 @@ CMsnProto::CMsnProto(const char* aProtoName, const TCHAR* aUserName) :
 	m_arContacts(10, CompareLists),
 	m_arGroups(10, CompareId),
 	m_arThreads(10, PtrKeySortT),
+	m_arGCThreads(10, PtrKeySortT),
 	m_arSessions(10, PtrKeySortT),
 	m_arDirect(10, PtrKeySortT),
 	lsMessageQueue(1),
@@ -140,6 +141,8 @@ CMsnProto::CMsnProto(const char* aProtoName, const TCHAR* aUserName) :
 
 	mir_sntprintf(szBuffer, SIZEOF(szBuffer), TranslateT("%s plugin connections"), m_tszUserName);
 	m_hNetlibUser = (HANDLE)CallService(MS_NETLIB_REGISTERUSER, 0, (LPARAM)&nlu);
+
+	m_DisplayNameCache = NULL;
 }
 
 CMsnProto::~CMsnProto()
@@ -173,6 +176,7 @@ CMsnProto::~CMsnProto()
 	mir_free(abCacheKey);
 	mir_free(sharingCacheKey);
 	mir_free(storageCacheKey);
+	mir_free(m_DisplayNameCache);
 
 	FreeAuthTokens();
 }
