@@ -1433,6 +1433,7 @@ LBL_InvalidCommand:
 									db_event_get(hDbEvent, &dbei);
 									ts = dbei.timestamp;
 								}
+								db_set_dw(hContact, m_szModuleName, "syncTS", ts);
 							}
 							msnNsThread->sendPacketPayload("GET", "MSGR\\MESSAGESBYCONVERSATION", 
 								"<messagesbyconversation><id>%s</id><start>%llu</start><pagesize>100</pagesize></messagesbyconversation>",
@@ -1447,7 +1448,10 @@ LBL_InvalidCommand:
 					if ((id=ezxml_child(xmli, "id"))) 
 					{
 						bool bIsChat = strncmp(id->txt, "19:", 3)==0;
+						bool bHasMore = stricmp(ezxml_txt(ezxml_child(xmli, "hasmore")), "true") == 0;
+						ezxml_t syncstate;
 						hContact = MSN_HContactFromEmail(id->txt, NULL, false, false);
+						if (!bHasMore && hContact) db_unset(hContact, m_szModuleName, "syncTS");
 
 						/* We have to traverse the list in reverse order as newest events are on top (which is the opposite direction of Groupchat) */
 						LIST<ezxml> msgs(10,PtrKeySortT);
@@ -1482,6 +1486,7 @@ LBL_InvalidCommand:
 
 							if (bIsChat) {
 								hContact = MSN_HContactFromEmail(from->txt, NULL, false, false);
+								if (hContact) db_unset(hContact, m_szModuleName, "syncTS");
 								MSN_GCAddMessage(_A2T(id->txt), hContact, email, ts, sentMsg, message);
 							}
 							else if (hContact) {
@@ -1489,7 +1494,9 @@ LBL_InvalidCommand:
 								MEVENT hDbEvent;
 								bool bDuplicate = false;
 								DBEVENTINFO dbei = { sizeof(dbei) };
-								BYTE *pszMsgBuf = (BYTE*)mir_alloc(dbei.cbBlob = strlen(message)+1);
+								DWORD cbBlob = strlen(message);
+								dbei.cbBlob = cbBlob;
+								BYTE *pszMsgBuf = (BYTE*)mir_calloc(cbBlob);
 								if (pszMsgBuf) {
 									dbei.pBlob = pszMsgBuf;
 									for((hDbEvent = db_event_last(hContact)); 
@@ -1497,7 +1504,8 @@ LBL_InvalidCommand:
 										hDbEvent=db_event_prev(hContact, hDbEvent)) 
 									{
 										if (db_event_get(hDbEvent, &dbei) || dbei.timestamp != ts) break;
-										if (!strcmp((char*)dbei.pBlob, message)) bDuplicate = true;
+										if (!memcmp((char*)dbei.pBlob, message, cbBlob)) bDuplicate = true;
+										dbei.cbBlob = cbBlob;
 									}
 									mir_free(pszMsgBuf);
 									if (bDuplicate) continue;
@@ -1523,6 +1531,13 @@ LBL_InvalidCommand:
 								}
 							}
 						}
+						/* In groupchat it wouldn't make much sense to sync more as older messages are coming now and that would jumble our log */
+						if (!bIsChat && bHasMore && (syncstate = ezxml_child(xmli, "messagessyncstate"))) {
+							msnNsThread->sendPacketPayload("GET", "MSGR\\MESSAGESBYCONVERSATION", 
+								"<messagesbyconversation><id>%s</id><start>%llu</start><messagessyncstate>%s</messagessyncstate><pagesize>100</pagesize></messagesbyconversation>",
+								id->txt, ((unsigned __int64)db_get_dw(hContact, m_szModuleName, "syncTS", 1000))*1000, syncstate->txt);
+						}
+						msgs.destroy();
 					}
 				}
 				else if (!strcmp(xmli->name, "threads-response")) {

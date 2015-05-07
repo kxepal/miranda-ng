@@ -549,7 +549,8 @@ struct ThreadData
 
    //----| internal data buffer |--------------------------------------------------------
    int           mBytesInData;     // bytes available in data buffer
-   char          mData[8192];      // data buffer for connection
+   char          *mData;           // data buffer for connection
+   int           mDataSize;
 
    //----| methods |---------------------------------------------------------------------
    void          applyGatewayData(HANDLE hConn, bool isPoll);

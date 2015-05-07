@@ -27,7 +27,7 @@ MCONTACT CMsnProto::MSN_HContactFromEmail(const char* wlid, const char* msnNick,
 {
 	MCONTACT hContact = NULL;
 
-	char *szEmail, *szNet;
+	char *szEmail, *szNet = NULL;
 	parseWLID(NEWSTR_ALLOCA(wlid), &szNet, &szEmail, NULL);
 
 	MsnContact *msc = Lists_Get(szEmail);
@@ -45,7 +45,7 @@ MCONTACT CMsnProto::MSN_HContactFromEmail(const char* wlid, const char* msnNick,
 		if (temporary)
 			db_set_b(hContact, "CList", "NotOnList", 1);
 
-		Lists_Add(0, atoi(szNet), szEmail, hContact);
+		Lists_Add(0, szNet?atoi(szNet):NETID_MSN, szEmail, hContact);
 	}
 
 	return hContact;

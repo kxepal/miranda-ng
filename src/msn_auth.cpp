@@ -782,6 +782,7 @@ int CMsnProto::MSN_AuthOAuth(void)
 								*pEnd = 0;
 								pAccessToken+=13;
 								UrlDecode(pAccessToken);
+								replaceStr(authAccessToken, pAccessToken);
 
 								/* Extract refresh token */
 								if ((pRefreshToken = strstr(pEnd+1, "refresh_token=")) && (pEnd=strchr(pRefreshToken+14, '&'))) {
@@ -899,5 +900,6 @@ void CMsnProto::FreeAuthTokens(void)
 	mir_free(authCookies);
 	mir_free(authSSLToken);
 	mir_free(authUser);
+	mir_free(authAccessToken);
 	free(hotAuthToken);
 }

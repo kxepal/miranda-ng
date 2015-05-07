@@ -110,7 +110,7 @@ struct CMsnProto : public PROTO<CMsnProto>
 	char *authContactToken;
 	char *authStorageToken;
 	char *hotSecretToken, *hotAuthToken;
-	char *authUser, *authUIC, *authCookies, *authSSLToken;
+	char *authUser, *authUIC, *authCookies, *authSSLToken, *authAccessToken;
 	int  authMethod;
 	time_t authTokenExpiretime;
 	bool bSentBND;

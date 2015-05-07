@@ -167,8 +167,9 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 	debugLogA("Entering main recv loop");
 	info->mBytesInData = 0;
 	int msglen = 0;
+	char *msg=(char*)mir_alloc(info->mDataSize+1);
 	for (;;) {
-		int recvResult = info->recv(info->mData + info->mBytesInData, sizeof(info->mData) - info->mBytesInData);
+		int recvResult = info->recv(info->mData + info->mBytesInData, info->mDataSize - info->mBytesInData);
 		if (recvResult == SOCKET_ERROR) {
 			debugLogA("Connection %08p [%08X] was abortively closed", info->s, GetCurrentThreadId());
 			break;
@@ -191,21 +192,19 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 				if (peol == NULL)
 					break;
 
-				/* Check for extra payload to read
 				if (!msglen && isdigit(peol[-1])) {
 					char *pMsgLen = peol-1;
 					
 					while (pMsgLen>info->mData && isdigit(*pMsgLen)) pMsgLen--;
 					pMsgLen++;
 					sscanf(pMsgLen, "%d", &msglen);
-				}*/
+				}
 
 				if (info->mBytesInData < peol - info->mData + 2 + msglen)
 					break;  //wait for full line end
 
 				msglen = 0;
 
-				char msg[sizeof(info->mData)];
 				memcpy(msg, info->mData, peol - info->mData); msg[peol - info->mData] = 0;
 
 				if (*++peol != '\n')
@@ -241,13 +240,22 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 			}
 		}
 
-		if (info->mBytesInData == sizeof(info->mData)) {
-			debugLogA("sizeof(data) is too small: the longest line won't fit");
-			break;
+		if (info->mBytesInData == info->mDataSize) {
+			info->mDataSize*=2;
+			char *mData = (char*)mir_realloc(info->mData, (info->mDataSize)+1);
+			if (mData) {
+				info->mData = mData;
+				ZeroMemory(&mData[info->mBytesInData], info->mDataSize-info->mBytesInData+1);
+				if (!(msg = (char*)mir_realloc(msg, info->mDataSize + 1))) break;
+			} else {
+				debugLogA("sizeof(data) is too small: the longest line won't fit");
+				break;
+			}
 		}
 	}
 
 LBL_Exit:
+	mir_free(msg);
 	if (info->mIsMainThread) {
 		if (!isConnectSuccess && !usingGateway && m_iDesiredStatus != ID_STATUS_OFFLINE) {
 			msnNsThread = NULL;
@@ -518,6 +526,7 @@ ThreadData::ThreadData()
 	mGatewayTimeout = 2;
 	resetTimeout();
 	hWaitEvent = CreateSemaphore(NULL, 0, MSN_PACKETS_COMBINE, NULL);
+	mData = (char*)mir_calloc((mDataSize=8192)+1);
 }
 
 ThreadData::~ThreadData()
@@ -568,6 +577,8 @@ ThreadData::~ThreadData()
 		proto->MSN_GetUnconnectedThread(wlid) == NULL) {
 		proto->MsgQueue_Clear(wlid, true);
 	}
+
+	mir_free(mData);
 }
 
 void ThreadData::applyGatewayData(HANDLE hConn, bool isPoll)
@@ -678,7 +689,7 @@ HReadBuffer::~HReadBuffer()
 
 BYTE* HReadBuffer::surelyRead(size_t parBytes)
 {
-	const size_t bufferSize = sizeof(owner->mData);
+	const size_t bufferSize = owner->mDataSize;
 
 	if ((startOffset + parBytes) > bufferSize) {
 		if (totalDataSize > startOffset)

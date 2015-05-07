@@ -295,9 +295,12 @@ void __cdecl CMsnProto::msnftp_sendFileThread(void* arg)
 			}
 		}
 
-		if (info->mBytesInData == sizeof(info->mData)) {
-			debugLogA("sizeof(data) is too small: the longest line won't fit");
-			break;
+		if (info->mBytesInData == info->mDataSize) {
+			char *mData = (char*)mir_realloc(info->mData, (info->mDataSize*=2)+1);
+			if (mData) info->mData = mData;  else {
+				debugLogA("sizeof(data) is too small: the longest line won't fit");
+				break;
+			}
 		}
 	}
 

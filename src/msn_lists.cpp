@@ -166,7 +166,7 @@ int CMsnProto::Lists_Add(int list, int netId, const char* email, MCONTACT hConta
 		p->invite = mir_strdup(invite);
 		p->nick = mir_strdup(nick);
 		p->hContact = hContact;
-		p->p2pMsgId = 0;
+		p->p2pMsgId = p->cap1 = p->cap2 = 0;
 		m_arContacts.insert(p);
 	}
 	else {
