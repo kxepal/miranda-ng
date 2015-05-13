@@ -242,8 +242,7 @@ void CMsnProto::MSN_GCProcessThreadActivity(ezxml_t xmli, const TCHAR *mChatID)
 				}
 				char* szEmail, *szNet;
 				parseWLID(NEWSTR_ALLOCA(pszTarget), &szNet, &szEmail, NULL);
-				if (!stricmp(szEmail, GetMyUsername(atoi(szNet))))
-					gce.bIsMe = TRUE;
+				gce.bIsMe = !stricmp(szEmail, GetMyUsername(atoi(szNet)));
 				gce.ptszUID = mir_a2t(pszTarget);
 				MCONTACT hContTarget = MSN_HContactFromEmail(pszTarget);
 				gce.ptszNick =GetContactNameT(hContTarget);

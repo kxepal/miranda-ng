@@ -1872,12 +1872,30 @@ LBL_InvalidCommand:
 
 			if (tHeader["Set-Registration"]) replaceStr(msnRegistration,tHeader["Set-Registration"]);
 			if (cmdString[1]=='N') { // PNG
-				if (ezxml_t xmli = ezxml_parse_str(msgBody, strlen(msgBody)))
-				{
+				if (ezxml_t xmli = ezxml_parse_str(msgBody, strlen(msgBody))) {
 					if (ezxml_t wait = ezxml_child(xmli, "wait")) {
 						msnPingTimeout = atoi(ezxml_txt(wait));
 						if (msnPingTimeout && hKeepAliveThreadEvt != NULL)
 							SetEvent(hKeepAliveThreadEvt);
+					}
+					ezxml_free(xmli);
+				}				
+			} else { // PUT
+				ezxml_t xmli;
+				if (*msgBody && (xmli = ezxml_parse_str(msgBody, strlen(msgBody)))) {
+					if (!strcmp(xmli->name, "presence-response")) {
+						ezxml_t user, from;
+						if ((user = ezxml_child(xmli, "user")) && (from = ezxml_child(xmli, "from"))) {
+							if (ezxml_t xmlstatus = ezxml_get(user, "s", 0, "Status", -1)) {
+								ezxml_t usertile = ezxml_get(user, "s", 1, "UserTileLocation", -1);
+								MSN_ProcessNLN(ezxml_txt(xmlstatus), from->txt, NULL, NULL, usertile?usertile->txt:NULL);
+							} else {
+								int oldMode = m_iStatus;
+								m_iStatus = m_iDesiredStatus;
+								ProtoBroadcastAck(NULL, ACKTYPE_STATUS, ACKRESULT_SUCCESS, (HANDLE)oldMode, m_iStatus);
+							}
+							MSN_ProcessStatusMessage(user, from->txt);
+						}
 					}
 					ezxml_free(xmli);
 				}				

@@ -711,6 +711,7 @@ BYTE* HReadBuffer::surelyRead(size_t parBytes)
 	}
 
 	BYTE *result = buffer + startOffset; startOffset += parBytes;
+	buffer[totalDataSize] = 0;
 	return result;
 }
 
