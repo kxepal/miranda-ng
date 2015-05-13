@@ -1167,23 +1167,36 @@ LBL_InvalidCommand:
 		break;
 
 	case ' HTA':	//********* ATH: MSNP21+ Authentication
-		if (!bSentBND)
 		{
-			info->sendPacketPayload("BND", "CON\\MSGR",
-				"<msgr><ver>%d</ver>%s<client><name>%s</name><ver>%s</ver></client>"
-                        "<epid>%.*s</epid></msgr>\r\n", 
-						msnP24Ver, (msnP24Ver>1?"<altVersions><ver>1</ver></altVersions>":""),
-						msnStoreAppId, msnProductVer, 
-						strlen(MyOptions.szMachineGuid)-2, MyOptions.szMachineGuid+1);
-			bSentBND = true;
-		}
-		else
-		{
-			msnLoggedIn = true;
-			MSN_SetServerStatus(m_iStatus);
-			MSN_EnableMenuItems(true);
-			MSN_RefreshContactList();
-			MSN_FetchRecentMessages();
+			union {
+				char* tWords[2];
+				struct { char *typeId, *strMsgBytes; } data;
+			};
+
+			if (sttDivideWords(params, SIZEOF(tWords), tWords) < 2)
+				goto LBL_InvalidCommand;
+
+			HReadBuffer buf(info, 0);
+			char* msgBody = (char*)buf.surelyRead(atol(data.strMsgBytes));
+
+			if (!bSentBND)
+			{
+				info->sendPacketPayload("BND", "CON\\MSGR",
+					"<msgr><ver>%d</ver>%s<client><name>%s</name><ver>%s</ver></client>"
+							"<epid>%.*s</epid></msgr>\r\n", 
+							msnP24Ver, (msnP24Ver>1?"<altVersions><ver>1</ver></altVersions>":""),
+							msnStoreAppId, msnProductVer, 
+							strlen(MyOptions.szMachineGuid)-2, MyOptions.szMachineGuid+1);
+				bSentBND = true;
+			}
+			else
+			{
+				msnLoggedIn = true;
+				MSN_SetServerStatus(m_iStatus);
+				MSN_EnableMenuItems(true);
+				MSN_RefreshContactList();
+				MSN_FetchRecentMessages();
+			}
 		}
 		break;
 
@@ -1195,21 +1208,32 @@ LBL_InvalidCommand:
 
 	case ' DNB':	//********* BND: MSNP21+ bind request answer?
 		{
+			union {
+				char* tWords[2];
+				struct { char *typeId, *strMsgBytes; } data;
+			};
+
+			if (sttDivideWords(params, SIZEOF(tWords), tWords) < 2)
+				goto LBL_InvalidCommand;
+
 			MimeHeaders tHeader;
-			char* msgBody = tHeader.readFromBuffer(info->mData);
+			HReadBuffer buf(info, 0);
+			char* msgBody = tHeader.readFromBuffer((char*)buf.surelyRead(atol(data.strMsgBytes)));
 
 			replaceStr(msnRegistration,tHeader["Set-Registration"]);
-			ezxml_t xmlbnd = ezxml_parse_str(msgBody, strlen(msgBody));
-			ezxml_t xmlbdy = ezxml_child(xmlbnd, "nonce");
-			if (xmlbdy)
-			{
-				char dgst[64];
-				MSN_MakeDigest(xmlbdy->txt, dgst);
-				info->sendPacketPayload("PUT", "MSGR\\CHALLENGE",
-					"<challenge><appId>%s</appId><response>%s</response></challenge>\r\n",
-					msnProductID, dgst);
+			if (!strcmp(data.typeId, "CON")) {
+				ezxml_t xmlbnd = ezxml_parse_str(msgBody, strlen(msgBody));
+				ezxml_t xmlbdy = ezxml_child(xmlbnd, "nonce");
+				if (xmlbdy)
+				{
+					char dgst[64];
+					MSN_MakeDigest(xmlbdy->txt, dgst);
+					info->sendPacketPayload("PUT", "MSGR\\CHALLENGE",
+						"<challenge><appId>%s</appId><response>%s</response></challenge>\r\n",
+						msnProductID, dgst);
+				}
+				ezxml_free(xmlbnd);
 			}
-			ezxml_free(xmlbnd);
 		}
 		break;
 
@@ -1329,6 +1353,18 @@ LBL_InvalidCommand:
 		break;
 	case ' TNC':	//********* CNT: Connect, MSNP21+ Authentication
 		{
+			union {
+				char* tWords[2];
+				struct { char *typeId, *strMsgBytes; } data;
+			};
+
+			if (sttDivideWords(params, SIZEOF(tWords), tWords) < 2)
+				goto LBL_InvalidCommand;
+
+			HReadBuffer buf(info, 0);
+			char* msgBody = (char*)buf.surelyRead(atol(data.strMsgBytes));
+			if (strcmp(data.typeId, "CON")) break;
+
 			if (GetMyNetID()!=NETID_SKYPE) {
 				/* MSN account login */
 				char *pszSite = "";
@@ -1358,7 +1394,7 @@ LBL_InvalidCommand:
 					GetMyUsername(NETID_MSN), GetMyUsername(NETID_SKYPE));
 			} else {
 				/* Skype username/pass login */
-				ezxml_t xmlcnt = ezxml_parse_str(info->mData, strlen(info->mData));
+				ezxml_t xmlcnt = ezxml_parse_str(msgBody, strlen(msgBody));
 				ezxml_t xmlnonce = ezxml_child(xmlcnt, "nonce");
 				if (xmlnonce) {
 					char szUIC[1024]={0};
@@ -1401,10 +1437,19 @@ LBL_InvalidCommand:
 
 	case ' TEG':    //********* GET: MSNP21+ GET reply
 		{
+			union {
+				char* tWords[2];
+				struct { char *typeId, *strMsgBytes; } data;
+			};
+
+			if (sttDivideWords(params, SIZEOF(tWords), tWords) < 2)
+				goto LBL_InvalidCommand;
+
 			MimeHeaders tHeader;
+			HReadBuffer buf(info, 0);
+			char* msgBody = tHeader.readFromBuffer((char*)buf.surelyRead(atol(data.strMsgBytes)));
 			ezxml_t xmli;
 
-			char* msgBody = tHeader.readFromBuffer(info->mData);
 			if (tHeader["Set-Registration"]) replaceStr(msnRegistration,tHeader["Set-Registration"]);
 			if (xmli = ezxml_parse_str(msgBody, strlen(msgBody)))
 			{
@@ -1736,9 +1781,13 @@ LBL_InvalidCommand:
 			if (sttDivideWords(params, SIZEOF(tWords), tWords) < 2)
 				goto LBL_InvalidCommand;
 
+			HReadBuffer buf(info, 0);
+			char* msgBody = (char*)buf.surelyRead(atol(data.strMsgBytes));
+			if (msgBody == NULL) break;
+
 			if (!strcmp(data.typeId, "MSGR\\PUT") || !strcmp(data.typeId, "MSGR\\DEL")) {
 				MimeHeaders tHeader;
-				char* msgBody = info->mData;
+
 				int i;
 				for (i=0; i<2; i++) msgBody = tHeader.readFromBuffer(msgBody);
 				char *pszTo = NULL, *pszToNet;
@@ -1809,8 +1858,17 @@ LBL_InvalidCommand:
 	case ' TUP':	//******** MSNP21+: PUT notifications
 	case ' GNP':	//******** MSNP21+: PNG reply
 		{
+			union {
+				char* tWords[2];
+				struct { char *typeId, *strMsgBytes; } data;
+			};
+
+			if (sttDivideWords(params, SIZEOF(tWords), tWords) < 2)
+				goto LBL_InvalidCommand;
+
 			MimeHeaders tHeader;
-			char* msgBody = tHeader.readFromBuffer(info->mData);
+			HReadBuffer buf(info, 0);
+			char* msgBody = tHeader.readFromBuffer((char*)buf.surelyRead(atol(data.strMsgBytes)));
 
 			if (tHeader["Set-Registration"]) replaceStr(msnRegistration,tHeader["Set-Registration"]);
 			if (cmdString[1]=='N') { // PNG
@@ -2065,24 +2123,37 @@ LBL_InvalidCommand:
 		break;
 	case ' RFX':    //******** XFR: sections 7.4 Referral, 8.1 Referral to Switchboard
 		{
-			ezxml_t xmlxfr = ezxml_parse_str(info->mData, strlen(info->mData));
-			ezxml_t xmltgt = ezxml_child(xmlxfr, "target");
-			if (xmltgt)
-			{
-				ThreadData* newThread = new ThreadData;
-				strcpy(newThread->mServer, xmltgt->txt);
-				strcpy(newThread->mState, ezxml_txt(ezxml_child(xmlxfr, "state")));
-				newThread->mType = SERVER_NOTIFICATION;
-				newThread->mTrid = info->mTrid;
-				newThread->mIsMainThread = true;
-				info->mIsMainThread = false;
+			union {
+				char* tWords[2];
+				struct { char *typeId, *strMsgBytes; } data;
+			};
 
-				debugLogA("Switching to notification server '%s'...", xmltgt->txt);
-				newThread->startThread(&CMsnProto::MSNServerThread, this);
+			if (sttDivideWords(params, SIZEOF(tWords), tWords) < 2)
+				goto LBL_InvalidCommand;
+
+			MimeHeaders tHeader;
+			HReadBuffer buf(info, 0);
+			char* msgBody = tHeader.readFromBuffer((char*)buf.surelyRead(atol(data.strMsgBytes)));
+			if (!strcmp(data.typeId, "CON")) {
+				ezxml_t xmlxfr = ezxml_parse_str(msgBody, strlen(msgBody));
+				ezxml_t xmltgt = ezxml_child(xmlxfr, "target");
+				if (xmltgt)
+				{
+					ThreadData* newThread = new ThreadData;
+					strcpy(newThread->mServer, xmltgt->txt);
+					strcpy(newThread->mState, ezxml_txt(ezxml_child(xmlxfr, "state")));
+					newThread->mType = SERVER_NOTIFICATION;
+					newThread->mTrid = info->mTrid;
+					newThread->mIsMainThread = true;
+					info->mIsMainThread = false;
+
+					debugLogA("Switching to notification server '%s'...", xmltgt->txt);
+					newThread->startThread(&CMsnProto::MSNServerThread, this);
+					ezxml_free(xmlxfr);
+					return 1;  //kill the old thread
+				}
 				ezxml_free(xmlxfr);
-				return 1;  //kill the old thread
 			}
-			ezxml_free(xmlxfr);
 		}
 		break;
 

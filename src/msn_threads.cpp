@@ -72,6 +72,18 @@ void __cdecl CMsnProto::msn_keepAliveThread(void*)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	MSN server thread - read and process commands from a server
+static bool ReallocInfoBuffer(ThreadData *info, int mDataSize)
+{
+	char *mData = (char*)mir_realloc(info->mData, mDataSize+1);
+	if (mData) {
+		info->mData = mData;
+		info->mDataSize = mDataSize;
+		ZeroMemory(&mData[info->mBytesInData], info->mDataSize-info->mBytesInData+1);
+		return true;
+	}
+	return false;
+}
+
 
 void __cdecl CMsnProto::MSNServerThread(void* arg)
 {
@@ -166,8 +178,6 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 
 	debugLogA("Entering main recv loop");
 	info->mBytesInData = 0;
-	int msglen = 0;
-	char *msg=(char*)mir_alloc(info->mDataSize+1);
 	for (;;) {
 		int recvResult = info->recv(info->mData + info->mBytesInData, info->mDataSize - info->mBytesInData);
 		if (recvResult == SOCKET_ERROR) {
@@ -192,19 +202,10 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 				if (peol == NULL)
 					break;
 
-				if (!msglen && isdigit(peol[-1])) {
-					char *pMsgLen = peol-1;
-					
-					while (pMsgLen>info->mData && isdigit(*pMsgLen)) pMsgLen--;
-					pMsgLen++;
-					sscanf(pMsgLen, "%d", &msglen);
-				}
-
-				if (info->mBytesInData < peol - info->mData + 2 + msglen)
+				if (info->mBytesInData < peol - info->mData + 2)
 					break;  //wait for full line end
 
-				msglen = 0;
-
+				char msg[1024];
 				memcpy(msg, info->mData, peol - info->mData); msg[peol - info->mData] = 0;
 
 				if (*++peol != '\n')
@@ -236,18 +237,11 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 				else
 					if (MSN_HandleMSNFTP(info, msg))
 						goto LBL_Exit;
-				info->mBytesInData = 0;
 			}
 		}
 
 		if (info->mBytesInData == info->mDataSize) {
-			info->mDataSize*=2;
-			char *mData = (char*)mir_realloc(info->mData, (info->mDataSize)+1);
-			if (mData) {
-				info->mData = mData;
-				ZeroMemory(&mData[info->mBytesInData], info->mDataSize-info->mBytesInData+1);
-				if (!(msg = (char*)mir_realloc(msg, info->mDataSize + 1))) break;
-			} else {
+			if (!ReallocInfoBuffer(info, info->mDataSize*2)) {
 				debugLogA("sizeof(data) is too small: the longest line won't fit");
 				break;
 			}
@@ -255,7 +249,6 @@ void __cdecl CMsnProto::MSNServerThread(void* arg)
 	}
 
 LBL_Exit:
-	mir_free(msg);
 	if (info->mIsMainThread) {
 		if (!isConnectSuccess && !usingGateway && m_iDesiredStatus != ID_STATUS_OFFLINE) {
 			msnNsThread = NULL;
@@ -689,9 +682,7 @@ HReadBuffer::~HReadBuffer()
 
 BYTE* HReadBuffer::surelyRead(size_t parBytes)
 {
-	const size_t bufferSize = owner->mDataSize;
-
-	if ((startOffset + parBytes) > bufferSize) {
+	if ((startOffset + parBytes) > owner->mDataSize) {
 		if (totalDataSize > startOffset)
 			memmove(buffer, buffer + startOffset, (totalDataSize -= startOffset));
 		else
@@ -699,14 +690,19 @@ BYTE* HReadBuffer::surelyRead(size_t parBytes)
 
 		startOffset = 0;
 
-		if (parBytes > bufferSize) {
-			owner->proto->debugLogA("HReadBuffer::surelyRead: not enough memory, %d %d %d", parBytes, bufferSize, startOffset);
-			return NULL;
+		if (parBytes > owner->mDataSize) {
+			size_t mDataSize = owner->mDataSize;
+			while (parBytes > mDataSize) mDataSize*=2;
+			if (!ReallocInfoBuffer(owner, mDataSize)) {
+				owner->proto->debugLogA("HReadBuffer::surelyRead: not enough memory, %d %d %d", parBytes, owner->mDataSize, startOffset);
+				return NULL;
+			}
+			buffer = (BYTE*)owner->mData;
 		}
 	}
 
 	while ((startOffset + parBytes) > totalDataSize) {
-		int recvResult = owner->recv((char*)buffer + totalDataSize, bufferSize - totalDataSize);
+		int recvResult = owner->recv((char*)buffer + totalDataSize, owner->mDataSize - totalDataSize);
 
 		if (recvResult <= 0)
 			return NULL;
