@@ -582,6 +582,9 @@ static int CopyCookies(NETLIBHTTPREQUEST *nlhrReply, NETLIBHTTPHEADER *hdr)
 	service::ssl.live.com::MBI_SSL		- For ssl-compact-ticket
 	service::contacts.msn.com::MBI_SSL	- Contact SOAP service -> authContactToken
 	service::m.hotmail.com::MBI_SSL     - ActiveSync contactlist, not used by us
+	service::storage.live.com::MBI_SSL  - Storage service (authStorageToken)
+	service::skype.com::MBI_SSL			- ?
+	service::skype.net::MBI_SSL			- ?
 */
 bool CMsnProto::RefreshOAuth(const char *pszRefreshToken, const char *pszService, char *pszAccessToken, char *pszOutRefreshToken, time_t *ptExpires)
 {

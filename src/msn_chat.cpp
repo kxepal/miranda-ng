@@ -101,7 +101,12 @@ void CMsnProto::MSN_ChatStart(ezxml_t xmli)
 
 		MSN_ChatInit(info, pszID, ezxml_txt(ezxml_get(xmli, "properties", 0, "topic", -1)));
 		MSN_StartStopTyping(info, false);
+	} else  {
+		GCDEST gcd = { m_szModuleName, info->mChatID, GC_EVENT_CONTROL };
+		GCEVENT gce = { sizeof(gce), &gcd };
+		CallServiceSync(MS_GC_EVENT, SESSION_ONLINE, (LPARAM)&gce);
 	}
+
 	pszCreator = ezxml_txt(ezxml_get(xmli, "properties", 0, "creator", -1));
 
 	for (ezxml_t memb = ezxml_get(xmli, "members", 0, "member", -1); memb != NULL; memb = ezxml_next(memb)) {

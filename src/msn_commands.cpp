@@ -1369,13 +1369,6 @@ LBL_InvalidCommand:
 				/* MSN account login */
 				char *pszSite = "";
 
-				/* Obsolete, though still working
-				if (MSN_GetPassportAuth()) {
-					m_iDesiredStatus = ID_STATUS_OFFLINE;
-					return 1;
-				}
-				*/
-
 				switch (MSN_AuthOAuth())
 				{
 				case 1: break;
@@ -1548,7 +1541,7 @@ LBL_InvalidCommand:
 										!bDuplicate && hDbEvent; 
 										hDbEvent=db_event_prev(hContact, hDbEvent)) 
 									{
-										if (db_event_get(hDbEvent, &dbei) || dbei.timestamp != ts) break;
+										if (db_event_get(hDbEvent, &dbei) || dbei.timestamp > ts+1 || dbei.timestamp < ts) break;
 										if (!memcmp((char*)dbei.pBlob, message, cbBlob)) bDuplicate = true;
 										dbei.cbBlob = cbBlob;
 									}
